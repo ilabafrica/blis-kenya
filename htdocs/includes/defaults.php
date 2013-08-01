@@ -6,7 +6,7 @@
 #
 
 # System version number displayed on page title and footer
-$VERSION = "2.4";
+$VERSION = "2.5";
 
 # Debug mode
 $DEBUG = false;
@@ -20,7 +20,8 @@ $labIdArray = array(
 	"Cameroon" => 1,
 	"Ghana" => 1001,
 	"Uganda" => 2001,
-	"Tanzania" => 3001
+	"Tanzania" => 3001,
+	 "Drc" =>4001
 );
 
 # Default target turnaround time value (in days) for tests if not yet specified by lab admin

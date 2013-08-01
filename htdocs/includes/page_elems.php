@@ -329,8 +329,8 @@ class PageElems
                 echo "<br><input type='checkbox' name='$checkBoxName' id='$checkBoxName' value='0' checked>All</input>";
 
 		foreach($config_list as $lab_config) {
-			$strippedLabName = substr($lab_config->name,0,strpos($lab_config->name,'-')-1);
-			echo "<br><input type='checkbox' name='$checkBoxName' id='$checkBoxName' value='$lab_config->id'>$strippedLabName</input>";
+			//$strippedLabName = substr($lab_config->name,0,strpos($lab_config->name,'-')-1);
+			echo "<br><input type='checkbox' name='$checkBoxName' id='$checkBoxName' value='$lab_config->id'>$lab_config->name</input>";
 		}
 	}
 	public function getAdminUserOptions()

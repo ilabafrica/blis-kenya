@@ -616,3 +616,11 @@ CREATE TABLE IF NOT EXISTS `payments` (
   `bill_id` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `user_feedback` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `user_id` INT(11) NULL ,
+  `rating` INT(3) NULL ,
+  `comments` VARCHAR(500) NULL ,
+  `ts` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`id`) );
