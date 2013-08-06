@@ -58,7 +58,7 @@ header('Content-Type: text/html; charset=UTF-8');
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>
-		Basic Laboratory Information System v<?php echo $VERSION; ?>
+		BLIS v<?php echo $VERSION; ?> - Kenya
 		</title>
 <?php
 		include("styles.php");
@@ -100,7 +100,7 @@ header('Content-Type: text/html; charset=UTF-8');
 	
 	//-->
 	</script>
-
+	<script type="text/javasrcip" src="js/bootstrap.js"></script>
 
 	<script type='text/javascript'>
 	<?php 
@@ -119,69 +119,23 @@ header('Content-Type: text/html; charset=UTF-8');
 	
 	
 	</head>
-	<body class='parent_pane'>
+<body  data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true">
 <?php $script_elems->enablePageloadIndicator(); ?>
-	<div id="top_pane">
-		<div id="top_pane_user_info">
-<?php
-if(isset($_SESSION['username']))
-{
-?>
-	<?php echo LangUtil::getPageTerm("LOGGEDINAS"); ?>: <?php echo $_SESSION['username']; ?> | 
-	<a href='edit_profile.php'><?php echo LangUtil::$pageTerms['EDITPROFILE']; ?></a> | 
-	<?php
-	if(isset($_SESSION['admin_as_tech']) && $_SESSION['admin_as_tech'] === true)
-	{
-		?>
-		<a href='switchto_admin.php'><?php echo LangUtil::getPageTerm("SWITCH_TOMGR"); ?></a> | 
-		<?php
-	}
-	else if(isset($_SESSION['dir_as_tech']) && $_SESSION['dir_as_tech'] === true)
-	{
-		?>
-		<a href='switchto_admin.php'><?php echo LangUtil::getPageTerm("SWITCH_TODIR"); ?></a> | 
-		<?php
-	}
-	else if(User::onlyOneLabConfig($_SESSION['user_id'], $_SESSION['user_level']))
-	{
-		$lab_config_list = get_lab_configs($_SESSION['user_id']);
-		?>
-		<a href='switchto_tech.php?id=<?php echo $lab_config_list[0]->id; ?>'><?php echo LangUtil::getPageTerm("SWITCH_TOTECH"); ?></a> | 
-		<?php
-	}
-	?>
-	<a rel='facebox' href='user_rating.php'><?php echo LangUtil::getPageTerm("LOGOUT"); ?></a>
-	
-	<?php
-	//if(User::onlyOneLabConfig($_SESSION['user_id'], $_SESSION['user_level']))
-	if(false)
-	{
-		$lab_config_list = get_lab_configs($_SESSION['user_id']);
-		?>
-		<br><br>
-		<a class='dummy_class' id='top_pane_secondrow' href='data_backup?id=<?php echo $lab_config_list[0]->id; ?>' ><?php echo LangUtil::$pageTerms['MENU_BACKUP']; ?></a>
-		<?php
-	}
-}
-?>		
-		</div>
-		<table cellspacing="10px">
-			<tr>
-				<td>
-					<span class="lis_title">Basic Laboratory Information System</span>
-				</td>
-				<td>
-				</td>
-				<td> 
-				</td>
-			</tr>
-		</table>
+		
 <?php
 if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 {
 ?>
-	<div id="menus">
-	<ul id='globalnav'>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://examples.getbootstrap.com/jumbotron/index.html#">BLIS v<?php echo $VERSION; ?> - Kenya</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav navbar-nav">
 <?php
 	if(isset($top_menu_options))
 	{
@@ -210,12 +164,73 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 		}
 	}
 ?>
-	<span id='backup_div' style='float:right;margin-right:15px;'>
-	</span>
-	</ul>
-	</div>
+</ul>
+
+ <?php     if(isset($_SESSION['username']))
+{
+?>
+	          <div class="btn-group pull-right user-buttons"">
+	          	<button type="button" class="btn btn-primary"><?php echo $_SESSION['username']; ?></button>
+ 				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu">
+			    <li><a href='edit_profile.php'><span class="glyphicon glyphicon-pencil"></span>  &nbsp;&nbsp;<?php echo LangUtil::$pageTerms['EDITPROFILE']; ?></a></li>
+			    <li class="divider"></li> 
+	<?php
+	if(isset($_SESSION['admin_as_tech']) && $_SESSION['admin_as_tech'] === true)
+	{
+		?>
+		<li><a href='switchto_admin.php'><span class="glyphicon glyphicon-random"></span> &nbsp;&nbsp;<?php echo LangUtil::getPageTerm("SWITCH_TOMGR"); ?></a></li> 
+		<?php
+	}
+	else if(isset($_SESSION['dir_as_tech']) && $_SESSION['dir_as_tech'] === true)
+	{
+		?>
+		<li><a href='switchto_admin.php'><span class="glyphicon glyphicon-random"></span> &nbsp;&nbsp;<?php echo LangUtil::getPageTerm("SWITCH_TODIR"); ?></a></li>
+		<?php
+	}
+	else if(User::onlyOneLabConfig($_SESSION['user_id'], $_SESSION['user_level']))
+	{
+		$lab_config_list = get_lab_configs($_SESSION['user_id']);
+		?>
+		<li><a href='switchto_tech.php?id=<?php echo $lab_config_list[0]->id; ?>'><span class="glyphicon glyphicon-random"></span>  &nbsp;&nbsp;<?php echo LangUtil::getPageTerm("SWITCH_TOTECH"); ?></a></li>
+		<?php
+	}
+	?>
+	<li class="divider"></li>
+	<li><a rel='facebox' href='user_rating.php'><span class="glyphicon glyphicon-ban-circle"></span>  &nbsp;&nbsp;<?php echo LangUtil::getPageTerm("LOGOUT"); ?></a></li>
+	
+	<?php
+	//if(User::onlyOneLabConfig($_SESSION['user_id'], $_SESSION['user_level']))
+	if(false)
+	{
+		$lab_config_list = get_lab_configs($_SESSION['user_id']);
+		?>
+		<br><br>
+		<li><a class='dummy_class' id='top_pane_secondrow' href='data_backup?id=<?php echo $lab_config_list[0]->id; ?>' ><?php echo LangUtil::$pageTerms['MENU_BACKUP']; ?></a></li>
+		<?php
+	}
+}
+?>	
+			  </ul>
+			  
+			</div>
+		</div><!--/.user-menu -->
+		
+		<p class="navbar-text pull-right">
+              <?php echo LangUtil::getPageTerm("LOGGEDINAS"); ?>: &nbsp;</p>
+        </div><!--/.nav-text -->
+        
+      </div><!--/.container -->
+    </div> <!--/.nav-bar -->
+	
+
+	
+  
 <?php
 }
 ?>
-</div><!--end of top_pane-->
-<div id='center_pane'>
+<div id="wrap">
+<div class="container">
+ <div class="row">

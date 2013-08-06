@@ -32,7 +32,8 @@ class ScriptElems
 		if($this->enabledJQuery === false)
 		{
 		?>
-			<script src="js/jquery-1.3.2.min.js"></script>
+			<script src="js/jquery.js"></script>
+			<script src="js/bootstrap.js"></script>
 			<script type='text/javascript'>
 			
 				$(document).ready(function() {

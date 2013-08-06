@@ -26,10 +26,12 @@ include("includes/db_close.php");
 LangUtil::setPageId("footer");
 ?>
 
-
-</div><!-- end of center_pane-->
-
-<div id='bottom_pane'>
+</div><!--end of row-->
+</div><!-- end of container-->
+<div id="push"></div>
+</div><!--end of wrap-->
+<div id="footer">
+      <div class="container">
 	<br>
 	<hr>
 	<div class='footer_message'>
@@ -107,6 +109,7 @@ LangUtil::setPageId("footer");
 		</small>
 		<br><br>
 	</div>
-</div><!--end of bottom_pane-->
+</div><!--end of container-->
+</div><!--end of footer-->
 </body>
 </html>

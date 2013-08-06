@@ -50,7 +50,7 @@ function load()
 
 function check_input_boxes()
 {
-	if($('#username').attr("value") == "")
+	if($('#username').val() == "")
 	{
 		$('#username_error').show();
 		return;
@@ -59,7 +59,7 @@ function check_input_boxes()
 	{
 		$('#username_error').hide();
 	}
-	if($('#password').attr("value") == "")
+	if($('#password').val() == "")
 	{
 		$('#password_error').show();
 		return;

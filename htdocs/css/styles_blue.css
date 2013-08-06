@@ -525,7 +525,7 @@ font-size: 0.8em;
 
 button span {
 display: block;
-padding: 0 0 0 15px;
+padding: 0 0 0 0px;
 position: relative;
 white-space: nowrap;
 height: 30px;

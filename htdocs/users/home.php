@@ -101,16 +101,18 @@ function blis_update()
 }
 
 </script>
+<div class="col-lg-9">
+<div class="panel panel-primary">
 
-<br>
-<span class='page_title'><?php echo LangUtil::getTitle(); ?></span>
-<br><br>
+<div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>
+
 
 <?php 
 echo LangUtil::getPageTerm("WELCOME").", " . $_SESSION['username'] . ".<br><br>";
 echo LangUtil::getPageTerm("TIPS_BLISINTRO");
 
 ?>
+
 <br><br>
     <div id="update_div2" style="display:none;" class="warning">
     <a rel='facebox' id='update_link' href='../update/blis_update.php'>Click here to complete update to version <?php echo $VERSION ?></a>
@@ -137,8 +139,8 @@ $page_elems->getProgressSpinnerBig($spinner_message);
     </div>
 
 
-
-
+</div>
+</div>
 <?php
 # If technician user, show lab workflow
 if($_SESSION['user_level'] == $LIS_ADMIN || $_SESSION['user_level'] == $LIS_SUPERADMIN || $_SESSION['user_level'] == $LIS_COUNTRYDIR)
@@ -166,6 +168,7 @@ else
 }
 echo "<br>";
 ?>
+
 <?php
 include("includes/footer.php");
 ?>
