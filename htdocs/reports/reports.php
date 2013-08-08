@@ -1597,14 +1597,13 @@ function show_custom_report_form(report_id)
 	window.location = url_string;
 }
 </script>
-<br>
-<table name="page_panes" cellpadding="10px">
-	<tr valign='top'>
-		<td id='left_pane' width='200px'>
-		<?php
+<div class="col-lg-3">
+<div class="bs-sidebar affix">
+<ul class="nav bs-sidenav">
+<?php
 			$site_list = get_site_list($_SESSION['user_id']);
 			if ( !is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) { 
-				echo LangUtil::$pageTerms['MENU_DAILY']; ?>
+				echo '<li>'.LangUtil::$pageTerms['MENU_DAILY'].'</li>'; ?>
 			<ul>
 				<!--
 				<li class='menu_option' id='patient_report_menu'>
@@ -1652,7 +1651,7 @@ function show_custom_report_form(report_id)
 					<a href='lab_pin.php'><?php echo "Location Settings"; ?></a>
 					</li>
 				</ul>
-			<?php } echo LangUtil::$pageTerms['MENU_AGGREPORTS']; ?>
+			<?php } echo '<li>'.LangUtil::$pageTerms['MENU_AGGREPORTS'].'</li>'; ?>
 			<ul>
 				<?php
 					$site_list = get_site_list($_SESSION['user_id']);
@@ -1703,10 +1702,18 @@ function show_custom_report_form(report_id)
 				# Space for menu entries corresponding to a new aggregate report
 				# PLUG_AGGREGATE_REPORT_ENTRY
 				?>
-				
-			</ul>
-		</td>
-		<td></td>
+				</ul>
+</ul>
+</div>
+</div>
+
+<div class="col-lg-7">
+<div class="panel panel-primary">
+	
+<table name="page_panes" cellpadding="10px">
+	<tr valign='top'>
+		
+
 		
 	<td id="right_pane" class="right_pane" valign='top'>
 	<div id='reports_div' style='display:none;' class='reports_subdiv'>
@@ -3538,6 +3545,8 @@ function show_custom_report_form(report_id)
 	</td>
 	</tr>
 </table>
+</div>
+</div>
 <?php 
 $script_elems->bindEnterToClick("#patient_id8", "#submit_button8");
 $script_elems->bindEnterToClick("#session_num", "#submit_button11");

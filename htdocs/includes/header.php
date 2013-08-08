@@ -100,8 +100,6 @@ header('Content-Type: text/html; charset=UTF-8');
 	
 	//-->
 	</script>
-	<script type="text/javasrcip" src="js/bootstrap.js"></script>
-
 	<script type='text/javascript'>
 	<?php 
 	if($TRACK_LOADTIMEJS)
@@ -121,6 +119,11 @@ header('Content-Type: text/html; charset=UTF-8');
 	</head>
 <body  data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true">
 <?php $script_elems->enablePageloadIndicator(); ?>
+<?php $page= explode(".", basename($_SERVER['REQUEST_URI']))[0];?>
+<script type="text/javascript">
+
+
+</script>
 		
 <?php
 if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
@@ -133,7 +136,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="http://examples.getbootstrap.com/jumbotron/index.html#">BLIS v<?php echo $VERSION; ?> - Kenya</a>
+        <a class="navbar-brand" href="http://examples.getbootstrap.com/jumbotron/index.html#">BLIS v<?php echo $VERSION;?> - Kenya</a>
         <div class="nav-collapse collapse">
           <ul class="nav navbar-nav">
 <?php
@@ -141,8 +144,9 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 	{
 		foreach($top_menu_options as $key => $value)
 		{
-			
-			echo "<li ";
+			if($page==explode(".", $value)[0] || $page==explode("s", $value)[0].'_home'){
+				echo "<li class='active'";
+			}else echo "<li class=''";
 			echo "><a href='".$value."' ";
 			if(
 				(strpos($_SERVER['PHP_SELF'], $value) !== false)

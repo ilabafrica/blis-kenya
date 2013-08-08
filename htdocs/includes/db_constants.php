@@ -12,7 +12,7 @@ $ON_DEV = 1;
 $ON_ARC = 2;
 $ON_PORTABLE = 3;
 
-$SERVER = $ON_PORTABLE;
+$SERVER = $ON_DEV;
 
 $LOCAL_PATH = "../../local/";
 if($SERVER == $ON_ARC)

@@ -28,19 +28,6 @@ $page_elems = new PageElems();
 $login_tip="If you have forgotten your password then please send an email to 'c4gbackup@gmail.com' with the subject 'Password'.<br> New password will be sent to you.";
 $page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $login_tip);
 ?>
-<style type="text/css"> 
-	.btn {
-		color:white; 
-		background-color:#3B5998; 
-		border-style:none; 
-		font-weight:bold; 
-		font-size:14px; 
-		height:28px; 
-		width:65px;
-		cursor:pointer;
-	}
-</style> 
-
 <script type='text/javascript'>
 function load()
 {	
@@ -98,13 +85,8 @@ function capLock(e)
 		$('#caps_lock_msg_div').hide();
 }
 </script>
-
-<table>
-	<tr valign='top'>
-		<td>
-			<div id="login_area">
-				<form name="form_login" id='form_login' action="validate.php" method="post">
-				<table cellpadding="6px" cellspacing='10px'>
+				<form name="form_login" id='form_login' action="validate.php" method="post" class="form-signin">
+				 <h2 class="form-signin-heading"><img src="logos/bdh.png"><br> Bungoma District Hospital - LIS</h2>
 				<?php
 					
 					if(isset($_REQUEST['to']))
@@ -144,52 +126,28 @@ function capLock(e)
 						echo "</tr>";
 					}
 				?>
-					<tr valign='top'>
-						<td>
-							<?php echo LangUtil::getGeneralTerm("USERNAME"); ?>
-						</td>
-						<td>
-							<input type="text" name="username" id = "username" value="" size="20" class='uniform_width' />
-							<label class="error" for="username" id="username_error"><small><font color="red"><?php echo LangUtil::getGeneralTerm("MSG_REQDFIELD"); ?></font></small></label> 
-						</td>
-					</tr>
-					<tr valign='top'>
-						<td>
-							<?php echo LangUtil::getGeneralTerm("PWD"); ?>
-						</td>
-						<td>
-							<input type="password" name="password" id = "password" value="" size="20" class='uniform_width' onkeypress="javascript:capLock(event);" onkeydown="javascript:capLock(event);" />
-							<label class="error" for="password" id="password_error"><small><font color="red"><?php echo LangUtil::getGeneralTerm("MSG_REQDFIELD"); ?></font></small></label>
-							<br>
-							<div id="caps_lock_msg_div" style="display:none"><font color='red'><small><?php echo LangUtil::getPageTerm("MSG_CAPSLOCK"); ?></small></font></div>
-						</td>
-					</tr>					
-					<tr>
-						<td></td>
-						<td>
-							<input type="button" class="btn" id="login_button" value="<?php echo LangUtil::$generalTerms["CMD_LOGIN"]; ?>" onclick="check_input_boxes()"/>
-						
-						</td>
-					</tr>
-					<tr>
-						<td>
-						</td>
-						<td>
-							<!--<a href='password_reset.php'>
-								<small><?php echo LangUtil::getPageTerm("MSG_NEWPWD"); ?></small>
-							</a>-->
-						</td>
-					</tr>
-				</table>
+					
+				<input type="text" name="username" id = "username" value="" size="20" class="form-control" placeholder="<?php echo LangUtil::getGeneralTerm("USERNAME"); ?>"/>
+				<label class="error" for="username" id="username_error"><small><font color="red"><?php echo LangUtil::getGeneralTerm("MSG_REQDFIELD"); ?></font></small></label> 
+		
+	
+			
+				<input type="password" name="password" id = "password" value="" size="20" class='form-control' onkeypress="javascript:capLock(event);" onkeydown="javascript:capLock(event);" placeholder="<?php echo LangUtil::getGeneralTerm("PWD"); ?>" />
+				<label class="error" for="password" id="password_error"><small><font color="red"><?php echo LangUtil::getGeneralTerm("MSG_REQDFIELD"); ?></font></small></label>
+				<br>
+				<div id="caps_lock_msg_div" style="display:none"><font color='red'><small><?php echo LangUtil::getPageTerm("MSG_CAPSLOCK"); ?></small></font></div>
+	
+			
+
+				<button type="button" class="btn btn-large btn-primary btn-block" id=""  onclick="check_input_boxes()"><?php echo LangUtil::$generalTerms["CMD_LOGIN"]; ?></button>
+			
+		
+				<!--<a href='password_reset.php'>
+					<small><?php echo LangUtil::getPageTerm("MSG_NEWPWD"); ?></small>
+				</a>-->
+				
 				</form>
-			</div>
-		</td>
-		<td>
-		</td>
-		<td>
-		</td>
-	</tr>
-</table>
+	
 <?php $script_elems->bindEnterToClick("#password", "#login_button"); ?>
 <?php
 include("includes/footer.php");

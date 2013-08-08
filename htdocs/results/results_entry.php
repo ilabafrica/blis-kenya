@@ -430,20 +430,19 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 	 });
 }
 </script>
-<br>
-<table name="page_panes" cellpadding="10px">
-	<tr valign='top'>
-	<td id="left_pane" class="left_menu" valign="top" width='180px'>
-		<a href="javascript:right_load('specimen_results');" title='Enter Test Results for a Single Specimen' 
-			class='menu_option' id='specimen_results_menu'
-		>
+<div class="col-lg-3">
+<div class="bs-sidebar affix">
+<ul class="nav bs-sidenav">
+	<li><a href="javascript:right_load('specimen_results');" title='Enter Test Results for a Single Specimen' 
+			class='menu_option' id='specimen_results_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?>
-		</a><br><br>
-		<a href="javascript:right_load('batch_results');"  title='Enter Test Results for a Batch of Specimens'
-			class='menu_option' id='batch_results_menu'
-		>
+		</a>
+	</li>
+	<li><a href="javascript:right_load('batch_results');"  title='Enter Test Results for a Batch of Specimens'
+			class='menu_option' id='batch_results_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?>
-		</a><br><br>
+		</a>
+	</li>
 		<!--
 		<a href="javascript:right_load('import_results');"  title='Import Test Results from Equipment'
 			class='menu_option' id='import_results_menu'
@@ -451,11 +450,10 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 			Import Results
 		</a><br><br>
 		-->
-		<a href="javascript:right_load('verify_results');"  title='Verify Test Results'
-			class='menu_option' id='verify_results_menu'
-		>
+	<li><a href="javascript:right_load('verify_results');"  title='Verify Test Results'
+			class='menu_option' id='verify_results_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?>
-		</a><br><br>
+	</a></li>
 		
 		<?php /* Uncomment when Control Testing is finalized
 		<a href="javascript:right_load('control_testing');" title='Enter Control Testing Results'
@@ -469,24 +467,26 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		if($SHOW_REPORT_RESULTS === true)
 		{
 		?>
-		<a href="javascript:right_load('report_results');"  title='Mark Test Results as Reported to Patient/Doctor'
-			class='menu_option' id='report_results_menu'
-		>
+		<li><a href="javascript:right_load('report_results');"  title='Mark Test Results as Reported to Patient/Doctor'
+			class='menu_option' id='report_results_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_REPORTRESULTS']; ?>
-		</a><br><br>
+		</a></li>
 		<?php
 		}
 		?>
-		<a href="javascript:right_load('worksheet_div');"  title='Generate worksheet with a list of pending specimens'
-			class='menu_option' id='worksheet_div_menu'
-		>
+		<li><a href="javascript:right_load('worksheet_div');"  title='Generate worksheet with a list of pending specimens'
+			class='menu_option' id='worksheet_div_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?>
-		</a><br><br>
-		<p>&nbsp;</p>
+		</a></li>
 		<p><div id="worksheet_link"></div></p>
-	</td>
-	
-	<td id="right_pane" class="right_pane" valign="top" >
+</ul>
+</div>
+</div>
+	 
+	 
+	 
+<div class="col-lg-7">
+<div class="panel panel-primary">
 	
 		<div id="worksheet_results" class='results_subdiv' style='display:none;'>
 			<form name="fetch_worksheet" id="fetch_worksheet">
@@ -502,9 +502,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		
 		<div id="specimen_results" class='results_subdiv' style='display:none;'>
 			<form name="fetch_specimen_form" id="fetch_specimen_form">
-				<b><?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?></b>
-				<br>
-				<br>
+				<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?></span></div>	 
 				<select name='resultfetch_attrib' id='resultfetch_attrib'>
 					<?php
 					$hide_patient_name = true;
@@ -564,9 +562,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		</div>
 		
 		<div id='batch_results' class='results_subdiv' style='display:none;'>
-			<b><?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?></b>
-			<br>
-			<br>
+			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?></span></div>	 
 			<?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
 			&nbsp;&nbsp;&nbsp;
 			<select id='batch_test_type' class='uniform_width'>
@@ -623,9 +619,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		</div>
 		
 		<div id='verify_results' class='results_subdiv' style='display:none;'>
-			<b><?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?></b>
-			<br>
-			<br>
+			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?></span></div>
 			<form name='verify_results_form' id='verify_results_form' action='results_verify.php' method='post'>
 				<?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
 				&nbsp;&nbsp;&nbsp;
@@ -649,9 +643,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		</div>
 		
 		<div id='control_testing' class='results_subdiv' style='display:none;'>
-			<b><?php echo LangUtil::$generalTerms['CONTROL_TESTING_RESULTS']; ?></b>
-			<br>
-			<br>
+			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['CONTROL_TESTING_RESULTS']; ?></span></div>
 			<form name='control_testing_form' id='control_testing_form' action='control_testing_entry.php' method='post'>
 				<table cellspacing='4px'>
 					<tbody>
@@ -693,9 +685,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		</div>
 		
 		<div id='worksheet_div' class='results_subdiv' style='display:none;'>
-			<b><?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?></b>
-			<br>
-			<br>
+			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?></span></div>
 			<form name='worksheet_form' id='worksheet_form' action='worksheet.php' method='post' target='_blank'>
 				<table cellspacing='4px'>
 					<tbody>
@@ -783,9 +773,8 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		<?php
 		}
 		?>
-	</td>
-</tr>
-</table>
+
+
 <form id='ajax_redirect' method='post' action='results_entry.php'>
 	<input type='hidden' name='sid_redirect' id='sid_redirect' value=''></input>
 	<input type='hidden' name='ajax_response' id='ajax_response' value=''></input>
@@ -795,4 +784,6 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 <?php
 $script_elems->bindEntertoClick("#specimen_id", "#fetch_specimen_button");
 ?>
+</div>
+</div>
 <?php include("includes/footer.php"); ?>

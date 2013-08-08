@@ -48,9 +48,9 @@ function restrictCharacters(e) {
 function fetch_patients()
 {
 	$('#psearch_progress_spinner').show();
-	var patient_id = $('#pq').attr("value").trim();
+	var patient_id = $.trim($('#pq').val());
 	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
-	var search_attrib = $('#p_attrib').attr("value");
+	var search_attrib = $('#p_attrib').val();
 	var check_url = "ajax/patient_check_name.php?n="+patient_id;
 	$.ajax({ url: check_url, success: function(response){
 			if(response == "false" && search_attrib == 1)
@@ -68,9 +68,9 @@ function fetch_patients()
 
 function continue_fetch_patients()
 {
-	var patient_id = $('#pq').attr("value").trim();
+	var patient_id = $.trim($('#pq').val());
 	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
-	var search_attrib = $('#p_attrib').attr("value");
+	var search_attrib = $('#p_attrib').val();
 	$('#psearch_progress_spinner').show();
 	if(patient_id == "")
 	{
@@ -101,9 +101,11 @@ function continue_fetch_patients()
 </script>
 
 <p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
-<span class='page_title'><?php echo LangUtil::getTitle(); ?></span>
+<div class="col-lg-9">
+<div class="panel panel-primary">
+
+<div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>
 <!--| <a href='new_patient.php' title='Click to add a new patient in the system'>Add New Patient &raquo;</a>-->
-<br><br>
 <form>
 	<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
 		<?php $page_elems->getPatientSearchAttribSelect(); ?>
@@ -145,7 +147,7 @@ function continue_fetch_patients()
 <div id='add_anyway_div' style='display:none'>
 <a id='add_anyway_link' href='new_patient.php'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
 </div>
-<br>
-<br>
+</div>
+</div>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
 <?php include("includes/footer.php"); ?>

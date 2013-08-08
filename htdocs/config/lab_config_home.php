@@ -1112,98 +1112,110 @@ function right_load_1(option_num, div_id)
 
 <br>
 
+<div class="col-lg-3">
+<div class="bs-sidebar affix">
+<ul class="nav bs-sidenav">
+<li><a id='option1' class='menu_option' href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$pageTerms['MENU_SUMMARY']; ?></a>
+</li>
+			
+<?php
+# If super-admin or country-dir, show option to Delete this configuration
+# If super-admin or country-dir, show option to Change lab manager/admin
+# If super-admin or country-dir, show option to Back up Data
+# For lab admin, the option appears as a separate tab
+$user = get_user_by_id($_SESSION['user_id']);
+if(is_super_admin($user) || is_country_dir($user)) {			
+	?>
+	<li>
+	<a id='option9' class='menu_option' href="javascript:right_load(9, 'misc_div');"><?php echo LangUtil::$pageTerms['MENU_GENERAL']; ?></a>
+	</li>
+	<li>
+	<a id='option7' class='menu_option' href="javascript:right_load(7, 'change_admin_div');"><?php echo LangUtil::$pageTerms['MENU_MGR']; ?></a>
+	</li>
+	<li>
+	<a id='option6' class='menu_option' href="javascript:right_load(6, 'del_config_div');"><?php echo LangUtil::$pageTerms['MENU_DEL']; ?></a></li>
+	</li>
+	<?php					
+}
+?>
+<li>
+<a id='test' class='menu_option' href="javascript:test_setup();"><?php echo LangUtil::$pageTerms['Tests']; ?> </a>
+</li>
+<div id='test_setup' name='test_setup' style='display:none;'>
+	-<a id='option2' class='menu_option' href="javascript:right_load(2, 'st_types_div');"><?php echo LangUtil::$pageTerms['MENU_ST_TYPES']; ?></a>
+	</li><br><br>
+	-<a id='option5' class='menu_option' href="javascript:right_load(5, 'target_tat_div');"><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></a>
+	</li><br><br>
+	-<a href='remarks_edit.php?id=<?php echo $_REQUEST['id']; ?>'><?php echo "Results Interpretation"; ?></a>
+					<br><br>
+</div>
+<li>                         
+<a id='option21' class='menu_option' href="javascript:right_load(21, 'search_div');"><?php echo "Search" ?></a>
+</li>
+<li>
+<a id='report' class='menu_option' href="javascript:report_setup();"><?php echo LangUtil::$pageTerms['Reports']; ?> </a>
+</li>
+<div id='report_setup' name='report_setup' style='display:none;'>
+	-<a id='option8' class='menu_option' href="javascript:right_load(8, 'agg_report_div');"><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></a>
+					<br><br>
+                                        -<a id='option36' class='menu_option' href="javascript:right_load(36, 'grouped_count_div');"><?php echo "Test/Specimen Grouped Reports"; ?></a>
+	<br><br>
+	-<a id='option11' class='menu_option' href="javascript:right_load(11, 'report_config_div');"><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></a>
+	<br><br>
+	-<a id='option12' class='menu_option' href="javascript:right_load(12, 'worksheet_config_div');"><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></a>
+	<br><br>
+</div>
+<li>
+<a id='option15' class='menu_option' href="javascript:right_load(15, 'inventory_div');"><?php echo LangUtil::$pageTerms['Inventory']; ?></a>
+</li>
+<li>
+<a id='option28' class='menu_option' href="javascript:right_load(28, 'barcode_div');"><?php echo "Barcode Settings"; ?></a>
+</li>
+<li>
+<a id='option22' class='menu_option' href="javascript:right_load(22, 'billing_div');"><?php echo "Billing"; ?></a>
+</li>
+<li>
+<a id='option3' class='menu_option' href="javascript:right_load(3, 'users_div');"><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></a>
+</li>
+<li>
+<a id='option4' class='menu_option' href="javascript:right_load(4, 'fields_div');"><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></a>
+</li>
+<li>			
+<a id='option19' class='menu_option' href="javascript:language_div_load();"><?php echo LangUtil::getPageTerm("MODIFYLANG"); ?></a>
+</li>
+<li>
+<a id='option14' class='menu_option' href="javascript:export_html();"><?php echo "Setup Network" ?></a>
+</li>
+
+<?php
+	if($SERVER != $ON_ARC) {
+		?>
+		<li><a id='option13' class='menu_option' href="javascript:right_load(13, 'backup_revert_div');"><?php echo LangUtil::$pageTerms['MENU_BACKUP_REVERT']; ?></a></li>
+		<?php if(is_super_admin($user) || is_country_dir($user)) { ?>
+		<li><a id='option18' class='menu_option' href="javascript:right_load(18, 'update_database_div');"><?php echo 'Update Data'; ?></a></li>
+                                                                <a id='option34' class='menu_option' href="javascript:right_load(34, 'import_config_div');"><?php echo 'Import Configuration' ?></a><br><br></li>
+
+		<?php }
+	}
+?>
+
+<li><a href='export_config?id=<?php echo $_REQUEST['id']; ?>' target='_blank'><?php echo LangUtil::$pageTerms['MENU_EXPORTCONFIG']; ?></a></li>
+                                <div id="old_update_div" style="display:none;">
+<li><a id='option39' class='menu_option' href="javascript:right_load(39, 'blis_update_div');">Update to New Version</a></li>
+</div>
+<?php /* Enable for Data Merging
+<a rel='facebox' id='option18' class='menu_option' href="updateCountryDbAtLocalUI.php">Update National Database</a>
+</ul>
+*/ ?>
+</ul>
+</div>
+</div>
+<div class="col-lg-9">
+<div class="panel panel-primary">
+	
 <table>
 	<tbody>
 		<tr valign='top'>
-			<td class='left_menu' id='left_pane' width='160px'><ul>
-				<a id='option1' class='menu_option' href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$pageTerms['MENU_SUMMARY']; ?></a>
-				<br>
-				
-				<?php
-				# If super-admin or country-dir, show option to Delete this configuration
-				# If super-admin or country-dir, show option to Change lab manager/admin
-				# If super-admin or country-dir, show option to Back up Data
-				# For lab admin, the option appears as a separate tab
-				$user = get_user_by_id($_SESSION['user_id']);
-				if(is_super_admin($user) || is_country_dir($user)) {			
-					?>
-					<br>
-					<a id='option9' class='menu_option' href="javascript:right_load(9, 'misc_div');"><?php echo LangUtil::$pageTerms['MENU_GENERAL']; ?></a>
-					<br><br>
-					<a id='option7' class='menu_option' href="javascript:right_load(7, 'change_admin_div');"><?php echo LangUtil::$pageTerms['MENU_MGR']; ?></a>
-					<br><br>
-					<a id='option6' class='menu_option' href="javascript:right_load(6, 'del_config_div');"><?php echo LangUtil::$pageTerms['MENU_DEL']; ?></a></li>
-					<br>
-					<?php					
-				}
-				?>
-				<br>
-				
-				<a id='test' class='menu_option' href="javascript:test_setup();"><?php echo LangUtil::$pageTerms['Tests']; ?> </a>
-				<br><br>
-				<div id='test_setup' name='test_setup' style='display:none;'>
-					-<a id='option2' class='menu_option' href="javascript:right_load(2, 'st_types_div');"><?php echo LangUtil::$pageTerms['MENU_ST_TYPES']; ?></a>
-					</li><br><br>
-					-<a id='option5' class='menu_option' href="javascript:right_load(5, 'target_tat_div');"><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></a>
-					</li><br><br>
-					-<a href='remarks_edit.php?id=<?php echo $_REQUEST['id']; ?>'><?php echo "Results Interpretation"; ?></a>
-					<br><br>
-				</div>
-                                
-                                <a id='option21' class='menu_option' href="javascript:right_load(21, 'search_div');"><?php echo "Search" ?></a>
-                                <br><br>
-                                
-				<a id='report' class='menu_option' href="javascript:report_setup();"><?php echo LangUtil::$pageTerms['Reports']; ?> </a>
-				<br><br></li>
-				<div id='report_setup' name='report_setup' style='display:none;'>
-					-<a id='option8' class='menu_option' href="javascript:right_load(8, 'agg_report_div');"><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></a>
-					<br><br>
-                                        -<a id='option36' class='menu_option' href="javascript:right_load(36, 'grouped_count_div');"><?php echo "Test/Specimen Grouped Reports"; ?></a>
-					<br><br>
-					-<a id='option11' class='menu_option' href="javascript:right_load(11, 'report_config_div');"><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></a>
-					<br><br>
-					-<a id='option12' class='menu_option' href="javascript:right_load(12, 'worksheet_config_div');"><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></a>
-					<br><br>
-				</div>
-
-				<a id='option15' class='menu_option' href="javascript:right_load(15, 'inventory_div');"><?php echo LangUtil::$pageTerms['Inventory']; ?></a>
-				<br><br>
-				<a id='option28' class='menu_option' href="javascript:right_load(28, 'barcode_div');"><?php echo "Barcode Settings"; ?></a>
-				<br><br>
-                                <a id='option22' class='menu_option' href="javascript:right_load(22, 'billing_div');"><?php echo "Billing"; ?></a>
-				<br><br>
-				<a id='option3' class='menu_option' href="javascript:right_load(3, 'users_div');"><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></a>
-				<br><br>
-				<a id='option4' class='menu_option' href="javascript:right_load(4, 'fields_div');"><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></a>
-				<br><br>
-							
-				<a id='option19' class='menu_option' href="javascript:language_div_load();"><?php echo LangUtil::getPageTerm("MODIFYLANG"); ?></a>
-				<br><br>
-				<a id='option14' class='menu_option' href="javascript:export_html();"><?php echo "Setup Network" ?></a>
-				<br><br>
-				
-				<?php
-					if($SERVER != $ON_ARC) {
-						?>
-						<a id='option13' class='menu_option' href="javascript:right_load(13, 'backup_revert_div');"><?php echo LangUtil::$pageTerms['MENU_BACKUP_REVERT']; ?></a><br><br></li>
-						<?php if(is_super_admin($user) || is_country_dir($user)) { ?>
-								<a id='option18' class='menu_option' href="javascript:right_load(18, 'update_database_div');"><?php echo 'Update Data'; ?></a><br><br></li>
-                                                                <a id='option34' class='menu_option' href="javascript:right_load(34, 'import_config_div');"><?php echo 'Import Configuration' ?></a><br><br></li>
-
-						<?php }
-					}
-				?>
-				
-				<a href='export_config?id=<?php echo $_REQUEST['id']; ?>' target='_blank'><?php echo LangUtil::$pageTerms['MENU_EXPORTCONFIG']; ?></a><br><br></li>
-                                <div id="old_update_div" style="display:none;">
-				<a id='option39' class='menu_option' href="javascript:right_load(39, 'blis_update_div');">Update to New Version</a>
-				<br><br>
-				</div>
-				<?php /* Enable for Data Merging
-				<a rel='facebox' id='option18' class='menu_option' href="updateCountryDbAtLocalUI.php">Update National Database</a>
-				</ul>
-				*/ ?>
-			</td>
 			<td>
 				<br><br><br><br><br>
 			</td>
@@ -2480,5 +2492,6 @@ function right_load_1(option_num, div_id)
 		</tr>
 	</tbody>
 </table>
-
+</div>
+</div>
 <?php include("includes/footer.php"); ?>
