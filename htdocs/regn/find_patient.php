@@ -98,6 +98,17 @@ function continue_fetch_patients()
 		}
 	);
 }
+
+function right_load(destn_div)
+{
+	$('.reg_subdiv').hide();
+	$("#"+destn_div).show();
+	$('#specimen_id').focus();
+	$('.menu_option').removeClass('current_menu_option');
+	$('#'+destn_div+'_menu').addClass('current_menu_option');
+	$('#'+destn_div+'_subdiv_help').show();
+	
+}
 </script>
 <div class="col-lg-3">
 <div class="bs-sidebar affix">
@@ -108,14 +119,14 @@ function continue_fetch_patients()
 			<?php echo LangUtil::$pageTerms['MENU_LAB_REQUESTS']; ?>
 		</a>
 	</li>
-	<li><a href="javascript:right_load('specimen_results');" title='Patient Lookup' 
-			class='menu_option' id='specimen_results_menu'>
+	<li><a href="javascript:right_load('patient_lookup');" title='Patient Lookup' 
+			class='menu_option' id='patient_lookup_menu'>
 			<span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['MENU_PATIENT_LOOKUP']; ?>
 		</a>
 	</li>
-	<li><a href="javascript:right_load('verify_results');"  title='New Patient'
-			class='menu_option' id='verify_results_menu'>
+	<li><a href="javascript:right_load('new_patient');"  title='New Patient'
+			class='menu_option' id='new_patient_menu'>
 			<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['NEW_PATIENT']; ?>
 	</a></li>
@@ -127,6 +138,7 @@ function continue_fetch_patients()
 <div class="col-lg-7 context">
 <div class="panel panel-primary">
 
+<div id="patient_lookup" class='reg_subdiv' style='display:none;'>
 <div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>
 <!--| <a href='new_patient.php' title='Click to add a new patient in the system'>Add New Patient &raquo;</a>-->
 <form>
@@ -170,6 +182,13 @@ function continue_fetch_patients()
 <div id='add_anyway_div' style='display:none'>
 <a id='add_anyway_link' href='new_patient.php'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
 </div>
+</div>
+
+<div id="new_patient" class='reg_subdiv' style='display:none;'>
+<div class="panel-heading"><span class='page_title'><?php echo 'Register New Patient'; ?></span></div>
+<?php include 'new_patient.php';?>
+</div>
+
 </div>
 </div>
 <p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>

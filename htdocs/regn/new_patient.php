@@ -9,9 +9,9 @@ $load_time = $load_time[1] + $load_time[0];
 $page_start = $load_time; 
 */
 
-include("redirect.php");
+/*include("redirect.php");
 include("includes/header.php");
-LangUtil::setPageId("new_patient");
+LangUtil::setPageId("new_patient");*/
  
 $script_elems->enableDatePicker();
 $script_elems->enableJQueryForm();
@@ -535,4 +535,4 @@ $final_time = ($page_end - $page_start);
 $page_load_time = number_format($final_time, 4, '.', ''); 
 echo("Page generated in " . $page_load_time . " seconds"); 
 */
-include("includes/footer.php"); ?>
+/*include("includes/footer.php");*/ ?>
