@@ -65,7 +65,7 @@ $(document).ready(function(){
 	$('#specimen_id').focus();
 	});
 	$("input[name='is_blank']").change( function() {
-		var is_blank = $("input[name='is_blank']:checked").attr("value");
+		var is_blank = $("input[name='is_blank']:checked").val();
 		if(is_blank == "Y")
 			$('#num_rows_row').show();
 		else
@@ -84,7 +84,7 @@ $(document).ready(function(){
 
 function get_test_types_bycat()
 {
-	var cat_code = $('#cat_code').attr("value");
+	var cat_code = $('#cat_code').val();
 	var location_code = <?php echo $_SESSION['lab_config_id']; ?>;
 	$('#worksheet_test_type').load('ajax/tests_selectbycat.php?c='+cat_code+'&l='+location_code+'&all_no');
 	reset_worksheet_custom_type();
@@ -153,13 +153,13 @@ function hide_result_form(specimen_id)
 
 function fetch_specimen()
 {
-	var specimen_id = $('#specimen_id').attr("value");
+	var specimen_id = $('#specimen_id').val();
 	specimen_id = specimen_id.replace(/[^a-z0-9 ]/gi,'');
 	$('#fetch_progress_bar').show();
 	<?php 
 	#Used when Ajax response did not have JavaScript code included 
 	?>
-	var attrib = $('#resultfetch_attrib').attr("value");
+	var attrib = $('#resultfetch_attrib').val();
 	var first_char =specimen_id.charAt(0);
 	if(attrib==1 && isNaN(first_char)==false)
 	{
@@ -198,7 +198,7 @@ var pg=2;
 
 function verify_control_selection() {
 	$('#control_testing_error').hide();
-	var test_type_id = $('#verify_test_type_control').attr("value");
+	var test_type_id = $('#verify_test_type_control').val();
 	alert(test_type_id);
 	//var result = $('#control_testing_form').value("controlTesting");
 	var result = document.getElementById('controlTesting').value;
@@ -231,7 +231,7 @@ function toggle_form(form_id, checkbox_obj)
 
 function submit_forms(specimen_id)
 {
-	var form_id_csv = $('#form_id_list').attr("value");
+	var form_id_csv = $('#form_id_list').val();
 	var form_id_list = form_id_csv.split(",");
 	$('.result_cancel_link').hide();
 	$('.result_progress_spinner').show();
@@ -260,9 +260,9 @@ function get_batch_form()
 {
 	$('#batch_result_error').hide();
 	tableml = "";
-	var test_type_id = $('#batch_test_type').attr("value");
-	var date_to_array=$('#yyyy_to').attr("value")+"-"+$('#mm_to').attr("value")+"-"+$('#dd_to').attr("value");
-	var date_from_array=$('#yyyy_from').attr("value")+"-"+$('#mm_from').attr("value")+"-"+$('#dd_from').attr("value");
+	var test_type_id = $('#batch_test_type').val();
+	var date_to_array=$('#yyyy_to').val()+"-"+$('#mm_to').val()+"-"+$('#dd_to').val();
+	var date_from_array=$('#yyyy_from').val()+"-"+$('#mm_from').val()+"-"+$('#dd_from').val();
 	var table_id = 'batch_result_table';
 	if(test_type_id == "")
 	{	
@@ -300,7 +300,7 @@ function get_batch_form()
 function get_verification_form()
 {
 	$('#verify_result_error').hide();
-	var test_type_id = $('#verify_test_type').attr("value");
+	var test_type_id = $('#verify_test_type').val();
 	if(test_type_id == "")
 	{	
 		$('#verify_result_error').show();
@@ -313,13 +313,13 @@ function get_verification_form()
 function get_worksheet()
 {
 	$('#worksheet_error').hide();
-	var num_rows = $('#num_rows').attr("value");
+	var num_rows = $('#num_rows').val();
 	if(isNaN(num_rows))
 	{
 		$('#num_rows').attr("value", "10");
 	}
-	var worksheet_id = $('#worksheet_custom_type').attr("value")
-	var test_type_id = $('#worksheet_test_type').attr("value");
+	var worksheet_id = $('#worksheet_custom_type').val()
+	var test_type_id = $('#worksheet_test_type').val();
 	if(worksheet_id == "" && test_type_id == "")
 	{	
 		$('#worksheet_error').show();
@@ -389,7 +389,7 @@ function update_numeric_remarks(test_type_id, count, patient_age, patient_sex)
 	 for(var i = 0; i < count; i++)
 	 {
 	 var input_id = "measure_"+test_type_id+"_"+i;
-	 values_csv += $('#'+input_id).attr("value")+"_";
+	 values_csv += $('#'+input_id).val()+"_";
 	 }
 	 var url_string = "ajax/fetch_remarks.php";
 	values_csv = encodeURIComponent(values_csv);
@@ -414,7 +414,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 	 for(var i = 0; i < count; i++)
 	 {
 	 var input_id = "measure_"+test_type_id+"_"+i;
-	 values_csv += $('#'+input_id).attr("value")+"_";
+	 values_csv += $('#'+input_id).val()+"_";
 	 }
 	 var url_string = "ajax/fetch_remarks.php";
 	values_csv = encodeURIComponent(values_csv);
@@ -433,7 +433,19 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 <div class="col-lg-3">
 <div class="bs-sidebar affix">
 <ul class="nav bs-sidenav">
-	<li><a href="javascript:right_load('specimen_results');" title='Enter Test Results for a Single Specimen' 
+	<li><a href="javascript:right_load('specimen_results');" title='Pending tests' 
+			class='menu_option' id='specimen_results_menu'>
+			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
+			<?php echo LangUtil::$pageTerms['MENU_PENDING_TESTS']; ?>
+		</a>
+	</li>
+	<li><a href="javascript:right_load('specimen_results');" title='Pending tests' 
+			class='menu_option' id='specimen_results_menu'>
+			<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;
+			<?php echo LangUtil::$pageTerms['MENU_PENDING_RESULTS']; ?>
+		</a>
+	</li>
+	<!--li><a href="javascript:right_load('specimen_results');" title='Enter Test Results for a Single Specimen' 
 			class='menu_option' id='specimen_results_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?>
 		</a>
@@ -442,7 +454,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 			class='menu_option' id='batch_results_menu'>
 			<?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?>
 		</a>
-	</li>
+	</li-->
 		<!--
 		<a href="javascript:right_load('import_results');"  title='Import Test Results from Equipment'
 			class='menu_option' id='import_results_menu'
@@ -452,6 +464,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		-->
 	<li><a href="javascript:right_load('verify_results');"  title='Verify Test Results'
 			class='menu_option' id='verify_results_menu'>
+			<span class="glyphicon glyphicon-check"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?>
 	</a></li>
 		
@@ -469,6 +482,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		?>
 		<li><a href="javascript:right_load('report_results');"  title='Mark Test Results as Reported to Patient/Doctor'
 			class='menu_option' id='report_results_menu'>
+			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['MENU_REPORTRESULTS']; ?>
 		</a></li>
 		<?php
@@ -476,6 +490,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		?>
 		<li><a href="javascript:right_load('worksheet_div');"  title='Generate worksheet with a list of pending specimens'
 			class='menu_option' id='worksheet_div_menu'>
+			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?>
 		</a></li>
 		<p><div id="worksheet_link"></div></p>
@@ -485,7 +500,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 	 
 	 
 	 
-<div class="col-lg-7">
+<div class="col-lg-7 context">
 <div class="panel panel-primary">
 	
 		<div id="worksheet_results" class='results_subdiv' style='display:none;'>

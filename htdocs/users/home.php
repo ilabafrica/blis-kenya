@@ -101,7 +101,7 @@ function blis_update()
 }
 
 </script>
-<div class="col-lg-9">
+<div class="col-lg-9 context">
 <div class="panel panel-primary">
 
 <div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>

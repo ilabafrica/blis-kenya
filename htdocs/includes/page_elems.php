@@ -11,7 +11,7 @@ class PageElems
 	public function getSideTip($heading, $contents)
 	{
 		$html_code =
-			"<div class='col-lg-2 pull-right'><div class='panel panel-primary'>".
+			"<div class='col-lg-2 pull-right context'><div class='panel panel-primary'>".
 			"<b>".$heading."</b><br>".$contents.
 			"</div></div>";
 		echo $html_code;		

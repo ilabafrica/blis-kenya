@@ -117,26 +117,17 @@ header('Content-Type: text/html; charset=UTF-8');
 	
 	
 	</head>
-<body  data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true">
+<body>
 <?php $script_elems->enablePageloadIndicator(); ?>
 <?php $page= explode(".", basename($_SERVER['REQUEST_URI']))[0];?>
-<script type="text/javascript">
-
-
-</script>
-		
 <?php
 if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 {
 ?>
+<div id="wrap">
  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://examples.getbootstrap.com/jumbotron/index.html#">BLIS v<?php echo $VERSION;?> - Kenya</a>
+        <a class="navbar-brand" href="home.php">BLIS v<?php echo $VERSION;?> - Kenya</a>
         <div class="nav-collapse collapse">
           <ul class="nav navbar-nav">
 <?php
@@ -220,10 +211,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 			  </ul>
 			  
 			</div>
-		</div><!--/.user-menu -->
-		
-		<p class="navbar-text pull-right">
-              <?php echo LangUtil::getPageTerm("LOGGEDINAS"); ?>: &nbsp;</p>
+		<p class="navbar-text pull-right"><?php echo LangUtil::getPageTerm("LOGGEDINAS"); ?>: &nbsp;</p>
         </div><!--/.nav-text -->
         
       </div><!--/.container -->
@@ -235,6 +223,6 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 <?php
 }
 ?>
-<div id="wrap">
+
 <div class="container">
- <div class="row">
+<div class="row">

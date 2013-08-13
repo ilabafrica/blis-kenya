@@ -99,9 +99,32 @@ function continue_fetch_patients()
 	);
 }
 </script>
+<div class="col-lg-3">
+<div class="bs-sidebar affix">
+<ul class="nav bs-sidenav">
+	<li><a href="javascript:right_load('specimen_results');" title='Lab Test Requests' 
+			class='menu_option' id='specimen_results_menu'>
+			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
+			<?php echo LangUtil::$pageTerms['MENU_LAB_REQUESTS']; ?>
+		</a>
+	</li>
+	<li><a href="javascript:right_load('specimen_results');" title='Patient Lookup' 
+			class='menu_option' id='specimen_results_menu'>
+			<span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;
+			<?php echo LangUtil::$pageTerms['MENU_PATIENT_LOOKUP']; ?>
+		</a>
+	</li>
+	<li><a href="javascript:right_load('verify_results');"  title='New Patient'
+			class='menu_option' id='verify_results_menu'>
+			<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;
+			<?php echo LangUtil::$pageTerms['NEW_PATIENT']; ?>
+	</a></li>
+</ul>
+</div>
+</div>
+	 
 
-<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
-<div class="col-lg-9">
+<div class="col-lg-7 context">
 <div class="panel panel-primary">
 
 <div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>
@@ -149,5 +172,6 @@ function continue_fetch_patients()
 </div>
 </div>
 </div>
+<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
 <?php include("includes/footer.php"); ?>

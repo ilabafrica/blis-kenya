@@ -32,8 +32,6 @@ LangUtil::setPageId("footer");
 </div><!--end of wrap-->
 <div id="footer">
       <div class="container">
-	<br>
-	<hr>
 	<div class='footer_message'>
 		<small>
 		
@@ -107,7 +105,6 @@ LangUtil::setPageId("footer");
 		}
 		?>
 		</small>
-		<br><br>
 	</div>
 </div><!--end of container-->
 </div><!--end of footer-->

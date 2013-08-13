@@ -14,12 +14,11 @@
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
  <style>
-        body
+         html,body
         {
-            padding-top: 70px; /* 60px to make the container go all the way to the bottom of the topbar */
               height: 100%;
         }
-        
+      
         .user-buttons{
         	padding-top: 10px;
         }
@@ -37,6 +36,12 @@
          #footer {
            height: 60px;
          }
+         #footer {
+        	background-color: #f5f5f5;
+     	 }
+     	 .footer_message{
+     	 	margin-top:25px;
+     	 }
          
          /* Lastly, apply responsive CSS fixes as necessary */
          @media (max-width: 767px) {
@@ -89,6 +94,10 @@
       	
       	.dropdown-toggle{
       		height:34px;
+      	}
+      	
+      	.context{
+      		top: 30px;
       	}
          
 </style>
