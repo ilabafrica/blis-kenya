@@ -23,6 +23,7 @@ $(document).ready(function(){
 	$('div.content_div').hide();
 	$('#test_types_div').hide();
 	$('#specimen_types_div').hide();
+	$('#test_categories_div').hide();
 	$('#<?php echo $dialog_id; ?>').show();
 	<?php
 	if(isset($_REQUEST['show_t']))
@@ -37,6 +38,12 @@ $(document).ready(function(){
 		load_right_pane('specimen_types_div');
 		<?php
 	}
+	else if(isset($_REQUEST['show_tc']))
+	{
+		?>
+		load_right_pane('test_categories_div');
+		<?php
+	}
 	else if(isset($_REQUEST['tdel']))
 	{
 		?>
@@ -49,6 +56,13 @@ $(document).ready(function(){
 		?>
 		$('#sdel_msg').show();
 		load_right_pane('specimen_types_div');
+		<?php
+	}
+	else if(isset($_REQUEST['tcdel']))
+	{
+		?>
+		$('#sdel_msg').show();
+		load_right_pane('test_categories_div');
 		<?php
 	}
 	else if (isset($_REQUEST['rm']))
@@ -100,6 +114,10 @@ function delete_catalog_data()
 	<?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
 </a>
 <br><br>
+<a href="javascript:load_right_pane('test_categories_div');" class='menu_option' id='test_categories_div_menu'>
+	<?php echo LangUtil::$generalTerms['TEST_CATEGORIES']; ?>
+</a>
+<br><br>
 <?php
 $user = get_user_by_id($_SESSION['user_id']);
 if(is_super_admin($user) || is_country_dir($user))
@@ -127,7 +145,7 @@ if(is_super_admin($user) || is_country_dir($user))
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
-		<?php $page_elems->getTestTypeTable($lab_config_id); ?>
+		<?php $page_elems->getTestTypeTable($_SESSION['lab_config_id']); ?>
 	</div>
 	<div id='specimen_types_div' class='content_div'>
 		<p style="text-align: right;"><a rel='facebox' href='#SpecimenType_tc'>Page Help</a></p>
@@ -137,7 +155,18 @@ if(is_super_admin($user) || is_country_dir($user))
 		<div id='sdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('sdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
-		<?php $page_elems->getSpecimenTypeTable($lab_config_id); ?>
+		<?php $page_elems->getSpecimenTypeTable($_SESSION['lab_config_id']); ?>
+	</div>
+    
+    <div id='test_categories_div' class='content_div'>
+		<p style="text-align: right;"><a rel='facebox' href='#TestCategory_tc'>Page Help</a></p>
+		<b><?php echo LangUtil::$generalTerms['TEST_CATEGORIES']; ?></b>
+		| <a href='test_category_new.php'  title='Click to Add a New Test Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		<br><br>
+		<div id='sdel_msg' class='clean-orange' style='display:none;'>
+			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+		</div>
+		<?php $page_elems->getTestCategoryTable($_SESSION['lab_config_id']); ?>
 	</div>
 	
 	<div id='TestType_tc' class='right_pane' style='display:none;margin-left:10px;'>
@@ -153,6 +182,14 @@ if(is_super_admin($user) || is_country_dir($user))
 			<li><?php echo LangUtil::$pageTerms['TIPS_TC_SPECIMENTYPE_1']; ?></li>
 			<li><?php echo LangUtil::$pageTerms['TIPS_TC_SPECIMENTYPE_2']; ?></li>
 			<li><?php echo LangUtil::$pageTerms['TIPS_TC_SPECIMENTYPE_3']; ?></li>
+		</ul>
+	</div>
+    
+    <div id='TestCategory_tc' class='right_pane' style='display:none;margin-left:10px;'>
+		<ul>
+			<li><?php echo LangUtil::$pageTerms['TIPS_TC_TESTCATEGORY_1']; ?></li>
+			<li><?php echo LangUtil::$pageTerms['TIPS_TC_TESTCATEGORY_2']; ?></li>
+			<li><?php echo LangUtil::$pageTerms['TIPS_TC_TESTCATEGORY_3']; ?></li>
 		</ul>
 	</div>
 	

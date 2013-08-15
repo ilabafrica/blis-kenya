@@ -12,10 +12,10 @@ if(session_id() == "")
 include("defaults.php");
 require_once("db_mysql_lib.php");
 
-if(!isset($_SESSION['langdata_path']))
-{
-	$_SESSION['langdata_path'] = $LOCAL_PATH."langdata_revamp/";
-}
+
+	$_SESSION['langdata_path'] =  $LOCAL_PATH."langdata_revamp/";
+	
+
 # Select appropriate locale file
 if(!isset($_SESSION['locale']))
 	$_SESSION['locale'] = $DEFAULT_LANG;
@@ -1366,6 +1366,19 @@ class SpecimenType
 		}
 	}
 	
+	public function getCatName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getLabSectionName($this->CategoryId);
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
 	public function getDescription()
 	{
 		if(trim($this->description) == "" || $this->description == null)
@@ -1405,6 +1418,94 @@ class SpecimenType
 		# 3. Set disabled flag in specimen_type entry
 		$query_string =
 			"UPDATE specimen_type SET disabled=1 WHERE specimen_type_id=$specimen_type_id";
+		query_blind($query_string);
+		DbUtil::switchRestore($saved_db);
+	}
+}
+
+class TestCategory
+{
+	public $testCategoryId;
+	public $name;
+	public $description;
+	
+	public static function getObject($record)
+	{
+		if($record == null)
+			return null;
+			
+		$test_category = new TestCategory();
+		
+		if(isset($record['test_category_id']))
+			$test_category->testCategoryId = $record['test_category_id'];
+		else
+			$test_category->testCategoryId = null;
+		
+		if(isset($record['name']))
+			$test_category->name = $record['name'];
+		else
+			$test_category->name = null;
+			
+		if(isset($record['description']))
+			$test_category->description = $record['description'];
+		else
+			$test_category->description = null;
+			
+		return $test_category;
+	}
+	
+	public function getName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getTestCategoryName($this->testCategoryId);
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public function getLabSectionDescription()
+	{
+		if(trim($this->description) == "" || $this->description == null)
+			return "-";
+		else 
+			return trim($this->description);
+	}
+	
+	public static function getById($test_category_id)
+	{
+		# Returns a lab section entry fetch by ID
+		global $con;
+		$test_category_id = mysql_real_escape_string($test_category_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT * FROM test_category ".
+			"WHERE test_category_id=$test_category_id";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return SpecimenType::getObject($record);
+	}
+	
+	public static function deleteById($test_category_id)
+	{
+		# Deletes test category from database
+		# 1. Delete entries in lab_config_test_category
+		global $con;
+		$test_category_id = mysql_real_escape_string($test_category_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"DELETE FROM lab_config_test_category WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		# 2. Delete entries from specimen_test
+		$query_string =
+			"DELETE FROM specimen_test WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		# 3. Set disabled flag in test_category entry
+		$query_string =
+			"UPDATE test_category SET disabled=1 WHERE test_category_id=$test_category_id";
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
 	}
@@ -7967,6 +8068,44 @@ function get_test_types_catalog($lab_config_id=null, $reff=null)
 	return $retval;
 }
 
+
+/******/
+function get_test_categories_catalog($lab_config_id=null, $reff=null)
+{
+	# Returns a list of all specimen types available in catalog
+	global $CATALOG_TRANSLATION;
+        //NC3065
+        //global $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR;
+        if($reff == 1)
+        {
+            $user = get_user_by_id($_SESSION['user_id']);
+            $lab_config_id = $user->labConfigId;
+        }
+        //-NC3065
+
+	if($lab_config_id == null)
+		return;
+	else
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+	$query_stypes =
+		"SELECT test_category_id, name FROM test_category ORDER BY name";
+	$resultset = query_associative_all($query_stypes, $row_count);
+	$retval = array();
+	if($resultset) {
+		foreach($resultset as $record)
+		{
+			if($CATALOG_TRANSLATION === true)
+				$retval[$record['test_category_id']] = LangUtil::getLabSectionName($record['test_category_id']);
+			else
+				$retval[$record['test_category_id']] = $record['name'];
+		}
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}
+
+/******/
+
 //NC3065
 function get_search_fields($lab_config_id=null)
 {
@@ -8208,6 +8347,22 @@ function get_specimen_type_by_name($specimen_name)
 	return SpecimenType::getObject($record);
 }
 
+//get lab section by name
+function get_test_category_by_name($test_category_name)
+{
+	global $con;
+	$test_category_name = mysql_real_escape_string($test_category_name, $con);
+	# Returns specimen type record in DB
+	$user = get_user_by_id($_SESSION['user_id']);
+	$lab_config_id = $user->labConfigId;
+	$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
+	$query_string = 
+		"SELECT * FROM test_category WHERE name='$test_category_name' LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return TestCategory::getObject($record);
+}
+
 function get_test_type_by_name($test_name)
 {
 	global $con;
@@ -8313,6 +8468,19 @@ function get_specimen_type_by_id($specimen_type_id)
 	return SpecimenType::getObject($record);
 }
 
+function get_test_category_by_id($test_category_id)
+{
+	global $con;
+	$test_category_id = mysql_real_escape_string($test_category_id, $con);
+	# Returns specimen type record in DB
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string =
+		"SELECT * FROM test_category WHERE test_category_id=$test_category_id LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return TestCategory::getObject($record);
+}
+
 
 
 #
@@ -8384,6 +8552,29 @@ function search_specimen_types_catalog($specimen_name)
 			$retval[$record['specimen_type_id']] = LangUtil::getSpecimenName($record['specimen_type_id']);
 		else
 			$retval[$record['specimen_type_id']] = $record['name'];		
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}
+//search test category
+function search_test_categories_catalog($test_category_name)
+{
+	# Returns matching test types available in catalog
+	# Called from ajax/token_stypes.php
+	global $con;
+	$test_category_name = mysql_real_escape_string($test_category_name, $con);
+	global $CATALOG_TRANSLATION;
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string = 
+		"SELECT * FROM test_category WHERE name LIKE '$test_category_name%'";
+	$resultset = query_associative_all($query_string, $row_count);
+	$retval = array();
+	foreach($resultset as $record)
+	{
+		if($CATALOG_TRANSLATION === true)
+			$retval[$record['test_category_id']] = LangUtil::getLabSectionName($record['test_category_id']);
+		else
+			$retval[$record['test_category_id']] = $record['name'];		
 	}
 	DbUtil::switchRestore($saved_db);
 	return $retval;

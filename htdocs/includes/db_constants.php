@@ -12,7 +12,7 @@ $ON_DEV = 1;
 $ON_ARC = 2;
 $ON_PORTABLE = 3;
 
-$SERVER = $ON_PORTABLE;
+$SERVER = $ON_DEV;
 
 $LOCAL_PATH = "../../local/";
 if($SERVER == $ON_ARC)
@@ -48,7 +48,7 @@ $DB_PASS = "";
 
 if($SERVER == $ON_DEV)
 {
-	$DB_PASS = "monu123";
+	$DB_PASS = "";
 }
 else if($SERVER == $ON_ARC)
 {

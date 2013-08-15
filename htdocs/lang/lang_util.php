@@ -98,6 +98,16 @@ class LangUtil
 		return "[ERROR]";
 	}
 	
+	public static function getTestCategoryName($test_category_id)
+	{
+		global $CATALOG_ARRAY;
+		if(isset($CATALOG_ARRAY["test_category"][$test_category_id]))
+		{
+			return $CATALOG_ARRAY["test_category"][$test_category_id];
+		}
+		return "[ERROR]";
+	}
+	
 	public static function getMeasureName($measure_id)
 	{
 		global $CATALOG_ARRAY;
