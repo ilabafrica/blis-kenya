@@ -963,6 +963,7 @@ class PageElems
 						$compatible_specimens = get_compatible_specimens($test_type->testTypeId);
 						if(count($compatible_specimens) == 0)
 						{
+
 							echo "-";
 						}
 						else
@@ -1064,6 +1065,40 @@ class PageElems
 					</td>
 				</tr>
 			
+			</tbody>
+		</table>
+		<?php
+	}
+	
+	public function getTestCategoryInfo($test_category_name, $show_db_name=false)
+	{
+		# Returns HTML for displaying specimen type information
+		# Fetch specimen type record
+		$test_category = get_test_category_by_name($test_category_name);
+		?>
+		<table class='hor-minimalist-b'>
+			<tbody>
+				<tr valign='top'>
+					<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?></td>
+					<td>
+						<?php
+						if($show_db_name === true)
+						{
+							# Show original name stored in DB
+							echo $test_category->name;
+						}
+						else
+						{
+							# Show name store din locale string
+							echo $test_category->getName();
+						}
+						?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
+					<td><?php echo $test_category->getLabSectionDescription(); ?></td>
+				</tr>
 			</tbody>
 		</table>
 		<?php
@@ -1259,6 +1294,55 @@ class PageElems
 		</table>
 		<?php
 	}
+	
+	public function getTestCategoryTable($lab_config_id)
+	{
+		# Returns HTML table listing all test categories in catalog
+		$testcat_list = get_test_categories_catalog($lab_config_id);
+		if(count($testcat_list) == 0)
+		{
+			echo "<div class='sidetip_nopos'>".LangUtil::$pageTerms['TIPS_TESTCATEGORIESNOTFOUND']."</div>";
+			return;
+		}
+		?>
+		<table class='hor-minimalist-b'>
+		<tbody>
+		<?php
+		$count = 1;
+		foreach($testcat_list as $key => $value)
+		{
+			?>
+			<tr>
+			<td>
+				<?php echo $count; ?>.
+			</td>
+			<td>
+				<?php echo $value; ?>
+			</td>
+			<td>
+				<a href='test_category_edit.php?tcid=<?php echo $key; ?>' title='Click to Edit Test Category Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+			</td>
+			<?php
+			$user = get_user_by_id($_SESSION['user_id']);
+			if(is_country_dir($user) || is_super_admin($user))
+			{
+			?>
+			<td>
+				<a href='test_category_delete.php?tcid=<?php echo $key; ?>'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+			</td>
+			<?php
+			}
+			?>
+			</tr>
+			<?php
+			$count++;
+		}
+		?>
+		</tbody>
+		</table>
+		<?php
+	}
+	
 	
 	public function getOperatorForm($num_entries)
 	{
@@ -1760,6 +1844,7 @@ class PageElems
 					<th>
 						<?php echo LangUtil::$generalTerms['TYPE']; ?>
 					</th>
+
 					<?php
 					if($to_export == false)
 					{
@@ -3535,6 +3620,35 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		<?php
 	}
 	
+	public function getAllTestCategoryList()
+	{
+		# Returns HTML listing all test categories available in catalog
+		$category_list = get_test_categories_catalog();
+		$count = 0;
+		?>
+		<table cellspacing='4px'>
+			<tbody>
+				<tr valign='top'>
+				<?php
+				foreach($category_list as $category)
+				{
+					echo "<td>".$category."</td>";
+					$count++;
+					if($count % 3 == 0)
+					{
+					?>
+						</tr>
+						<tr valign='top'>
+					<?php
+					}
+				}
+				?>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
+	
 	public function getAllMeasureList()
 	{
 		# Returns HTML listing all measures available in catalog
@@ -4666,7 +4780,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		//if($lab_config_id == "")
 			//$specimen_list = get_specimen_types_catalog();
 		//else
-			$specimen_list = get_specimen_types_catalog($lab_config_id);
+			$specimen_list = get_specimen_types_catalog($_SESSION['lab_config_id']);
 		$current_specimen_list = array();
 		if($lab_config_id != "")
 			$current_specimen_list = get_lab_config_specimen_types($lab_config_id);
@@ -5669,6 +5783,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		</div>
 		<?php
 	}
+
 
 
 	
@@ -7853,6 +7968,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 						$field_name = $field_entry[1];
 						$field_width = $field_entry[2];
 						echo $field_name;
+
 						echo "&nbsp;&nbsp;(";
 						echo LangUtil::$pageTerms['COLUMN_WIDTH'].": ";
 						echo $field_width;
