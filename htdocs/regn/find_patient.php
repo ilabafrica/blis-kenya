@@ -179,7 +179,7 @@ function right_load(destn_div)
 <div id='patients_found' style='position:relative;left:10px;'>
 </div>
 <br>
-<div id='add_anyway_div' style='display:none'>
+<div id='add_anyway_div' >
 <a id='add_anyway_link' href='new_patient.php'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
 </div>
 </div>

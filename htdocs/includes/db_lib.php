@@ -6645,6 +6645,32 @@ function update_specimen_status($specimen_id)
 	set_specimen_status($specimen_id, $status_code);
 }
 
+// Reject specimen status, updates a specimen status to 6 (rejected)
+// as specified in line 2263
+function update_specimen_status_rejected($specimen_id, $rejectionreason){
+	
+	//No need to check if all tests results are entered
+	
+	# Update specimen status to complete
+	$status_code = Specimen::$STATUS_REJECTED;
+	$result = set_specimen_status_reject($specimen_id, $status_code, $rejectionreason);
+	return $result;
+}
+
+function set_specimen_status_reject($specimen_id, $status_code, $rejectionreason){
+	global $con;
+	$specimen_id = mysql_real_escape_string($specimen_id, $con);
+	$rejectionreason = mysql_real_escape_string($rejectionreason, $con);
+	# Sets specimen status to specified status code
+	# TODO: Link this to customized status codes in 'status_code' table
+	$query_string = 
+		"UPDATE `specimen` SET status_code_id= $status_code, comments = '$rejectionreason' ".
+		"WHERE specimen_id= $specimen_id";
+	$result = query_blind($query_string);
+	return $result;
+}
+
+
 function set_specimen_status($specimen_id, $status_code)
 {
 	global $con;
