@@ -19,7 +19,7 @@ if($TRACK_LOADTIME)
 }
 
 # Include required libraries
-require_once("includes/db_lib.php");
+//require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
 require_once("includes/script_elems.php");
 LangUtil::setPageId("header");
@@ -119,7 +119,9 @@ header('Content-Type: text/html; charset=UTF-8');
 	</head>
 <body>
 <?php $script_elems->enablePageloadIndicator(); ?>
-<?php $page= explode(".", basename($_SERVER['REQUEST_URI']))[0];?>
+<?php 
+$uri = explode(".", basename($_SERVER['REQUEST_URI']));
+$page = $uri[0]?>
 <?php
 if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 {
@@ -135,7 +137,9 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 	{
 		foreach($top_menu_options as $key => $value)
 		{
-			if($page==explode(".", $value)[0] || $page==explode("s", $value)[0].'_home'){
+			$page_value = explode(".", $value);
+			$page_value1 = explode("s", $value);
+			if($page== $page_value[0] || $page==$page_value1[0].'_home'){
 				echo "<li class='active'";
 			}else echo "<li class=''";
 			echo "><a href='".$value."' ";

@@ -50,6 +50,10 @@
 			<value>Submitting</value>
 		</term>
 		<term>
+			<key>CMD_REJECT</key>
+			<value>Reject Sample</value>
+		</term>
+		<term>
 			<key>CMD_UPDATE</key>
 			<value>Update</value>
 		</term>

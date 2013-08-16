@@ -13,6 +13,7 @@ $LANG_ARRAY = array (
 		"CMD_SEARCH" => "Search", 
 		"CMD_SUBMIT" => "Submit", 
 		"CMD_SUBMITTING" => "Submitting", 
+		"CMD_REJECT" => "Reject Sample",
 		"CMD_UPDATE" => "Update", 
 		"MSG_UPDATED" => "Updated", 
 		"CMD_CANCEL" => "Cancel", 
