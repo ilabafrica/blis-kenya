@@ -311,7 +311,26 @@ else
                     "OR status_code_id=".Specimen::$STATUS_REFERRED." ) ".
                     "ORDER BY date_collected DESC LIMIT 0,$rcap";
             
-    } 
+    } elseif($attrib_type == 10)
+    {
+            # Get all specimens with pending status
+            $query_string = 
+                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
+                    "WHERE p.patient_id=s.patient_id ".
+                    "AND (status_code_id=".Specimen::$STATUS_PENDING.") ".
+                    "AND s.specimen_id=t.specimen_id ".
+                    "AND t.result = '' LIMIT 0,$rcap ";
+    }
+    elseif($attrib_type == 11)
+    {
+		    # Get all specimens that have been started with pending results
+		    	$query_string =
+		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
+		        "WHERE p.patient_id=s.patient_id ".
+		        "AND (status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
+		        "AND s.specimen_id=t.specimen_id ".
+		        "AND t.result = '' LIMIT 0,$rcap ";
+	}
 }
 $resultset = query_associative_all($query_string, $row_count);
 
@@ -425,7 +444,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 		$specimen = get_specimen_by_id($specimen_id);
 		$patient = get_patient_by_id($specimen->patientId);
 		?>
-		<table class="hor-minimalist-c">
+		<table class="hor-minimalist-c" <?php echo "id='".$specimen->specimenId."'";?> >
 		<tbody>
 		<tr valign='top' <?php
 		if($attrib_type == 3 && $count != 1)
@@ -497,9 +516,19 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			}
 			?>
 			</td>
+			<?php if($attrib_type == 10)
+    		{?>
+			<td style='width:100px;'><a href="javascript:start_test(<?php echo $specimen->specimenId; ?>);" title='Click to begin testing this Specimen'>
+				<?php echo LangUtil::$generalTerms['START_TEST']; ?></a>
+			</td>
+			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Assign Specimen to a technician'>
+				<?php echo LangUtil::$generalTerms['ASSIGN_TO']; ?></a>
+			</td>
+			<?php }else{?>
 			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Click to Enter Results for this Specimen'>
 				<?php echo LangUtil::$generalTerms['ENTER_RESULTS']; ?></a>
 			</td>
+			<?php }?>
 		</tr>
 		</tbody>
 		</table>

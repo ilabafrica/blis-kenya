@@ -2261,6 +2261,8 @@ class Specimen
 	public static $STATUS_REPORTED = 4;
 	public static $STATUS_RETURNED = 5;
 	
+	public static $STATUS_PENDING_RESULTS = 7;
+
 	public static function getObject($record)
 	{
 		# Converts a specimen record in DB into a Specimen object

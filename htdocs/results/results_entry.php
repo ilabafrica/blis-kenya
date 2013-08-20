@@ -43,7 +43,7 @@ $(document).ready(function(){
 	get_test_types_bycat();
 	$("#worksheet_results").hide();
 	$('.results_subdiv').hide();
-	right_load("specimen_results");
+	right_load("pending_tests");
 	<?php 
 	if(isset($_REQUEST['ajax_response']))
 	{
@@ -176,6 +176,57 @@ function fetch_specimen()
 			$("#fetched_specimen").html("");
 		}
 	);
+}
+
+function fetch_pending_specimens()
+{
+	var url = 'ajax/result_entry_patient_dyn.php';
+	$("#fetched_specimens_entry").load(url, 
+		{a: '', t: 10}, 
+		function() 
+		{
+			$('#fetch_progress_bar').hide();
+			$("#fetched_specimen").show();
+			$("#fetched_specimen").html("");
+		}
+	);
+}
+function fetch_pending_results()
+{
+	var url = 'ajax/result_entry_patient_dyn.php';
+	$("#fetched_pending_results_entry").load(url, 
+		{a: '', t: 11}, 
+		function() 
+		{
+			$('#fetch_progress_bar').hide();
+			$("#fetched_specimen").show();
+			$("#fetched_specimen").html("");
+		}
+	);
+}
+function start_test(specimen_id)
+{
+
+	var r=confirm("Start test?");
+	if (r==true)
+   	{
+   		//Mark test as cancelled
+  		var url = 'ajax/result_entry_patient_dyn.php';
+		$("#fetched_pending_results_entry").load(url, 
+		{a: '', t: 11}, 
+		function() 
+		{
+			$('#fetch_progress_bar').hide();
+			$('#'+specimen_id).hide();
+		}
+	);
+		
+  	}
+	else
+  	{
+  		//Cancel Starting test
+  	}
+	
 }
 
 function fetch_specimen2(specimen_id)
@@ -433,14 +484,14 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 <div class="col-lg-3">
 <div class="bs-sidebar affix">
 <ul class="nav bs-sidenav">
-	<li><a href="javascript:right_load('specimen_results');" title='Pending tests' 
-			class='menu_option' id='specimen_results_menu'>
+	<li><a href="javascript:right_load('pending_tests');" title='Pending tests' 
+			class='menu_option' id='pending_tests_menu'>
 			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['MENU_PENDING_TESTS']; ?>
 		</a>
 	</li>
-	<li><a href="javascript:right_load('specimen_results');" title='Pending tests' 
-			class='menu_option' id='specimen_results_menu'>
+	<li><a href="javascript:right_load('pending_results');" title='Pending tests' 
+			class='menu_option' id='pending_results_menu'>
 			<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;
 			<?php echo LangUtil::$pageTerms['MENU_PENDING_RESULTS']; ?>
 		</a>
@@ -512,6 +563,32 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 				<input type="button" onclick="fetch_worksheets();" value="Fetch"/>
 			</form>
 			<div id="worksheet">
+			</div>
+		</div>
+		
+		<div id="pending_tests" class='results_subdiv' style='display:none;'>
+			<br>
+			<div id='fetched_specimens_entry'>
+			</div>
+			<script>fetch_pending_specimens();</script>
+			<div id="fetched_specimen">
+			<?php
+				if(isset($_REQUEST['ajax_response']))
+					echo $_REQUEST['ajax_response'];
+			?>
+			</div>
+		</div>
+		
+		<div id="pending_results" class='results_subdiv' style='display:none;'>
+			<br>
+			<div id='fetched_pending_results_entry'>
+			</div>
+			<script>fetch_pending_results();</script>
+			<div id="fetched_specimen">
+			<?php
+				if(isset($_REQUEST['ajax_response']))
+					echo $_REQUEST['ajax_response'];
+			?>
 			</div>
 		</div>
 		
