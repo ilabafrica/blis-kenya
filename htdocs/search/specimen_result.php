@@ -270,6 +270,8 @@ $test_list = get_tests_by_specimen_id($specimen->specimenId);
 		<td>
 			<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit();'></input>
 			&nbsp;&nbsp;&nbsp;
+          <a href="#reject-reason" rel="facebox" ><?php echo LangUtil::$generalTerms['CMD_REJECT']; ?></a>
+			&nbsp;&nbsp;&nbsp;
 			<a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 			&nbsp;&nbsp;&nbsp;
 			<span id='specimen_result_progress' style='display:none'>
@@ -278,5 +280,23 @@ $test_list = get_tests_by_specimen_id($specimen->specimenId);
 	</tbody>
 </table>
 </form>
+<div id="reject-reason" style="display:none" >
+<form name="formreject">
+<table width="200" border="0">
+  <tr>
+    <td><strong>Rejection</strong></td>
+    </tr>
+  <tr>
+    <td><p>Reason for rejection</p>
+      <p>
+        <textarea name="reject-reason" id="reject-reason" cols="45" rows="5"></textarea>
+      </p></td>
+    </tr>
+  <tr>
+    <td><input type="submit" name="reject-sample" id="reject-sample" value="Submit" /></td>
+  </tr>
+</table>
+</form>
+</div>
 <br>
 <?php include("includes/footer.php"); ?>

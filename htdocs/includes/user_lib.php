@@ -26,8 +26,8 @@ function get_top_menu_options($user_role)
 {
 	# Returns list links to php pages accessible by $user_role
 	# Called from perms_check.php
-	global $LIS_TECH_RO, $LIS_TECH_RW, $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR, $LIS_CLERK;
-	global $LIS_001, $LIS_010, $LIS_011, $LIS_100, $LIS_101, $LIS_110, $LIS_111, $LIS_TECH_SHOWPNAME;
+	global $LIS_TECH_RO, $LIS_TECH_RW, $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR, $LIS_CLERK, $LIS_TECHNOLOGIST;
+	global $LIS_001, $LIS_010, $LIS_011, $LIS_100, $LIS_101, $LIS_110, $LIS_111, $LIS_TECH_SHOWPNAME, $LIS_0101;
 	# Global variables from includes/db_constants.php
 	global $SERVER, $ON_ARC;
 	$page_list = array();
@@ -124,6 +124,13 @@ function get_top_menu_options($user_role)
 				break;
 			case $LIS_111:
 				# All three
+				$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
+				$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
+				$page_list[LangUtil::getPageTitle("search")] = "search.php";
+				$page_list[LangUtil::getPageTitle("reports")] = "reports.php";
+				break;
+			case $LIS_0101:
+				# TESTS ALONE - LAB TECHNOLOGIST
 				$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
 				$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
 				$page_list[LangUtil::getPageTitle("search")] = "search.php";

@@ -104,6 +104,14 @@ RewriteRule ^test_type_added\.php$ catalog/test_type_added.php
 RewriteRule ^test_type_edit\.php$ catalog/test_type_edit.php
 RewriteRule ^test_type_updated\.php$ catalog/test_type_updated.php
 RewriteRule ^test_type_delete\.php$ catalog/test_type_delete.php
+
+RewriteRule ^test_category_new\.php$ catalog/test_category_new.php
+RewriteRule ^test_category_add\.php$ catalog/test_category_add.php
+RewriteRule ^test_category_added\.php$ catalog/test_category_added.php
+RewriteRule ^test_category_edit\.php$ catalog/test_category_edit.php
+RewriteRule ^test_category_updated\.php$ catalog/test_category_updated.php
+RewriteRule ^test_category_delete\.php$ catalog/test_category_delete.php
+
 RewriteRule ^country_catalog\.php$ catalog/country_catalog.php
 RewriteRule ^test_type_edit_agg\.php$ catalog/test_type_edit_agg.php
 RewriteRule ^test_type_edit_dir\.php$ catalog/test_type_edit_dir.php
