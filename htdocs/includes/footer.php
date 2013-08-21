@@ -1,39 +1,16 @@
-<!-- (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre -->
-
-<script type="text/javascript">
-	function changeTheme(theme) {
-		alert(theme);
-		$.ajax({
-		type : 'POST',
-		url : 'users/changetheme.php?theme='+theme,
-		success : function(data) {
-			alert(data);
-		}
-	});
-	}
-        
-        
-        
-</script>
-
-<?php
-#
-# This is the footer file to display at the end of the file.
-# Closes any open database connections, and-
-# displays footer so the users know the page is done loading.
-#
-include("includes/db_close.php");
-LangUtil::setPageId("footer");
+<?php 
+# (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre
+# (c) @iLabAfrica, Roy Rutto, Emaanuel Kitsao, Brian Kiprop
 ?>
-
-</div><!--end of row-->
-</div><!-- end of container-->
-<div id="push"></div>
-</div><!--end of wrap-->
-<div id="footer">
-      <div class="container">
-	<div class='footer_message'>
-		<small>
+</div>
+			<!-- END PAGE CONTAINER-->		
+		</div>
+		<!-- END PAGE -->
+	</div>
+	<!-- END CONTAINER -->
+	<!-- BEGIN FOOTER -->
+	<div class="footer">
+				<small>
 		
 		<?php
 		if($_SESSION['locale'] == "en")
@@ -51,7 +28,7 @@ LangUtil::setPageId("footer");
 		?>
 		
 		<a rel='facebox' href='feedback/comments.php?src=<?php echo $_SERVER['PHP_SELF']; ?>'><?php echo "Comments" ?>?</a> |
-		C4G BLIS v<?php echo $VERSION; ?> - <?php echo LangUtil::getPageTerm("FOOTER_MSG"); ?>
+		C4G BLIS v<?php echo $VERSION; ?> - <?php echo LangUtil::$allTerms["FOOTER_MSG"]; ?>
 		<?php
 		if($_SESSION['locale'] !== "en")
 		{
@@ -105,8 +82,20 @@ LangUtil::setPageId("footer");
 		}
 		?>
 		</small>
+		<div class="span pull-right">
+			<span class="go-top"><i class="icon-angle-up"></i></span>
+		</div>
 	</div>
-</div><!--end of container-->
-</div><!--end of footer-->
+	<!-- END FOOTER -->
 </body>
+<!-- END BODY -->
 </html>
+<?php
+#
+# This is the footer file to display at the end of the file.
+# Closes any open database connections, and-
+# displays footer so the users know the page is done loading.
+#
+
+include("includes/db_close.php");
+?>

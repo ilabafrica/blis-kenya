@@ -1,56 +1,834 @@
-<?php
+<?php 
 include("redirect.php");
-
 include("includes/header.php");
 LangUtil::setPageId("home");
-
 $page_elems = new PageElems();
 $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
-$page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip);
-
-# Enable JavaScript for recording user props and latency values
-# Attaches record.js to this HTML
+//$page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip);
+?>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3 class="page-title">
+						<?php 
+						echo LangUtil::getPageTerm("WELCOME").", " . $_SESSION['username'];
+						
+						?>
+						</h3>
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i>
+								<a href="index.html">Home</a> 
+								<span class="icon-angle-right"></span>
+							</li>
+							<!--li><a href="#">Home</a></li-->
+							<li class="pull-right no-text-shadow">
+								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top" data-original-title="Change dashboard date range">
+									<i class="icon-calendar"></i>
+									<span></span>
+									<i class="icon-angle-down"></i>
+								</div>
+							</li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<div id="dashboard">
+					<div class="clearfix"></div>
+					<div class="row-fluid">
+						<div class="span6">
+							<!-- BEGIN PORTLET-->
+							<div class="portlet paddingless">
+								<div class="portlet-title line">
+									<h4><i class="icon-bell"></i>Notifications</h4>
+									<div class="tools">
+										<a href="javascript:;" class="collapse"></a>
+										<a href="#portlet-config" data-toggle="modal" class="config"></a>
+										<a href="javascript:;" class="reload"></a>
+										<a href="javascript:;" class="remove"></a>
+									</div>
+								</div>
+								<div class="portlet-body">
+									<!--BEGIN TABS-->
+									<div class="tabbable tabbable-custom">
+										<ul class="nav nav-tabs">
+											<li class="active"><a href="#tab_1_1" data-toggle="tab">System</a></li>
+											<li><a href="#tab_1_2" data-toggle="tab">Activities</a></li>
+											<li><a href="#tab_1_3" data-toggle="tab">Recent Users</a></li>
+										</ul>
+										<div class="tab-content">
+											<div class="tab-pane active" id="tab_1_1">
+												<div class="scroller" data-height="290px" data-always-visible="1" data-rail-visible1="1">
+													<ul class="feeds">
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-success">								
+																			<i class="icon-bell"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			You have 4 pending tasks.
+																			<span class="label label-important label-mini">
+																			Take action 
+																			<i class="icon-share-alt"></i>
+																			</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	Just now
+																</div>
+															</div>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New version v1.4 just lunched!	
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		20 mins
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-important">								
+																			<i class="icon-bolt"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			Database server #12 overloaded. Please fix the issue.								
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	24 mins
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-info">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	30 mins
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-success">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	40 mins
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-warning">								
+																			<i class="icon-plus"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New user registered.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	1.5 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-success">								
+																			<i class="icon-bell-alt"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			Web server hardware needs to be upgraded.	
+																			<span class="label label-inverse label-mini">Overdue</span>					
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	2 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	3 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-warning">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	5 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-info">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	18 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	21 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-info">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	22 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	21 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-info">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	22 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	21 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-info">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	22 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	21 hours
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-info">								
+																			<i class="icon-bullhorn"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			New order received. Please take care of it.						
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	22 hours
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane" id="tab_1_2">
+												<div class="scroller" data-height="290px" data-always-visible="1" data-rail-visible1="1">
+													<ul class="feeds">
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New order received 
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		10 mins
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<div class="col1">
+																<div class="cont">
+																	<div class="cont-col1">
+																		<div class="label label-important">								
+																			<i class="icon-bolt"></i>
+																		</div>
+																	</div>
+																	<div class="cont-col2">
+																		<div class="desc">
+																			Order #24DOP4 has been rejected. 	
+																			<span class="label label-important label-mini">Take action <i class="icon-share-alt"></i></span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col2">
+																<div class="date">
+																	24 mins
+																</div>
+															</div>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+														<li>
+															<a href="#">
+																<div class="col1">
+																	<div class="cont">
+																		<div class="cont-col1">
+																			<div class="label label-success">								
+																				<i class="icon-bell"></i>
+																			</div>
+																		</div>
+																		<div class="cont-col2">
+																			<div class="desc">
+																				New user registered
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col2">
+																	<div class="date">
+																		Just now
+																	</div>
+																</div>
+															</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane" id="tab_1_3">
+												<div class="scroller" data-height="290px" data-always-visible="1" data-rail-visible1="1">
+													<div class="row-fluid">
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Robert Nilson</a> 
+																	<span class="label label-success">Approved</span>
+																</div>
+																<div>29 Jan 2013 10:45AM</div>
+															</div>
+														</div>
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Lisa Miller</a> 
+																	<span class="label label-info">Pending</span>
+																</div>
+																<div>19 Jan 2013 10:45AM</div>
+															</div>
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Eric Kim</a> 
+																	<span class="label label-info">Pending</span>
+																</div>
+																<div>19 Jan 2013 12:45PM</div>
+															</div>
+														</div>
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Lisa Miller</a> 
+																	<span class="label label-important">In progress</span>
+																</div>
+																<div>19 Jan 2013 11:55PM</div>
+															</div>
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Eric Kim</a> 
+																	<span class="label label-info">Pending</span>
+																</div>
+																<div>19 Jan 2013 12:45PM</div>
+															</div>
+														</div>
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Lisa Miller</a> 
+																	<span class="label label-important">In progress</span>
+																</div>
+																<div>19 Jan 2013 11:55PM</div>
+															</div>
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div><a href="#">Eric Kim</a> <span class="label label-info">Pending</span>
+																</div>
+																<div>19 Jan 2013 12:45PM</div>
+															</div>
+														</div>
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Lisa Miller</a> 
+																	<span class="label label-important">In progress</span>
+																</div>
+																<div>19 Jan 2013 11:55PM</div>
+															</div>
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div><a href="#">Eric Kim</a> <span class="label label-info">Pending</span>
+																</div>
+																<div>19 Jan 2013 12:45PM</div>
+															</div>
+														</div>
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Lisa Miller</a> 
+																	<span class="label label-important">In progress</span>
+																</div>
+																<div>19 Jan 2013 11:55PM</div>
+															</div>
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Eric Kim</a> 
+																	<span class="label label-info">Pending</span>
+																</div>
+																<div>19 Jan 2013 12:45PM</div>
+															</div>
+														</div>
+														<div class="span6 user-info">
+															<img alt="" src="assets/img/avatar.png" />
+															<div class="details">
+																<div>
+																	<a href="#">Lisa Miller</a> 
+																	<span class="label label-important">In progress</span>
+																</div>
+																<div>19 Jan 2013 11:55PM</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!--END TABS-->
+								</div>
+							</div>
+							<!-- END PORTLET-->
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					
+				</div>
+<?php
+include("includes/scripts.php");
 $script_elems->enableLatencyRecord();
 ?>
-<style type='text/css'>
-.warning {
-    
-    border: 1px solid;
-    width: 350px;
-    margin: 10px 0px;
-    padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    color: #9F6000;
-    background-color: #FEEFB3;
-    background-image: url('../includes/img/knob_attention.png');
-}
-.update_error {
-    
-    border: 1px solid;
-    width: 500px;
-    margin: 10px 0px;
-    padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    color: #D8000C;
-    background-color: #FFBABA;
-    background-image: url('../includes/img/knob_cancel.png');
-}
-.update_success {
-    
-    border: 1px solid;
-    width: 350px;
-    margin: 10px 0px;
-    padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    color: #000000;
-    background-color: #99FF99;
-    background-image: url('../includes/img/knob_valid_green.png');
-}
-</style>
-
 <script type='text/javascript'>
 
 $(document).ready(function(){
@@ -99,76 +877,7 @@ function blis_update()
         
     //$('#update_button').show();
 }
-
 </script>
-<div class="col-lg-9 context">
-<div class="panel panel-primary">
-
-<div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>
-
-
-<?php 
-echo LangUtil::getPageTerm("WELCOME").", " . $_SESSION['username'] . ".<br><br>";
-echo LangUtil::getPageTerm("TIPS_BLISINTRO");
-
-?>
-
-<br><br>
-    <div id="update_div2" style="display:none;" class="warning">
-    <a rel='facebox' id='update_link' href='../update/blis_update.php'>Click here to complete update to version <?php echo $VERSION ?></a>
-    </div>
-
-    <div id="update_div" style="display:none;" class="warning">
-    <a id='update_link' href='javascript:blis_update_t();'>Click here to complete update to version <?php echo $VERSION ?></a>
-    </div>
-
-<div id='update_spinner' style='display:none;'>
-<?php
-$spinner_message = "Updating to C4G BLIS ".$VERSION."<br>";
-$page_elems->getProgressSpinnerBig($spinner_message);
-?>
-</div>
-
- <div id="update_failure" style="display:none;" class="update_error">
-    Update Error! Please Try Again by clicking <a id='update_link' href='javascript:blis_update_t();'>here</a><br>
-    If still unsuccessful report error UE5 to naomichopra@gatech.edu
-    </div>
-
- <div id="update_success"  style="display:none;" class="update_success">
-    Update Successful! Welcome to C4G BLIS <?php echo $VERSION; ?>
-    </div>
-
-
-</div>
-</div>
-<?php
-# If technician user, show lab workflow
-if($_SESSION['user_level'] == $LIS_ADMIN || $_SESSION['user_level'] == $LIS_SUPERADMIN || $_SESSION['user_level'] == $LIS_COUNTRYDIR)
-{
-?>
-   
-
-<?php
-}
-?>
-<?php
-# If technician user, show lab workflow
-if($_SESSION['user_level'] == $LIS_TECH_RW || $_SESSION['user_level'] == $LIS_TECH_SHOWPNAME || $_SESSION['user_level'] == $LIS_TECH_RO)
-{
-	//$page_elems->getLabConfigStatus($_SESSION['lab_config_id']);
-}
-else if(User::onlyOneLabConfig($_SESSION['user_id'], $_SESSION['user_level']))
-{
-	//$lab_config_list = get_lab_configs($_SESSION['user_id']);
-	//$page_elems->getLabConfigStatus($lab_config_list[0]->id);
-}
-else
-{
-	//echo "<br>";
-}
-echo "<br>";
-?>
-
 <?php
 include("includes/footer.php");
 ?>

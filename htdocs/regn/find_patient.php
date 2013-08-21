@@ -7,15 +7,160 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("find_patient");
-
 putUILog('find_patient', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
-
-$script_elems->enableDatePicker();
-$script_elems->enableJQueryForm();
-
 $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 ?>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3 class="page-title">
+						Bungoma District Hospital
+						</h3>
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i>
+								<a href="index.html">Home</a> 
+								<span class="icon-angle-right"></span>
+							</li>
+							<li><a href="#">Registration</a>
+							<span class="icon-angle-right"></span></li>
+							<li><a href="#"></a></li>
+							<li class="pull-right no-text-shadow">
+								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top" data-original-title="Change dashboard date range">
+									<i class="icon-calendar"></i>
+									<span></span>
+									<i class="icon-angle-down"></i>
+								</div>
+							</li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+ 				<!-- BEGIN REGISTRATION PORTLETS-->   
+				<div class="row-fluid">
+				<div class="span12 sortable">
+				
+<!-- <div class="portlet box blue"> -->
+<!-- <div class="portlet-title"> -->
+<!-- <h4><i class="icon-reorder"></i>Portlet</h4> -->
+<!-- <div class="tools"> -->
+<!-- <a href="javascript:;" class="collapse"></a> -->
+<!-- <a href="#portlet-config" data-toggle="modal" class="config"></a> -->
+<!-- <a href="javascript:;" class="reload"></a> -->
+<!-- <a href="javascript:;" class="remove"></a> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- <div class="portlet-body"> -->
+<!-- <div class="scroller" data-height="200px" data-always-visible="1"> -->
+<!-- testter -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- BEGIN PATIENT LOOK UP -->
+<div id="patient_lookup" class='reg_subdiv' style='display:none;'>
+<div class="portlet box blue">
+<div class="portlet-title">
+<h4><i class="icon-reorder"></i><?php echo "Patient Look-up" ?></h4>
+<div class="tools">
+<a href="javascript:;" class="collapse"></a>
+<a href="#portlet-config" data-toggle="modal" class="config"></a>
+<a href="javascript:;" class="reload"></a>
+<a href="javascript:;" class="remove"></a>
+</div>
+</div>
+<div class="portlet-body">
+<div class="scroller" data-height="200px" data-always-visible="1">
+<form>
+<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
+<?php $page_elems->getPatientSearchAttribSelect(); ?>
+</select>
+&nbsp;&nbsp;
+<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
+&nbsp;&nbsp;
+<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
+&nbsp;&nbsp;&nbsp;
+<span id='psearch_progress_spinner'>
+<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+</span>
+</form>
+<br>
+<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
+	<ul>
+		<?php
+		if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
+			echo "<li>";
+			echo LangUtil::$pageTerms['TIPS_REGISTRATION_1'];
+			echo "</li>";
+		}	
+		if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
+			echo "<li>"; 
+			echo LangUtil::$pageTerms['TIPS_REGISTRATION_2'];
+			echo "</li>";
+		}
+		if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
+			echo "<li>"; 
+			echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
+			echo "</li>"; 
+		}
+		?>
+	</ul>
+</div>
+<div id='patients_found' style='position:relative;left:10px;'>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BEGIN PATIENT LOOK UP -->
+
+<!-- BEGIN NEW PATIENT REGISTRATION -->
+<div id="new_patient" class='reg_subdiv' style='display:none;'>
+<div class="portlet box blue">
+<div class="portlet-title">
+<h4><i class="icon-reorder"></i><?php echo "Register new patient" ?></h4>
+<div class="tools">
+<a href="javascript:;" class="collapse"></a>
+<a href="#portlet-config" data-toggle="modal" class="config"></a>
+<a href="javascript:;" class="reload"></a>
+<a href="javascript:;" class="remove"></a>
+</div>
+</div>
+<div class="portlet-body form">
+<?php //include 'new_patient.php';?>
+</div>
+</div>
+</div>
+<!-- END NEW PATIENT REGISTRATION -->
+
+<!-- BEGIN LAB REQUESTS -->
+<div id="lab_requests" class='reg_subdiv' style='display:none;'>
+<div class="portlet box blue">
+<div class="portlet-title">
+<h4><i class="icon-reorder"></i><?php echo "Lab Requests" ?></h4>
+<div class="tools">
+<a href="javascript:;" class="collapse"></a>
+<a href="#portlet-config" data-toggle="modal" class="config"></a>
+<a href="javascript:;" class="reload"></a>
+<a href="javascript:;" class="remove"></a>
+</div>
+</div>
+<div class="portlet-body form">
+<?php //include 'new_patient.php';?>
+</div>
+</div>
+</div>
+<!-- END LAB REQUESTS -->
+</div>
+<!-- END SPAN 12 -->
+</div>
+
+<!-- END REGISTRATION PORTLETS-->   
+<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
+
+<?php
+include("includes/scripts.php");
+?>
+<?php $script_elems->enableDatePicker();
+$script_elems->enableJQueryForm();?>
 <script type='text/javascript'>
 $(document).ready(function() {
 	$('#psearch_progress_spinner').hide();
@@ -110,87 +255,5 @@ function right_load(destn_div)
 	
 }
 </script>
-<div class="col-lg-3">
-<div class="bs-sidebar affix">
-<ul class="nav bs-sidenav">
-	<li><a href="javascript:right_load('specimen_results');" title='Lab Test Requests' 
-			class='menu_option' id='specimen_results_menu'>
-			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_LAB_REQUESTS']; ?>
-		</a>
-	</li>
-	<li><a href="javascript:right_load('patient_lookup');" title='Patient Lookup' 
-			class='menu_option' id='patient_lookup_menu'>
-			<span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_PATIENT_LOOKUP']; ?>
-		</a>
-	</li>
-	<li><a href="javascript:right_load('new_patient');"  title='New Patient'
-			class='menu_option' id='new_patient_menu'>
-			<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['NEW_PATIENT']; ?>
-	</a></li>
-</ul>
-</div>
-</div>
-	 
-
-<div class="col-lg-7 context">
-<div class="panel panel-primary">
-
-<div id="patient_lookup" class='reg_subdiv' style='display:none;'>
-<div class="panel-heading"><span class='page_title'><?php echo LangUtil::getTitle(); ?></span></div>
-<!--| <a href='new_patient.php' title='Click to add a new patient in the system'>Add New Patient &raquo;</a>-->
-<form>
-	<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
-		<?php $page_elems->getPatientSearchAttribSelect(); ?>
-	</select>
-	&nbsp;&nbsp;
-	<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
-	&nbsp;&nbsp;
-	<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
-	&nbsp;&nbsp;&nbsp;
-	<span id='psearch_progress_spinner'>
-	<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-	</span>
-</form>
-<br>
-<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
-	<ul>
-		<?php
-		if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
-			echo "<li>";
-			echo LangUtil::$pageTerms['TIPS_REGISTRATION_1'];
-			echo "</li>";
-		}	
-		if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
-			echo "<li>"; 
-			echo LangUtil::$pageTerms['TIPS_REGISTRATION_2'];
-			echo "</li>";
-		}
-		if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
-			echo "<li>"; 
-			echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
-			echo "</li>"; 
-		}
-		?>
-	</ul>
-</div>
-<div id='patients_found' style='position:relative;left:10px;'>
-</div>
-<br>
-<div id='add_anyway_div' >
-<a id='add_anyway_link' href='new_patient.php'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
-</div>
-</div>
-
-<div id="new_patient" class='reg_subdiv' style='display:none;'>
-<div class="panel-heading"><span class='page_title'><?php echo 'Register New Patient'; ?></span></div>
-<?php include 'new_patient.php';?>
-</div>
-
-</div>
-</div>
-<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
-<?php include("includes/footer.php"); ?>
+<?php include("includes/footer.php");?>

@@ -57,7 +57,7 @@ $(document).ready(function(){
 
 function prefetch_pname()
 {
-	var name = $('#name').attr("value");
+	var name = $('#name').val();
 	name = name.replace(" ", "%20");
 	if(name == "" || name.length < 3)
 	{
@@ -70,36 +70,36 @@ function prefetch_pname()
 
 function add_patient()
 {
-	var card_num = $("#card_num").attr("value");
+	var card_num = $("#card_num").val();
 	$('#pid2').attr("value", card_num);
-	var addl_id = $("#addl_id").attr("value");
-	var name = $("#name").attr("value");
+	var addl_id = $("#addl_id").val();
+	var name = $("#name").val();
 	name = name.replace(/[^a-z ]/gi,'');
-	var yyyy = $("#yyyy").attr("value");
+	var yyyy = $("#yyyy").val();
 	yyyy = yyyy.replace(/[^0-9]/gi,'');
-	var mm = $("#mm").attr("value");
+	var mm = $("#mm").val();
 	mm = mm.replace(/[^0-9]/gi,'');
-	var dd = $("#dd").attr("value");
+	var dd = $("#dd").val();
 	dd = dd.replace(/[^0-9]/gi,'');
-	var receipt_yyyy = $("#receipt_yyyy").attr("value");
+	var receipt_yyyy = $("#receipt_yyyy").val();
 	receipt_yyyy = receipt_yyyy.replace(/[^0-9]/gi,'');
-	var receipt_mm = $("#receipt_mm").attr("value");
+	var receipt_mm = $("#receipt_mm").val();
 	receipt_mm = receipt_mm.replace(/[^0-9]/gi,'');
-	var receipt_dd = $("#receipt_dd").attr("value");
+	var receipt_dd = $("#receipt_dd").val();
 	receipt_dd = receipt_dd.replace(/[^0-9]/gi,'');
-	var age = $("#age").attr("value");
+	var age = $("#age").val();
 	age = age.replace(/[^0-9]/gi,'');
-	var age_param = $('#age_param').attr("value");
+	var age_param = $('#age_param').val();
 	age_param = age_param.replace(/[^0-9]/gi,'');
 	var sex = "";
-	var pid = $('#pid').attr("value");
+	var pid = $('#pid').val();
 	for(i = 0; i < document.new_record.sex.length; i++)
 	{
 		if(document.new_record.sex[i].checked)
 			sex = document.new_record.sex[i].value;
 	}
-	var email = $("#email").attr("value");
-	var phone = $("#phone").attr("value");
+	var email = $("#email").val();
+	var phone = $("#phone").val();
 	var error_message = "";
 	var error_flag = 0;
 	var partial_dob_ym = 0;
@@ -196,7 +196,7 @@ function add_patient()
 	if($_SESSION['dnum'] != 0)
 	{
 	?>
-		var dnum = $("#dnum").attr("value");
+		var dnum = $("#dnum").val();
 		if(dnum.trim() == "" || !dnum)
 		{
 			alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?>");
@@ -264,7 +264,7 @@ function add_patient()
 
 function fetchPatientAjax()
 {
-	var card_num = $("#card_num").attr("value");
+	var card_num = $("#card_num").val();
 	if(card_num == "")
 	{
 		document.getElementById("card_num_msg").innerHTML = "";
@@ -329,10 +329,9 @@ function reset_new_patient()
 }
 
 </script>
-<p style="text-align: right;"><a rel='facebox' href='#regn_sidetip'>Page Help</a></p>
-<b><?php echo LangUtil::getTitle(); ?></b>
- | <a href='find_patient.php'>&laquo; <?php echo LangUtil::$pageTerms['MSG_BACKTOLOOKUP']; ?></a>
-<br><br>
+<!--p style="text-align: right;"><a rel='facebox' href='#regn_sidetip'>Page Help</a></p-->
+<!--b><?php echo LangUtil::getTitle(); ?></b>
+ | <a href='find_patient.php'>&laquo; <?php echo LangUtil::$pageTerms['MSG_BACKTOLOOKUP']; ?></a-->
 <div id='new_patient_msg' class='sidetip_nopos' style='display:none;width:510px;'>
 </div>
 <br>
@@ -341,37 +340,40 @@ function reset_new_patient()
 <td>
 <div id='patient_new'>
 <div class='pretty_box' style='width:500px'>
-<form name="new_record" action="add_patient.php" method="post" id="new_record" class="new_record">
+<form name="new_record" action="add_patient.php" method="post" id="new_record" class="new_record" role="form">
 	<?php # Hidden field for db key ?>
+	
 	<input type='hidden' name='card_num' id='card_num' value="<?php echo get_max_patient_id()+1; ?>" ></input>
 	<table cellpadding="2" class='regn_form_table'>
-	<tr <?php
+	<div class="form-group" <?php
 	if($_SESSION['pid'] == 0)
 		echo " style='display:none;' ";
 	?>>
-		<td>
-			<?php echo LangUtil::$generalTerms['PATIENT_ID']; ?>
+	 
+		   <label for="Patient ID"><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></label>
+			
 			<?php
 			if($_SESSION['pid'] == 2)
 				$page_elems->getAsterisk();
 			?>
-		</td>
-		<td><input type="text" name="pid" id="pid" value="" size="20" class='uniform_width' /></td>
-	</tr>
+		
+		<input type="text" name="pid" id="pid" value="" size="20" class='uniform_width form-control'>
+	 </div>
 	<tr>
 		<td>Date of Registration</td>
 		<td>
 		<?php
 
-		$today1 = date("Y-m-d");
-		$today_array1 = explode("-", $today1);
-		$name_list1 = array("receipt_yyyy", "receipt_mm", "receipt_dd");
-		$id_list1 = array("receipt_yyyy", "receipt_mm", "receipt_dd");
-		$value_list1 = array($today_array1[0], $today_array1[1], $today_array1[2]);
-		$page_elems->getDatePicker($name_list1, $id_list1, $value_list1, true);
+// 		$today1 = date("Y-m-d");
+// 		$today_array1 = explode("-", $today1);
+// 		$name_list1 = array("receipt_yyyy", "receipt_mm", "receipt_dd");
+// 		$id_list1 = array("receipt_yyyy", "receipt_mm", "receipt_dd");
+// 		$value_list1 = array($today_array1[0], $today_array1[1], $today_array1[2]);
+// 		$page_elems->getDatePicker($name_list1, $id_list1, $value_list1, true);
 		
 		?>
 		</td>
+		<input type="text" id="datepicker" />
 	</tr>
 	<tr <?php
 	if($_SESSION['p_addl'] == 0)

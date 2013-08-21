@@ -9,11 +9,18 @@ class LangUtil
 	public static $pageId;
 	public static $generalTerms;
 	public static $pageTerms;
+	public static $allTerms;
 	
 	public static function init()
 	{
 		global $LANG_ARRAY;
 		self::$generalTerms = $LANG_ARRAY[self::$generalPageId];
+		self::$allTerms = array_merge(
+				$LANG_ARRAY['header'],
+				$LANG_ARRAY['footer'], 
+				$LANG_ARRAY['home'],
+				$LANG_ARRAY['find_patient'],
+				$LANG_ARRAY['results_entry']);
 	}
 	
 	public static function setPageId($page_id)
