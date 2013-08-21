@@ -5560,11 +5560,39 @@ function check_user_password($username, $password)
 		"WHERE username='$username' ".
 		"AND password='$password' LIMIT 1";
 	$record = query_associative_one($query_string);
+	
 	# Return user profile (null if incorrect username/password)
+	
+	global $userobject;
+	$userobject = User::getObject($record);
+	
+	if($record){
+		//Log Valid Login
+		log_access($userobject->userId, 1 , $username);
+	}
+	else {
+		//Log Invalid Login
+		log_access(0, 3, $username);
+	}
 	DbUtil::switchRestore($saved_db);
-	return User::getObject($record);
+	return $userobject;
 }
 
+//Function for Logging and logout and also failed attempts
+
+function log_access($userid , $accesstype, $username ){
+	
+	$saved_db = DbUtil::switchToGlobal();
+	$ip_address = $_SERVER['REMOTE_ADDR'];
+	$username = mysql_escape_string($username);
+	$sessionid = session_id();
+	
+	$query_string = 
+		"INSERT INTO access_log (user_id, access_type, ip_address, user_name, access_sessionid ) ".
+		"VALUES ($userid,  $accesstype, '$ip_address', '$username', '$sessionid')";
+	query_insert_one($query_string);
+	DbUtil::switchRestore($saved_db);
+}
 function change_user_password($username, $password)
 {
 	# Changes user password
@@ -5865,8 +5893,21 @@ function add_patient($patient, $importOn = false)
 			"VALUES ($pid, '$addl_id', '$name', '$dob', $age, '$sex', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
 	}
 	
-	print $query_string;
-	query_insert_one($query_string);
+	$result = query_insert_one($query_string);
+	
+	if($result){
+		//Query Patient_id of Just inserted patient
+		$prev_id = get_last_insert_id();
+	
+		//Add event to audit trail
+		$auditTrail = new AuditTrail();		
+		$auditTrail->userid = $created_by;
+	    $auditTrail->tablename = "patient";
+		$auditTrail->objectid = $prev_id;
+
+		$auditTrail->logPatientReg($auditTrail);		
+	}
+	
 	return true;
 }
 
@@ -13431,7 +13472,7 @@ function create_or_update_map_coords_entry($lab_id, $dir_id, $x, $y)
 		DbUtil::switchRestore($saved_db);
 
 	} else
-	{
+	{	
 		$query_string = "INSERT INTO map_coordinates (coordinates, lab_id, user_id) VALUES ('$coordinate_string', $lab_id, $dir_id)";
 		
 		$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
@@ -13439,4 +13480,57 @@ function create_or_update_map_coords_entry($lab_id, $dir_id, $x, $y)
 		DbUtil::switchRestore($saved_db);
 	}
 }
+
+////////////////////////////////////////////////
+//
+//  Begin Audit Trail Module
+//
+////////////////////////////////////////////////
+
+Class AuditTrail {
+		
+	//Constants - Operation Type
+	public $ADD = 1;
+	public $UPDATE = 1;
+	public $DELETE = 3;
+	
+	//Constants - Description
+	public $REGISTER_PATIENT = 1;
+	public $REGISTER_SPECIMEN = 2;
+				
+	//Variables
+    public $SESSION_ID;
+	public $USER_ID;
+	
+	public $dbname;
+	public $tablename;
+	public $objectid; // Primary Key Affected 
+	public $fieldname;
+	public $oldvalue;
+	public $newvalue;
+	
+	function __construct(){
+		$this->dbname = db_get_current();
+		$this->SESSION_ID = session_id();
+		$this->USER_ID = $_SESSION['user_id'];
+	} 
+	
+    public function logPatientReg($auditTrailObj){
+
+		$saved_db = DbUtil::switchToGlobal(); //Switch to Global DB
+		
+		$query_string = "INSERT into audit_trail ".
+		"(at_userid, at_operationtype, at_dbname, at_tablename, at_objectid, at_sessionid, at_descript) ".
+		" values($this->userid, $this->ADD, $this->dbname, $this->tablename, $this->objectid, ".
+		" $this->SESSION_ID, $this->REGISTER_PATIENT ) ";
+			
+		query_insert_one($query_string);
+			
+		DbUtil::switchRestore($saved_db);		
+	}
+	
+
+	
+}
+
 ?>
