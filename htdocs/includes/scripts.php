@@ -54,15 +54,17 @@
 			<script type="text/javascript" src="assets/uniform/jquery.uniform.min.js"></script>	
 			<script type="text/javascript" src="assets/js/jquery.pulsate.min.js"></script>
 			<script type="text/javascript" src="assets/bootstrap-daterangepicker/date.js"></script>
-			<script type="text/javascript" src="assets/bootstrap-daterangepicker/daterangepicker.js"></script>	
+			<script type="text/javascript" src="assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+			<script type="text/javascript" src="assets/data-tables/jquery.dataTables.js"></script>
+			<script type="text/javascript" src="assets/data-tables/DT_bootstrap.js"></script>	
 			<script src="assets/js/app.js"></script>				
 			<script>
 				jQuery(document).ready(function() {		
-					App.setPage("index");  // set current page
+					//App.setPage("index");  // set current page
 					App.init(); // init the rest of plugins and elements
 				});
 			</script>
-			<script type="text/javascript">
+			<!--script type="text/javascript">
 			  var _gaq = _gaq || [];
 			  _gaq.push(['_setAccount', 'UA-37564768-1']);
 			  _gaq.push(['_setDomainName', 'keenthemes.com']);
@@ -73,6 +75,6 @@
 			    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
 			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 			  })();
-			</script>
+			</script-->
 	
 <!-- END JAVASCRIPTS -->

@@ -10,6 +10,7 @@
 	<!-- END CONTAINER -->
 	<!-- BEGIN FOOTER -->
 	<div class="footer">
+			<center>
 				<small>
 		
 		<?php
@@ -82,9 +83,7 @@
 		}
 		?>
 		</small>
-		<div class="span pull-right">
-			<span class="go-top"><i class="icon-angle-up"></i></span>
-		</div>
+		</center>
 	</div>
 	<!-- END FOOTER -->
 </body>

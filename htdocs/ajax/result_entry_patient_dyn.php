@@ -3,7 +3,6 @@
 # Returns list of patients matched with list of pending specimens
 # Called via Ajax form result_entry.php
 #
-
 include("../includes/db_lib.php");
 include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
@@ -16,169 +15,7 @@ $rcap = $search_settings['results_per_page'];
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 $uiinfo = "op=".$_REQUEST['t']."&qr=".$_REQUEST['a'];
 putUILog('result_entry_patient_dyn', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
 ?>
-<style type="text/css">
-    .prev_link{
-        position: relative;
-        float: left;
-    }
-    .next_link{
-        position: relative;
-        float: right;
-    }
-.customers
-{
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width:100%;
-border-collapse:collapse;
-table-layout:inherit
-}
-.customers td, .customers th 
-{
-font-size:1em;
-border:1px solid #98bf21;
-padding:3px 7px 2px 7px;
-}
-.customers th 
-{
-font-size:1.1em;
-text-align:left;
-padding-top:5px;
-padding-bottom:4px;
-background-color:#A7C942;
-color:#ffffff;
-}
-.customers tr.alt td 
-{
-color:#000000;
-background-color:#EAF2D3;
-}
-
-.idtd
-{
-    width: 60px;
-}
-.nametd
-{
-    width: 200px;
-}
-.agetd
-{
-    width: 60px;
-}
-.sextd
-{
-    width: 50px;
-}
-
-
-</style>
-<script type='text/javascript'>
-    $(document).ready(function(){
-        url_string = 'ajax/result_data_count.php?a='+'<?php echo $_REQUEST['t']; ?>'+'&q='+'<?php echo $_REQUEST['a']; ?>';
-        var cap = parseInt($('#rcap').html());
-        //console.log(cap);
-                                        $('.prev_link').hide();
-
-        $.ajax({ 
-		url: url_string, 
-                async : false,
-		success: function(count){
-                    var icount = parseInt(count);
-                     if(icount < cap/*parseInt('<?php echo $_REQUEST['result_cap']; ?>')*/)
-                        {
-                                $('.next_link').hide();
-                                if(icount == 0)
-                                    {
-                                        $('#page_counts').html('0/0 Page');
-                                        $('#result_counts').html('0 Results');
-                                    }
-                                else if(icount == 1)
-                                    {
-                                        $('#result_counts').html('1 Result');
-                                    }
-                                else
-                                    {
-                                        $('#result_counts').html(count + ' Results');
-                                    }
-
-                        }
-                        else
-                        {
-                                $('#result_counts').html(count + ' Results');
-                                
-                                if(icount % cap == 0)
-                                    var max_pages = parseInt(icount / cap);
-                                else
-                                    var max_pages = parseInt(icount / cap) + 1;
-                                 $('#page_counts').html('1/' + max_pages + ' Page');
-                                 $('#mpage').html(max_pages);
-                                $('#tot').html(count);
-                                var rem = icount - cap;
-                                $('#rem').html(rem);
-                        }
-                    
-
-               }
-	});
-
-});
-
-function get_next(url, sno, cap)
-{
-    var page = parseInt($('#page').html()); 
-    page = page + 1;
-    $('#page').html(page);
-    var rem = parseInt($('#rem').html()); 
-    var tot = parseInt($('#tot').html());
-    var cap = parseInt($('#rcap').html());
-     rem = rem - cap;
-    $('#rem').html(rem);
-    var mpage = parseInt($('#mpage').html());
-    
-    var displayed = tot - rem;
-    
-    if(displayed > tot)
-        displayed = tot;
-    $('#page_counts').html(page + '/' + mpage + ' Page');
-    
-    $('.prev_link').hide();    
-    $('.next_link').hide();
-    url = url + '&rem=' + rem;
-    var div_name = 'resultset'+sno;
-    var html_content = "<div id='"+div_name+"'</div>";
-    //$('#data_table').html(html_content);
-    $('#data_table').load(url);
-}   
-
-function get_prev(url, sno, cap)
-{
-    var page = parseInt($('#page').html()); 
-    page = page - 1;
-    $('#page').html(page);
-    var rem = parseInt($('#rem').html()); 
-    var tot = parseInt($('#tot').html());
-    var cap = parseInt($('#rcap').html());
-    var mpage = parseInt($('#mpage').html());
-
-     rem = rem + cap;
-    $('#rem').html(rem);
-    var displayed = tot - rem;
-    if(displayed > tot)
-        displayed = tot;
-        $('#page_counts').html(page + '/' + mpage + ' Page');
-
-    //$('#result_counts').html(displayed + '/' + tot + ' Results');
-    $('.prev_link').hide();
-    $('.next_link').hide();
-    url = url + '&rem=' + rem;
-    var div_name = 'resultset'+sno;
-    var html_content = "<div id='"+div_name+"'</div>";
-    //$('#data_table').html(html_content);
-    $('#data_table').load(url);
-}
-</script>
 <?php
 if(!isset($_REQUEST['result_cap']))
     $result_cap = $rcap;
@@ -319,7 +156,7 @@ else
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (status_code_id=".Specimen::$STATUS_PENDING.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' LIMIT 0,$rcap ";
+                    "AND t.result = ''";
     }
     elseif($attrib_type == 11)
     {
@@ -329,10 +166,20 @@ else
 		        "WHERE p.patient_id=s.patient_id ".
 		        "AND (status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
 		        "AND s.specimen_id=t.specimen_id ".
-		        "AND t.result = '' LIMIT 0,$rcap ";
+		        "AND t.result = ''";
+	}else if($attrib_type == 12)
+	{	
+		# Update speciment to started status code
+			$query_string = "UPDATE specimen SET status_code_id = 7 where specimen_id ='$attrib_value'";
+
 	}
 }
-$resultset = query_associative_all($query_string, $row_count);
+if($attrib_type == 12)
+{
+	$resultset = query_update($query_string);
+
+} else 
+	$resultset = query_associative_all($query_string, $row_count);
 
 if(count($resultset) == 0 || $resultset == null)
 {
@@ -368,22 +215,10 @@ foreach($resultset as $record)
 # Remove duplicates that might come due to multiple pending tests
 $specimen_id_list = array_values(array_unique($specimen_id_list));
 ?>
-<div id="rcap" style="display: none;"><?php echo $rcap; ?></div>
-<div id="page" style="display: none;">1</div>
-<div id="mpage" style="display: none;">1</div>
-<div id="rem" style="display: none;"></div>
-<div id="tot" style="display: none;"></div>
 
-<font color="grey"><small><div id="result_counts" style="float: right; padding-right: 16px">0 results</div></small></font>
-<font color="grey"><small><div id="page_counts" style="float: right; padding-right: 16px">1/1 Page</div></small></font>
-
-<br>
-
-                    
-<div id='data_table'>                    
-<table class="hor-minimalist-c">
+<table class="table table-striped table-bordered table-condensed" id="<?php echo $attrib_type; ?>">
 	<thead>
-		<tr valign='top'>
+		<tr>
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
@@ -434,9 +269,14 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
 			<th style='width:100px;'></th>
+			<?php if($attrib_type==10){
+			?>
+			<th style='width:100px;'></th>
+			<?php 
+			}?>
 		</tr>
 	</thead>
-</table>
+	<tbody>
 <?php
 	$count = 1;
 	foreach($specimen_id_list as $specimen_id)
@@ -444,15 +284,13 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 		$specimen = get_specimen_by_id($specimen_id);
 		$patient = get_patient_by_id($specimen->patientId);
 		?>
-		<table class="hor-minimalist-c" <?php echo "id='".$specimen->specimenId."'";?> >
-		<tbody>
-		<tr valign='top' <?php
+		<tr <?php
 		if($attrib_type == 3 && $count != 1)
 		{
 			# Fetching by patient daily number. Hide all records except the latest one
 			echo " class='old_pnum_records' style='display:none' ";
 		}
-		?>>
+		?> id="<?php echo $specimen->specimenId; ?>">
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
@@ -518,27 +356,27 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			</td>
 			<?php if($attrib_type == 10)
     		{?>
-			<td style='width:100px;'><a href="javascript:start_test(<?php echo $specimen->specimenId; ?>);" title='Click to begin testing this Specimen'>
+			<td style='width:100px;'><a href="javascript:start_test(<?php echo $specimen->specimenId; ?>);" title='Click to begin testing this Specimen' class="btn red">
 				<?php echo LangUtil::$generalTerms['START_TEST']; ?></a>
 			</td>
-			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Assign Specimen to a technician'>
+			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Assign Specimen to a technician' class="btn blue">
 				<?php echo LangUtil::$generalTerms['ASSIGN_TO']; ?></a>
 			</td>
 			<?php }else{?>
-			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Click to Enter Results for this Specimen'>
+			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Click to Enter Results for this Specimen'class="btn green">
 				<?php echo LangUtil::$generalTerms['ENTER_RESULTS']; ?></a>
 			</td>
 			<?php }?>
 		</tr>
-		</tbody>
-		</table>
+		
 		<div class='result_form_pane' id='result_form_pane_<?php echo $specimen->specimenId; ?>'>
 		</div>
 		<?php
 		$count++;
 	}
 	?>
-
+	</tbody>
+</table>
 <?php
 if($attrib_type == 3 && $count > 2)
 {
@@ -550,28 +388,8 @@ if($attrib_type == 3 && $count > 2)
 }
 
 ?>
+
 <?php 
-        if(isset($_REQUEST['l']))
-        { 
-            $next_link = "../ajax/result_data_page.php?a=".$_REQUEST['a']."&t=".$_REQUEST['t']."&l=".$_REQUEST['l']."&result_cap=".$result_cap."&result_counter=".($result_counter+1); 
-        }
-        else
-        {
-            $next_link = "../ajax/result_data_page.php?a=".$_REQUEST['a']."&t=".$_REQUEST['t']."&result_cap=".$result_cap."&result_counter=".($result_counter+1);             
-        }
-        if(isset($_REQUEST['l']))
-        { 
-            $prev_link = "../ajax/result_data_page.php?a=".$_REQUEST['a']."&t=".$_REQUEST['t']."&l=".$_REQUEST['l']."&result_cap=".$result_cap."&result_counter=".($result_counter - 1); 
-        }
-        else
-        {
-            $prev_link = "../ajax/result_data_page.php?a=".$_REQUEST['a']."&t=".$_REQUEST['t']."&result_cap=".$result_cap."&result_counter=".($result_counter - 1);             
-        }
-    ?>        
-<div class="prev_link">                       
-     <small><a onclick="javascript:get_prev('<?php echo $prev_link; ?>', '<?php echo $result_counter - 1; ?>', '<?php echo $result_cap; ?>');">&lt;&nbsp;Previous&nbsp;</a></small>
-</div>
-<div class="next_link">                
-     <small><a onclick="javascript:get_next('<?php echo $next_link; ?>', '<?php echo $result_counter + 1; ?>', '<?php echo $result_cap; ?>');">&nbsp;Next&nbsp&nbsp;&gt;</a></small>
-</div>
-</div>
+
+
+?>

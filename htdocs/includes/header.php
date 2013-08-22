@@ -291,7 +291,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					$page_value1 = explode("s", $value);
 					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
 						echo "<li class='has-sub active'>";
-					}else if ($page_value=="home")echo "<li class=''>";
+					}else if ($page_value[0]=="home")echo "<li class=''>";
 					else echo "<li class='has-sub'>";
 					echo "<a href='".$value."' ";
 					if(
@@ -310,7 +310,11 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					{
 						echo " class='' ";
 					}
-					echo "><i class='icon-table'></i>$key<span class='arrow'></span></a>";
+					echo "><i class='icon-table'></i>".$key;
+					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
+						echo "<span class='selected'></span></a>";
+					}else echo "<span class='arrow'></span></a>";
+					
 					switch($page_value[0]){
 					case 'find_patient':
 						echo "<ul class='sub'>".
@@ -384,26 +388,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 			<div class="container-fluid">
 				<!-- BEGIN PAGE HEADER-->
 				<div class="row-fluid">
-					<div class="span12">
-						<!-- BEGIN STYLE CUSTOMIZER-->
-						<div class="styler-panel hidden-phone">
-							<i class="icon-cog"></i>
-							<i class="icon-remove"></i>
-							<span class="settings">
-							<span class="text">Style:</span>
-							<span class="colors">
-							<span class="color-default" data-style="default"></span>
-							<span class="color-blue" data-style="blue"></span>
-							<span class="color-light" data-style="light"></span>		
-							</span>
-							<span class="layout">
-							<label class="hidden-phone">
-							<input type="checkbox" class="header" checked="" value="" />Fixed Header
-							</label>							
-							</span>
-							</span>
-						</div>
-						<!-- END STYLE CUSTOMIZER-->    	
+					<div class="span12">    	
 <?php
 }
 ?>

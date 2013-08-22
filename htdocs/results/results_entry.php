@@ -9,8 +9,7 @@ LangUtil::setPageId("results_entry");
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
-						<h3 class="page-title">
-						Bungoma District Hospital
+						<h3>
 						</h3>
 						<ul class="breadcrumb">
 							<li>
@@ -21,13 +20,6 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 							<li><a href="#">Tests</a>
 							<span class="icon-angle-right"></span></li>
 							<li><a href="#"></a></li>
-							<li class="pull-right no-text-shadow">
-								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top" data-original-title="Change dashboard date range">
-									<i class="icon-calendar"></i>
-									<span></span>
-									<i class="icon-angle-down"></i>
-								</div>
-							</li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
@@ -41,50 +33,74 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 	?>
 </div>
 
-<!-- BEGIN RESULTS ENTRY PORTLETS-->   
+<!-- BEGIN ROW-FLUID-->   
 <div class="row-fluid">
 <div class="span12 sortable">
-		
+
+<!-- BEGIN PENDING TESTS PORTLET-->	
 <div id="pending_tests" class='results_subdiv' style='display:none;'>
-<div class="portlet box blue">
-<div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Pending tests";?></h4>
-<div class="tools">
-<a href="javascript:;" class="collapse"></a>
-<a href="#portlet-config" data-toggle="modal" class="config"></a>
-<a href="javascript:;" class="reload"></a>
-<a href="javascript:;" class="remove"></a>
-</div>
-</div>
-<div class="portlet-body">
-<div class="scroller" data-height="500px" data-always-visible="1">
-<div id='fetched_specimens_entry'>
-</div>
-<!--script>fetch_pending_specimens();</script-->
-<div id="fetched_specimen">
-<?php
-	if(isset($_REQUEST['ajax_response']))
-		echo $_REQUEST['ajax_response'];
-?>
-</div>
-</div>
-</div>
-</div>
-</div>
-		
-		<div id="pending_results" class='results_subdiv' style='display:none;'>
-			<br>
-			<div id='fetched_pending_results_entry'>
-			</div>
-			<!--script>fetch_pending_results();</script-->
-			<div id="fetched_specimen">
-			<?php
-				if(isset($_REQUEST['ajax_response']))
-					echo $_REQUEST['ajax_response'];
-			?>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Pending Tests";?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				<a href="#portlet-config" data-toggle="modal" class="config"></a>
+				<a href="javascript:fetch_pending_results();" class="reload"></a>
+				<a href="javascript:;" class="remove"></a>
 			</div>
 		</div>
-		
+		<div class="portlet-body">
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<div id='fetched_specimens_entry'>
+				<!--PENDING SPECIMENTS LOADED IN THIS DIV-->
+				</div>
+				<div id="fetched_specimen">
+				<?php
+					if(isset($_REQUEST['ajax_response']))
+						echo $_REQUEST['ajax_response'];
+				?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PENDING TESTS PORTLET-->
+
+<!-- BEGIN PENDING RESULTS PORTLET-->		
+<div id="pending_results" class='results_subdiv' style='display:none;'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Pending Results";?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				<a href="#portlet-config" data-toggle="modal" class="config"></a>
+				<a href="javascript:fetch_pending_results();" class="reload"></a>
+				<a href="javascript:;" class="remove"></a>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<div id='fetched_specimens_entry'>
+				<!--PENDING RESULTS LOADED IN THIS DIV-->
+				</div>
+				<div id='fetched_pending_results_entry'>
+				<!--PENDING RESULTS FETCHED IN THIS DIV-->
+				</div>
+				<div id="fetched_specimen">
+				<?php
+				if(isset($_REQUEST['ajax_response']))
+					echo $_REQUEST['ajax_response'];
+				?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PENDING RESULTS PORTLET-->	
+
+
+
+
 		<div id="worksheet_results" class='results_subdiv' style='display:none;'>
 			<form name="fetch_worksheet" id="fetch_worksheet">
 				<b>Worksheet Results</b>
@@ -377,10 +393,10 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 	<input type='hidden' name='ajax_response' id='ajax_response' value=''></input>
 </form>
 
-</form>
 
 </div>
 </div>
+<!-- END ROW-FLUID--> 
 <?php
 include("includes/scripts.php");
 ?>
@@ -473,6 +489,7 @@ function right_load(destn_div)
 	}
 	else if(destn_div == "pending_tests"){
 		fetch_pending_specimens();
+		
 	}
 	else if(destn_div == "pending_results"){
 		fetch_pending_results();
@@ -552,9 +569,11 @@ function fetch_pending_specimens()
 			$('#fetch_progress_bar').hide();
 			$("#fetched_specimen").show();
 			$("#fetched_specimen").html("");
+			handleDataTable(10);
 		}
 	);
 }
+
 function fetch_pending_results()
 {
 	var url = 'ajax/result_entry_patient_dyn.php';
@@ -565,23 +584,24 @@ function fetch_pending_results()
 			$('#fetch_progress_bar').hide();
 			$("#fetched_specimen").show();
 			$("#fetched_specimen").html("");
+			handleDataTable(11);
 		}
 	);
 }
 function start_test(specimen_id)
 {
-
+	$('#'+specimen_id).show();
 	var r=confirm("Start test?");
 	if (r==true)
    	{
    		//Mark test as cancelled
   		var url = 'ajax/result_entry_patient_dyn.php';
 		$("#fetched_pending_results_entry").load(url, 
-		{a: '', t: 11}, 
+		{a: specimen_id, t: 12}, 
 		function() 
 		{
 			$('#fetch_progress_bar').hide();
-			$('#'+specimen_id).hide();
+			$('#'+specimen_id).hide();	
 		}
 	);
 		
@@ -590,7 +610,6 @@ function start_test(specimen_id)
   	{
   		//Cancel Starting test
   	}
-	
 }
 
 function fetch_specimen2(specimen_id)
@@ -733,7 +752,7 @@ function get_worksheet()
 	{
 		$('#num_rows').attr("value", "10");
 	}
-	var worksheet_id = $('#worksheet_custom_type').val()
+	var worksheet_id = $('#worksheet_custom_type').val();
 	var test_type_id = $('#worksheet_test_type').val();
 	if(worksheet_id == "" && test_type_id == "")
 	{	
@@ -843,6 +862,182 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		$("#"+remarks_input_id).attr("value", msg)
 		 }
 	 });
+}
+</script>
+<script>
+function handleDataTable(table_id) {
+    if (!jQuery().dataTable) {
+        return;
+    }
+    (function($) {
+    	/*
+    	 * Function: fnGetColumnData
+    	 * Purpose:  Return an array of table values from a particular column.
+    	 * Returns:  array string: 1d data array 
+    	 * Inputs:   object:oSettings - dataTable settings object. This is always the last argument past to the function
+    	 *           int:iColumn - the id of the column to extract the data from
+    	 *           bool:bUnique - optional - if set to false duplicated values are not filtered out
+    	 *           bool:bFiltered - optional - if set to false all the table data is used (not only the filtered)
+    	 *           bool:bIgnoreEmpty - optional - if set to false empty values are not filtered from the result array
+    	 * Author:   Benedikt Forchhammer <b.forchhammer /AT\ mind2.de>
+    	 */
+    	$.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique, bFiltered, bIgnoreEmpty ) {
+    		// check that we have a column id
+    		if ( typeof iColumn == "undefined" ) return new Array();
+    		
+    		// by default we only wany unique data
+    		if ( typeof bUnique == "undefined" ) bUnique = true;
+    		
+    		// by default we do want to only look at filtered data
+    		if ( typeof bFiltered == "undefined" ) bFiltered = true;
+    		
+    		// by default we do not wany to include empty values
+    		if ( typeof bIgnoreEmpty == "undefined" ) bIgnoreEmpty = true;
+    		
+    		// list of rows which we're going to loop through
+    		var aiRows;
+    		
+    		// use only filtered rows
+    		if (bFiltered == true) aiRows = oSettings.aiDisplay; 
+    		// use all rows
+    		else aiRows = oSettings.aiDisplayMaster; // all row numbers
+
+    		// set up data array	
+    		var asResultData = new Array();
+    		
+    		for (var i=0,c=aiRows.length; i<c; i++) {
+    			iRow = aiRows[i];
+    			var aData = this.fnGetData(iRow);
+    			var sValue = aData[iColumn];
+    			
+    			// ignore empty values?
+    			if (bIgnoreEmpty == true && sValue.length == 0) continue;
+
+    			// ignore unique values?
+    			else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1) continue;
+    			
+    			// else push the value onto the result data array
+    			else asResultData.push(sValue);
+    		}
+    		
+    		return asResultData;
+    	}}(jQuery));
+
+
+    	function fnCreateSelect( aData )
+    	{
+    		var r='<select><option value=""></option>', i, iLen=aData.length;
+    		for ( i=0 ; i<iLen ; i++ )
+    		{
+    			r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+    		}
+    		return r+'</select>';
+    	}
+    // begin first table
+    var oTable = $('#'+table_id).dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ records per page",
+            "oPaginate": {
+                "sPrevious": "Prev",
+                "sNext": "Next"
+            }
+        },
+        "aoColumnDefs": [{
+            'bSortable': false,
+            'aTargets': [0]
+        }],
+    });
+
+    jQuery('#'+table_id+' .group-checkable').change(function () {
+        var set = jQuery(this).attr("data-set");
+        var checked = jQuery(this).is(":checked");
+        jQuery(set).each(function () {
+            if (checked) {
+                $(this).attr("checked", true);
+            } else {
+                $(this).attr("checked", false);
+            }
+        });
+        jQuery.uniform.update(set);
+    });
+
+    jQuery('#'+table_id+'_wrapper .dataTables_filter input').addClass("m-wrap medium"); // modify table search input
+    jQuery('#'+table_id+'_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
+
+    // begin second table
+    $('#sample_2').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ per page",
+            "oPaginate": {
+                "sPrevious": "Prev",
+                "sNext": "Next"
+            }
+        },
+        "aoColumnDefs": [{
+            'bSortable': false,
+            'aTargets': [0]
+        }]
+    });
+
+    jQuery('#sample_2 .group-checkable').change(function () {
+        var set = jQuery(this).attr("data-set");
+        var checked = jQuery(this).is(":checked");
+        jQuery(set).each(function () {
+            if (checked) {
+                $(this).attr("checked", true);
+            } else {
+                $(this).attr("checked", false);
+            }
+        });
+        jQuery.uniform.update(set);
+    });
+
+    jQuery('#sample_2_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
+    jQuery('#sample_2_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
+
+    // begin: third table
+    $('#sample_3').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ per page",
+            "oPaginate": {
+                "sPrevious": "Prev",
+                "sNext": "Next"
+            }
+        },
+        "aoColumnDefs": [{
+            'bSortable': false,
+            'aTargets': [0]
+        }]
+    });
+
+    jQuery('#sample_3 .group-checkable').change(function () {
+        var set = jQuery(this).attr("data-set");
+        var checked = jQuery(this).is(":checked");
+        jQuery(set).each(function () {
+            if (checked) {
+                $(this).attr("checked", true);
+            } else {
+                $(this).attr("checked", false);
+            }
+        });
+        jQuery.uniform.update(set);
+    });
+
+    jQuery('#sample_3_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
+    jQuery('#sample_3_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
+    /* Add a select menu for each TH element in the table footer */
+// 	$("thead th").each( function ( i ) {
+// 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
+// 		$('select', this).change( function () {
+// 			oTable.fnFilter( $(this).val(), i );
+// 		} );
+// 	} );
 }
 </script>
 <?php

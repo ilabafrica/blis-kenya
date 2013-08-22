@@ -7,11 +7,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 //$page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip);
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
-						<h3 class="page-title">
-						<?php 
-						echo LangUtil::getPageTerm("WELCOME").", " . $_SESSION['username'];
-						
-						?>
+						<h3>
 						</h3>
 						<ul class="breadcrumb">
 							<li>
@@ -21,11 +17,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 							</li>
 							<!--li><a href="#">Home</a></li-->
 							<li class="pull-right no-text-shadow">
-								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top" data-original-title="Change dashboard date range">
-									<i class="icon-calendar"></i>
-									<span></span>
-									<i class="icon-angle-down"></i>
-								</div>
+								
 							</li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
@@ -823,6 +815,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 						</div>
 					</div>
 					<div class="clearfix"></div>
+					
 					
 				</div>
 <?php

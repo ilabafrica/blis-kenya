@@ -11,8 +11,7 @@ putUILog('find_patient', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X
 $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
-						<h3 class="page-title">
-						Bungoma District Hospital
+						<h3>
 						</h3>
 						<ul class="breadcrumb">
 							<li>
@@ -23,13 +22,6 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 							<li><a href="#">Registration</a>
 							<span class="icon-angle-right"></span></li>
 							<li><a href="#"></a></li>
-							<li class="pull-right no-text-shadow">
-								<div id="dashboard-report-range" class="dashboard-date-range tooltips no-tooltip-on-touch-device responsive" data-tablet="" data-desktop="tooltips" data-placement="top" data-original-title="Change dashboard date range">
-									<i class="icon-calendar"></i>
-									<span></span>
-									<i class="icon-angle-down"></i>
-								</div>
-							</li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
@@ -82,7 +74,6 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 </span>
 </form>
-<br>
 <div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
 	<ul>
 		<?php

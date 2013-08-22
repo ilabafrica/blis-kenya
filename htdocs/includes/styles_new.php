@@ -15,3 +15,13 @@
 <link href="assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
 <link href="assets/jqvmap/jqvmap/jqvmap.css" media="screen" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
+<style>
+.page-sidebar{
+  background-color: rgb(61, 61, 61)!important;
+  height: inherit;
+}
+html{
+ height:100%;
+}
+</style>

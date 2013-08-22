@@ -422,7 +422,7 @@ Page content
 ***/
 .page-content {  
   margin-top: 0px;
-  min-height: 800px;    
+  /*min-height: 800px; */   
   padding: 0px;
   background-color: #fff; 
 }
@@ -463,7 +463,7 @@ Page breadcrumb
   box-shadow: none;
   padding-right: 0px;
   padding-left: 8px;
-  margin-bottom: 25px;
+  margin-bottom: 5px;
   border:0px !important;  
   background-color: #eee;
 }
