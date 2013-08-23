@@ -224,7 +224,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					?>
 					<li class="dropdown user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img alt="" src="assets/img/avatar1_small.jpg" />
+						<img alt="" src="assets/img/avatar.png" height=30 width=30/>
 						<span class="username"> <?php echo $_SESSION['username']; ?></span>
 						<i class="icon-angle-down"></i>
 						</a>
@@ -347,17 +347,24 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 										"</a>
 									</li>
 									<li>
-										<a href='javascript:right_load(&#34;pending_results&#34;);' title='Patient Lookup'
+										<a href='javascript:right_load(&#34;pending_results&#34;);' title='Pending Results'
 										class='' id='patient_lookup_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_PENDING_RESULTS'].
 										"</a>
 									</li>
 									<li>
-										<a href='javascript:right_load(&#34;verify_results&#34;);'  title='New Patient'
+										<a href='javascript:right_load(&#34;verify_results_new&#34;);'  title='Verify Results'
 										class='' id='new_patient_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_VERIFYRESULTS'].
+										"</a>
+									</li>
+									<li>
+										<a href='javascript:right_load(&#34;verify_results_new&#34;);'  title='Quality Controls'
+										class='' id='new_patient_menu'>
+										<i class='icon-table'></i>&nbsp;&nbsp;"
+										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
 										"</a>
 									</li>".
 								"</ul>";

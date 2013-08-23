@@ -2395,10 +2395,10 @@ var App = function () {
         },
 
         // wrapper function to  block element(indicate loading)
-        blockUI: function (el, loaderOnTop) {
+        blockUI: function (el, loaderOnTop) {	
             lastBlockedUI = el;
             jQuery(el).block({
-                message: '<img src="./assets/img/loading.gif" align="absmiddle">',
+                message: '<img src="./assets/img/loading.gif" align="absmiddle"><br>Loading....',
                 css: {
                     border: 'none',
                     padding: '2px',

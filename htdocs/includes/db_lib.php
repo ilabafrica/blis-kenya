@@ -2699,6 +2699,16 @@ class Test
 		else
 			$test->timestamp = null;
 		
+		if(isset($record['test_type']))
+			$test->test_type = $record['test_type'];
+		else
+			$test->test_type = null;
+		
+		if(isset($record['test_category']))
+			$test->test_category = $record['test_category'];
+		else
+			$test->test_category = null;
+		
 		return $test;
 	}
 	
