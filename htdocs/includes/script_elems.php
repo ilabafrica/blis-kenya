@@ -15,6 +15,7 @@ class ScriptElems
 	public $enabledJQueryForm = false;
 	public $enabledJQueryValidate = false;
 	public $enabledTableSorter = false;
+	public $enabledFormBuilder = false;
 	public $enabledFlotBasic = false;
 	public $enabledMultiSelect = false;
 	public $enabledLatencyRecord = false;
@@ -33,7 +34,7 @@ class ScriptElems
 		{
 		?>
 			<script src="js/jquery.js"></script>
-			<script src="js/bootstrap.js"></script>
+            <script src="js/bootstrap.js"></script>
 			<script type='text/javascript'>
 			
 				$(document).ready(function() {
@@ -207,7 +208,6 @@ class ScriptElems
 			$this->enabledPageLoadIndicator = true;
 		}
 	}
-	
 	public function enableAutoScrollTop()
 	{
 		?>
@@ -449,6 +449,33 @@ class ScriptElems
 		<?php
 		}
 		$this->enabledEditInPlace = true;
+	}
+		public function enableFormBuilder()
+	{
+		# Enable page load indicator bar
+		if($this->enabledFormBuilder === false)
+		{
+		?>
+	<script src="js/jquery-latest.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.formbuilder.js"></script>
+    <link href="css/jquery.formbuilder.css" media="screen" rel="stylesheet" />
+    <script>
+	$(function(){
+		$('#my_form_builder').formbuilder({
+			
+			'useJson' : true
+		});
+		$(function() {
+			$("#my_form_builder ul").sortable({ opacity: 0.6, cursor: 'move'});
+		});
+	});
+</script>
+		</script>
+		<?php
+			$this->enabledFormBuilder = true;
+		}
+			
 	}
 	
 	

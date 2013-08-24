@@ -1,6 +1,6 @@
 <?php
 #
-# Main page for adding new test category
+# Main page for adding new quality control
 #
 include("redirect.php");
 include("includes/header.php");

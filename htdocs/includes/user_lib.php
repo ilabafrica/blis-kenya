@@ -63,6 +63,7 @@ function get_top_menu_options($user_role)
 		# ... 
 		$page_list[LangUtil::getPageTitle("lab_config_home")] = "lab_configs.php";
 		$page_list[LangUtil::getPageTitle("catalog")] = "catalog.php";
+		$page_list["Quality Control"]="quality.php";
 		$page_list[LangUtil::getPageTitle("reports")] = "reports.php";
 		if($SERVER != $ON_ARC)
 		{
@@ -124,13 +125,6 @@ function get_top_menu_options($user_role)
 				break;
 			case $LIS_111:
 				# All three
-				$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
-				$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
-				$page_list[LangUtil::getPageTitle("search")] = "search.php";
-				$page_list[LangUtil::getPageTitle("reports")] = "reports.php";
-				break;
-			case $LIS_0101:
-				# TESTS ALONE - LAB TECHNOLOGIST
 				$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
 				$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
 				$page_list[LangUtil::getPageTitle("search")] = "search.php";

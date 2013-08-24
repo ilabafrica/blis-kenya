@@ -281,7 +281,7 @@ function add_specimenbox()
 
 function get_testbox(testbox_id, stype_id)
 {
-	var stype_val = $('#'+stype_id).attr("value");
+	var stype_val = $('#'+stype_id).val();
 	if(stype_val == "")
 	{
 		$('#'+testbox_id).html("-<?php echo LangUtil::$pageTerms['MSG_SELECT_STYPE']; ?>-");

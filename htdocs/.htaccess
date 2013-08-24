@@ -146,6 +146,9 @@ RewriteRule ^specimen_result\.php$ search/specimen_result.php
 RewriteRule ^specimen_result_do\.php$ search/specimen_result_do.php
 RewriteRule ^viewPatientInfo\.php$ search/viewPatientInfo.php
 
+## /quality control folder
+RewriteRule ^quality\.php$ quality_control/quality.php
+RewriteRule ^quality\.php$ quality_control/quality_control_category_new.php
 
 ## /export folder
 RewriteRule ^export_word\.php$ export/export_word.php
