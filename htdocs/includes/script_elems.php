@@ -32,8 +32,8 @@ class ScriptElems
 		if($this->enabledJQuery === false)
 		{
 		?>
-			<script src="js/jquery.js"></script>
-			<script src="js/bootstrap.js"></script>
+			<script src="assets/js/jquery-1.8.3.min.js"></script>
+			
 			<script type='text/javascript'>
 			
 				$(document).ready(function() {
@@ -130,11 +130,11 @@ class ScriptElems
 		if($this->enabledFacebox === false)
 		{
 		?>
-			<link href="facebox/facebox.css" media="screen" rel="stylesheet" type="text/css" />
+			<link href="facebox/facebox.css" media="screen" rel="stylesheet" type="text/css">
 			<script src="facebox/facebox.js" type="text/javascript"></script>
 			<script type='text/javascript'>
 			$(document).ready(function(){
-				$('a[rel*=facebox]').facebox()
+				$('a[rel*=facebox]').facebox();
 			});
 			</script>
 		<?php
@@ -317,9 +317,9 @@ class ScriptElems
 		if($this->enabledMultiSelect === false)
 		{
 		?>
-			<script src="js/jquery.multiSelect/jquery.bgiframe.min.js" type="text/javascript"></script> 
-			<script src="js/jquery.multiSelect/jquery.multiSelect.js" type="text/javascript"></script> 
- 			<link href="js/jquery.multiSelect/jquery.multiSelect.css" rel="stylesheet" type="text/css" /> 
+			<script src="js/jquery.multiselect/jquery.bgiframe.min.js" type="text/javascript"></script> 
+			<script src="js/jquery.multiselect/jquery.multiSelect.js" type="text/javascript"></script> 
+ 			<link href="js/jquery.multiselect/jquery.multiSelect.css" rel="stylesheet" type="text/css" /> 
 		<?php
 		}
 		$this->enabledMultiSelect = true;
