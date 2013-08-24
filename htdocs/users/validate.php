@@ -40,7 +40,6 @@ if($login_correct)
 	else
 	{
 		$_SESSION['lab_config_id'] = $user->labConfigId;
-		echo $user->labConfigId;
 		$_SESSION['country'] = $user->country;
 		$lab_config = get_lab_config_by_id($user->labConfigId);
 		$_SESSION['db_name'] = $lab_config->dbName;

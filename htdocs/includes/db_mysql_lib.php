@@ -27,7 +27,7 @@ function query_insert_one($query)
 		DebugLib::logDBUpdates($query, db_get_current());
 		DebugLib::logQuery($query, db_get_current(), $_SESSION['username']);
         }
-		
+	return true;	
 }
 
 

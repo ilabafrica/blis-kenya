@@ -231,7 +231,6 @@ class ScriptElems
   <!--<link rel="stylesheet" href="css/main.css" type="text/css" />-->
   <link rel="stylesheet" href="css/jquery.autocomplete.css" type="text/css" />
   <script type="text/javascript" src="js/jquery.bgiframe.min.js"></script>
- <script type="text/javascript" src="js/jquery.dimensions.js"></script>
   <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
   
 	<?php
