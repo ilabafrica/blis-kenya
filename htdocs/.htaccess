@@ -184,6 +184,7 @@ RewriteRule ^login\.php$ users/login.php
 RewriteRule ^validate\.php$ users/validate.php
 RewriteRule ^logout\.php$ users/logout.php
 RewriteRule ^home\.php$ users/home.php
+RewriteRule ^home_new\.php$ users/home_new.php
 RewriteRule ^accesslist\.php$ users/accesslist.php
 
 

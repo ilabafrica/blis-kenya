@@ -98,6 +98,7 @@
       	
       	.context{
       		top: 30px;
+      		margin-bottom: 30px;
       	}
          
 </style>

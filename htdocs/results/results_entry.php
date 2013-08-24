@@ -6,16 +6,25 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("results_entry");
-
-$script_elems->enableDatePicker();
-$script_elems->enableJQueryForm();
-$script_elems->enableJQueryValidate();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
-$script_elems->enableTokenInput();
-
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 ?>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i>
+								<a href="index.html">Home</a> 
+								<span class="icon-angle-right"></span>
+							</li>
+							<li><a href="#">Tests</a>
+							<span class="icon-angle-right"></span></li>
+							<li><a href="#"></a></li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
 <div class='batch_results_subdiv_help' id='batch_results_subdiv_help' style='display:none;'>
 	<?php
 		//$tips_string = LangUtil::$pageTerms['TIPS_INFECTIONSUMMARY'];
@@ -23,16 +32,393 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 		$page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
 	?>
 </div>
-<style type='text/css'>
-label
+
+<!-- BEGIN ROW-FLUID-->   
+<div class="row-fluid">
+<div class="span12 sortable">
+
+<!-- BEGIN PENDING TESTS PORTLET-->	
+<div id="pending_tests" class='results_subdiv' style='display:none;'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Pending Tests";?></h4>
+			<div class="tools">
+				<a href="javascript:fetch_pending_results();" class="reload"></a>
+				<a href="javascript:;" class="collapse"></a>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<div id='fetched_specimens_entry'>
+				<!--PENDING SPECIMENTS LOADED IN THIS DIV-->
+				</div>
+				<div id="fetched_specimen">
+				<?php
+					if(isset($_REQUEST['ajax_response']))
+						echo $_REQUEST['ajax_response'];
+				?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PENDING TESTS PORTLET-->
+
+<!-- BEGIN PENDING RESULTS PORTLET-->		
+<div id="pending_results" class='results_subdiv' style='display:none;'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Pending Results";?></h4>
+			<div class="tools">
+				<a href="javascript:fetch_pending_results();" class="reload"></a>
+				<a href="javascript:;" class="collapse"></a>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<div id='fetched_pending_results_entry'>
+				<!--PENDING RESULTS FETCHED IN THIS DIV-->
+				</div>
+				<div id="fetched_specimen">
+				<?php
+				if(isset($_REQUEST['ajax_response']))
+					echo $_REQUEST['ajax_response'];
+				?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PENDING RESULTS PORTLET-->
+
+<!-- BEGIN VERIFY RESULTS PORTLET-->		
+<div id="verify_results_new" class='results_subdiv'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Verify Results";?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="reload"></a>
+				<a href="javascript:;" class="collapse"></a>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<div id='fetched_verify_results'>
+				<!--RESULTS TO BE VERIFIED FETCHED IN THIS DIV-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END VERIFY RESULTS PORTLET-->	
+
+
+
+<div id="worksheet_results" class='results_subdiv' style='display:none;'>
+	<form name="fetch_worksheet" id="fetch_worksheet">
+		<b>Worksheet Results</b>
+		<br>
+		<br>
+		Worksheet# <input type="text" name="worksheet_num" id="worksheet_num" class='uniform_width' />
+		<input type="button" onclick="fetch_worksheets();" value="Fetch"/>
+	</form>
+	<div id="worksheet">
+	</div>
+</div>
+		
+<div id="specimen_results" class='results_subdiv' style='display:none;'>
+	<form name="fetch_specimen_form" id="fetch_specimen_form">
+		<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?></span></div>	 
+		<select name='resultfetch_attrib' id='resultfetch_attrib'>
+			<?php
+			$hide_patient_name = true;
+			//if($lab_config->hidePatientName == 1)
+			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
+			{
+				$hide_patient_name = false;
+			}
+			$page_elems->getPatientSearchAttribSelect($hide_patient_name);
+			if($_SESSION['s_addl'] != 0)
+			{
+			?>
+				<option value='5'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></option>
+			<?php
+			}
+			?>
+		</select>
+		&nbsp;&nbsp;
+		<input type="text" name="specimen_id" id="specimen_id" class='uniform_width' />
+		<input type="button" id='fetch_specimen_button' onclick="fetch_specimen();" value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" />
+		&nbsp;&nbsp;
+		<span id='fetch_progress_bar' style='display:none;'>
+			<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+		</span>	
+	</form>
+	<br>
+	<div id='fetched_patient_entry'>
+	</div>
+	<div id="fetched_specimen">
+	<?php
+		if(isset($_REQUEST['ajax_response']))
+			echo $_REQUEST['ajax_response'];
+	?>
+	</div>
+</div>
+
+<div id="import_results" class='results_subdiv' style='display:none;'>
+	<b>Import Results</b>
+	<br>
+	<br>
+	<form name='form_import' id='form_import' action='' method='POST' enctype='multipart/form-data'>
+		<table>
+			<tr>
+				<td>Machine Type</td>
+				<td><input type='text' name='mc_type'></td>
+			</tr>
+			<tr>
+				<td>File</td>
+				<td><input type='file' name='file_path'></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><br><input type='button' name='submit_import' value='Import Results'/></td>
+			</tr>
+		</table>
+	</form>
+</div>
+		
+<div id='batch_results' class='results_subdiv' style='display:none;'>
+	<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?></span></div>	 
+	<?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
+	&nbsp;&nbsp;&nbsp;
+	<select id='batch_test_type' class='uniform_width'>
+		<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
+		<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
+	</select>
+	&nbsp;&nbsp;&nbsp;
+	&nbsp;&nbsp;&nbsp;
+	<br><br>
+	<table>
+		<tr valign='top'>
+			<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td>
+			<?php
+			$today = date("Y-m-d");
+			$today_array = explode("-", $today);
+			$monthago_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($today)) . " -270 days"));
+			$monthago_array = explode("-", $monthago_date);
+			$name_list = array("yyyy_from", "mm_from", "dd_from");
+			$id_list = array("yyyy_from", "mm_from", "dd_from");
+			$value_list = $monthago_array;
+			//$page_elems->getDatePicker($name_list, $id_list, $value_list);
+			?>
+			</td>
+		</tr>
+		<tr valign='top'>
+			<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+			<td>
+			<?php
+				$name_list = array("yyyy_to", "mm_to", "dd_to");
+				$id_list = array("yyyy_to", "mm_to", "dd_to");
+				$value_list = $today_array;
+				//$page_elems->getDatePicker($name_list, $id_list, $value_list);
+			?>
+			</td>
+		</tr>
+		<tr valign='top'>
+			<td>&nbsp;&nbsp;&nbsp;</td>
+			<td>
+				&nbsp;&nbsp;&nbsp;
+				<input type='button' onclick='javascript:get_batch_form();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
+			</td>
+		</tr>
+	</table>
+	<span id='batch_progress_form' style='display:none'>
+		<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+	</span>
+	<span id='batch_result_error' class='error_string' style='display:none;'>
+		<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
+	</span>
+	<br><br>
+	<div id='batch_form_div'>
+	</div>
+</div>
+		
+<div id='verify_results' class='results_subdiv' style='display:none;'>
+	<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?></span></div>
+	<form name='verify_results_form' id='verify_results_form' action='results_verify.php' method='post'>
+		<?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
+		&nbsp;&nbsp;&nbsp;
+		<select id='verify_test_type' name='t_type' class='uniform_width'>
+			<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
+			<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
+		</select>
+		&nbsp;&nbsp;&nbsp;
+		<input type='button' onclick='javascript:get_verification_form();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
+		&nbsp;&nbsp;&nbsp;
+		<span id='verify_progress_form' style='display:none'>
+			<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+		</span>
+		<span id='verify_result_error' class='error_string' style='display:none;'>
+			<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
+		</span>
+	</form>
+	<br><br>
+	<div id='verify_form_div'>
+	</div>
+</div>
+		
+<div id='control_testing' class='results_subdiv' style='display:none;'>
+	<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['CONTROL_TESTING_RESULTS']; ?></span></div>
+	<form name='control_testing_form' id='control_testing_form' action='control_testing_entry.php' method='post'>
+		<table cellspacing='4px'>
+			<tbody>
+			<tr valign='top'>
+				<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?> &nbsp;&nbsp;&nbsp;</td>
+				<td>
+					<select id='verify_test_type_control' name='t_type' class='uniform_width'>
+						<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
+						<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
+					</select>
+					<span id='control_testing_error' class='error_string' style='display:none;'>
+						<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
+					</span>
+					<br>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td>Result</td>
+				<td>
+					<input type="radio" name="controlTesting" id="controlTesting" value="Pass" checked> Pass 
+					<input type="radio" name="controlTesting" id="controlTesting" value="Fail"> Fail
+					<br>
+				</td>
+			<tr valign='top'>
+				<td></td>
+				<td>
+					<input type='button' onclick='javascript:verify_control_selection();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+	<br><br>
+	<div id='control_testing_div'>
+	</div>
+	<div class='clean-orange' id='control_result_done' style='width:300px' style='display:none;'>
+				
+	</div>
+</div>
+		
+<div id='worksheet_div' class='results_subdiv' style='display:none;'>
+	<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?></span></div>
+	<form name='worksheet_form' id='worksheet_form' action='worksheet.php' method='post' target='_blank'>
+		<table cellspacing='4px'>
+			<tbody>
+			<tr valign='top'>
+				<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></td>
+				<td>
+					<select name='cat_code' id='cat_code' class='uniform_width'>
+						<?php $page_elems->getTestCategorySelect(); ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?><br>OR</td>
+				<td>
+					<select id='worksheet_test_type' name='t_type' class='uniform_width'>
+						<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td>
+					<?php echo LangUtil::$pageTerms['CUSTOM_WORKSHEET']; ?></td>
+				<td>
+					<select id='worksheet_custom_type' name='w_type' class='uniform_width'>
+						<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?></option>
+						<?php 
+						$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
+						$page_elems->getCustomWorksheetSelect($lab_config); 
+						?>
+					</select>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td><?php echo LangUtil::$pageTerms['BLANK_WORKSHEET']; ?>?</td>
+				<td>
+					<input type='radio' name='is_blank' value='Y'><?php echo LangUtil::$generalTerms['YES']; ?></input>
+					<input type='radio' name='is_blank' value='N' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
+				</td>
+			</tr>
+			<tr valign='top' id='num_rows_row' style='display:none;'>
+				<td><?php echo LangUtil::$pageTerms['NUM_ROWS']; ?></td>
+				<td>
+					<input type='text' name='num_rows' id='num_rows' value='10' class='uniform_width'></input>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td></td>
+				<td>
+					<input type='button' onclick='javascript:get_worksheet();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+					&nbsp;&nbsp;&nbsp;
+					<span id='worksheet_progress_form' style='display:none'>
+						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+					</span>
+					<span id='worksheet_error' class='error_string' style='display:none;'>
+						<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
+					</span>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<?php
+if($SHOW_REPORT_RESULTS === true)
 {
-	width: 10em;
-	float: left;
-	text-align: right;
-	margin-right: 0.5em;
-	display: block
+?>
+<div id='report_results' class='results_subdiv' style='display:none;'>
+	<b><?php echo LangUtil::$pageTerms['MENU_REPORTRESULTS']; ?></b>
+	<span id='report_results_load_progress'>
+	&nbsp;&nbsp;&nbsp;
+	<?php
+	$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']);
+	?>
+	</span>
+	<br>
+	<br>
+	<div id='report_results_container'>
+	
+	<?php 
+	/*
+	
+	*/
+	?>
+	</div>
+</div>
+<?php
 }
-</style>
+?>
+
+<form id='ajax_redirect' method='post' action='results_entry.php'>
+	<input type='hidden' name='sid_redirect' id='sid_redirect' value=''></input>
+	<input type='hidden' name='ajax_response' id='ajax_response' value=''></input>
+</form>
+
+</div>
+</div>
+<!-- END ROW-FLUID--> 
+<?php
+include("includes/scripts.php");
+?>
+<?php $script_elems->enableDatePicker();
+$script_elems->enableJQueryForm();
+$script_elems->enableJQueryValidate();
+$script_elems->enableTableSorter();
+$script_elems->enableLatencyRecord();
+$script_elems->enableTokenInput();
+?>
 <script type='text/javascript'>
 tableml = "";
 unreported_fetched = false;
@@ -43,7 +429,7 @@ $(document).ready(function(){
 	get_test_types_bycat();
 	$("#worksheet_results").hide();
 	$('.results_subdiv').hide();
-	right_load("specimen_results");
+	right_load("pending_tests");
 	<?php 
 	if(isset($_REQUEST['ajax_response']))
 	{
@@ -79,7 +465,7 @@ $(document).ready(function(){
 	<?php
 	}
 	?>
-	hide_worksheet_link();
+	//hide_worksheet_link();
 });
 
 function get_test_types_bycat()
@@ -102,7 +488,7 @@ function toggle(elem_id)
 
 function right_load(destn_div)
 {
-	hide_worksheet_link();
+	//hide_worksheet_link();
 	$('.results_subdiv').hide();
 	$("#"+destn_div).show();
 	$('#specimen_id').focus();
@@ -112,6 +498,16 @@ function right_load(destn_div)
 	if(destn_div == "report_results")
 	{
 		load_unreported_results();
+	}
+	else if(destn_div == "pending_tests"){
+		fetch_pending_specimens();
+		
+	}
+	else if(destn_div == "pending_results"){
+		fetch_pending_results();
+	}
+	else if(destn_div == "verify_results_new"){
+		fetch_verify_results();
 	}
 }
 
@@ -176,6 +572,80 @@ function fetch_specimen()
 			$("#fetched_specimen").html("");
 		}
 	);
+}
+/**
+ * FETCH PENDING SPECIMENS
+ */
+function fetch_pending_specimens()
+{	
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'ajax/result_entry_patient_dyn.php';
+	$("#fetched_specimens_entry").load(url, 
+		{a: '', t: 10}, 
+		function() 
+		{
+			handleDataTable(10);
+			App.unblockUI(el);
+		}
+	);
+}
+/**
+ * FETCH TEST STARTED AND PENDING RESULTS
+ */
+function fetch_pending_results()
+{	
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'ajax/result_entry_patient_dyn.php';
+	$("#fetched_pending_results_entry").load(url, 
+		{a: '', t: 11}, 
+		function() 
+		{
+			handleDataTable(11);
+			App.unblockUI(el);
+		}
+	);
+}
+/**
+ * FETCH RESULTS TO BE VERIFIED
+ */
+function fetch_verify_results()
+{	
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'ajax/results_verify.php';
+	$("#fetched_verify_results").load(url, 
+		{a: '', t: 12}, 
+		function() 
+		{
+			handleDataTable(12);
+			App.unblockUI(el);
+		}
+	);
+}
+function start_test(specimen_id)
+{
+	$('#'+specimen_id).show();
+	var r=confirm("Start test?");
+	if (r==true)
+   	{
+   		//Mark test as cancelled
+  		var url = 'ajax/result_entry_patient_dyn.php';
+		$("#fetched_pending_results_entry").load(url, 
+		{a: specimen_id, t: 12}, 
+		function() 
+		{
+			$('#fetch_progress_bar').hide();
+			$('#'+specimen_id).hide();	
+		}
+	);
+		
+  	}
+	else
+  	{
+  		//Cancel Starting test
+  	}
 }
 
 function fetch_specimen2(specimen_id)
@@ -318,7 +788,7 @@ function get_worksheet()
 	{
 		$('#num_rows').attr("value", "10");
 	}
-	var worksheet_id = $('#worksheet_custom_type').val()
+	var worksheet_id = $('#worksheet_custom_type').val();
 	var test_type_id = $('#worksheet_test_type').val();
 	if(worksheet_id == "" && test_type_id == "")
 	{	
@@ -430,375 +900,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 	 });
 }
 </script>
-<div class="col-lg-3">
-<div class="bs-sidebar affix">
-<ul class="nav bs-sidenav">
-	<li><a href="javascript:right_load('specimen_results');" title='Pending tests' 
-			class='menu_option' id='specimen_results_menu'>
-			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_PENDING_TESTS']; ?>
-		</a>
-	</li>
-	<li><a href="javascript:right_load('specimen_results');" title='Pending tests' 
-			class='menu_option' id='specimen_results_menu'>
-			<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_PENDING_RESULTS']; ?>
-		</a>
-	</li>
-	<!--li><a href="javascript:right_load('specimen_results');" title='Enter Test Results for a Single Specimen' 
-			class='menu_option' id='specimen_results_menu'>
-			<?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?>
-		</a>
-	</li>
-	<li><a href="javascript:right_load('batch_results');"  title='Enter Test Results for a Batch of Specimens'
-			class='menu_option' id='batch_results_menu'>
-			<?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?>
-		</a>
-	</li-->
-		<!--
-		<a href="javascript:right_load('import_results');"  title='Import Test Results from Equipment'
-			class='menu_option' id='import_results_menu'
-		>
-			Import Results
-		</a><br><br>
-		-->
-	<li><a href="javascript:right_load('verify_results');"  title='Verify Test Results'
-			class='menu_option' id='verify_results_menu'>
-			<span class="glyphicon glyphicon-check"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?>
-	</a></li>
-		
-		<?php /* Uncomment when Control Testing is finalized
-		<a href="javascript:right_load('control_testing');" title='Enter Control Testing Results'
-			class='menu_option' id='control_testing_menu'
-		>
-			<?php echo LangUtil::$pageTerms['CONTROL_TESTING_RESULTS']; ?>
-		</a><br><br>
-		*/ ?>
-		
-		<?php
-		if($SHOW_REPORT_RESULTS === true)
-		{
-		?>
-		<li><a href="javascript:right_load('report_results');"  title='Mark Test Results as Reported to Patient/Doctor'
-			class='menu_option' id='report_results_menu'>
-			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_REPORTRESULTS']; ?>
-		</a></li>
-		<?php
-		}
-		?>
-		<li><a href="javascript:right_load('worksheet_div');"  title='Generate worksheet with a list of pending specimens'
-			class='menu_option' id='worksheet_div_menu'>
-			<span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;
-			<?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?>
-		</a></li>
-		<p><div id="worksheet_link"></div></p>
-</ul>
-</div>
-</div>
-	 
-	 
-	 
-<div class="col-lg-7 context">
-<div class="panel panel-primary">
-	
-		<div id="worksheet_results" class='results_subdiv' style='display:none;'>
-			<form name="fetch_worksheet" id="fetch_worksheet">
-				<b>Worksheet Results</b>
-				<br>
-				<br>
-				Worksheet# <input type="text" name="worksheet_num" id="worksheet_num" class='uniform_width' />
-				<input type="button" onclick="fetch_worksheets();" value="Fetch"/>
-			</form>
-			<div id="worksheet">
-			</div>
-		</div>
-		
-		<div id="specimen_results" class='results_subdiv' style='display:none;'>
-			<form name="fetch_specimen_form" id="fetch_specimen_form">
-				<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_SINGLESPECIMEN']; ?></span></div>	 
-				<select name='resultfetch_attrib' id='resultfetch_attrib'>
-					<?php
-					$hide_patient_name = true;
-					//if($lab_config->hidePatientName == 1)
-					if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-					{
-						$hide_patient_name = false;
-					}
-					$page_elems->getPatientSearchAttribSelect($hide_patient_name);
-					if($_SESSION['s_addl'] != 0)
-					{
-					?>
-						<option value='5'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></option>
-					<?php
-					}
-					?>
-				</select>
-				&nbsp;&nbsp;
-				<input type="text" name="specimen_id" id="specimen_id" class='uniform_width' />
-				<input type="button" id='fetch_specimen_button' onclick="fetch_specimen();" value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" />
-				&nbsp;&nbsp;
-				<span id='fetch_progress_bar' style='display:none;'>
-					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-				</span>	
-			</form>
-			<br>
-			<div id='fetched_patient_entry'>
-			</div>
-			<div id="fetched_specimen">
-			<?php
-				if(isset($_REQUEST['ajax_response']))
-					echo $_REQUEST['ajax_response'];
-			?>
-			</div>
-		</div>
-
-		<div id="import_results" class='results_subdiv' style='display:none;'>
-			<b>Import Results</b>
-			<br>
-			<br>
-			<form name='form_import' id='form_import' action='' method='POST' enctype='multipart/form-data'>
-				<table>
-					<tr>
-						<td>Machine Type</td>
-						<td><input type='text' name='mc_type'></td>
-					</tr>
-					<tr>
-						<td>File</td>
-						<td><input type='file' name='file_path'></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><br><input type='button' name='submit_import' value='Import Results'/></td>
-					</tr>
-				</table>
-			</form>
-		</div>
-		
-		<div id='batch_results' class='results_subdiv' style='display:none;'>
-			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_BATCHRESULTS']; ?></span></div>	 
-			<?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
-			&nbsp;&nbsp;&nbsp;
-			<select id='batch_test_type' class='uniform_width'>
-				<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
-				<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
-			</select>
-			&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;
-			<br><br>
-			<table>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-					$today = date("Y-m-d");
-					$today_array = explode("-", $today);
-					$monthago_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($today)) . " -270 days"));
-					$monthago_array = explode("-", $monthago_date);
-					$name_list = array("yyyy_from", "mm_from", "dd_from");
-					$id_list = array("yyyy_from", "mm_from", "dd_from");
-					$value_list = $monthago_array;
-					$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to", "mm_to", "dd_to");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-						&nbsp;&nbsp;&nbsp;
-						<input type='button' onclick='javascript:get_batch_form();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
-					</td>
-				</tr>
-			</table>
-			<span id='batch_progress_form' style='display:none'>
-				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-			</span>
-			<span id='batch_result_error' class='error_string' style='display:none;'>
-				<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
-			</span>
-			<br><br>
-			<div id='batch_form_div'>
-			</div>
-		</div>
-		
-		<div id='verify_results' class='results_subdiv' style='display:none;'>
-			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_VERIFYRESULTS']; ?></span></div>
-			<form name='verify_results_form' id='verify_results_form' action='results_verify.php' method='post'>
-				<?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
-				&nbsp;&nbsp;&nbsp;
-				<select id='verify_test_type' name='t_type' class='uniform_width'>
-					<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
-					<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
-				</select>
-				&nbsp;&nbsp;&nbsp;
-				<input type='button' onclick='javascript:get_verification_form();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
-				&nbsp;&nbsp;&nbsp;
-				<span id='verify_progress_form' style='display:none'>
-					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-				</span>
-				<span id='verify_result_error' class='error_string' style='display:none;'>
-					<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
-				</span>
-			</form>
-			<br><br>
-			<div id='verify_form_div'>
-			</div>
-		</div>
-		
-		<div id='control_testing' class='results_subdiv' style='display:none;'>
-			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['CONTROL_TESTING_RESULTS']; ?></span></div>
-			<form name='control_testing_form' id='control_testing_form' action='control_testing_entry.php' method='post'>
-				<table cellspacing='4px'>
-					<tbody>
-					<tr valign='top'>
-						<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?> &nbsp;&nbsp;&nbsp;</td>
-						<td>
-							<select id='verify_test_type_control' name='t_type' class='uniform_width'>
-								<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
-								<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
-							</select>
-							<span id='control_testing_error' class='error_string' style='display:none;'>
-								<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
-							</span>
-							<br>
-						</td>
-					</tr>
-					<tr valign='top'>
-						<td>Result</td>
-						<td>
-							<input type="radio" name="controlTesting" id="controlTesting" value="Pass" checked> Pass 
-							<input type="radio" name="controlTesting" id="controlTesting" value="Fail"> Fail
-							<br>
-						</td>
-					<tr valign='top'>
-						<td></td>
-						<td>
-							<input type='button' onclick='javascript:verify_control_selection();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</form>
-			<br><br>
-			<div id='control_testing_div'>
-			</div>
-			<div class='clean-orange' id='control_result_done' style='width:300px' style='display:none;'>
-						
-			</div>
-		</div>
-		
-		<div id='worksheet_div' class='results_subdiv' style='display:none;'>
-			<div class="panel-heading"><span class='page_title'><?php echo LangUtil::$pageTerms['MENU_WORKSHEET']; ?></span></div>
-			<form name='worksheet_form' id='worksheet_form' action='worksheet.php' method='post' target='_blank'>
-				<table cellspacing='4px'>
-					<tbody>
-					<tr valign='top'>
-						<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></td>
-						<td>
-							<select name='cat_code' id='cat_code' class='uniform_width'>
-								<?php $page_elems->getTestCategorySelect(); ?>
-							</select>
-						</td>
-					</tr>
-					<tr valign='top'>
-						<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?><br>OR</td>
-						<td>
-							<select id='worksheet_test_type' name='t_type' class='uniform_width'>
-								<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
-							</select>
-						</td>
-					</tr>
-					<tr valign='top'>
-						<td>
-							<?php echo LangUtil::$pageTerms['CUSTOM_WORKSHEET']; ?></td>
-						<td>
-							<select id='worksheet_custom_type' name='w_type' class='uniform_width'>
-								<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?></option>
-								<?php 
-								$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
-								$page_elems->getCustomWorksheetSelect($lab_config); 
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr valign='top'>
-						<td><?php echo LangUtil::$pageTerms['BLANK_WORKSHEET']; ?>?</td>
-						<td>
-							<input type='radio' name='is_blank' value='Y'><?php echo LangUtil::$generalTerms['YES']; ?></input>
-							<input type='radio' name='is_blank' value='N' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
-						</td>
-					</tr>
-					<tr valign='top' id='num_rows_row' style='display:none;'>
-						<td><?php echo LangUtil::$pageTerms['NUM_ROWS']; ?></td>
-						<td>
-							<input type='text' name='num_rows' id='num_rows' value='10' class='uniform_width'></input>
-						</td>
-					</tr>
-					<tr valign='top'>
-						<td></td>
-						<td>
-							<input type='button' onclick='javascript:get_worksheet();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
-							&nbsp;&nbsp;&nbsp;
-							<span id='worksheet_progress_form' style='display:none'>
-								<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-							</span>
-							<span id='worksheet_error' class='error_string' style='display:none;'>
-								<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
-							</span>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-		<?php
-		if($SHOW_REPORT_RESULTS === true)
-		{
-		?>
-		<div id='report_results' class='results_subdiv' style='display:none;'>
-			<b><?php echo LangUtil::$pageTerms['MENU_REPORTRESULTS']; ?></b>
-			<span id='report_results_load_progress'>
-			&nbsp;&nbsp;&nbsp;
-			<?php
-			$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']);
-			?>
-			</span>
-			<br>
-			<br>
-			<div id='report_results_container'>
-			
-			<?php 
-			/*
-			
-			*/
-			?>
-			</div>
-		</div>
-		<?php
-		}
-		?>
-
-
-<form id='ajax_redirect' method='post' action='results_entry.php'>
-	<input type='hidden' name='sid_redirect' id='sid_redirect' value=''></input>
-	<input type='hidden' name='ajax_response' id='ajax_response' value=''></input>
-</form>
-
-</form>
 <?php
 $script_elems->bindEntertoClick("#specimen_id", "#fetch_specimen_button");
 ?>
-</div>
-</div>
 <?php include("includes/footer.php"); ?>
