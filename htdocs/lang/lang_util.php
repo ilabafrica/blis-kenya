@@ -16,11 +16,14 @@ class LangUtil
 		global $LANG_ARRAY;
 		self::$generalTerms = $LANG_ARRAY[self::$generalPageId];
 		self::$allTerms = array_merge(
+				$LANG_ARRAY['general'],
 				$LANG_ARRAY['header'],
 				$LANG_ARRAY['footer'], 
 				$LANG_ARRAY['home'],
 				$LANG_ARRAY['find_patient'],
-				$LANG_ARRAY['results_entry']);
+				$LANG_ARRAY['results_entry'],
+				$LANG_ARRAY['lab_config_home'],
+				$LANG_ARRAY['reports']);
 	}
 	
 	public static function setPageId($page_id)

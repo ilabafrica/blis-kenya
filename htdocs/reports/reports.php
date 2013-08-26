@@ -2,15 +2,1880 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("reports");
-
 putUILog('reports', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
-
-$script_elems->enableDatePicker();
-$script_elems->enableJQueryForm();
-$script_elems->enableTableSorter();
 db_get_current();
 ?>
+
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i>
+								<a href="index.html">Home</a> 
+								<span class="icon-angle-right"></span>
+							</li>
+							<li><a href="#">Reports</a>
+							<span class="icon-angle-right"></span></li>
+							<li><a href="#"></a></li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+<div class='batch_results_subdiv_help' id='batch_results_subdiv_help' style='display:none;'>
+	<?php
+		//$tips_string = LangUtil::$pageTerms['TIPS_INFECTIONSUMMARY'];
+		$tips_string = "If you cannot see any information other than Test Name, Results and the Skip Option, please tell your administrator to configure it from Worksheet Configuration";
+		$page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+	?>
+</div>
+
+<!-- BEGIN ROW-FLUID-->   
+<div class="row-fluid">
+<div class="span12 sortable"
+
+<div class="col-lg-7">
+<div class="panel panel-primary">
+	
+<table name="page_panes" cellpadding="10px">
+	<tr valign='top'>
+		
+
+		
+	<td id="right_pane" class="right_pane" valign='top'>
+	<div id='reports_div' style='display:none;' class='reports_subdiv'>
+		<b>Patient Results Report</b>
+		<br><br>
+		<form name="get_patient_report" id="get_patient_report" action="reports_patient.php" method='post'>
+			<table cellpadding="4px">
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<?php
+						$site_list = get_site_list($_SESSION['user_id']);
+						if(count($site_list) == 1)
+						{
+							foreach($site_list as $key=>$value)
+								echo "<input type='hidden' name='location' id='location' value='$key'></input>";
+						}
+						else
+						{
+						?>
+							<select name='location' id='location' class='uniform_width'>
+							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+							<?php
+								$page_elems->getSiteOptions();
+							?>
+							</select>
+						<?php
+						}
+						?>
+					</td>
+				</tr>
+			
+				<?php
+				$today = date("Y-m-d");
+				$today_array = explode("-", $today);
+				$monthago_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($today)) . " -270 days"));//getStartDate();
+				$monthago_array = explode("-", $monthago_date);
+				?>
+			
+				<tr class="type_row" id="type_row">
+					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> 
+					<td>
+						<SELECT NAME="t_type" id="t_type" class='uniform_width'>
+							<OPTION VALUE='' selected='selected'>Select..</option>
+						</SELECT>
+					</td>
+				</tr>
+				
+				<tr class="sdate_row" id="sdate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = $name_list;
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list); 
+					?>
+					</td>
+				</tr>
+			
+				<tr class="edate_row" id="edate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = $name_list;
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list); 
+					?>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+					</td>
+					<td>
+						<br>
+						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_patient_reports();"/>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='report_progress_bar' style='display:none;'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='summary_div' style='display:none;' class='reports_subdiv'>
+			<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONSUMMARY']; ?></b><?php echo getStartDate();?>
+		<br><br>
+		<form name="get_summary" id="get_summary" action="reports_infection.php" method='post'>
+			<table cellpadding="4px">
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+				echo "<input type='hidden' name='location' id='location2' value='$key'></input>";
+			}
+			else
+			{
+
+			?>
+			
+				<tr class="location_row" id="location_row">
+				<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+				<td>
+					<select name='location' id='location2' class='uniform_width'>
+					<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+					<?php
+						$page_elems->getSiteOptions();
+					?>
+					</select>
+				</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from2", "mm_from2", "dd_from2");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to2", "mm_to2", "dd_to2");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+			<?php
+			if ( count($site_list) > 1 ) { ?>
+				<tr id='testType'>
+					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
+					<td>
+						<select name='ttype' id='ttype' class='uniform_width' onchange='changeAvailableLocations(this)'>
+							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+							<?php
+								$page_elems->getTestTypesCountrySelect();
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr class="location_row_aggregate" id="location_row_aggregate">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td id='locationAggregation'>
+						<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>
+						<?php
+							$page_elems->getSiteOptionsCheckBoxes("locationAgg");
+						?>
+					</td>
+				</tr>
+				<?php
+			} else {
+				foreach($site_list as $key=>$value)
+				echo "<input type='hidden' name='location' id='location2' value='$key'></input>";
+			}
+			?>
+				<tr>
+					<td>
+						<INPUT TYPE=RADIO NAME="summary_type" id="summary_type" VALUE="C" style="display:none;" checked />
+						&nbsp;&nbsp;
+						<INPUT TYPE=RADIO NAME="summary_type" style="display:none;" VALUE="M" />
+					</td>
+					<td>
+						<br>
+						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_summary_fn(0);"/>
+						&nbsp;&nbsp;
+						<!--<input type="button" value="View Monthly" onclick="get_summary_fn(1);"/>-->
+						<!--<br><br>-->
+						<span id='summary_progress_bar'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='pending_tests_div'  style='display:none;' class='reports_subdiv'>
+		<b><?php echo LangUtil::$pageTerms['MENU_PENDINGTESTS']; ?></b>
+		<?php
+		if($SHOW_TESTRECORD_REPORT === true)
+		{
+			?>
+			 |
+			<a href='javascript:show_print_form()'><?php echo LangUtil::$pageTerms['MENU_TESTRECORDS']; ?></a>
+			<?php
+		}
+		?>
+		<br><br>
+		<form name="pending_tests_form" id="pending_tests_form" action="reports_pending.php" method='post'>
+			<table cellpadding="4px">
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location3' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location3' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+								$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
+					<td>
+						<select name='test_type' id='t_type3' class='uniform_width'>
+							<OPTION VALUE='' selected='selected'>Select..</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='button' id='pending_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_pending_report();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='pending_progress_spinner' style='display:none;'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='doctors_stats_div' style='display:none;' class='reports_subdiv'>
+		<b>Test Count Report</b>
+		<br><br>
+		<form name="doctors_stats_form" id="doctors_stats_form" action="doctor_stats.php" method='post'>
+		<table cellpadding="4px">
+		<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location8' value='$key'></input>";
+			}
+
+			else
+			{
+			?>
+			<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location8' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+						$name_list = array("yyyy_from", "mm_from", "dd_from");
+						$id_list = array("yyyy_from8", "mm_from8", "dd_from8");
+						$value_list = $monthago_array;
+						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to8", "mm_to8", "dd_to8");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+					<br>
+						<input type='button' id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_doctor_stats();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='tests_done_progress_spinner' style='display:none'>
+							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='tests_done_div' style='display:none;' class='reports_subdiv'>
+		<b>Test Count Report</b>
+		<br><br>
+		<form name="tests_done_form" id="tests_done_form" action="reports_tests_done.php" method='post'>
+		<table cellpadding="4px">
+		<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location4' value='$key'></input>";
+			}
+			else
+			{
+			?>
+			<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location4' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from4", "mm_from4", "dd_from4");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to4", "mm_to4", "dd_to4");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+					<br>
+						<input type='button' id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='tests_done_progress_spinner' style='display:none'>
+							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+        <div id='testcount_grouped_div' style='display:none;' class='reports_subdiv'>
+		<b>Test Count Report</b>
+		<br><br>
+		<form name="testcount_grouped_form" id="testcount_grouped_form" action="reports_testcount_grouped.php" method='post' target='_blank'>
+		<table cellpadding="4px">
+		<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location44' value='$key'></input>";
+			}
+			else
+			{
+			?>
+			<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location44' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from44", "mm_from44", "dd_from44");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to44", "mm_to44", "dd_to44");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+					<br>
+						<input type='button' id='testcount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='tests_done_progress_spinner' style='display:none'>
+							<?php // $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+            
+        <div id='specimencount_grouped_div' style='display:none;' class='reports_subdiv'>
+		<b>Test Count Report</b>
+		<br><br>
+		<form name="specimencount_grouped_form" id="specimencount_grouped_form" action="reports_specimencount_grouped.php" method='post' target='_blank'>
+		<table cellpadding="4px">
+		<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location444' value='$key'></input>";
+			}
+			else
+			{
+			?>
+			<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location444' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from444", "mm_from444", "dd_from444");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to444", "mm_to444", "dd_to444");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+					<br>
+						<input type='button' id='specimencount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='tests_done_progress_spinner' style='display:none'>
+							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+            
+	<div id='tat_div' style='display:none;' class='reports_subdiv'>
+		<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
+		<br><br>
+		<form name="tat_form" id="tat_form" action="reports_tat.php" method='post'>
+			<table cellpadding="4px">
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location5' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location5' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from5", "mm_from5", "dd_from5");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to5", "mm_to5", "dd_to5");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$pageTerms['MSG_INCLUDEPENDING']; ?> </td>
+					<td>
+						<input type='radio' value='Y' name='pending'><?php echo LangUtil::$generalTerms['YES']; ?></input>
+						<input type='radio' value='N' name='pending' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
+					</td>
+				</tr>
+	
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='button' id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tat_report();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='tat_progress_spinner' style='display:none;'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='tat_aggregate_div' style='display:none;' class='reports_subdiv'>
+		<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
+		<br><br>
+                <form name="tat_aggregate_form" id="tat_aggregate_form" action="geo_report_dir_tat.php" method='post'>
+			<table cellpadding="4px">
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from5", "mm_from5", "dd_from5");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to5", "mm_to5", "dd_to5");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				
+                                <tr id='testType'>
+					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
+					<td>
+						<select name='testTypeCountry' id='testTypeCountry' class='uniform_width' onchange='changeAvailableLocations(this)'>
+							<!--<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>-->
+						<?php
+							$page_elems->getTestTypesCountrySelect();
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr class="location_row_aggregate" id="location_row_aggregate">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td id='locationAggregation'>
+						<!--<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>-->
+						<?php
+							$page_elems->getSiteOptionsCheckBoxes("locationAgg[]");
+						?>
+					</td>
+				</tr>
+				<!--<tr valign='top'>
+					<td><?php echo LangUtil::$pageTerms['MSG_INCLUDEPENDING']; ?> </td>
+					<td>
+						<input type='radio' value='Y' name='pending'><?php echo LangUtil::$generalTerms['YES']; ?></input>
+						<input type='radio' value='N' name='pending' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo "Time Division"; ?></td>
+					<td>
+					<select name='tattype' id='tattype' style='font-family:Tahoma;'>
+						<option value='m'><?php echo LangUtil::$pageTerms['PROGRESSION_M']; ?></option>
+						<option value='w' selected><?php echo LangUtil::$pageTerms['PROGRESSION_W']; ?></option>
+						<option value='d'><?php echo LangUtil::$pageTerms['PROGRESSION_D']; ?></option>
+					</select>
+					</td>
+				</tr>-->
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='button' id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:submit_tat_aggregate_form();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='tat_progress_spinner' style='display:none;'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='print_div' style='display:none;' class='reports_subdiv'>
+		<span id='test_report_title'><b><?php echo LangUtil::$pageTerms['MENU_TESTRECORDS']; ?></b></span> | <span id='view_pending_title'><a href='javascript:show_pending_tests_form()'><?php echo LangUtil::$pageTerms['MENU_PENDINGTESTS']; ?></a></span>
+		<br><br>
+		<form name="get_print" id="get_print" method="post" action="reports_print.php" target="_blank">
+			<table cellpadding="4px">
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location6' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location6' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				
+				<tr class="type_row" id="type_row">
+					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> 
+					<td>
+						<SELECT NAME="t_type" id="t_type6" class='uniform_width'>
+							<OPTION VALUE='' selected='selected'><?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>..</option>
+						</SELECT>
+					</td>
+				</tr>
+		
+				<tr class="sdate_row" id="sdate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from6", "mm_from6", "dd_from6");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+			
+				<tr class="edate_row" id="edate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to6", "mm_to6", "dd_to6");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					</td>
+					<td>
+						<br>
+						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_print_page();" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='print_progress_bar' style='display:none;'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='specimen_count_div' style='display:none;' class='reports_subdiv'>
+		<b><?php echo LangUtil::$pageTerms['MENU_COUNTS']; ?></b>
+		<br><br>
+		<form name="specimen_count_form" id="specimen_count_form" action="reports_specimencount.php" method='post'>
+			<table cellpadding="4px">
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location7' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location7' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from7", "mm_from7", "dd_from7");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to7", "mm_to7", "dd_to7");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				
+				<tr valign='top'>
+					<td><?php echo LangUtil::$pageTerms['COUNT_TYPE']; ?></td>
+					<td>
+						<input type='radio' id='count_type' name='count_type' value='2' checked>
+							<?php echo LangUtil::$pageTerms['COUNT_TEST']." (Ungrouped)"; ?>
+						</input>
+						<br>
+                                                <input type='radio' id='count_type' name='count_type' value='4' checked>
+							<?php echo LangUtil::$pageTerms['COUNT_TEST']." (Grouped)"; ?>
+						</input>
+                                                <br>
+						<input type='radio' id='count_type' name='count_type' value='1'>
+							<?php echo LangUtil::$pageTerms['COUNT_SPECIMEN']." (Ungrouped)"; ?>
+						</input>
+						<br>
+                                                <input type='radio' id='count_type' name='count_type' value='5'>
+							<?php echo LangUtil::$pageTerms['COUNT_SPECIMEN']." (Grouped)"; ?>
+						</input>
+                                                <br>
+						<input type='radio' id='count_type' name='count_type' value='3'>
+							<?php echo "Doctor Statistics" ?>
+						</input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='button' id='specimen_count_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_count_report()'>
+						</input>
+						<!--
+						--Merged into single submit button--
+						<input type='button' id='specimen_count_submit_button' value='Specimen Count' onclick="javascript:get_specimen_count_report();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type='button' value='Test Count' onclick="javascript:get_tests_done_report2();"></input>
+						-->
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='specimen_count_progress_spinner' style='display:none'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+        <div id='user_stats_div' style='display:none;' class='reports_subdiv'>
+		<b><?php echo "User Statistics"; ?></b>
+                <?php $userStats = new UserStats(); ?>
+		<!--<br><br>
+                
+                <a id="ustats_a" class="ustats_link_u" href='javascript:show_user_stats_submenu(1);'>User Stats for All Users</a>
+                |
+                <a id="ustats_i" class="ustats_link_u" href='javascript:show_user_stats_submenu(2);'>User Logs for Individual Users</a>
+
+                <br><br>-->
+                
+
+		<form name="user_stats_form" id="user_stats_form" action="reports_user_stats_all.php" method='post' target='_blank'>
+                    <table cellpadding="4px">
+			
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from7", "mm_from7", "dd_from7");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to7", "mm_to7", "dd_to7");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				
+                                <tr valign='top'>
+					<td><?php echo "Stat Type" ?></td>
+                                            <td>
+						
+                                                <input type='radio' id='stat_type' name='stat_type' value='a' onclick="user_radio(1)">
+							<?php echo "Collective User Stats"; ?>
+						</input>
+						<br>
+                                                <input type='radio' id='stat_type' name='stat_type' value='i' onclick="user_radio(2)">
+							<?php echo "Individual User Logs"; ?>
+						</input>
+                                                
+					</td>
+				</tr>
+                       </table>         
+                      <div id='user_stats_all' style='display:none;'>
+                          <table cellpadding="4px">
+				<tr valign='top'>
+					<td><?php echo LangUtil::$pageTerms['COUNT_TYPE'] ?></td>
+                                            <td>
+						<input type='checkbox' id='count_type_pr' name='count_type_pr' value='Yes' checked>
+							<?php echo "Patients Registered"; ?>
+						</input>
+						<br>
+                                                <input type='checkbox' id='count_type_sr' name='count_type_sr' value='Yes' checked>
+							<?php echo "Specimens Registered"; ?>
+						</input>
+                                                <br>
+                                                <input type='checkbox' id='count_type_tr' name='count_type_tr' value='Yes' checked>
+							<?php echo "Tests Registered"; ?>
+						</input>
+                                                <br>
+						<input type='checkbox' id='count_type_re' name='count_type_re' value='Yes' checked>
+							<?php echo "Results Entered"; ?>
+						</input>
+						<br>
+                                                
+					</td>
+				</tr>
+                                <tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='submit' id='user_stats_all_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
+						</input>
+						<!--
+						--Merged into single submit button--
+						<input type='button' id='specimen_count_submit_button' value='Specimen Count' onclick="javascript:get_specimen_count_report();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type='button' value='Test Count' onclick="javascript:get_tests_done_report2();"></input>
+						-->
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='specimen_count_progress_spinner' style='display:none'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+                             </table>
+                    </div>
+
+				
+	
+
+                <div id='user_stats_individual' style='display:none;'>
+                    <table cellpadding="4px">
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			//if(count($site_list) == 1)
+                        if(true)
+			{
+				//foreach($site_list as $key=>$value)
+					//echo "<input type='hidden' name='location' id='location7' value='$key'></input>";
+                            $liddd = $_SESSION['lab_config_id'];
+                                        echo "<input type='hidden' name='location' id='location7' value='$liddd'></input>";
+			
+                                $user_ids = array();
+                                array_push($user_ids, $userStats->getAdminUser($lab_config_id));
+                                $user_ids_others =  $userStats->getAllUsers($lab_config_id);
+                                foreach($user_ids_others as $uids)
+                                     array_push($user_ids, $uids);
+                                //print_r($user_ids);
+                        ?>
+                                <tr>
+					<td><?php echo "User"; ?> </td>
+					<td>
+						<select name='user_id' id='user_id' class='uniform_width'>
+						<?php foreach($user_ids as $uid) {?>
+                                                    <option value='<?php echo $uid; ?>'><?php echo get_username_by_id($uid); ?></option>	
+						<?php } ?>
+                                                </select>
+					</td>
+				</tr>
+                        <?php
+                        }
+			else
+			{
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location7' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				
+				<tr valign='top'>
+					<td><?php echo "Log Type"; ?></td>
+					<td>
+						<input type='radio' id='log_type' name='log_type' value='1' checked>
+							<?php echo "Patients Registry"; ?>
+						</input>
+						<br>
+                                                <input type='radio' id='log_type' name='log_type' value='2'>
+							<?php echo "Specimens Registry"; ?>
+						</input>
+                                                <br>
+                                                <input type='radio' id='log_type' name='log_type' value='3'>
+							<?php echo "Tests Registry"; ?>
+						</input>
+                                                <br>
+						<input type='radio' id='log_type' name='log_type' value='4'>
+							<?php echo "Results Entry"; ?>
+						</input>
+						<br>
+                                                <input type='radio' id='log_type' name='log_type' value='5'>
+							<?php echo "Inventory Transaction"; ?>
+						</input>
+                                                <br>
+						
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='submit' id='user_stats_individual_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
+						</input>
+						<!--
+						--Merged into single submit button--
+						<input type='button' id='specimen_count_submit_button' value='Specimen Count' onclick="javascript:get_specimen_count_report();"></input>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type='button' value='Test Count' onclick="javascript:get_tests_done_report2();"></input>
+						-->
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span id='specimen_count_progress_spinner' style='display:none'>
+							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+                    </div>
+		</form>
+                </div>
+            
+	<div id='test_history_div' class='reports_subdiv'  style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_PATIENT']; ?></b>
+		<br><br>
+		<form name='test_history_form' id='test_history_form'>
+			<table cellpadding='4px'>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location8' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?></td>
+					<td>
+						<select name='location' id='location8' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td>
+					<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
+						<?php $page_elems->getPatientSearchAttribSelect(); ?>
+					</select>
+					</td>
+					<td>
+						<input type='text' name='patient_id' id='patient_id8' class='uniform_width'></input>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='test_history_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<div id='phistory_list'>
+			</div>
+		</form>
+	</div>
+	
+	<div id='test_report_div' class='reports_subdiv'  style='display:none'>
+		<b>Single Test Report</b>
+		<br><br>
+		<form name='test_report_form' id='test_report_form' action='reports_test.php' method='post' target='_blank'>
+			<table cellpadding='4px'>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location9' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location9' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
+					<td>
+						<input type='text' name='specimen_id' id='specimen_id9' class='uniform_width'></input>
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
+					<td>
+						<SELECT NAME="t_type" id="t_type9" class='uniform_width'>
+							<OPTION VALUE='' selected='selected'>Select..</option>
+						</SELECT>
+					</td>
+				</tr>				
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' name='test_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_test_report();'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='test_report_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id='session_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_SPECIMEN']; ?></b>
+		<br><br>
+		<form name='session_report_form' id='session_report_form' action='reports_session.php' method='post' target='_blank'>
+			<table cellpadding='4px'>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location11' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
+					<td>
+						<select name='location' id='location11' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td>
+					<select id='specimen_attrib' name='specimen_attrib'>
+						<option value='1'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></option>
+						<option value='2'><?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?></option>
+						<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
+						<option value='4'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
+					</select>
+					</td>
+					<td>
+						<input type='text' name='session_num' id='session_num' class='uniform_width'></input>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' id='submit_button11' name='session_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_session_report();'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='session_report_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id='specimens_fetched'>
+		</div>
+	</div>
+	
+	<div id='daily_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></b>
+		<br><br>
+		<table cellpadding='4px'>
+			<tbody>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location13' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='location' id='location13' class='uniform_width' onchange='handleChange(this)'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></td>
+					<td>
+					<?php		
+// 					$today = date("Y-m-d");
+// 					$value_list = explode("-", $today);
+// 					$name_list = array("daily_yyyy", "daily_mm", "daily_dd");
+// 					$id_list = $name_list;
+// 					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
+					?>
+					</td>
+				</tr>
+				
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?></td>
+					<td>
+					<?php		
+// 					$name_list = array("daily_yyyy_to", "daily_mm_to", "daily_dd_to");
+// 					$id_list = $name_list;
+// 					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
+					?>
+					</td>
+				</tr>
+				
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<input type='radio' name='rectype13' value='1' checked>
+							<?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?>
+						</input>
+						<br>
+						<input type='radio' name='rectype13' value='2'>
+							<?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
+						</input>
+					</td>
+				</tr>
+				<tr id='cat_row13'>
+					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='cat_code' id='cat_code13' class='uniform_width'>
+							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+							<?php
+							if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) )
+								$page_elems->getTestCategoryCountrySelect();
+							else {
+								$page_elems->getTestCategorySelect();
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr id='ttype_row13'>
+					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
+					<td>
+						<select name='ttype' id='ttype13' class='uniform_width'>
+							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+            
+	<div id='daily_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></b>
+		<br><br>
+		<table cellpadding='4px'>
+			<tbody>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location13' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='location' id='location13' class='uniform_width' onchange='handleChange(this)'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></td>
+					<td>
+					<?php		
+// 					$today = date("Y-m-d");
+// 					$value_list = explode("-", $today);
+// 					$name_list = array("daily_yyyy", "daily_mm", "daily_dd");
+// 					$id_list = $name_list;
+// 					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
+					?>
+					</td>
+				</tr>
+				
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?></td>
+					<td>
+					<?php		
+// 					$name_list = array("daily_yyyy_to", "daily_mm_to", "daily_dd_to");
+// 					$id_list = $name_list;
+// 					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
+					?>
+					</td>
+				</tr>
+				
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<input type='radio' name='rectype13' value='1' checked>
+							<?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?>
+						</input>
+						<br>
+						<input type='radio' name='rectype13' value='2'>
+							<?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
+						</input>
+					</td>
+				</tr>
+				<tr id='cat_row13'>
+					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='cat_code' id='cat_code13' class='uniform_width'>
+							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+							<?php
+							if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) )
+								$page_elems->getTestCategoryCountrySelect();
+							else {
+								$page_elems->getTestCategorySelect();
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr id='ttype_row13'>
+					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
+					<td>
+						<select name='ttype' id='ttype13' class='uniform_width'>
+							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div id='billing_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo "Bill Generation"; ?></b>
+		<br><br>
+		<form name='preport_form' id='preport_form'>
+			<table cellpadding='4px'>
+			
+				<tr>
+					<td>
+					<select name='p_attrib' id='p_attrib15'>
+						<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
+						<option value='2'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
+						<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
+					</select>
+					</td>
+					<td>
+						<input type='text' name='patient_id' id='patient_id15' class='uniform_width'></input>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='preport_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<div id='preport_list'>
+			</div>
+                        </form>
+	</div>
+	
+	<div id='prevalance_aggregate_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONSUMMARY'];  ?></b>
+		<br><br>
+                <form name="country_aggregate_form" id="country_aggregate_form" action="geo_report_dir_prev.php" method='post'>
+			<table>
+				<tr class="sdate_row" id="sdate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from15", "mm_from15", "dd_from15");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr class="edate_row" id="edate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to15", "mm_to15", "dd_to15");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+                               
+				<tr id='ttype_row16'>
+					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
+					<td>
+						<select name='testTypeCountry' id='testTypeCountry' class='uniform_width' onchange='changeAvailableLocations(this)'>
+							<!--<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>-->
+						<?php
+							$page_elems->getTestTypesCountrySelect();
+						?>
+						</select>
+					</td>
+				</tr>
+				
+				<tr class="location_row_aggregate" id="location_row_aggregate">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td id='locationAggregation'>
+						<?php /*
+						<select name='location' id='locationAggregation' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select> */
+						?>
+						<!--<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>-->
+						<?php
+							$page_elems->getSiteOptionsCheckBoxes("locationAgg[]");
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<br>
+                                                <input type='button' id='prev_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_aggregate_report();" ></input>
+						
+						&nbsp;&nbsp;&nbsp;
+						<span id='aggregate_report_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+		</table>
+		</form>
+	</div>
+	
+	<div id='control_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_CONTROLREPORT']; ?></b>
+		<br><br>
+		<form id='control_report_form' action='control_report.php' method='post'>
+		<table>
+			<tbody>
+			<tr valign='top'>
+				<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?> &nbsp;&nbsp;&nbsp;</td>
+				<td>
+					<select id='verify_test_type_control' name='t_type' class='uniform_width'>
+						<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
+						<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
+					</select>
+					<span id='control_testing_error' class='error_string' style='display:none;'>
+						<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
+					</span>
+				</td>
+			</tr>
+			<tr class="sdate_row" id="sdate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from15", "mm_from15", "dd_from15");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+			</tr>
+			<tr class="edate_row" id="edate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to15", "mm_to15", "dd_to15");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+			<tr>
+				<td></td>
+				<td>
+				<br>
+				<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_control_report()'></input>
+				&nbsp;&nbsp;&nbsp;
+				<span id='stock_report_progress_spinner'  style='display:none;'>
+					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+				</span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		</form>
+	</div>	
+	
+	<div id='disease_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></b>
+		<br><br>
+		<form id='disease_report_form' action='report_disease.php' method='post' target='_blank'>
+		<table>
+			<tbody>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location14' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='location' id='location14' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr class="sdate_row" id="sdate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from14", "mm_from14", "dd_from14");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr class="edate_row" id="edate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_to", "mm_to", "dd_to");
+// 						$id_list = array("yyyy_to14", "mm_to14", "dd_to14");
+// 						$value_list = $today_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='cat_code' id='cat_code14' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+								$site_list = get_site_list($_SESSION['user_id']);
+								if(count($site_list) == 1) 
+									$page_elems->getTestCategorySelect();
+								else {
+									$page_elems->getTestCategoryCountrySelect();
+								}
+						?>
+						</select>
+					</td>
+				</tr>
+				<?php
+				$site_list = get_site_list($_SESSION['user_id']);
+				if(count($site_list) == 1) {
+					foreach($site_list as $key=>$value)
+						echo "<input type='hidden' name='location' id='location14' value='$key'></input>";
+				}
+				else { ?>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td id='locationAggregation'>
+						<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>
+						<?php
+							$page_elems->getSiteOptionsCheckBoxes("locationAgg");
+						?>
+					</td><br>
+				</tr>
+				<?php
+				}
+				?>
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_disease_report()'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='disease_report_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</form>
+	</div>
+
+	<div id='infection_aggregate_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></b>
+		<br><br>
+		<form id='infection_aggregate_form' action='infection_aggregate.php' method='post' target='_blank'>
+		<table>
+			<tbody>	
+				<tr class="sdate_row" id="sdate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
+					<td>
+					<?php
+// 						$name_list = array("yyyy_from", "mm_from", "dd_from");
+// 						$id_list = array("yyyy_from14", "mm_from14", "dd_from14");
+// 						$value_list = $monthago_array;
+// 						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr class="edate_row" id="edate_row" valign='top'>
+					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
+					<td>
+					<?php
+						$name_list = array("yyyy_to", "mm_to", "dd_to");
+						$id_list = array("yyyy_to14", "mm_to14", "dd_to14");
+						$value_list = $today_array;
+						$page_elems->getDatePicker($name_list, $id_list, $value_list);
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<select name='cat_code' id='cat_code14' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php $page_elems->getTestCategoryTypesCountrySelect(); ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="location_row" id="location_row">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+					<td id='locationAggregation'>
+						<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>
+						<?php
+							$page_elems->getSiteOptionsCheckBoxes("locationAgg[]");
+						?>
+					</td><br>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<br>
+						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_infection_report_aggregate()'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='infection_aggregate_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</form>
+	</div>	
+	
+	<div id='patient_report_div' class='reports_subdiv' style='display:none'>
+		<b><?php echo LangUtil::$pageTerms['MENU_PATIENT']; ?></b>
+		<br><br>
+		<form name='preport_form' id='preport_form'>
+			<table cellpadding='4px'>
+			<?php
+			$site_list = get_site_list($_SESSION['user_id']);
+			if(count($site_list) == 1)
+			{
+				foreach($site_list as $key=>$value)
+					echo "<input type='hidden' name='location' id='location15' value='$key'></input>";
+			}
+			else
+			{
+			?>
+				<tr class="location_row" id="location_row15">
+					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?></td>
+					<td>
+						<select name='location' id='location15' class='uniform_width'>
+						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+						<?php
+							$page_elems->getSiteOptions();
+						?>
+						</select>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+				<tr>
+					<td>
+					<select name='p_attrib' id='p_attrib15'>
+						<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
+						<option value='2'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
+						<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
+					</select>
+					</td>
+					<td>
+						<input type='text' name='patient_id' id='patient_id15' class='uniform_width'></input>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type='button' id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
+						&nbsp;&nbsp;&nbsp;
+						<span id='preport_progress_spinner'  style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+						</span>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<div id='preport_list'>
+			</div>
+	</div>
+	
+	<div id='infection_report_settings_div' class='reports_subdiv'  style='display:none;'>
+		<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
+		<b><?php echo "Infection Report Settings"; ?></b>
+		 | <a href='javascript:toggleInfectionReportSettings();' id='agg_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+		<br><br>
+		<div id='report_updated_msg' class='clean-orange' style='display:none;width:350px;'>
+		</div>
+		<br>
+		<div id='infection_report_settings_summary'>
+			<?php echo $page_elems->getInfectonReportSummary(); ?>
+		</div>
+		<div id='infection_report_settings_form_div' style='display:none;'>
+			<form id='infection_report_settings_preview_form' style='display:none;' name='infection_report_settings_preview_form' action='report_disease_preview.php' method='post' target='_blank'>					
+				<?php # This form is cloned from agg_report_form in javascript:agg_preview() function ?>
+			</form>
+			<form id='infection_report_settings_form' name='infection_report_settings_form' action='ajax/infection_report_settings_update.php' method='get'>
+				<?php $page_elems->getInfectionReportConfigureForm(); ?>
+			</form>	
+		</div>
+	</div>
+				
+	
+	<?php 
+	# Space for additional report forms after this
+	# PLUG_FORM_DIV
+	?>
+	
+	</td>
+	</tr>
+</table>
+
+
+
 
 <div class='reports_subdiv_help' id='reports_div_help' style='display:none'>
 <?php
@@ -129,18 +1994,10 @@ db_get_current();
 ?>
 </div>
 
-<style type="text/css">
-.ustats_link_v
-{
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-	background-color:#a7dd5c;
-}
+</div>
+</div>
 
-.ustats_link_u
-{
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-}
-</style>
+<?php include("includes/scripts.php");?>
 <script type='text/javascript' src="facebox/facebox.js"></script>
 <script type='text/javascript'>
 $(document).ready(function(){
@@ -1597,1956 +3454,6 @@ function show_custom_report_form(report_id)
 	window.location = url_string;
 }
 </script>
-<div class="col-lg-3">
-<div class="bs-sidebar affix">
-<ul class="nav bs-sidenav">
-<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if ( !is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) { 
-				echo '<li>'.LangUtil::$pageTerms['MENU_DAILY'].'</li>'; ?>
-			<ul>
-				<!--
-				<li class='menu_option' id='patient_report_menu'>
-					<a href='javascript:show_patient_report_form();'><?php #echo LangUtil::$pageTerms['MENU_PATIENT']; ?></a>
-				</li>
-				-->
-				<li class='menu_option' id='test_history_menu'>
-					<!--<a href='javascript:show_test_history_form();'><?php #echo LangUtil::$pageTerms['MENU_PHISTORY']; ?></a>-->
-					<a href='javascript:show_test_history_form();'><?php echo LangUtil::$pageTerms['MENU_PATIENT']; ?></a>
-				</li>
-				<li class='menu_option' id='session_report_menu' <?php
-				if($SHOW_SPECIMEN_REPORT === false)
-					echo " style='display:none;' ";
-				?>>
-					<a href='javascript:show_session_report_form();'><?php echo LangUtil::$pageTerms['MENU_SPECIMEN']; ?></a>
-				</li>
-				<li class='menu_option' id='print_menu' <?php
-				if($SHOW_TESTRECORD_REPORT === false)
-					echo " style='display:none;' ";
-				?>>
-					<a href='javascript:show_print_form();'><?php echo LangUtil::$pageTerms['MENU_TESTRECORDS']; ?></a>
-				</li>
-				
-				<li class='menu_option' id='daily_report_menu'>
-					<a href='javascript:show_daily_report_form();'><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></a>
-				</li>
-				<li class='menu_option' id='print_menu' <?php
-				if($SHOW_PENDINGTEST_REPORT === false)
-					echo " style='display:none;' ";
-				?>>
-					<a href='javascript:show_pending_tests_form();'><?php echo LangUtil::$pageTerms['MENU_PENDINGTESTS']; ?></a>
-				</li>
-
-				
-				<?php
-				# Space for menu entries corresponding to a new daily report
-				# PLUG_DAILY_REPORT_ENTRY
-				?>
-				
-			</ul>
-			<?php } else { ?>
-				<?php echo "Report Settings"; ?>
-				<ul>
-					<li class='menu_option' id='location_settings' >
-					<a href='lab_pin.php'><?php echo "Location Settings"; ?></a>
-					</li>
-				</ul>
-			<?php } echo '<li>'.LangUtil::$pageTerms['MENU_AGGREPORTS'].'</li>'; ?>
-			<ul>
-				<?php
-					$site_list = get_site_list($_SESSION['user_id']);
-					if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) { ?>
-						<li class='menu_option' id='country_aggregate_menu'>
-							<a href='javascript:show_selection("prevalance_aggregate");'><?php echo LangUtil::$pageTerms['MENU_INFECTIONSUMMARY']; ?></a>
-						</li>
-						<li class='menu_option' id='tat_menu'>
-							<a href='javascript:show_selection("tat_aggregate");'><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></a>
-						</li>
-						<!--<li class='menu_option' id='disease_report_menu'>
-							<a href='javascript:show_selection("infection_aggregate");'><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></a>
-						</li>-->
-					<?php } else { ?>
-						<li class='menu_option' id='summary_menu'>
-							<a href='javascript:show_selection("summary");'><?php echo LangUtil::$pageTerms['MENU_INFECTIONSUMMARY']; ?></a>
-						</li>
-						<li class='menu_option' id='specimen_count_menu'>
-							<a href='javascript:show_selection("specimen_count");'><?php echo LangUtil::$pageTerms['MENU_COUNTS']; ?></a>
-						</li>
-						<li class='menu_option' id='tat_menu'>
-							<a href='javascript:show_selection("tat");'><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></a>
-						</li>
-						<li class='menu_option' id='disease_report_menu'>
-							<a href='javascript:show_selection("disease_report");'><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></a>
-						</li>
-                                                <?php if(is_admin(get_user_by_id($_SESSION['user_id'])))
-                                                { ?>
-                                                <li class='menu_option' id='user_stats_menu'>
-							<a href='javascript:show_selection("user_stats");'>User Statistics</a>
-						</li>
-                                                <?php } ?><li class='menu_option' id='stock_report_menu'>
-							<a href='javascript:show_selection("stock_report");'>Previous Inventory Data</a>
-						</li>
-                                                
-					<?php } ?>
-				<?php /*
-				if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) { ?>
-					<li class='menu_option' id='country_aggregate_menu'>
-					<a href='javascript:show_selection("country_aggregate");'>Country Level Aggregation</a>
-					</li>
-				<?php }
-				/*
-				<li class='menu_option' id='control_tests_menu'>
-					<a href='javascript:show_control_test_form();'><?php echo LangUtil::$pageTerms['MENU_CONTROLREPORT']; ?></a>
-				</li>
-				*/
-				# Space for menu entries corresponding to a new aggregate report
-				# PLUG_AGGREGATE_REPORT_ENTRY
-				?>
-				</ul>
-</ul>
-</div>
-</div>
-
-<div class="col-lg-7">
-<div class="panel panel-primary">
-	
-<table name="page_panes" cellpadding="10px">
-	<tr valign='top'>
-		
-
-		
-	<td id="right_pane" class="right_pane" valign='top'>
-	<div id='reports_div' style='display:none;' class='reports_subdiv'>
-		<b>Patient Results Report</b>
-		<br><br>
-		<form name="get_patient_report" id="get_patient_report" action="reports_patient.php" method='post'>
-			<table cellpadding="4px">
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<?php
-						$site_list = get_site_list($_SESSION['user_id']);
-						if(count($site_list) == 1)
-						{
-							foreach($site_list as $key=>$value)
-								echo "<input type='hidden' name='location' id='location' value='$key'></input>";
-						}
-						else
-						{
-						?>
-							<select name='location' id='location' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-							<?php
-								$page_elems->getSiteOptions();
-							?>
-							</select>
-						<?php
-						}
-						?>
-					</td>
-				</tr>
-			
-				<?php
-				$today = date("Y-m-d");
-				$today_array = explode("-", $today);
-				$monthago_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($today)) . " -270 days"));//getStartDate();
-				$monthago_array = explode("-", $monthago_date);
-				?>
-			
-				<tr class="type_row" id="type_row">
-					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> 
-					<td>
-						<SELECT NAME="t_type" id="t_type" class='uniform_width'>
-							<OPTION VALUE='' selected='selected'>Select..</option>
-						</SELECT>
-					</td>
-				</tr>
-				
-				<tr class="sdate_row" id="sdate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = $name_list;
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list); 
-					?>
-					</td>
-				</tr>
-			
-				<tr class="edate_row" id="edate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = $name_list;
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list); 
-					?>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-					</td>
-					<td>
-						<br>
-						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_patient_reports();"/>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='report_progress_bar' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='summary_div' style='display:none;' class='reports_subdiv'>
-			<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONSUMMARY']; ?></b><?php echo getStartDate();?>
-		<br><br>
-		<form name="get_summary" id="get_summary" action="reports_infection.php" method='post'>
-			<table cellpadding="4px">
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-				echo "<input type='hidden' name='location' id='location2' value='$key'></input>";
-			}
-			else
-			{
-
-			?>
-			
-				<tr class="location_row" id="location_row">
-				<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-				<td>
-					<select name='location' id='location2' class='uniform_width'>
-					<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-					<?php
-						$page_elems->getSiteOptions();
-					?>
-					</select>
-				</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from2", "mm_from2", "dd_from2");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to2", "mm_to2", "dd_to2");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-			<?php
-			if ( count($site_list) > 1 ) { ?>
-				<tr id='testType'>
-					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
-					<td>
-						<select name='ttype' id='ttype' class='uniform_width' onchange='changeAvailableLocations(this)'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-							<?php
-								$page_elems->getTestTypesCountrySelect();
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr class="location_row_aggregate" id="location_row_aggregate">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td id='locationAggregation'>
-						<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>
-						<?php
-							$page_elems->getSiteOptionsCheckBoxes("locationAgg");
-						?>
-					</td>
-				</tr>
-				<?php
-			} else {
-				foreach($site_list as $key=>$value)
-				echo "<input type='hidden' name='location' id='location2' value='$key'></input>";
-			}
-			?>
-				<tr>
-					<td>
-						<INPUT TYPE=RADIO NAME="summary_type" id="summary_type" VALUE="C" style="display:none;" checked />
-						&nbsp;&nbsp;
-						<INPUT TYPE=RADIO NAME="summary_type" style="display:none;" VALUE="M" />
-					</td>
-					<td>
-						<br>
-						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_summary_fn(0);"/>
-						&nbsp;&nbsp;
-						<!--<input type="button" value="View Monthly" onclick="get_summary_fn(1);"/>-->
-						<!--<br><br>-->
-						<span id='summary_progress_bar'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='pending_tests_div'  style='display:none;' class='reports_subdiv'>
-		<b><?php echo LangUtil::$pageTerms['MENU_PENDINGTESTS']; ?></b>
-		<?php
-		if($SHOW_TESTRECORD_REPORT === true)
-		{
-			?>
-			 |
-			<a href='javascript:show_print_form()'><?php echo LangUtil::$pageTerms['MENU_TESTRECORDS']; ?></a>
-			<?php
-		}
-		?>
-		<br><br>
-		<form name="pending_tests_form" id="pending_tests_form" action="reports_pending.php" method='post'>
-			<table cellpadding="4px">
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location3' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location3' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-								$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
-					<td>
-						<select name='test_type' id='t_type3' class='uniform_width'>
-							<OPTION VALUE='' selected='selected'>Select..</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='button' id='pending_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_pending_report();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='pending_progress_spinner' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='doctors_stats_div' style='display:none;' class='reports_subdiv'>
-		<b>Test Count Report</b>
-		<br><br>
-		<form name="doctors_stats_form" id="doctors_stats_form" action="doctor_stats.php" method='post'>
-		<table cellpadding="4px">
-		<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location8' value='$key'></input>";
-			}
-
-			else
-			{
-			?>
-			<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location8' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from8", "mm_from8", "dd_from8");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to8", "mm_to8", "dd_to8");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-					<br>
-						<input type='button' id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_doctor_stats();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='tests_done_div' style='display:none;' class='reports_subdiv'>
-		<b>Test Count Report</b>
-		<br><br>
-		<form name="tests_done_form" id="tests_done_form" action="reports_tests_done.php" method='post'>
-		<table cellpadding="4px">
-		<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location4' value='$key'></input>";
-			}
-			else
-			{
-			?>
-			<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location4' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from4", "mm_from4", "dd_from4");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to4", "mm_to4", "dd_to4");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-					<br>
-						<input type='button' id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-        <div id='testcount_grouped_div' style='display:none;' class='reports_subdiv'>
-		<b>Test Count Report</b>
-		<br><br>
-		<form name="testcount_grouped_form" id="testcount_grouped_form" action="reports_testcount_grouped.php" method='post' target='_blank'>
-		<table cellpadding="4px">
-		<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location44' value='$key'></input>";
-			}
-			else
-			{
-			?>
-			<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location44' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from44", "mm_from44", "dd_from44");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to44", "mm_to44", "dd_to44");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-					<br>
-						<input type='button' id='testcount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-            
-        <div id='specimencount_grouped_div' style='display:none;' class='reports_subdiv'>
-		<b>Test Count Report</b>
-		<br><br>
-		<form name="specimencount_grouped_form" id="specimencount_grouped_form" action="reports_specimencount_grouped.php" method='post' target='_blank'>
-		<table cellpadding="4px">
-		<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location444' value='$key'></input>";
-			}
-			else
-			{
-			?>
-			<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location444' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from444", "mm_from444", "dd_from444");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to444", "mm_to444", "dd_to444");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-					<br>
-						<input type='button' id='specimencount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-            
-	<div id='tat_div' style='display:none;' class='reports_subdiv'>
-		<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
-		<br><br>
-		<form name="tat_form" id="tat_form" action="reports_tat.php" method='post'>
-			<table cellpadding="4px">
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location5' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location5' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from5", "mm_from5", "dd_from5");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to5", "mm_to5", "dd_to5");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$pageTerms['MSG_INCLUDEPENDING']; ?> </td>
-					<td>
-						<input type='radio' value='Y' name='pending'><?php echo LangUtil::$generalTerms['YES']; ?></input>
-						<input type='radio' value='N' name='pending' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
-					</td>
-				</tr>
-	
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='button' id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tat_report();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='tat_progress_spinner' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='tat_aggregate_div' style='display:none;' class='reports_subdiv'>
-		<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
-		<br><br>
-                <form name="tat_aggregate_form" id="tat_aggregate_form" action="geo_report_dir_tat.php" method='post'>
-			<table cellpadding="4px">
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from5", "mm_from5", "dd_from5");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to5", "mm_to5", "dd_to5");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				
-                                <tr id='testType'>
-					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
-					<td>
-						<select name='testTypeCountry' id='testTypeCountry' class='uniform_width' onchange='changeAvailableLocations(this)'>
-							<!--<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>-->
-						<?php
-							$page_elems->getTestTypesCountrySelect();
-						?>
-						</select>
-					</td>
-				</tr>
-				<tr class="location_row_aggregate" id="location_row_aggregate">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td id='locationAggregation'>
-						<!--<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>-->
-						<?php
-							$page_elems->getSiteOptionsCheckBoxes("locationAgg[]");
-						?>
-					</td>
-				</tr>
-				<!--<tr valign='top'>
-					<td><?php echo LangUtil::$pageTerms['MSG_INCLUDEPENDING']; ?> </td>
-					<td>
-						<input type='radio' value='Y' name='pending'><?php echo LangUtil::$generalTerms['YES']; ?></input>
-						<input type='radio' value='N' name='pending' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo "Time Division"; ?></td>
-					<td>
-					<select name='tattype' id='tattype' style='font-family:Tahoma;'>
-						<option value='m'><?php echo LangUtil::$pageTerms['PROGRESSION_M']; ?></option>
-						<option value='w' selected><?php echo LangUtil::$pageTerms['PROGRESSION_W']; ?></option>
-						<option value='d'><?php echo LangUtil::$pageTerms['PROGRESSION_D']; ?></option>
-					</select>
-					</td>
-				</tr>-->
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='button' id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:submit_tat_aggregate_form();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='tat_progress_spinner' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='print_div' style='display:none;' class='reports_subdiv'>
-		<span id='test_report_title'><b><?php echo LangUtil::$pageTerms['MENU_TESTRECORDS']; ?></b></span> | <span id='view_pending_title'><a href='javascript:show_pending_tests_form()'><?php echo LangUtil::$pageTerms['MENU_PENDINGTESTS']; ?></a></span>
-		<br><br>
-		<form name="get_print" id="get_print" method="post" action="reports_print.php" target="_blank">
-			<table cellpadding="4px">
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location6' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location6' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				
-				<tr class="type_row" id="type_row">
-					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td> 
-					<td>
-						<SELECT NAME="t_type" id="t_type6" class='uniform_width'>
-							<OPTION VALUE='' selected='selected'><?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>..</option>
-						</SELECT>
-					</td>
-				</tr>
-		
-				<tr class="sdate_row" id="sdate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from6", "mm_from6", "dd_from6");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-			
-				<tr class="edate_row" id="edate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to6", "mm_to6", "dd_to6");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td>
-					</td>
-					<td>
-						<br>
-						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_print_page();" />
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='print_progress_bar' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='specimen_count_div' style='display:none;' class='reports_subdiv'>
-		<b><?php echo LangUtil::$pageTerms['MENU_COUNTS']; ?></b>
-		<br><br>
-		<form name="specimen_count_form" id="specimen_count_form" action="reports_specimencount.php" method='post'>
-			<table cellpadding="4px">
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location7' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location7' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from7", "mm_from7", "dd_from7");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to7", "mm_to7", "dd_to7");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				
-				<tr valign='top'>
-					<td><?php echo LangUtil::$pageTerms['COUNT_TYPE']; ?></td>
-					<td>
-						<input type='radio' id='count_type' name='count_type' value='2' checked>
-							<?php echo LangUtil::$pageTerms['COUNT_TEST']." (Ungrouped)"; ?>
-						</input>
-						<br>
-                                                <input type='radio' id='count_type' name='count_type' value='4' checked>
-							<?php echo LangUtil::$pageTerms['COUNT_TEST']." (Grouped)"; ?>
-						</input>
-                                                <br>
-						<input type='radio' id='count_type' name='count_type' value='1'>
-							<?php echo LangUtil::$pageTerms['COUNT_SPECIMEN']." (Ungrouped)"; ?>
-						</input>
-						<br>
-                                                <input type='radio' id='count_type' name='count_type' value='5'>
-							<?php echo LangUtil::$pageTerms['COUNT_SPECIMEN']." (Grouped)"; ?>
-						</input>
-                                                <br>
-						<input type='radio' id='count_type' name='count_type' value='3'>
-							<?php echo "Doctor Statistics" ?>
-						</input>
-					</td>
-				</tr>
-				
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='button' id='specimen_count_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_count_report()'>
-						</input>
-						<!--
-						--Merged into single submit button--
-						<input type='button' id='specimen_count_submit_button' value='Specimen Count' onclick="javascript:get_specimen_count_report();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type='button' value='Test Count' onclick="javascript:get_tests_done_report2();"></input>
-						-->
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='specimen_count_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-        <div id='user_stats_div' style='display:none;' class='reports_subdiv'>
-		<b><?php echo "User Statistics"; ?></b>
-                <?php $userStats = new UserStats(); ?>
-		<!--<br><br>
-                
-                <a id="ustats_a" class="ustats_link_u" href='javascript:show_user_stats_submenu(1);'>User Stats for All Users</a>
-                |
-                <a id="ustats_i" class="ustats_link_u" href='javascript:show_user_stats_submenu(2);'>User Logs for Individual Users</a>
-
-                <br><br>-->
-                
-
-		<form name="user_stats_form" id="user_stats_form" action="reports_user_stats_all.php" method='post' target='_blank'>
-                    <table cellpadding="4px">
-			
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from7", "mm_from7", "dd_from7");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to7", "mm_to7", "dd_to7");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				
-                                <tr valign='top'>
-					<td><?php echo "Stat Type" ?></td>
-                                            <td>
-						
-                                                <input type='radio' id='stat_type' name='stat_type' value='a' onclick="user_radio(1)">
-							<?php echo "Collective User Stats"; ?>
-						</input>
-						<br>
-                                                <input type='radio' id='stat_type' name='stat_type' value='i' onclick="user_radio(2)">
-							<?php echo "Individual User Logs"; ?>
-						</input>
-                                                
-					</td>
-				</tr>
-                       </table>         
-                      <div id='user_stats_all' style='display:none;'>
-                          <table cellpadding="4px">
-				<tr valign='top'>
-					<td><?php echo LangUtil::$pageTerms['COUNT_TYPE'] ?></td>
-                                            <td>
-						<input type='checkbox' id='count_type_pr' name='count_type_pr' value='Yes' checked>
-							<?php echo "Patients Registered"; ?>
-						</input>
-						<br>
-                                                <input type='checkbox' id='count_type_sr' name='count_type_sr' value='Yes' checked>
-							<?php echo "Specimens Registered"; ?>
-						</input>
-                                                <br>
-                                                <input type='checkbox' id='count_type_tr' name='count_type_tr' value='Yes' checked>
-							<?php echo "Tests Registered"; ?>
-						</input>
-                                                <br>
-						<input type='checkbox' id='count_type_re' name='count_type_re' value='Yes' checked>
-							<?php echo "Results Entered"; ?>
-						</input>
-						<br>
-                                                
-					</td>
-				</tr>
-                                <tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='submit' id='user_stats_all_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
-						</input>
-						<!--
-						--Merged into single submit button--
-						<input type='button' id='specimen_count_submit_button' value='Specimen Count' onclick="javascript:get_specimen_count_report();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type='button' value='Test Count' onclick="javascript:get_tests_done_report2();"></input>
-						-->
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='specimen_count_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-                             </table>
-                    </div>
-
-				
-	
-
-                <div id='user_stats_individual' style='display:none;'>
-                    <table cellpadding="4px">
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			//if(count($site_list) == 1)
-                        if(true)
-			{
-				//foreach($site_list as $key=>$value)
-					//echo "<input type='hidden' name='location' id='location7' value='$key'></input>";
-                            $liddd = $_SESSION['lab_config_id'];
-                                        echo "<input type='hidden' name='location' id='location7' value='$liddd'></input>";
-			
-                                $user_ids = array();
-                                array_push($user_ids, $userStats->getAdminUser($lab_config_id));
-                                $user_ids_others =  $userStats->getAllUsers($lab_config_id);
-                                foreach($user_ids_others as $uids)
-                                     array_push($user_ids, $uids);
-                                //print_r($user_ids);
-                        ?>
-                                <tr>
-					<td><?php echo "User"; ?> </td>
-					<td>
-						<select name='user_id' id='user_id' class='uniform_width'>
-						<?php foreach($user_ids as $uid) {?>
-                                                    <option value='<?php echo $uid; ?>'><?php echo get_username_by_id($uid); ?></option>	
-						<?php } ?>
-                                                </select>
-					</td>
-				</tr>
-                        <?php
-                        }
-			else
-			{
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location7' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				
-				<tr valign='top'>
-					<td><?php echo "Log Type"; ?></td>
-					<td>
-						<input type='radio' id='log_type' name='log_type' value='1' checked>
-							<?php echo "Patients Registry"; ?>
-						</input>
-						<br>
-                                                <input type='radio' id='log_type' name='log_type' value='2'>
-							<?php echo "Specimens Registry"; ?>
-						</input>
-                                                <br>
-                                                <input type='radio' id='log_type' name='log_type' value='3'>
-							<?php echo "Tests Registry"; ?>
-						</input>
-                                                <br>
-						<input type='radio' id='log_type' name='log_type' value='4'>
-							<?php echo "Results Entry"; ?>
-						</input>
-						<br>
-                                                <input type='radio' id='log_type' name='log_type' value='5'>
-							<?php echo "Inventory Transaction"; ?>
-						</input>
-                                                <br>
-						
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='submit' id='user_stats_individual_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
-						</input>
-						<!--
-						--Merged into single submit button--
-						<input type='button' id='specimen_count_submit_button' value='Specimen Count' onclick="javascript:get_specimen_count_report();"></input>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type='button' value='Test Count' onclick="javascript:get_tests_done_report2();"></input>
-						-->
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<span id='specimen_count_progress_spinner' style='display:none'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-                    </div>
-		</form>
-                </div>
-            
-	<div id='test_history_div' class='reports_subdiv'  style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_PATIENT']; ?></b>
-		<br><br>
-		<form name='test_history_form' id='test_history_form'>
-			<table cellpadding='4px'>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location8' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?></td>
-					<td>
-						<select name='location' id='location8' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td>
-					<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
-						<?php $page_elems->getPatientSearchAttribSelect(); ?>
-					</select>
-					</td>
-					<td>
-						<input type='text' name='patient_id' id='patient_id8' class='uniform_width'></input>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='test_history_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<div id='phistory_list'>
-			</div>
-		</form>
-	</div>
-	
-	<div id='test_report_div' class='reports_subdiv'  style='display:none'>
-		<b>Single Test Report</b>
-		<br><br>
-		<form name='test_report_form' id='test_report_form' action='reports_test.php' method='post' target='_blank'>
-			<table cellpadding='4px'>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location9' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location9' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
-					<td>
-						<input type='text' name='specimen_id' id='specimen_id9' class='uniform_width'></input>
-					</td>
-				</tr>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
-					<td>
-						<SELECT NAME="t_type" id="t_type9" class='uniform_width'>
-							<OPTION VALUE='' selected='selected'>Select..</option>
-						</SELECT>
-					</td>
-				</tr>				
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' name='test_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_test_report();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='test_report_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<div id='session_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_SPECIMEN']; ?></b>
-		<br><br>
-		<form name='session_report_form' id='session_report_form' action='reports_session.php' method='post' target='_blank'>
-			<table cellpadding='4px'>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location11' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> </td>
-					<td>
-						<select name='location' id='location11' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>	
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td>
-					<select id='specimen_attrib' name='specimen_attrib'>
-						<option value='1'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></option>
-						<option value='2'><?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?></option>
-						<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
-						<option value='4'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
-					</select>
-					</td>
-					<td>
-						<input type='text' name='session_num' id='session_num' class='uniform_width'></input>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' id='submit_button11' name='session_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_session_report();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='session_report_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</form>
-		<div id='specimens_fetched'>
-		</div>
-	</div>
-	
-	<div id='daily_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></b>
-		<br><br>
-		<table cellpadding='4px'>
-			<tbody>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location13' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='location' id='location13' class='uniform_width' onchange='handleChange(this)'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></td>
-					<td>
-					<?php		
-					$today = date("Y-m-d");
-					$value_list = explode("-", $today);
-					$name_list = array("daily_yyyy", "daily_mm", "daily_dd");
-					$id_list = $name_list;
-					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-					</td>
-				</tr>
-				
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?></td>
-					<td>
-					<?php		
-					$name_list = array("daily_yyyy_to", "daily_mm_to", "daily_dd_to");
-					$id_list = $name_list;
-					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-					</td>
-				</tr>
-				
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<input type='radio' name='rectype13' value='1' checked>
-							<?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?>
-						</input>
-						<br>
-						<input type='radio' name='rectype13' value='2'>
-							<?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
-						</input>
-					</td>
-				</tr>
-				<tr id='cat_row13'>
-					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='cat_code' id='cat_code13' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-							<?php
-							if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) )
-								$page_elems->getTestCategoryCountrySelect();
-							else {
-								$page_elems->getTestCategorySelect();
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr id='ttype_row13'>
-					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
-					<td>
-						<select name='ttype' id='ttype13' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						</select>
-					</td>
-				</tr>
-				
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-            
-	<div id='daily_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></b>
-		<br><br>
-		<table cellpadding='4px'>
-			<tbody>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location13' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='location' id='location13' class='uniform_width' onchange='handleChange(this)'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></td>
-					<td>
-					<?php		
-					$today = date("Y-m-d");
-					$value_list = explode("-", $today);
-					$name_list = array("daily_yyyy", "daily_mm", "daily_dd");
-					$id_list = $name_list;
-					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-					</td>
-				</tr>
-				
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?></td>
-					<td>
-					<?php		
-					$name_list = array("daily_yyyy_to", "daily_mm_to", "daily_dd_to");
-					$id_list = $name_list;
-					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-					</td>
-				</tr>
-				
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<input type='radio' name='rectype13' value='1' checked>
-							<?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?>
-						</input>
-						<br>
-						<input type='radio' name='rectype13' value='2'>
-							<?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
-						</input>
-					</td>
-				</tr>
-				<tr id='cat_row13'>
-					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='cat_code' id='cat_code13' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-							<?php
-							if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) )
-								$page_elems->getTestCategoryCountrySelect();
-							else {
-								$page_elems->getTestCategorySelect();
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr id='ttype_row13'>
-					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
-					<td>
-						<select name='ttype' id='ttype13' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						</select>
-					</td>
-				</tr>
-				
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	
-	<div id='billing_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo "Bill Generation"; ?></b>
-		<br><br>
-		<form name='preport_form' id='preport_form'>
-			<table cellpadding='4px'>
-			
-				<tr>
-					<td>
-					<select name='p_attrib' id='p_attrib15'>
-						<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
-						<option value='2'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
-						<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
-					</select>
-					</td>
-					<td>
-						<input type='text' name='patient_id' id='patient_id15' class='uniform_width'></input>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='preport_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<div id='preport_list'>
-			</div>
-                        </form>
-	</div>
-	
-	<div id='prevalance_aggregate_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONSUMMARY'];  ?></b>
-		<br><br>
-                <form name="country_aggregate_form" id="country_aggregate_form" action="geo_report_dir_prev.php" method='post'>
-			<table>
-				<tr class="sdate_row" id="sdate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from15", "mm_from15", "dd_from15");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr class="edate_row" id="edate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to15", "mm_to15", "dd_to15");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-                               
-				<tr id='ttype_row16'>
-					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
-					<td>
-						<select name='testTypeCountry' id='testTypeCountry' class='uniform_width' onchange='changeAvailableLocations(this)'>
-							<!--<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>-->
-						<?php
-							$page_elems->getTestTypesCountrySelect();
-						?>
-						</select>
-					</td>
-				</tr>
-				
-				<tr class="location_row_aggregate" id="location_row_aggregate">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td id='locationAggregation'>
-						<?php /*
-						<select name='location' id='locationAggregation' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select> */
-						?>
-						<!--<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>-->
-						<?php
-							$page_elems->getSiteOptionsCheckBoxes("locationAgg[]");
-						?>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<br>
-                                                <input type='button' id='prev_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_aggregate_report();" ></input>
-						
-						&nbsp;&nbsp;&nbsp;
-						<span id='aggregate_report_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-		</table>
-		</form>
-	</div>
-	
-	<div id='control_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_CONTROLREPORT']; ?></b>
-		<br><br>
-		<form id='control_report_form' action='control_report.php' method='post'>
-		<table>
-			<tbody>
-			<tr valign='top'>
-				<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?> &nbsp;&nbsp;&nbsp;</td>
-				<td>
-					<select id='verify_test_type_control' name='t_type' class='uniform_width'>
-						<option value=""><?php echo LangUtil::$generalTerms['SELECT_ONE']; ?>..</option>
-						<?php $page_elems->getTestTypesSelect($_SESSION['lab_config_id']); ?>
-					</select>
-					<span id='control_testing_error' class='error_string' style='display:none;'>
-						<?php echo LangUtil::$generalTerms['MSG_SELECT_TTYPE']; ?>
-					</span>
-				</td>
-			</tr>
-			<tr class="sdate_row" id="sdate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from15", "mm_from15", "dd_from15");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-			</tr>
-			<tr class="edate_row" id="edate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to15", "mm_to15", "dd_to15");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-			<tr>
-				<td></td>
-				<td>
-				<br>
-				<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_control_report()'></input>
-				&nbsp;&nbsp;&nbsp;
-				<span id='stock_report_progress_spinner'  style='display:none;'>
-					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-				</span>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-		</form>
-	</div>	
-	
-	<div id='disease_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></b>
-		<br><br>
-		<form id='disease_report_form' action='report_disease.php' method='post' target='_blank'>
-		<table>
-			<tbody>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location14' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='location' id='location14' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr class="sdate_row" id="sdate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from14", "mm_from14", "dd_from14");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr class="edate_row" id="edate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to14", "mm_to14", "dd_to14");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='cat_code' id='cat_code14' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-								$site_list = get_site_list($_SESSION['user_id']);
-								if(count($site_list) == 1) 
-									$page_elems->getTestCategorySelect();
-								else {
-									$page_elems->getTestCategoryCountrySelect();
-								}
-						?>
-						</select>
-					</td>
-				</tr>
-				<?php
-				$site_list = get_site_list($_SESSION['user_id']);
-				if(count($site_list) == 1) {
-					foreach($site_list as $key=>$value)
-						echo "<input type='hidden' name='location' id='location14' value='$key'></input>";
-				}
-				else { ?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td id='locationAggregation'>
-						<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>
-						<?php
-							$page_elems->getSiteOptionsCheckBoxes("locationAgg");
-						?>
-					</td><br>
-				</tr>
-				<?php
-				}
-				?>
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_disease_report()'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='disease_report_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		</form>
-	</div>
-
-	<div id='infection_aggregate_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></b>
-		<br><br>
-		<form id='infection_aggregate_form' action='infection_aggregate.php' method='post' target='_blank'>
-		<table>
-			<tbody>	
-				<tr class="sdate_row" id="sdate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?> </td>
-					<td>
-					<?php
-						$name_list = array("yyyy_from", "mm_from", "dd_from");
-						$id_list = array("yyyy_from14", "mm_from14", "dd_from14");
-						$value_list = $monthago_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr class="edate_row" id="edate_row" valign='top'>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-					<?php
-						$name_list = array("yyyy_to", "mm_to", "dd_to");
-						$id_list = array("yyyy_to14", "mm_to14", "dd_to14");
-						$value_list = $today_array;
-						$page_elems->getDatePicker($name_list, $id_list, $value_list);
-					?>
-					</td>
-				</tr>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='cat_code' id='cat_code14' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php $page_elems->getTestCategoryTypesCountrySelect(); ?>
-						</select>
-					</td>
-				</tr>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td id='locationAggregation'>
-						<input type='checkbox' name='locationAgg' id='locationAgg' value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></input>
-						<?php
-							$page_elems->getSiteOptionsCheckBoxes("locationAgg[]");
-						?>
-					</td><br>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<br>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_infection_report_aggregate()'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='infection_aggregate_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		</form>
-	</div>	
-	
-	<div id='patient_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_PATIENT']; ?></b>
-		<br><br>
-		<form name='preport_form' id='preport_form'>
-			<table cellpadding='4px'>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location15' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row15">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?></td>
-					<td>
-						<select name='location' id='location15' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td>
-					<select name='p_attrib' id='p_attrib15'>
-						<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
-						<option value='2'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
-						<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
-					</select>
-					</td>
-					<td>
-						<input type='text' name='patient_id' id='patient_id15' class='uniform_width'></input>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='preport_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<div id='preport_list'>
-			</div>
-	</div>
-	
-	<div id='infection_report_settings_div' class='reports_subdiv'  style='display:none;'>
-		<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
-		<b><?php echo "Infection Report Settings"; ?></b>
-		 | <a href='javascript:toggleInfectionReportSettings();' id='agg_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-		<br><br>
-		<div id='report_updated_msg' class='clean-orange' style='display:none;width:350px;'>
-		</div>
-		<br>
-		<div id='infection_report_settings_summary'>
-			<?php echo $page_elems->getInfectonReportSummary(); ?>
-		</div>
-		<div id='infection_report_settings_form_div' style='display:none;'>
-			<form id='infection_report_settings_preview_form' style='display:none;' name='infection_report_settings_preview_form' action='report_disease_preview.php' method='post' target='_blank'>					
-				<?php # This form is cloned from agg_report_form in javascript:agg_preview() function ?>
-			</form>
-			<form id='infection_report_settings_form' name='infection_report_settings_form' action='ajax/infection_report_settings_update.php' method='get'>
-				<?php $page_elems->getInfectionReportConfigureForm(); ?>
-			</form>	
-		</div>
-	</div>
-				
-	
-	<?php 
-	# Space for additional report forms after this
-	# PLUG_FORM_DIV
-	?>
-	
-	</td>
-	</tr>
-</table>
-</div>
-</div>
 <?php 
 $script_elems->bindEnterToClick("#patient_id8", "#submit_button8");
 $script_elems->bindEnterToClick("#session_num", "#submit_button11");

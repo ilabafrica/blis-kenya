@@ -409,9 +409,7 @@ if($SHOW_REPORT_RESULTS === true)
 </div>
 </div>
 <!-- END ROW-FLUID--> 
-<?php
-include("includes/scripts.php");
-?>
+<?php include("includes/scripts.php");?>
 <?php $script_elems->enableDatePicker();
 $script_elems->enableJQueryForm();
 $script_elems->enableJQueryValidate();
