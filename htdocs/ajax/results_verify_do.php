@@ -43,7 +43,16 @@ function verify_and_update($test_type_id, $verified_entry, $hash_value)
 			"date_verified='$verified_entry->dateVerified' ".
 			"WHERE test_id=$test_id";
 	}
-	query_blind($query_verify);
+	
+	$result = query_blind($query_verify);
+		
+		if($result){
+			//Add event to audit trail
+			$auditTrail = new AuditTrail();		
+		    $auditTrail->tablename = "test";
+			$auditTrail->objectid = $test_id;
+			$auditTrail->logVerifyResult($auditTrail);		
+		}
 }
 
 # Execution begins here

@@ -2,8 +2,7 @@
 include("../includes/db_lib.php");
 
 //Logging User logout
-$auditTrail = new AuditTrail();
-$auditTrail->log_access($_SESSION['user_id'], $auditTrail::LOGOUT, $_SESSION['username']);
+log_access($_SESSION['user_id'], 2, $_SESSION['username']);
 
 session_unset();
 session_destroy();
