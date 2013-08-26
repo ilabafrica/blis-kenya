@@ -12,9 +12,6 @@ include("includes/stats_lib.php");
 LangUtil::setPageId("lab_config_home");
 
 putUILog('lab_config_home', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
-$script_elems->enableTableSorter();
-$script_elems->enableJQueryForm();
 ?>
 
 
@@ -228,12 +225,1108 @@ if($lab_config == null)
 	return;
 }
 ?>
-<style type='text/css'>
 
-.range_field {
-	width:30px;
-}
-</style>
+
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i>
+								<a href="index.html">Home</a> 
+								<span class="icon-angle-right"></span>
+							</li>
+							<li><a href="#">Lab Configuration</a>
+							<span class="icon-angle-right"></span></li>
+							<li><a href="#"></a></li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+<!-- BEGIN ROW-FLUID-->   
+<div class="row-fluid">
+<div class="span12 sortable">
+	
+<table>
+	<tbody>
+		<tr valign='top'>
+			<td>
+				<br><br><br><br><br>
+			</td>
+			<td>
+				<div class='right_pane' id='site_info_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
+				<b><?php echo LangUtil::$pageTerms['MENU_SUMMARY']; ?></b>
+					<br><br>
+					<div id='main_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<?php
+					$page_elems->getLabConfigInfo($lab_config->id);
+					?>
+					<form id='backup_form' name='backup_form' action='data_backup' method='post' target='_blank'>
+						<input type='hidden' name='id' value='<?php echo $_REQUEST['id']; ?>'></input>
+					</form>
+				</div>
+                            
+                                <div class='right_pane' id='blis_update_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
+				<b><?php echo "BLIS Update"; ?></b>
+					<br><br>
+                                        <input type="Button" id="update_button" name="update_button" value="Start Update" onclick="javascript:blis_update_t()"/>
+                                        <br>
+                                        <div id='update_spinner' style='display:none;'>
+                                        <?php
+					$spinner_message = "Updating to C4G BLIS v2.2"."<br>";
+                                        $page_elems->getProgressSpinnerBig($spinner_message);
+                                        ?>
+                                        </div>
+                                        <br>
+                                        <div id='update_success' class='clean-orange' style='display:none;width:350px;'>
+                                            Update to v2.2 Successful!
+                                        </div>
+                                        <div id='update_failure' class='clean-error' style='display:none;width:350px;'>
+                                            Update to v2.2 Failed! Try Again.
+                                        </div>
+				</div>
+				
+				<div class='right_pane' id='st_types_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_ST_TYPES']; ?></b>
+					<br><br>
+					<div id='sttypes_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<form id='st_types_form' name='st_types_form' action='ajax/st_types_update.php' method='post'>
+					<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>					
+					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?>
+					<small><a id='stype_link' href='javascript:stype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
+					<div class='pretty_box' id='stype_box' style='display:none'>
+					<b><u><?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?></u></b>
+						<?php $page_elems->getSpecimenTypeCheckboxes($lab_config->id); ?>
+					</div>
+					<br>
+					<br>
+					<?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
+					<small><a id='ttype_link' href='javascript:ttype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
+					<div class='pretty_box' id='ttype_box' style='display:none'>
+					<b><u><?php echo LangUtil::$generalTerms['TEST_TYPES']; ?></u></b>
+                                        
+                                        <?php
+                                        //NC3065
+                                        
+                                        $user = get_user_by_id($_SESSION['user_id']);
+                                        if(is_super_admin($user) || is_country_dir($user))
+                                        {
+                                            $page_elems->getTestTypeCheckboxes_dir($lab_config->id);
+                                        }
+                                        else
+                                        {
+                                            $page_elems->getTestTypeCheckboxes($lab_config->id); 
+                                        }
+                                        //NC3065
+					?>
+                                        
+                                         <?php //$page_elems->getTestTypeCheckboxes($lab_config->id); ?>
+                                        
+					</div>
+					<br><br>
+					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='checkandsubmit_st_types()'>
+					</input>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<span id='st_types_progress' style='display:none;'>
+                                  
+						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+					</span>
+					</form>
+				</div>
+			
+                                <!--NC3065-->
+                                
+                                <div class='right_pane' id='search_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
+					<b><?php echo "Configure Fields for search results"; ?></b>
+					<br><br>
+                                        <div id='searchfield_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<form id='searchfields_form' name='searchfields_form' action='ajax/search_config_update.php' method='post'>
+					<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>					
+						<?php $page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
+					<br><br>
+					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_searchconfig()'>
+					</input>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<!--span id='st_types_progress' style='display:none;'-->
+                                        <span id='searchfields_progress' style='display:none;'>
+
+						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+					</span>
+					</form>
+				</div>
+                                
+                                <div class='right_pane' id='barcode_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#barcode_config'>Page Help</a></p>
+					<b><?php echo "Configure Barcode Format Settings"; ?></b>
+					<br><br>
+                                        <div id='barcodefield_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<form id='barcodefields_form' name='barcodefields_form' action='ajax/update_barcode_settings.php' method='post'>
+					<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>					
+						<?php $page_elems->getBarcodeFields($lab_config->id);
+                                                //$page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
+					<br><br>
+					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_barcodeconfig()'>
+					</input>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<!--span id='st_types_progress' style='display:none;'-->
+                                        <span id='barcodefields_progress' style='display:none;'>
+
+						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+					</span>
+					</form>
+				</div>
+                                
+                                <!--NC3065-->
+
+                            
+				<div class='right_pane' id='users_div' style='display:none;margin-left:10px;'>
+					<?php
+					$reload_url = "lab_config_home.php?id=$lab_config_id";
+					?>
+					<p style="text-align: right;"><a rel='facebox' href='#UserAccounts_config'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></b>
+					 | <a rel='facebox' href='lab_user_new.php?ru=<?php echo $reload_url; ?>&lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['CMD_ADDNEWACCOUNT']; ?></a>
+					<br><br>
+					<div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<div id='user_list_table'>
+					<?php
+					$user_list = $lab_config->getUsers();
+					$page_elems->getLabUsersTable($user_list, $lab_config_id);
+					?>
+					</div>
+				</div>
+					
+				<div class='right_pane' id='inventory_div' style='display:none;margin-left:10px;'>
+				</div>
+                                
+                                <div class='right_pane' id='billing_div' style='display:none;margin-left:10px;'>
+                                         
+                                    <p style="text-align: right;"><a rel='facebox' href='#Billing_config'>Page Help</a></p>
+                                    <div id='billing_msg' class='clean-orange' style='display:none;width:350px;'>
+                                    </div>
+                                    <form id='billing_form' name='billing_form' action='ajax/billing_update.php' method='post'>
+                                        <input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
+                                        <div class="pretty_box">
+                                        <?php
+                                            if (is_billing_enabled($_SESSION['lab_config_id'])) {
+                                                $checkbox = "checked";
+                                            } else {
+                                                $checkbox = "";
+                                            }
+                                            $old_currency = get_currency_type_from_lab_config_settings();
+                                        ?>
+                                        <input type="checkbox" value="enable_billing" name="enable_billing" <?php echo $checkbox ?>/><?php echo "Enable Billing"; ?>
+                                        <br><br>
+                                        <?php echo "Currency Name:"; ?>
+                                        <input type="text" name="currency_name" value="<?php echo get_currency_type_from_lab_config_settings() ?>" />
+                                        <br><br>
+                                        <?php echo "Currency Delimiter:"; ?>
+                                        <input type="text" name="currency_delimiter" value="<?php echo get_currency_delimiter_from_lab_config_settings() ?>" size="1" maxlength="1" />
+                                        <br><br>
+                                        Currency will display as: 00<?php echo get_currency_delimiter_from_lab_config_settings(); ?>00 <?php echo get_currency_type_from_lab_config_settings() ?>
+                                        </div>
+                                        <br>
+                                        <input type="button" value="Update" onclick="submit_billing_update()" />
+
+                                        <span id='billing_progress' style='display:none;'>
+                                            <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+					</span>
+                                    </form>
+                                </div>
+				
+				<div class='right_pane' id='fields_div' style='display:none;margin-left:10px;'>
+					<p style="text-align: right;"><a rel='facebox' href='#RegistrationFields_config'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></b>
+					 | <a href='javascript:toggle_ofield_div();' id='ofield_toggle_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+					<br><br>
+					<div id='cfield_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<div id='ofield_summary' class='pretty_box'>
+					<?php $page_elems->getRegistrationFieldsSummary($lab_config); ?>
+					</div>
+					<div id='ofield_form_div' style='display:none;'>
+					<form id='otherfields_form' name='otherfields_form' action='ajax/ofield_update.php' method='post'>
+					<input type='hidden' value='<?php echo $_REQUEST['id']; ?>' name='lab_config_id'></input>
+					<table class='hor-minimalist-b' style='width:auto;'>
+						<thead>
+							<tr>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr valign='top'>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
+								<td>
+									<input type='checkbox' name='use_pid' id='use_pid' <?php
+									if($lab_config->pid != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_pid_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_pid_radio' value='Y' <?php
+										if($lab_config->pid == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_pid_radio' value='N' <?php
+										if($lab_config->pid != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr valign='top'>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['ADDL_ID']; ?></td>
+								<td>
+									<input type='checkbox' name='use_p_addl' id='use_p_addl' <?php
+									if($lab_config->patientAddl != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_p_addl_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_p_addl_radio' value='Y' <?php
+										if($lab_config->patientAddl == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_p_addl_radio' value='N' <?php
+										if($lab_config->patientAddl != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></td>
+								<td>
+									<input type='checkbox' name='use_dnum' id='use_dnum'<?php
+									
+                                                                        if($lab_config->dailyNum == 1 || $lab_config->dailyNum == 2 || $lab_config->dailyNum == 11 || $lab_config->dailyNum == 12)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_dnum_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_dnum_radio' value='Y'<?php
+										if($lab_config->dailyNum == 2 || $lab_config->dailyNum == 12)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_dnum_radio' value='N' <?php
+										if($lab_config->dailyNum != 2 && $lab_config->dailyNum != 12)
+											echo " checked ";
+										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_RESET']; ?>
+										<select name='dnum_reset' id='dnum_reset'>
+											<option value='<?php echo LabConfig::$RESET_DAILY; ?>'><?php echo LangUtil::$pageTerms['DAILY']; ?></option>
+											<option value='<?php echo LabConfig::$RESET_WEEKLY; ?>'><?php echo LangUtil::$pageTerms['WEEKLY']; ?></option>
+											<option value='<?php echo LabConfig::$RESET_MONTHLY; ?>'><?php echo LangUtil::$pageTerms['MONTHLY']; ?></option>
+											<option value='<?php echo LabConfig::$RESET_YEARLY; ?>'><?php echo LangUtil::$pageTerms['YEARLY']; ?></option>
+										</select>
+										
+									</span>
+								</td>
+							</tr>
+							<tr style='display:none;'>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['NAME']; ?></td>
+								<td>
+									<input type='checkbox' name='use_pname' id='use_pname'<?php
+									if($lab_config->pname != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_pname_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_pname_radio' value='Y'<?php
+										if($lab_config->pname == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_pname_radio' value='N' <?php
+										if($lab_config->pname != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr style='display:none;'>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['GENDER']; ?></td>
+								<td>
+									<input type='checkbox' name='use_sex' id='use_sex' <?php
+									if($lab_config->sex != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_sex_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['DOB']; ?></td>
+								<td>
+									<input type='checkbox' name='use_dob' id='use_dob'<?php
+									if($lab_config->dob != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_dob_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_dob_radio' value='Y'<?php
+										if($lab_config->dob == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_dob_radio' value='N' <?php
+										if($lab_config->dob != 2)
+											echo " checked ";
+										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr style='display:none;'>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['AGE']; ?></td>
+								<td>
+									<input type='checkbox' name='use_age' id='use_age'<?php
+                                                                        if($lab_config->age == 1 || $lab_config->age == 2 || $lab_config->age == 11 || $lab_config->age == 12)
+									
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_age_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_age_radio' value='Y'<?php
+										if($lab_config->age == 2 || $lab_config->age == 12)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_age_radio' value='N' <?php
+										if($lab_config->age != 2 && $lab_config->age != 12)
+											echo " checked ";
+										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo 'Complete Age Display Limit'; ?></td>
+								<td>
+									<input type='text' name='ageLimit' id='ageLimit' size='3' maxlength='3' value='<?php echo $lab_config->ageLimit; ?>'>
+									</input>
+									<?php echo LangUtil::$generalTerms['YEARS'] ?>
+								</td>
+							</tr>
+							<tr valign='top' style='display:none;'>
+								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
+								<td>
+									<input type='checkbox' name='use_sid' id='use_sid'<?php
+									//if($lab_config->sid != 0)
+									if(true)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_sid_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
+								<td>
+									<input type='checkbox' name='use_s_addl' id='use_s_addl'<?php
+									if($lab_config->specimenAddl != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_s_addl_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_s_addl_radio' value='Y'<?php
+										if($lab_config->specimenAddl == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_s_addl_radio' value='N' <?php
+										if($lab_config->specimenAddl != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['COMMENTS']; ?></td>
+								<td>
+									<input type='checkbox' name='use_comm' id='use_comm'<?php
+									if($lab_config->comm != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_comm_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_comm_radio' value='Y'<?php
+										if($lab_config->comm == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_comm_radio' value='N' <?php
+										if($lab_config->comm != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['R_DATE']; ?></td>
+								<td>
+									<input type='checkbox' name='use_rdate' id='use_rdate'<?php
+									if($lab_config->rdate != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_rdate_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_rdate_radio' value='Y'<?php
+										if($lab_config->rdate == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_rdate_radio' value='N' <?php
+										if($lab_config->rdate != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['REF_OUT']; ?></td>
+								<td>
+									<input type='checkbox' name='use_refout' id='use_refout'<?php
+									if($lab_config->refout != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_refout_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_refout_radio' value='Y'<?php
+										if($lab_config->refout == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_refout_radio' value='N' <?php
+										if($lab_config->refout != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['DOCTOR']; ?></td>
+								<td>
+									<input type='checkbox' name='use_doctor' id='use_doctor'<?php
+									if($lab_config->refout != 0)
+										echo " checked ";
+									?>>
+									</input>
+									<span id='use_doctor_mand' style='display:none;'>
+										&nbsp;&nbsp;
+										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+										&nbsp;&nbsp;
+										<input type='radio' name='use_doctor_radio' value='Y'<?php
+										if($lab_config->refout == 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										&nbsp;&nbsp;
+										<input type='radio' name='use_doctor_radio' value='N' <?php
+										if($lab_config->refout != 2)
+											echo " checked ";
+										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo LangUtil::$generalTerms['DATE_FORMAT']; ?></td>
+								<td>
+									<select name='dformat' id='dformat'>
+										<?php $page_elems->getDateFormatSelect($lab_config); ?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_UPDATE']; ?>' onclick='javascript:submit_otherfields();'>
+									</input>
+									&nbsp;&nbsp;&nbsp;
+									<span id='otherfields_progress' style='display:none;'>
+										<?php echo $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</form>
+					</div>
+					
+					<br>
+					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['SPECIMENS']; ?>
+					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>[<a href='#new_help' rel='facebox'>?</a>]
+					<div id='specimen_custom_field_list'>
+					<?php 
+					$custom_field_list = get_lab_config_specimen_custom_fields($lab_config->id);
+					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 1); 
+					?>
+					</div>
+					
+					<br>
+					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['PATIENTS']; ?>
+					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
+					<div id='patient_custom_field_list'>
+					<?php 
+					$custom_field_list = get_lab_config_patient_custom_fields($lab_config->id);
+					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 2); 
+					?>
+					</div>
+					
+					<br>
+					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - Lab Titles"; ?>
+					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
+					<div id='labtitle_custom_field_list'>
+					<?php 
+					$custom_field_list = get_lab_config_labtitle_custom_fields($lab_config->id);
+					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 3); 
+					?>
+					</div>
+				</div>
+				<div class='right_pane' id='network_setup_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#SetupNet'>Page Help</a></p>
+				Setup can be accessed from BlisSetup.html in the main folder.
+				</div>
+				<div class='right_pane' id='target_tat_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
+					 | <a href="javascript:toggletatdivs();" id='toggletat_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+					<br><br>
+					<div id='tat_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<div id='goal_tat_list'>
+					<?php $page_elems->getGetGoalTatTable($lab_config->id); ?>
+					</div>
+					<form id='goal_tat_form' style='display:none' name='goal_tat_form' action='ajax/lab_config_tat_update.php' method='post'>
+						<?php $page_elems->getGoalTatForm($lab_config->id); ?>
+						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_goal_tat();'></input>
+						&nbsp;&nbsp;&nbsp;
+						<small><a href='javascript:toggletatdivs();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+						&nbsp;&nbsp;&nbsp;
+						<span id='tat_progress_spinner' style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+						</span>
+					</form>
+				</div>
+				
+
+                            <div id='view_stocks_help' class='right_pane' style='display:none;margin-left:10px;'>
+                                    <ul>	
+                                            <?php
+
+                                                    echo "<li>";
+                                                    echo " Toggle Patient Number or Patient's Age to be displayed as part of Search Results";
+                                                    echo "</li>";
+                                                    echo "<li>";
+                                                    echo " Choosing to display Patient Number and/or Patient's Age as part of Search results slows down the time taken to search ";
+                                                    echo "</li>";
+
+
+
+                                            ?>
+                                    </ul>
+                                    </div>
+
+                                
+                                
+				<div class='right_pane' id='del_config_div' style='display:none;margin-left:10px;'>
+					<b><?php echo LangUtil::$pageTerms['MENU_DEL']; ?></b>
+					<br><br>
+					<div class='clean-orange' style='width:350px;'>
+					'<?php echo $lab_config->getSiteName(); ?>' - <?php echo LangUtil::$pageTerms['TIPS_LABDELETE']; ?>
+					<br><br>
+					<input type='button' onclick='javascript:delete_config();' value='<?php echo LangUtil::$generalTerms['CMD_OK']; ?>'>
+					&nbsp;&nbsp;&nbsp;
+					<input type='button' onclick="javascript:right_load(1, 'site_info_div');" value='<?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?>'>
+					</div>
+				</div>
+				
+				<div class='right_pane' id='change_admin_div' style='display:none;margin-left:10px;'>
+					<b><?php echo LangUtil::$pageTerms['MENU_MGR']; ?></b>
+					<br><br>
+					<div id='admin_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<select name='lab_admin' id='lab_admin' class='uniform_width'>
+					<?php 
+						# Fetch list of existing lab admins 
+						$page_elems->getAdminUserOptions();
+					?>
+					</select>
+					<br><br>
+					<input type='button' onclick='javascript:change_admin();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
+					&nbsp;&nbsp;&nbsp;
+					<small><a href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+				</div>
+				
+				<div class='right_pane' id='agg_report_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></b>
+					 | <a href='javascript:toggle_disease_report();' id='agg_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+					<br><br>
+					<div id='agg_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<div id='agg_report_summary'>
+						<?php echo $page_elems->getAggregateReportSummary($lab_config); ?>
+					</div>
+					<div id='agg_report_form_div' style='display:none;'>
+						<form id='agg_report_form' name='agg_report_form' action='ajax/report_agg_update.php' method='post'>
+							<?php $page_elems->getAggregateReportConfigureForm($lab_config); ?>
+						</form>	
+						<form id='agg_preview_form' style='display:none;' name='agg_preview_form' action='report_disease_preview.php' method='post' target='_blank'>					
+							<?php # This form is cloned from agg_report_form in javascript:agg_preview() function ?>
+						</form>
+					</div>
+				</div>
+				
+                                <div class='right_pane' id='grouped_count_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
+					<b><?php echo "Test/Specimen Count Grouped Reports"; ?></b>
+					 | <a href='javascript:toggle_grouped_count_report();' id='grouped_count_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+					<br><br>
+					<div id='grouped_count_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<div id='grouped_count_report_summary'>
+						<?php echo $page_elems->getGroupedCountReportSummary($lab_config); ?>
+					</div>
+					<div id='grouped_count_report_form_div' style='display:none;'>
+						<form id='grouped_count_report_form' name='grouped_count_report_form' action='ajax/grouped_count_reports_update.php' method='post'>
+							<?php $page_elems->getGroupedCountReportConfigureForm($lab_config); ?>
+						</form>	
+						
+					</div>
+				</div>
+                                
+				<div class='right_pane' id='misc_div' style='display:none;margin-left:10px;'>
+					<b><?php echo LangUtil::$pageTerms['MENU_GENERAL']; ?></b>
+					<br><br>
+					<div id='misc_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<form id='misc_form' name='misc_form' action='ajax/lab_config_miscupdate.php' method='get'>
+						<table cellspacing='10px'>
+							<tbody>
+								<tr>
+									<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;&nbsp;</td>
+									<td>
+										<input type='text' name='name' id='name9' class='uniform_width' value='<?php echo $lab_config->name; ?>'>
+										</input>
+										<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo LangUtil::$generalTerms['LOCATION']; ?></td>
+									<td>
+										<input type='text' name='loc' id='loc9' class='uniform_width' value='<?php echo $lab_config->location; ?>'>
+										</input>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td>Database</td>
+									<td>
+										<input type='radio' class='dboption' name='dboption' value='1'>Populate Random Data</input><br>
+										<input type='radio' class='dboption' name='dboption' value='2'>Clear Random Data</input><br>
+										<input type='radio' class='dboption' name='dboption' value='0' checked>Keep Unchanged</input>
+										<br><br>
+										<div class='clean-orange dboption_help uniform_width' id='dboption_help_1' style='display:none'>
+										Populate Random Data - Creates new random records for patients and specimens
+										</div>
+										<div class='clean-orange dboption_help uniform_width' id='dboption_help_2' style='display:none'>
+										Clear Random Data - Clears all random data about patients and specimens
+										</div>
+									</td>
+								</tr>
+								<tr valign='top' class='random_params' style='display:none;'>
+									<td>Total Patients</td>
+									<td>
+										<input type='text' class='uniform_width' name='num_p' value='<?php echo $MAX_NUM_PATIENTS/2; ?>'></input>
+									</td>
+								</tr>
+								<tr valign='top' class='random_params' style='display:none;'>
+									<td>Total Specimens</td>
+									<td>
+										<input type='text' class='uniform_width' name='num_s' value='<?php echo "2000"; #$MAX_NUM_SPECIMENS/2; ?>'></input>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										<input type='button' name='misc_form_button' id='misc_form_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:misc_checkandsubmit();'>
+										</input>
+										&nbsp;&nbsp;&nbsp;
+										<small><a href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+										&nbsp;&nbsp;&nbsp;
+										<span id='misc_progress' style='display:none'>
+											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										<span id='misc_errormsg' class='clean-error' style='display:none' >
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>			
+				</div>
+				
+				<div class='right_pane' id='report_config_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#DRS_rc'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></b>
+					<br><br>
+					<div id='report_config_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<form id='report_config_form' name='report_config_form' action='' method='post'>
+						<?php echo LangUtil::$generalTerms['REPORT_TYPE']; ?>
+						&nbsp;&nbsp;
+						<select name='report_type' id='report_type11'>
+							<option value='1'><?php echo $LANG_ARRAY['reports']['MENU_PATIENT']; ?></option>
+							<?php
+							if($SHOW_SPECIMEN_REPORT === true)
+							{
+								?>
+								<option value='2'><?php echo $LANG_ARRAY['reports']['MENU_SPECIMEN']; ?></option>
+								<?php
+							}
+							if($SHOW_TESTRECORD_REPORT === true)
+							{
+								?>
+								<option value='3'><?php echo $LANG_ARRAY['reports']['MENU_TESTRECORDS']; ?></option>
+								<?php
+							}
+							?>
+							<option value='4'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['SPECIMENS']; ?></option>
+							<option value='6'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['PATIENTS']; ?></option>
+						</select>
+						&nbsp;&nbsp;
+						<input type='button' id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>
+						&nbsp;&nbsp;
+						<span id='report_config_fetch_progress' style='display:none;'>
+							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+						</span>
+						<br><br>
+						<div id='report_config_content'>
+						</div>
+					</form>	
+				</div>
+				
+				<div class='right_pane' id='backup_revert_div' style='display:none;margin-left:10px;'>
+					<p style="text-align: right;"><a rel='facebox' href='#Revert'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_REVERT']; ?></b>
+					<br><br>
+					<div id='backup_revert_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<form id='backup_revert_form' name='backup_revert_form' action='data_backup_revert.php' method='post'>
+						<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
+						<table>
+							<tbody>
+								<tr valign='top'>
+									<td><?php echo LangUtil::$pageTerms['BACKUP_LOCATION']; ?></td>
+									<td>
+										<?php $page_elems->getBackupRevertRadio("backup_path", $lab_config->id); ?>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td><?php echo LangUtil::$pageTerms['INCLUDE_LANGUAGE_SETTINGS']; ?>?</td>
+									<td>
+										<input type='radio' name='do_lang' id='do_lang' value='Y'><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										<input type='radio' name='do_lang' value='N' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td><?php echo LangUtil::$pageTerms['BACKUP_CURRENT_VERSION']; ?></td>
+									<td>
+										<input type='radio' name='do_currbackup' id='do_currbackup' value='Y' checked><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										<input type='radio' name='do_currbackup' value='N'><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td></td>
+									<td>
+										<input type='button' onclick='javascript:backup_revert_submit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+										&nbsp;&nbsp;&nbsp;
+										<span id='backup_revert_progress' style='display:none'>
+											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+	
+					<br><br>
+					<div class='clean-orange' id='revert_done_msg' style='width:300px' style='display:none;'>
+						<?php echo LangUtil::$pageTerms['TIPS_REVERTDONE']; ?>
+					</div>
+				</div>
+				
+				<div class='right_pane' id='update_database_div' style='display:none;margin-left:10px;'>
+					<p style="text-align: right;"><a rel='facebox' href='#Revert'>Page Help</a></p>
+					<b><?php echo "Update Data"; ?></b>
+					<br><br>
+					<form id='update_database_form' name='update_database_form' action='export/update_database.php' method='get'>
+						<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
+						<table>
+							<tbody>
+								<tr valign='top'>
+									<td><?php echo 'BACKUP_LOCATION'; ?></td>
+									<td>
+										<?php $page_elems->getBackupRevertRadio("backup_path", $lab_config->id); ?>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td><?php echo 'BACKUP_CURRENT_VERSION'; ?></td>
+									<td>
+										<input type='radio' name='do_currbackup' id='do_currbackup' value='Y' checked><?php echo LangUtil::$generalTerms['YES']; ?></input>
+										<input type='radio' name='do_currbackup' value='N'><?php echo LangUtil::$generalTerms['NO']; ?></input>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td></td>
+									<td>
+										<input type='button' onclick='javascript:update_database_submit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+										&nbsp;&nbsp;&nbsp;
+										<span id='update_database_progress' style='display:none'>
+											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+					<br><br>
+					<div id='update_success' class='clean-orange' style='display:none;width:350px;'>
+						Updated Successfully&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_success');"--><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+					</div>
+					<div id='update_failure' class='clean-orange' style='display:none;width:350px;'>
+						Update Failed&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_failure');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+					</div>
+				</div>
+                                
+                                <div class='right_pane' id='import_config_div' style='display:none;margin-left:10px;'>
+					<p style="text-align: right;"><a rel='facebox' href='#importconfig'>Page Help</a></p>
+					<b><?php echo "Import Configuration"; ?></b>
+					<br><br>
+					<form id='import_config_form' name='import_config_form' action='ajax/import_config.php' method='get'>
+						<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
+						<table>
+							<tbody>
+                                                            <tr valign='top'>
+                                                                <td><?php echo '- Select the facility from which you want to import data:'; ?></td>
+									<td>
+										<?php echo ""; ?>
+									</td>
+								</tr>
+                                                                <tr valign='top'>
+                                                                <td><?php
+                                                                    //$site_list = get_site_list($_SESSION['user_id']);
+                                                                    //print_r($site_list);
+                                                                    //echo "<input type='checkbox' name='".$elem_name."[]' id='$elem_id' value='$key'>$value</input>";
+                                                                    ?>
+                                                                    <select name='location' id='location2' class='uniform_width' onchange="javascript:get_testbox2(this.value);">
+                                                                    <option value='0'><?php echo 'Select Facility'; ?></option>
+                                                                    <?php
+                                                                        $page_elems->getSiteOptions();
+                                                                    ?>
+                                                                    </select>
+                                                                    
+                                                                        
+                                                                </td>
+									<td>
+										<?php //echo $lab_config->id; ?>
+									</td>
+								</tr>
+                                                                <tr valign='top'>
+                                                                <td>
+                                                                    <div id='test_list_by_site'>
+                                                                        <?php //echo 'Select Facility to dispay its test catalog '?>
+                                                                        </div>
+                                                                </td>
+									<td>
+										<?php echo ""; ?>
+									</td>
+								</tr>
+                                                                <tr valign='top'>
+                                                                <td><?php echo '- Select the configuration data you want to import:'; ?></td>
+									<td>
+										<?php echo ""; ?>
+									</td>
+								</tr>
+								
+								<tr valign='top'>
+									<td><?php echo 'Import test catalog'; ?></td>
+									<td>
+										<input type='checkbox' id="import_tc" name='import_tc' >
+                                                                                </input>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td><?php echo 'Import specimen catalog'; ?></td>
+									<td>
+										<input type='checkbox' id="import_sc" name='import_sc' >
+                                                                                </input>
+									</td>
+								</tr>
+                                                                <tr valign='top'>
+									<td><?php echo 'Import Statistic Report settings'; ?></td>
+									<td>
+										<input type='checkbox' id="import_sr" name='import_sr' >
+                                                                                </input>
+									</td>
+								</tr>
+                                                                <tr valign='top'>
+									<td><?php echo 'Import Patient Report configurations and Worksheets'; ?></td>
+									<td>
+										<input type='checkbox' id="import_pw" name='import_pw' >
+                                                                                </input>
+									</td>
+								</tr>
+                                                                <tr valign='top'>
+									<td></td>
+									<td>
+										<input type='button' onclick='javascript:update_database_submit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+										&nbsp;&nbsp;&nbsp;
+										<span id='update_database_progress' style='display:none'>
+											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+					<br><br>
+					<div id='update_success' class='clean-orange' style='display:none;width:350px;'>
+						Updated Successfully&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_success');"--><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+					</div>
+					<div id='update_failure' class='clean-orange' style='display:none;width:350px;'>
+						Update Failed&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_failure');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+					</div>
+				</div>
+				
+				<div class='right_pane' id='worksheet_config_div' style='display:none;margin-left:10px;'>
+				<p style="text-align: right;"><a rel='facebox' href='#WS_rc'>Page Help</a></p>
+					<b><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></b>
+					<br><br>
+					<div id='worksheet_config_msg' class='clean-orange' style='display:none;width:350px;'>
+					</div>
+					<br>
+					<form id='worksheet_config_form' name='worksheet_config_form' action='ajax/report_config_update.php' method='post'>
+						<table>
+							<tbody>
+								<tr valign='top'>
+									<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></td>
+									<td>
+										<select name='cat_code' id='cat_code12' class='uniform_width'>
+											<option value="0"><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+											<?php $page_elems->getTestCategorySelect(); ?>
+										</select>
+									</td>
+								</tr>
+								<tr valign='top'>
+									<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
+									<td>
+										<select id='test_type12' name='t_type' class='uniform_width'>
+											<?php $page_elems->getTestTypesSelect($lab_config->id); ?>
+										</select>
+									</td>
+							</tr>
+							<tr valign='top'>
+								<td></td>
+								<td>
+									<input type='button' onclick='javascript:fetch_worksheet_config();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
+									&nbsp;&nbsp;&nbsp;
+									<span id='worksheet_fetch_progress' style='display:none'>
+										<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+									</span>
+								</td>
+							</tr>
+						</table>
+					</form>
+					<br>
+					<div id='worksheet_config_content'>
+					</div>
+					<br>
+					<?php echo LangUtil::$pageTerms['CUSTOM_WORKSHEETS']; ?>
+					<?php $page_elems->getCustomWorksheetTable($lab_config); ?>
+					<br>
+					<small><a href='worksheet_custom_new.php?id=<?php echo $lab_config->id; ?>'><?php echo LangUtil::$pageTerms['NEW_CUSTOMWORKSHEET']; ?> &raquo;</a></small>
+				</div>
+				
+				<div class='right_pane' id='language_div' style='display:none;margin-left:10px;'>
+					<div id='language_contents'></div>
+					<?php
+						//include('lang/lang_edit.php'); 
+					?>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>
+<?php include("includes/scripts.php");?>
 <script type='text/javascript'>
 
 <?php $page_elems->getCompatibilityJsArray("st_map", $lab_config_id); ?>
@@ -1109,1389 +2202,210 @@ function right_load_1(option_num, div_id)
 	
 }
 </script>
-
-<br>
-
-<div class="col-lg-3">
-<div class="bs-sidebar affix">
-<ul class="nav bs-sidenav">
-<li><a id='option1' class='menu_option' href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$pageTerms['MENU_SUMMARY']; ?></a>
-</li>
-			
-<?php
-# If super-admin or country-dir, show option to Delete this configuration
-# If super-admin or country-dir, show option to Change lab manager/admin
-# If super-admin or country-dir, show option to Back up Data
-# For lab admin, the option appears as a separate tab
-$user = get_user_by_id($_SESSION['user_id']);
-if(is_super_admin($user) || is_country_dir($user)) {			
-	?>
-	<li>
-	<a id='option9' class='menu_option' href="javascript:right_load(9, 'misc_div');"><?php echo LangUtil::$pageTerms['MENU_GENERAL']; ?></a>
-	</li>
-	<li>
-	<a id='option7' class='menu_option' href="javascript:right_load(7, 'change_admin_div');"><?php echo LangUtil::$pageTerms['MENU_MGR']; ?></a>
-	</li>
-	<li>
-	<a id='option6' class='menu_option' href="javascript:right_load(6, 'del_config_div');"><?php echo LangUtil::$pageTerms['MENU_DEL']; ?></a></li>
-	</li>
-	<?php					
-}
-?>
-<li>
-<a id='test' class='menu_option' href="javascript:test_setup();"><?php echo LangUtil::$pageTerms['Tests']; ?> </a>
-</li>
-<div id='test_setup' name='test_setup' style='display:none;'>
-	-<a id='option2' class='menu_option' href="javascript:right_load(2, 'st_types_div');"><?php echo LangUtil::$pageTerms['MENU_ST_TYPES']; ?></a>
-	</li><br><br>
-	-<a id='option5' class='menu_option' href="javascript:right_load(5, 'target_tat_div');"><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></a>
-	</li><br><br>
-	-<a href='remarks_edit.php?id=<?php echo $_REQUEST['id']; ?>'><?php echo "Results Interpretation"; ?></a>
-					<br><br>
-</div>
-<li>                         
-<a id='option21' class='menu_option' href="javascript:right_load(21, 'search_div');"><?php echo "Search" ?></a>
-</li>
-<li>
-<a id='report' class='menu_option' href="javascript:report_setup();"><?php echo LangUtil::$pageTerms['Reports']; ?> </a>
-</li>
-<div id='report_setup' name='report_setup' style='display:none;'>
-	-<a id='option8' class='menu_option' href="javascript:right_load(8, 'agg_report_div');"><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></a>
-					<br><br>
-                                        -<a id='option36' class='menu_option' href="javascript:right_load(36, 'grouped_count_div');"><?php echo "Test/Specimen Grouped Reports"; ?></a>
-	<br><br>
-	-<a id='option11' class='menu_option' href="javascript:right_load(11, 'report_config_div');"><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></a>
-	<br><br>
-	-<a id='option12' class='menu_option' href="javascript:right_load(12, 'worksheet_config_div');"><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></a>
-	<br><br>
-</div>
-<li>
-<a id='option15' class='menu_option' href="javascript:right_load(15, 'inventory_div');"><?php echo LangUtil::$pageTerms['Inventory']; ?></a>
-</li>
-<li>
-<a id='option28' class='menu_option' href="javascript:right_load(28, 'barcode_div');"><?php echo "Barcode Settings"; ?></a>
-</li>
-<li>
-<a id='option22' class='menu_option' href="javascript:right_load(22, 'billing_div');"><?php echo "Billing"; ?></a>
-</li>
-<li>
-<a id='option3' class='menu_option' href="javascript:right_load(3, 'users_div');"><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></a>
-</li>
-<li>
-<a id='option4' class='menu_option' href="javascript:right_load(4, 'fields_div');"><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></a>
-</li>
-<li>			
-<a id='option19' class='menu_option' href="javascript:language_div_load();"><?php echo LangUtil::getPageTerm("MODIFYLANG"); ?></a>
-</li>
-<li>
-<a id='option14' class='menu_option' href="javascript:export_html();"><?php echo "Setup Network" ?></a>
-</li>
-
-<?php
-	if($SERVER != $ON_ARC) {
-		?>
-		<li><a id='option13' class='menu_option' href="javascript:right_load(13, 'backup_revert_div');"><?php echo LangUtil::$pageTerms['MENU_BACKUP_REVERT']; ?></a></li>
-		<?php if(is_super_admin($user) || is_country_dir($user)) { ?>
-		<li><a id='option18' class='menu_option' href="javascript:right_load(18, 'update_database_div');"><?php echo 'Update Data'; ?></a></li>
-                                                                <a id='option34' class='menu_option' href="javascript:right_load(34, 'import_config_div');"><?php echo 'Import Configuration' ?></a><br><br></li>
-
-		<?php }
+<script type='text/javascript'>
+$(document).ready(function(){
+	$('#dnum_reset').attr("value", "<?php echo $lab_config->dailyNumReset; ?>");
+});										
+</script>
+<script type='text/javascript'>
+$(document).ready(function(){
+	if($('#use_pid').is(':checked'))
+	{
+		$('#use_pid_mand').show();
 	}
-?>
+	if($('#use_p_addl').is(':checked'))
+	{
+		$('#use_p_addl_mand').show();
+	}
+	if($('#use_s_addl').is(':checked'))
+	{
+		$('#use_s_addl_mand').show();
+	}
+	if($('#use_dnum').is(':checked'))
+	{
+		$('#use_dnum_mand').show();
+	}
+	if($('#use_sex').is(':checked'))
+	{
+		$('#use_sex_mand').show();
+	}
+	if($('#use_age').is(':checked'))
+	{
+		$('#use_age_mand').show();
+	}
+	if($('#use_dob').is(':checked'))
+	{
+		$('#use_dob_mand').show();
+	}
+	if($('#use_pid').is(':checked'))
+	{
+		$('#use_pid_mand').show();
+	}
+	if($('#use_sid').is(':checked'))
+	{
+		$('#use_sid_mand').show();
+	}
+	if($('#use_rdate').is(':checked'))
+	{
+		$('#use_rdate_mand').show();
+	}
+	if($('#use_refout').is(':checked'))
+	{
+		$('#use_refout_mand').show();
+	}
+	if($('#use_doctor').is(':checked'))
+	{
+		$('#use_doctor_mand').show();
+	}
+	if($('#use_pname').is(':checked'))
+	{
+		$('#use_pname_mand').show();
+	}
+	if($('#use_comm').is(':checked'))
+	{
+		$('#use_comm_mand').show();
+	}
+	$('#use_pid').click(function() {
+		if($('#use_pid').is(':checked'))
+		{
+			$('#use_pid_mand').show();
+		}
+		else
+		{
+			$('#use_pid_mand').hide();
+		}
+	});
+	$('#use_p_addl').click(function() {
+		if($('#use_p_addl').is(':checked'))
+		{
+			$('#use_p_addl_mand').show();
+		}
+		else
+		{
+			$('#use_p_addl_mand').hide();
+		}
+	});
+	$('#use_dnum').click(function() {
+		if($('#use_dnum').is(':checked'))
+		{
+			$('#use_dnum_mand').show();
+		}
+		else
+		{
+			$('#use_dnum_mand').hide();
+		}
+	});
+	$('#use_s_addl').click(function() {
+		if($('#use_s_addl').is(':checked'))
+		{
+			$('#use_s_addl_mand').show();
+		}
+		else
+		{
+			$('#use_s_addl_mand').hide();
+		}
+	});
+	$('#use_dnum').click(function() {
+		if($('#use_dnum').is(':checked'))
+		{
+			$('#use_dnum_mand').show();
+		}
+		else
+		{
+			$('#use_dnum_mand').hide();
+		}
+	});
+	$('#use_dob').click(function() {
+		if($('#use_dob').is(':checked'))
+		{
+			$('#use_dob_mand').show();
+		}
+		else
+		{
+			$('#use_dob_mand').hide();
+		}
+	});
+	$('#use_sid').click(function() {
+		if($('#use_sid').is(':checked'))
+		{
+			$('#use_sid_mand').show();
+		}
+		else
+		{
+			$('#use_sid_mand').hide();
+		}
+	});
+	$('#use_sex').click(function() {
+		if($('#use_sex').is(':checked'))
+		{
+			$('#use_sex_mand').show();
+		}
+		else
+		{
+			$('#use_sex_mand').hide();
+		}
+	});
+	$('#use_age').click(function() {
+		if($('#use_age').is(':checked'))
+		{
+			$('#use_age_mand').show();
+		}
+		else
+		{
+			$('#use_age_mand').hide();
+		}
+	});
+	$('#use_refout').click(function() {
+		if($('#use_refout').is(':checked'))
+		{
+			$('#use_refout_mand').show();
+		}
+		else
+		{
+			$('#use_refout_mand').hide();
+		}
+	});
+	$('#use_doctor').click(function() {
+		if($('#use_doctor').is(':checked'))
+		{
+			$('#use_doctor_mand').show();
+		}
+		else
+		{
+			$('#use_doctor_mand').hide();
+		}
+	});
+	$('#use_rdate').click(function() {
+		if($('#use_rdate').is(':checked'))
+		{
+			$('#use_rdate_mand').show();
+		}
+		else
+		{
+			$('#use_rdate_mand').hide();
+		}
+	});
+	$('#use_comm').click(function() {
+		if($('#use_comm').is(':checked'))
+		{
+			$('#use_comm_mand').show();
+		}
+		else
+		{
+			$('#use_comm_mand').hide();
+		}
+	});
+	$('#use_pname').click(function() {
+		if($('#use_pname').is(':checked'))
+		{
+			$('#use_pname_mand').show();
+		}
+		else
+		{
+			$('#use_pname_mand').hide();
+		}
+	});
+});
+</script>
 
-<li><a href='export_config?id=<?php echo $_REQUEST['id']; ?>' target='_blank'><?php echo LangUtil::$pageTerms['MENU_EXPORTCONFIG']; ?></a></li>
-                                <div id="old_update_div" style="display:none;">
-<li><a id='option39' class='menu_option' href="javascript:right_load(39, 'blis_update_div');">Update to New Version</a></li>
-</div>
-<?php /* Enable for Data Merging
-<a rel='facebox' id='option18' class='menu_option' href="updateCountryDbAtLocalUI.php">Update National Database</a>
-</ul>
-*/ ?>
-</ul>
-</div>
-</div>
-<div class="col-lg-9">
-<div class="panel panel-primary">
-	
-<table>
-	<tbody>
-		<tr valign='top'>
-			<td>
-				<br><br><br><br><br>
-			</td>
-			<td>
-				<div class='right_pane' id='site_info_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
-				<b><?php echo LangUtil::$pageTerms['MENU_SUMMARY']; ?></b>
-					<br><br>
-					<div id='main_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<?php
-					$page_elems->getLabConfigInfo($lab_config->id);
-					?>
-					<form id='backup_form' name='backup_form' action='data_backup' method='post' target='_blank'>
-						<input type='hidden' name='id' value='<?php echo $_REQUEST['id']; ?>'></input>
-					</form>
-				</div>
-                            
-                                <div class='right_pane' id='blis_update_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
-				<b><?php echo "BLIS Update"; ?></b>
-					<br><br>
-                                        <input type="Button" id="update_button" name="update_button" value="Start Update" onclick="javascript:blis_update_t()"/>
-                                        <br>
-                                        <div id='update_spinner' style='display:none;'>
-                                        <?php
-					$spinner_message = "Updating to C4G BLIS v2.2"."<br>";
-                                        $page_elems->getProgressSpinnerBig($spinner_message);
-                                        ?>
-                                        </div>
-                                        <br>
-                                        <div id='update_success' class='clean-orange' style='display:none;width:350px;'>
-                                            Update to v2.2 Successful!
-                                        </div>
-                                        <div id='update_failure' class='clean-error' style='display:none;width:350px;'>
-                                            Update to v2.2 Failed! Try Again.
-                                        </div>
-				</div>
-				
-				<div class='right_pane' id='st_types_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_ST_TYPES']; ?></b>
-					<br><br>
-					<div id='sttypes_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='st_types_form' name='st_types_form' action='ajax/st_types_update.php' method='post'>
-					<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>					
-					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?>
-					<small><a id='stype_link' href='javascript:stype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
-					<div class='pretty_box' id='stype_box' style='display:none'>
-					<b><u><?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?></u></b>
-						<?php $page_elems->getSpecimenTypeCheckboxes($lab_config->id); ?>
-					</div>
-					<br>
-					<br>
-					<?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
-					<small><a id='ttype_link' href='javascript:ttype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
-					<div class='pretty_box' id='ttype_box' style='display:none'>
-					<b><u><?php echo LangUtil::$generalTerms['TEST_TYPES']; ?></u></b>
-                                        
-                                        <?php
-                                        //NC3065
-                                        
-                                        $user = get_user_by_id($_SESSION['user_id']);
-                                        if(is_super_admin($user) || is_country_dir($user))
-                                        {
-                                            $page_elems->getTestTypeCheckboxes_dir($lab_config->id);
-                                        }
-                                        else
-                                        {
-                                            $page_elems->getTestTypeCheckboxes($lab_config->id); 
-                                        }
-                                        //NC3065
-					?>
-                                        
-                                         <?php //$page_elems->getTestTypeCheckboxes($lab_config->id); ?>
-                                        
-					</div>
-					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='checkandsubmit_st_types()'>
-					</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<span id='st_types_progress' style='display:none;'>
-                                  
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-					</form>
-				</div>
-			
-                                <!--NC3065-->
-                                
-                                <div class='right_pane' id='search_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
-					<b><?php echo "Configure Fields for search results"; ?></b>
-					<br><br>
-                                        <div id='searchfield_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<form id='searchfields_form' name='searchfields_form' action='ajax/search_config_update.php' method='post'>
-					<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>					
-						<?php $page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
-					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_searchconfig()'>
-					</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<!--span id='st_types_progress' style='display:none;'-->
-                                        <span id='searchfields_progress' style='display:none;'>
-
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-					</form>
-				</div>
-                                
-                                <div class='right_pane' id='barcode_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#barcode_config'>Page Help</a></p>
-					<b><?php echo "Configure Barcode Format Settings"; ?></b>
-					<br><br>
-                                        <div id='barcodefield_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<form id='barcodefields_form' name='barcodefields_form' action='ajax/update_barcode_settings.php' method='post'>
-					<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>					
-						<?php $page_elems->getBarcodeFields($lab_config->id);
-                                                //$page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
-					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_barcodeconfig()'>
-					</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<!--span id='st_types_progress' style='display:none;'-->
-                                        <span id='barcodefields_progress' style='display:none;'>
-
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-					</form>
-				</div>
-                                
-                                <!--NC3065-->
-
-                            
-				<div class='right_pane' id='users_div' style='display:none;margin-left:10px;'>
-					<?php
-					$reload_url = "lab_config_home.php?id=$lab_config_id";
-					?>
-					<p style="text-align: right;"><a rel='facebox' href='#UserAccounts_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></b>
-					 | <a rel='facebox' href='lab_user_new.php?ru=<?php echo $reload_url; ?>&lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['CMD_ADDNEWACCOUNT']; ?></a>
-					<br><br>
-					<div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<div id='user_list_table'>
-					<?php
-					$user_list = $lab_config->getUsers();
-					$page_elems->getLabUsersTable($user_list, $lab_config_id);
-					?>
-					</div>
-				</div>
-					
-				<div class='right_pane' id='inventory_div' style='display:none;margin-left:10px;'>
-				</div>
-                                
-                                <div class='right_pane' id='billing_div' style='display:none;margin-left:10px;'>
-                                         
-                                    <p style="text-align: right;"><a rel='facebox' href='#Billing_config'>Page Help</a></p>
-                                    <div id='billing_msg' class='clean-orange' style='display:none;width:350px;'>
-                                    </div>
-                                    <form id='billing_form' name='billing_form' action='ajax/billing_update.php' method='post'>
-                                        <input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
-                                        <div class="pretty_box">
-                                        <?php
-                                            if (is_billing_enabled($_SESSION['lab_config_id'])) {
-                                                $checkbox = "checked";
-                                            } else {
-                                                $checkbox = "";
-                                            }
-                                            $old_currency = get_currency_type_from_lab_config_settings();
-                                        ?>
-                                        <input type="checkbox" value="enable_billing" name="enable_billing" <?php echo $checkbox ?>/><?php echo "Enable Billing"; ?>
-                                        <br><br>
-                                        <?php echo "Currency Name:"; ?>
-                                        <input type="text" name="currency_name" value="<?php echo get_currency_type_from_lab_config_settings() ?>" />
-                                        <br><br>
-                                        <?php echo "Currency Delimiter:"; ?>
-                                        <input type="text" name="currency_delimiter" value="<?php echo get_currency_delimiter_from_lab_config_settings() ?>" size="1" maxlength="1" />
-                                        <br><br>
-                                        Currency will display as: 00<?php echo get_currency_delimiter_from_lab_config_settings(); ?>00 <?php echo get_currency_type_from_lab_config_settings() ?>
-                                        </div>
-                                        <br>
-                                        <input type="button" value="Update" onclick="submit_billing_update()" />
-
-                                        <span id='billing_progress' style='display:none;'>
-                                            <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-                                    </form>
-                                </div>
-				
-				<div class='right_pane' id='fields_div' style='display:none;margin-left:10px;'>
-					<p style="text-align: right;"><a rel='facebox' href='#RegistrationFields_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></b>
-					 | <a href='javascript:toggle_ofield_div();' id='ofield_toggle_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='cfield_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<div id='ofield_summary' class='pretty_box'>
-					<?php $page_elems->getRegistrationFieldsSummary($lab_config); ?>
-					</div>
-					<div id='ofield_form_div' style='display:none;'>
-					<form id='otherfields_form' name='otherfields_form' action='ajax/ofield_update.php' method='post'>
-					<input type='hidden' value='<?php echo $_REQUEST['id']; ?>' name='lab_config_id'></input>
-					<table class='hor-minimalist-b' style='width:auto;'>
-						<thead>
-							<tr>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr valign='top'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_pid' id='use_pid' <?php
-									if($lab_config->pid != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_pid_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pid_radio' value='Y' <?php
-										if($lab_config->pid == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pid_radio' value='N' <?php
-										if($lab_config->pid != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr valign='top'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['ADDL_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_p_addl' id='use_p_addl' <?php
-									if($lab_config->patientAddl != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_p_addl_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_p_addl_radio' value='Y' <?php
-										if($lab_config->patientAddl == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_p_addl_radio' value='N' <?php
-										if($lab_config->patientAddl != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></td>
-								<td>
-									<input type='checkbox' name='use_dnum' id='use_dnum'<?php
-									
-                                                                        if($lab_config->dailyNum == 1 || $lab_config->dailyNum == 2 || $lab_config->dailyNum == 11 || $lab_config->dailyNum == 12)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_dnum_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dnum_radio' value='Y'<?php
-										if($lab_config->dailyNum == 2 || $lab_config->dailyNum == 12)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dnum_radio' value='N' <?php
-										if($lab_config->dailyNum != 2 && $lab_config->dailyNum != 12)
-											echo " checked ";
-										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_RESET']; ?>
-										<select name='dnum_reset' id='dnum_reset'>
-											<option value='<?php echo LabConfig::$RESET_DAILY; ?>'><?php echo LangUtil::$pageTerms['DAILY']; ?></option>
-											<option value='<?php echo LabConfig::$RESET_WEEKLY; ?>'><?php echo LangUtil::$pageTerms['WEEKLY']; ?></option>
-											<option value='<?php echo LabConfig::$RESET_MONTHLY; ?>'><?php echo LangUtil::$pageTerms['MONTHLY']; ?></option>
-											<option value='<?php echo LabConfig::$RESET_YEARLY; ?>'><?php echo LangUtil::$pageTerms['YEARLY']; ?></option>
-										</select>
-										<script type='text/javascript'>
-										$(document).ready(function(){
-											$('#dnum_reset').attr("value", "<?php echo $lab_config->dailyNumReset; ?>");
-										});										
-										</script>
-									</span>
-								</td>
-							</tr>
-							<tr style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['NAME']; ?></td>
-								<td>
-									<input type='checkbox' name='use_pname' id='use_pname'<?php
-									if($lab_config->pname != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_pname_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pname_radio' value='Y'<?php
-										if($lab_config->pname == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pname_radio' value='N' <?php
-										if($lab_config->pname != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['GENDER']; ?></td>
-								<td>
-									<input type='checkbox' name='use_sex' id='use_sex' <?php
-									if($lab_config->sex != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_sex_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['DOB']; ?></td>
-								<td>
-									<input type='checkbox' name='use_dob' id='use_dob'<?php
-									if($lab_config->dob != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_dob_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dob_radio' value='Y'<?php
-										if($lab_config->dob == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dob_radio' value='N' <?php
-										if($lab_config->dob != 2)
-											echo " checked ";
-										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['AGE']; ?></td>
-								<td>
-									<input type='checkbox' name='use_age' id='use_age'<?php
-                                                                        if($lab_config->age == 1 || $lab_config->age == 2 || $lab_config->age == 11 || $lab_config->age == 12)
-									
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_age_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_age_radio' value='Y'<?php
-										if($lab_config->age == 2 || $lab_config->age == 12)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_age_radio' value='N' <?php
-										if($lab_config->age != 2 && $lab_config->age != 12)
-											echo " checked ";
-										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo 'Complete Age Display Limit'; ?></td>
-								<td>
-									<input type='text' name='ageLimit' id='ageLimit' size='3' maxlength='3' value='<?php echo $lab_config->ageLimit; ?>'>
-									</input>
-									<?php echo LangUtil::$generalTerms['YEARS'] ?>
-								</td>
-							</tr>
-							<tr valign='top' style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_sid' id='use_sid'<?php
-									//if($lab_config->sid != 0)
-									if(true)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_sid_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_s_addl' id='use_s_addl'<?php
-									if($lab_config->specimenAddl != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_s_addl_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_s_addl_radio' value='Y'<?php
-										if($lab_config->specimenAddl == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_s_addl_radio' value='N' <?php
-										if($lab_config->specimenAddl != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['COMMENTS']; ?></td>
-								<td>
-									<input type='checkbox' name='use_comm' id='use_comm'<?php
-									if($lab_config->comm != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_comm_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_comm_radio' value='Y'<?php
-										if($lab_config->comm == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_comm_radio' value='N' <?php
-										if($lab_config->comm != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['R_DATE']; ?></td>
-								<td>
-									<input type='checkbox' name='use_rdate' id='use_rdate'<?php
-									if($lab_config->rdate != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_rdate_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_rdate_radio' value='Y'<?php
-										if($lab_config->rdate == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_rdate_radio' value='N' <?php
-										if($lab_config->rdate != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['REF_OUT']; ?></td>
-								<td>
-									<input type='checkbox' name='use_refout' id='use_refout'<?php
-									if($lab_config->refout != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_refout_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_refout_radio' value='Y'<?php
-										if($lab_config->refout == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_refout_radio' value='N' <?php
-										if($lab_config->refout != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['DOCTOR']; ?></td>
-								<td>
-									<input type='checkbox' name='use_doctor' id='use_doctor'<?php
-									if($lab_config->refout != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_doctor_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_doctor_radio' value='Y'<?php
-										if($lab_config->refout == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_doctor_radio' value='N' <?php
-										if($lab_config->refout != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['DATE_FORMAT']; ?></td>
-								<td>
-									<select name='dformat' id='dformat'>
-										<?php $page_elems->getDateFormatSelect($lab_config); ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>
-									<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_UPDATE']; ?>' onclick='javascript:submit_otherfields();'>
-									</input>
-									&nbsp;&nbsp;&nbsp;
-									<span id='otherfields_progress' style='display:none;'>
-										<?php echo $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-									</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					</form>
-					</div>
-					<script type='text/javascript'>
-					$(document).ready(function(){
-						if($('#use_pid').is(':checked'))
-						{
-							$('#use_pid_mand').show();
-						}
-						if($('#use_p_addl').is(':checked'))
-						{
-							$('#use_p_addl_mand').show();
-						}
-						if($('#use_s_addl').is(':checked'))
-						{
-							$('#use_s_addl_mand').show();
-						}
-						if($('#use_dnum').is(':checked'))
-						{
-							$('#use_dnum_mand').show();
-						}
-						if($('#use_sex').is(':checked'))
-						{
-							$('#use_sex_mand').show();
-						}
-						if($('#use_age').is(':checked'))
-						{
-							$('#use_age_mand').show();
-						}
-						if($('#use_dob').is(':checked'))
-						{
-							$('#use_dob_mand').show();
-						}
-						if($('#use_pid').is(':checked'))
-						{
-							$('#use_pid_mand').show();
-						}
-						if($('#use_sid').is(':checked'))
-						{
-							$('#use_sid_mand').show();
-						}
-						if($('#use_rdate').is(':checked'))
-						{
-							$('#use_rdate_mand').show();
-						}
-						if($('#use_refout').is(':checked'))
-						{
-							$('#use_refout_mand').show();
-						}
-						if($('#use_doctor').is(':checked'))
-						{
-							$('#use_doctor_mand').show();
-						}
-						if($('#use_pname').is(':checked'))
-						{
-							$('#use_pname_mand').show();
-						}
-						if($('#use_comm').is(':checked'))
-						{
-							$('#use_comm_mand').show();
-						}
-						$('#use_pid').click(function() {
-							if($('#use_pid').is(':checked'))
-							{
-								$('#use_pid_mand').show();
-							}
-							else
-							{
-								$('#use_pid_mand').hide();
-							}
-						});
-						$('#use_p_addl').click(function() {
-							if($('#use_p_addl').is(':checked'))
-							{
-								$('#use_p_addl_mand').show();
-							}
-							else
-							{
-								$('#use_p_addl_mand').hide();
-							}
-						});
-						$('#use_dnum').click(function() {
-							if($('#use_dnum').is(':checked'))
-							{
-								$('#use_dnum_mand').show();
-							}
-							else
-							{
-								$('#use_dnum_mand').hide();
-							}
-						});
-						$('#use_s_addl').click(function() {
-							if($('#use_s_addl').is(':checked'))
-							{
-								$('#use_s_addl_mand').show();
-							}
-							else
-							{
-								$('#use_s_addl_mand').hide();
-							}
-						});
-						$('#use_dnum').click(function() {
-							if($('#use_dnum').is(':checked'))
-							{
-								$('#use_dnum_mand').show();
-							}
-							else
-							{
-								$('#use_dnum_mand').hide();
-							}
-						});
-						$('#use_dob').click(function() {
-							if($('#use_dob').is(':checked'))
-							{
-								$('#use_dob_mand').show();
-							}
-							else
-							{
-								$('#use_dob_mand').hide();
-							}
-						});
-						$('#use_sid').click(function() {
-							if($('#use_sid').is(':checked'))
-							{
-								$('#use_sid_mand').show();
-							}
-							else
-							{
-								$('#use_sid_mand').hide();
-							}
-						});
-						$('#use_sex').click(function() {
-							if($('#use_sex').is(':checked'))
-							{
-								$('#use_sex_mand').show();
-							}
-							else
-							{
-								$('#use_sex_mand').hide();
-							}
-						});
-						$('#use_age').click(function() {
-							if($('#use_age').is(':checked'))
-							{
-								$('#use_age_mand').show();
-							}
-							else
-							{
-								$('#use_age_mand').hide();
-							}
-						});
-						$('#use_refout').click(function() {
-							if($('#use_refout').is(':checked'))
-							{
-								$('#use_refout_mand').show();
-							}
-							else
-							{
-								$('#use_refout_mand').hide();
-							}
-						});
-						$('#use_doctor').click(function() {
-							if($('#use_doctor').is(':checked'))
-							{
-								$('#use_doctor_mand').show();
-							}
-							else
-							{
-								$('#use_doctor_mand').hide();
-							}
-						});
-						$('#use_rdate').click(function() {
-							if($('#use_rdate').is(':checked'))
-							{
-								$('#use_rdate_mand').show();
-							}
-							else
-							{
-								$('#use_rdate_mand').hide();
-							}
-						});
-						$('#use_comm').click(function() {
-							if($('#use_comm').is(':checked'))
-							{
-								$('#use_comm_mand').show();
-							}
-							else
-							{
-								$('#use_comm_mand').hide();
-							}
-						});
-						$('#use_pname').click(function() {
-							if($('#use_pname').is(':checked'))
-							{
-								$('#use_pname_mand').show();
-							}
-							else
-							{
-								$('#use_pname_mand').hide();
-							}
-						});
-					});
-					</script>
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['SPECIMENS']; ?>
-					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>[<a href='#new_help' rel='facebox'>?</a>]
-					<div id='specimen_custom_field_list'>
-					<?php 
-					$custom_field_list = get_lab_config_specimen_custom_fields($lab_config->id);
-					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 1); 
-					?>
-					</div>
-					
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['PATIENTS']; ?>
-					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
-					<div id='patient_custom_field_list'>
-					<?php 
-					$custom_field_list = get_lab_config_patient_custom_fields($lab_config->id);
-					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 2); 
-					?>
-					</div>
-					
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - Lab Titles"; ?>
-					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
-					<div id='labtitle_custom_field_list'>
-					<?php 
-					$custom_field_list = get_lab_config_labtitle_custom_fields($lab_config->id);
-					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 3); 
-					?>
-					</div>
-				</div>
-				<div class='right_pane' id='network_setup_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#SetupNet'>Page Help</a></p>
-				Setup can be accessed from BlisSetup.html in the main folder.
-				</div>
-				<div class='right_pane' id='target_tat_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
-					 | <a href="javascript:toggletatdivs();" id='toggletat_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='tat_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<div id='goal_tat_list'>
-					<?php $page_elems->getGetGoalTatTable($lab_config->id); ?>
-					</div>
-					<form id='goal_tat_form' style='display:none' name='goal_tat_form' action='ajax/lab_config_tat_update.php' method='post'>
-						<?php $page_elems->getGoalTatForm($lab_config->id); ?>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_goal_tat();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<small><a href='javascript:toggletatdivs();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
-						&nbsp;&nbsp;&nbsp;
-						<span id='tat_progress_spinner' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-						</span>
-					</form>
-				</div>
-				
-
-                            <div id='view_stocks_help' class='right_pane' style='display:none;margin-left:10px;'>
-                                    <ul>	
-                                            <?php
-
-                                                    echo "<li>";
-                                                    echo " Toggle Patient Number or Patient's Age to be displayed as part of Search Results";
-                                                    echo "</li>";
-                                                    echo "<li>";
-                                                    echo " Choosing to display Patient Number and/or Patient's Age as part of Search results slows down the time taken to search ";
-                                                    echo "</li>";
-
-
-
-                                            ?>
-                                    </ul>
-                                    </div>
-
-                                
-                                
-				<div class='right_pane' id='del_config_div' style='display:none;margin-left:10px;'>
-					<b><?php echo LangUtil::$pageTerms['MENU_DEL']; ?></b>
-					<br><br>
-					<div class='clean-orange' style='width:350px;'>
-					'<?php echo $lab_config->getSiteName(); ?>' - <?php echo LangUtil::$pageTerms['TIPS_LABDELETE']; ?>
-					<br><br>
-					<input type='button' onclick='javascript:delete_config();' value='<?php echo LangUtil::$generalTerms['CMD_OK']; ?>'>
-					&nbsp;&nbsp;&nbsp;
-					<input type='button' onclick="javascript:right_load(1, 'site_info_div');" value='<?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?>'>
-					</div>
-				</div>
-				
-				<div class='right_pane' id='change_admin_div' style='display:none;margin-left:10px;'>
-					<b><?php echo LangUtil::$pageTerms['MENU_MGR']; ?></b>
-					<br><br>
-					<div id='admin_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<select name='lab_admin' id='lab_admin' class='uniform_width'>
-					<?php 
-						# Fetch list of existing lab admins 
-						$page_elems->getAdminUserOptions();
-					?>
-					</select>
-					<br><br>
-					<input type='button' onclick='javascript:change_admin();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
-					&nbsp;&nbsp;&nbsp;
-					<small><a href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
-				</div>
-				
-				<div class='right_pane' id='agg_report_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></b>
-					 | <a href='javascript:toggle_disease_report();' id='agg_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='agg_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<div id='agg_report_summary'>
-						<?php echo $page_elems->getAggregateReportSummary($lab_config); ?>
-					</div>
-					<div id='agg_report_form_div' style='display:none;'>
-						<form id='agg_report_form' name='agg_report_form' action='ajax/report_agg_update.php' method='post'>
-							<?php $page_elems->getAggregateReportConfigureForm($lab_config); ?>
-						</form>	
-						<form id='agg_preview_form' style='display:none;' name='agg_preview_form' action='report_disease_preview.php' method='post' target='_blank'>					
-							<?php # This form is cloned from agg_report_form in javascript:agg_preview() function ?>
-						</form>
-					</div>
-				</div>
-				
-                                <div class='right_pane' id='grouped_count_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
-					<b><?php echo "Test/Specimen Count Grouped Reports"; ?></b>
-					 | <a href='javascript:toggle_grouped_count_report();' id='grouped_count_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='grouped_count_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<div id='grouped_count_report_summary'>
-						<?php echo $page_elems->getGroupedCountReportSummary($lab_config); ?>
-					</div>
-					<div id='grouped_count_report_form_div' style='display:none;'>
-						<form id='grouped_count_report_form' name='grouped_count_report_form' action='ajax/grouped_count_reports_update.php' method='post'>
-							<?php $page_elems->getGroupedCountReportConfigureForm($lab_config); ?>
-						</form>	
-						
-					</div>
-				</div>
-                                
-				<div class='right_pane' id='misc_div' style='display:none;margin-left:10px;'>
-					<b><?php echo LangUtil::$pageTerms['MENU_GENERAL']; ?></b>
-					<br><br>
-					<div id='misc_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<form id='misc_form' name='misc_form' action='ajax/lab_config_miscupdate.php' method='get'>
-						<table cellspacing='10px'>
-							<tbody>
-								<tr>
-									<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>
-										<input type='text' name='name' id='name9' class='uniform_width' value='<?php echo $lab_config->name; ?>'>
-										</input>
-										<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo LangUtil::$generalTerms['LOCATION']; ?></td>
-									<td>
-										<input type='text' name='loc' id='loc9' class='uniform_width' value='<?php echo $lab_config->location; ?>'>
-										</input>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td>Database</td>
-									<td>
-										<input type='radio' class='dboption' name='dboption' value='1'>Populate Random Data</input><br>
-										<input type='radio' class='dboption' name='dboption' value='2'>Clear Random Data</input><br>
-										<input type='radio' class='dboption' name='dboption' value='0' checked>Keep Unchanged</input>
-										<br><br>
-										<div class='clean-orange dboption_help uniform_width' id='dboption_help_1' style='display:none'>
-										Populate Random Data - Creates new random records for patients and specimens
-										</div>
-										<div class='clean-orange dboption_help uniform_width' id='dboption_help_2' style='display:none'>
-										Clear Random Data - Clears all random data about patients and specimens
-										</div>
-									</td>
-								</tr>
-								<tr valign='top' class='random_params' style='display:none;'>
-									<td>Total Patients</td>
-									<td>
-										<input type='text' class='uniform_width' name='num_p' value='<?php echo $MAX_NUM_PATIENTS/2; ?>'></input>
-									</td>
-								</tr>
-								<tr valign='top' class='random_params' style='display:none;'>
-									<td>Total Specimens</td>
-									<td>
-										<input type='text' class='uniform_width' name='num_s' value='<?php echo "2000"; #$MAX_NUM_SPECIMENS/2; ?>'></input>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>
-										<input type='button' name='misc_form_button' id='misc_form_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:misc_checkandsubmit();'>
-										</input>
-										&nbsp;&nbsp;&nbsp;
-										<small><a href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
-										&nbsp;&nbsp;&nbsp;
-										<span id='misc_progress' style='display:none'>
-											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>
-										<span id='misc_errormsg' class='clean-error' style='display:none' >
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>
-										
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</form>			
-				</div>
-				
-				<div class='right_pane' id='report_config_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#DRS_rc'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></b>
-					<br><br>
-					<div id='report_config_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='report_config_form' name='report_config_form' action='' method='post'>
-						<?php echo LangUtil::$generalTerms['REPORT_TYPE']; ?>
-						&nbsp;&nbsp;
-						<select name='report_type' id='report_type11'>
-							<option value='1'><?php echo $LANG_ARRAY['reports']['MENU_PATIENT']; ?></option>
-							<?php
-							if($SHOW_SPECIMEN_REPORT === true)
-							{
-								?>
-								<option value='2'><?php echo $LANG_ARRAY['reports']['MENU_SPECIMEN']; ?></option>
-								<?php
-							}
-							if($SHOW_TESTRECORD_REPORT === true)
-							{
-								?>
-								<option value='3'><?php echo $LANG_ARRAY['reports']['MENU_TESTRECORDS']; ?></option>
-								<?php
-							}
-							?>
-							<option value='4'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['SPECIMENS']; ?></option>
-							<option value='6'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['PATIENTS']; ?></option>
-						</select>
-						&nbsp;&nbsp;
-						<input type='button' id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>
-						&nbsp;&nbsp;
-						<span id='report_config_fetch_progress' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-						</span>
-						<br><br>
-						<div id='report_config_content'>
-						</div>
-					</form>	
-				</div>
-				
-				<div class='right_pane' id='backup_revert_div' style='display:none;margin-left:10px;'>
-					<p style="text-align: right;"><a rel='facebox' href='#Revert'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_REVERT']; ?></b>
-					<br><br>
-					<div id='backup_revert_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='backup_revert_form' name='backup_revert_form' action='data_backup_revert.php' method='post'>
-						<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
-						<table>
-							<tbody>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$pageTerms['BACKUP_LOCATION']; ?></td>
-									<td>
-										<?php $page_elems->getBackupRevertRadio("backup_path", $lab_config->id); ?>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$pageTerms['INCLUDE_LANGUAGE_SETTINGS']; ?>?</td>
-									<td>
-										<input type='radio' name='do_lang' id='do_lang' value='Y'><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										<input type='radio' name='do_lang' value='N' checked><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$pageTerms['BACKUP_CURRENT_VERSION']; ?></td>
-									<td>
-										<input type='radio' name='do_currbackup' id='do_currbackup' value='Y' checked><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										<input type='radio' name='do_currbackup' value='N'><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td></td>
-									<td>
-										<input type='button' onclick='javascript:backup_revert_submit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
-										&nbsp;&nbsp;&nbsp;
-										<span id='backup_revert_progress' style='display:none'>
-											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-										</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</form>
-	
-					<br><br>
-					<div class='clean-orange' id='revert_done_msg' style='width:300px' style='display:none;'>
-						<?php echo LangUtil::$pageTerms['TIPS_REVERTDONE']; ?>
-					</div>
-				</div>
-				
-				<div class='right_pane' id='update_database_div' style='display:none;margin-left:10px;'>
-					<p style="text-align: right;"><a rel='facebox' href='#Revert'>Page Help</a></p>
-					<b><?php echo "Update Data"; ?></b>
-					<br><br>
-					<form id='update_database_form' name='update_database_form' action='export/update_database.php' method='get'>
-						<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
-						<table>
-							<tbody>
-								<tr valign='top'>
-									<td><?php echo 'BACKUP_LOCATION'; ?></td>
-									<td>
-										<?php $page_elems->getBackupRevertRadio("backup_path", $lab_config->id); ?>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td><?php echo 'BACKUP_CURRENT_VERSION'; ?></td>
-									<td>
-										<input type='radio' name='do_currbackup' id='do_currbackup' value='Y' checked><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										<input type='radio' name='do_currbackup' value='N'><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td></td>
-									<td>
-										<input type='button' onclick='javascript:update_database_submit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
-										&nbsp;&nbsp;&nbsp;
-										<span id='update_database_progress' style='display:none'>
-											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-										</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</form>
-					<br><br>
-					<div id='update_success' class='clean-orange' style='display:none;width:350px;'>
-						Updated Successfully&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_success');"--><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-					</div>
-					<div id='update_failure' class='clean-orange' style='display:none;width:350px;'>
-						Update Failed&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_failure');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-					</div>
-				</div>
-                                
-                                <div class='right_pane' id='import_config_div' style='display:none;margin-left:10px;'>
-					<p style="text-align: right;"><a rel='facebox' href='#importconfig'>Page Help</a></p>
-					<b><?php echo "Import Configuration"; ?></b>
-					<br><br>
-					<form id='import_config_form' name='import_config_form' action='ajax/import_config.php' method='get'>
-						<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>
-						<table>
-							<tbody>
-                                                            <tr valign='top'>
-                                                                <td><?php echo '- Select the facility from which you want to import data:'; ?></td>
-									<td>
-										<?php echo ""; ?>
-									</td>
-								</tr>
-                                                                <tr valign='top'>
-                                                                <td><?php
-                                                                    //$site_list = get_site_list($_SESSION['user_id']);
-                                                                    //print_r($site_list);
-                                                                    //echo "<input type='checkbox' name='".$elem_name."[]' id='$elem_id' value='$key'>$value</input>";
-                                                                    ?>
-                                                                    <select name='location' id='location2' class='uniform_width' onchange="javascript:get_testbox2(this.value);">
-                                                                    <option value='0'><?php echo 'Select Facility'; ?></option>
-                                                                    <?php
-                                                                        $page_elems->getSiteOptions();
-                                                                    ?>
-                                                                    </select>
-                                                                    
-                                                                        
-                                                                </td>
-									<td>
-										<?php //echo $lab_config->id; ?>
-									</td>
-								</tr>
-                                                                <tr valign='top'>
-                                                                <td>
-                                                                    <div id='test_list_by_site'>
-                                                                        <?php //echo 'Select Facility to dispay its test catalog '?>
-                                                                        </div>
-                                                                </td>
-									<td>
-										<?php echo ""; ?>
-									</td>
-								</tr>
-                                                                <tr valign='top'>
-                                                                <td><?php echo '- Select the configuration data you want to import:'; ?></td>
-									<td>
-										<?php echo ""; ?>
-									</td>
-								</tr>
-								
-								<tr valign='top'>
-									<td><?php echo 'Import test catalog'; ?></td>
-									<td>
-										<input type='checkbox' id="import_tc" name='import_tc' >
-                                                                                </input>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td><?php echo 'Import specimen catalog'; ?></td>
-									<td>
-										<input type='checkbox' id="import_sc" name='import_sc' >
-                                                                                </input>
-									</td>
-								</tr>
-                                                                <tr valign='top'>
-									<td><?php echo 'Import Statistic Report settings'; ?></td>
-									<td>
-										<input type='checkbox' id="import_sr" name='import_sr' >
-                                                                                </input>
-									</td>
-								</tr>
-                                                                <tr valign='top'>
-									<td><?php echo 'Import Patient Report configurations and Worksheets'; ?></td>
-									<td>
-										<input type='checkbox' id="import_pw" name='import_pw' >
-                                                                                </input>
-									</td>
-								</tr>
-                                                                <tr valign='top'>
-									<td></td>
-									<td>
-										<input type='button' onclick='javascript:update_database_submit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
-										&nbsp;&nbsp;&nbsp;
-										<span id='update_database_progress' style='display:none'>
-											<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-										</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</form>
-					<br><br>
-					<div id='update_success' class='clean-orange' style='display:none;width:350px;'>
-						Updated Successfully&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_success');"--><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-					</div>
-					<div id='update_failure' class='clean-orange' style='display:none;width:350px;'>
-						Update Failed&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_failure');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-					</div>
-				</div>
-				
-				<div class='right_pane' id='worksheet_config_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#WS_rc'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></b>
-					<br><br>
-					<div id='worksheet_config_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='worksheet_config_form' name='worksheet_config_form' action='ajax/report_config_update.php' method='post'>
-						<table>
-							<tbody>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></td>
-									<td>
-										<select name='cat_code' id='cat_code12' class='uniform_width'>
-											<option value="0"><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-											<?php $page_elems->getTestCategorySelect(); ?>
-										</select>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
-									<td>
-										<select id='test_type12' name='t_type' class='uniform_width'>
-											<?php $page_elems->getTestTypesSelect($lab_config->id); ?>
-										</select>
-									</td>
-							</tr>
-							<tr valign='top'>
-								<td></td>
-								<td>
-									<input type='button' onclick='javascript:fetch_worksheet_config();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
-									&nbsp;&nbsp;&nbsp;
-									<span id='worksheet_fetch_progress' style='display:none'>
-										<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-									</span>
-								</td>
-							</tr>
-						</table>
-					</form>
-					<br>
-					<div id='worksheet_config_content'>
-					</div>
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOM_WORKSHEETS']; ?>
-					<?php $page_elems->getCustomWorksheetTable($lab_config); ?>
-					<br>
-					<small><a href='worksheet_custom_new.php?id=<?php echo $lab_config->id; ?>'><?php echo LangUtil::$pageTerms['NEW_CUSTOMWORKSHEET']; ?> &raquo;</a></small>
-				</div>
-				
-				<div class='right_pane' id='language_div' style='display:none;margin-left:10px;'>
-					<div id='language_contents'></div>
-					<?php
-						include('lang/lang_edit.php'); 
-					?>
-				</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-</div>
 <?php include("includes/footer.php"); ?>

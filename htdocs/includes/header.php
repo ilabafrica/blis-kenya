@@ -18,6 +18,7 @@ if($TRACK_LOADTIME)
 	$startarray = explode(" ", $starttime);
 	$starttime = $startarray[1] + $startarray[0];
 }
+$quote="&#34;";
 
 # Include required libraries
 require_once("includes/db_lib.php");
@@ -318,19 +319,19 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					switch($page_value[0]){
 					case 'find_patient':
 						echo "<ul class='sub'>".
-							"<li><a href='javascript:right_load(&#34;lab_requests&#34;);' title='Lab Test Requests' 
+							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
 									class='' id='specimen_results_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
 								"</a>
 							</li>
-							<li><a href='javascript:right_load(&#34;patient_lookup&#34;);' title='Patient Lookup' 
+							<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Patient Lookup' 
 									class='' id='patient_lookup_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_PATIENT_LOOKUP'].
 								"</a>
 							</li>
-							<li><a href='javascript:right_load(&#34;new_patient&#34;);'  title='New Patient'
+							<li><a href='javascript:right_load(".$quote."new_patient".$quote.");'  title='New Patient'
 									class='' id='new_patient_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['NEW_PATIENT'].
@@ -340,28 +341,28 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					case 'results_entry':
 						echo "<ul class='sub'>".
 									"<li>
-										<a href='javascript:right_load(&#34;pending_tests&#34;);' title='Lab Test Requests'
+										<a href='javascript:right_load(".$quote."pending_tests".$quote.");' title='Lab Test Requests'
 										class='' id='specimen_results_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_PENDING_TESTS'].
 										"</a>
 									</li>
 									<li>
-										<a href='javascript:right_load(&#34;pending_results&#34;);' title='Pending Results'
+										<a href='javascript:right_load(".$quote."pending_results".$quote.");' title='Pending Results'
 										class='' id='patient_lookup_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_PENDING_RESULTS'].
 										"</a>
 									</li>
 									<li>
-										<a href='javascript:right_load(&#34;verify_results_new&#34;);'  title='Verify Results'
+										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Verify Results'
 										class='' id='new_patient_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_VERIFYRESULTS'].
 										"</a>
 									</li>
 									<li>
-										<a href='javascript:right_load(&#34;verify_results_new&#34;);'  title='Quality Controls'
+										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Quality Controls'
 										class='' id='new_patient_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
@@ -369,10 +370,236 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 									</li>".
 								"</ul>";
 					break;
+					case "catalog":
+						echo 
+						"<ul class='sub'>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."specimen_types_div".$quote.");' class='menu_option' id='specimen_types_div_menu'>
+								".LangUtil::$generalTerms['SPECIMEN_TYPES']."
+								</a>
+							</li>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."test_types_div".$quote.");' class='menu_option' id='test_types_div_menu'>
+								".LangUtil::$generalTerms['TEST_TYPES']."
+								</a>
+							</li>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."test_categories_div".$quote.");' class='menu_option' id='test_categories_div_menu'>
+								".LangUtil::$generalTerms['TEST_CATEGORIES']."
+								</a>
+							</li>
+						</ul>";
+						
+					break;
+					case "reports":
+						echo "<ul class='sub'>";
+						$site_list = get_site_list($_SESSION['user_id']);
+						if ( !is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) {
+										echo '<li>'.LangUtil::$allTerms['MENU_DAILY'].'</li>'; 
+									echo "
+									<ul>
+										<!--
+										<li class='menu_option' id='patient_report_menu'>
+											<a href='javascript:show_patient_report_form();'><". LangUtil::$allTerms['MENU_PATIENT']."</a>
+										</li>
+										-->
+										<li class='menu_option' id='test_history_menu'>
+											<!--<a href='javascript:show_test_history_form();'>".LangUtil::$allTerms['MENU_PHISTORY']."</a>-->
+											<a href='javascript:show_test_history_form();'>".LangUtil::$allTerms['MENU_PATIENT']."</a>
+										</li>";
+										echo "
+										<li class='menu_option' id='session_report_menu' <";
+										
+										if($SHOW_SPECIMEN_REPORT === false)
+											echo " style='display:none;' ";
+									
+										echo "
+										>
+											<a href='javascript:show_session_report_form();'>".LangUtil::$allTerms['MENU_SPECIMEN']."</a>
+										</li>
+										<li class='menu_option' id='print_menu'";
+										if($SHOW_TESTRECORD_REPORT === false)
+											echo " style='display:none;' ";
+										echo "
+										>
+											<a href='javascript:show_print_form();'>".LangUtil::$allTerms['MENU_TESTRECORDS']."</a>
+										</li>
+										
+										<li class='menu_option' id='daily_report_menu'>
+											<a href='javascript:show_daily_report_form();'>".LangUtil::$allTerms['MENU_DAILYLOGS']."</a>
+										</li>
+										<li class='menu_option' id='print_menu'";
+										if($SHOW_PENDINGTEST_REPORT === false)
+											echo " style='display:none;' ";
+										echo "
+										>
+											<a href='javascript:show_pending_tests_form();'>".LangUtil::$allTerms['MENU_PENDINGTESTS']."</a>
+										</li>
+										<!--
+										# Space for menu entries corresponding to a new daily report
+										# PLUG_DAILY_REPORT_ENTRY
+										-->
+										
+									</ul>";
+									 } else { echo
+										".Report Settings.
+										<ul>
+											<li class='menu_option' id='location_settings' >
+											<a href='lab_pin.php'>"."Location Settings"."</a>
+											</li>
+										</ul>";
+									} echo 
+									"<li>".LangUtil::$allTerms['MENU_AGGREPORTS']."</li>
+									<ul>";
+								
+											$site_list = get_site_list($_SESSION['user_id']);
+											if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) { 
+												echo "
+												<li class='menu_option' id='country_aggregate_menu'>
+													<a href='javascript:show_selection(".$quote."prevalance_aggregate".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
+												</li>
+												<li class='menu_option' id='tat_menu'>
+													<a href='javascript:show_selection(".$quote."tat_aggregate".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
+												</li>
+												<!--<li class='menu_option' id='disease_report_menu'>
+													<a href='javascript:show_selection(".$quote."infection_aggregate".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONREPORT']."</a>
+												</li>-->";
+											} else {
+												echo "
+												<li class='menu_option' id='summary_menu'>
+													<a href='javascript:show_selection(".$quote."summar".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
+												</li>
+												<li class='menu_option' id='specimen_count_menu'>
+													<a href='javascript:show_selection(".$quote."specimen_count".$quote.");'>".LangUtil::$allTerms['MENU_COUNTS']."</a>
+												</li>
+												<li class='menu_option' id='tat_menu'>
+													<a href='javascript:show_selection(".$quote."tat".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
+												</li>
+												<li class='menu_option' id='disease_report_menu'>
+													<a href='javascript:show_selection(".$quote."disease_report".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONREPORT']."</a>
+												</li>";
+						                     	if(is_admin(get_user_by_id($_SESSION['user_id'])))
+						                        { 
+						                        echo "
+						                            <li class='menu_option' id='user_stats_menu'>
+														<a href='javascript:show_selection(".$quote."user_stats".$quote.");'>User Statistics</a>
+													</li>";
+						                        }
+						                        echo "
+						                        <li class='menu_option' id='stock_report_menu'>
+													<a href='javascript:show_selection(".$quote."stock_report".$quote.");'>Previous Inventory Data</a>
+												</li>";                          
+											} 
+						
+											echo "</ul>";
+											echo "</ul>";
+					break;
+					
 					}
+					#LAB CONFIG LEFT MENU
+					if($page_value1[0]=='lab_config'){
+						echo "<ul class='sub'>";
+						$user = get_user_by_id($_SESSION['user_id']);
+						if(is_super_admin($user) || is_country_dir($user)) {
+							echo
+							"<li>
+								<a id='option9' class='' href='javascript:right_load(9, ".$quote."misc_".$quote.");>
+									<i class='icon-table'></i>&nbsp;&nbsp;".
+									LangUtil::$allTerms['MENU_GENERAL'].
+								"</a>
+							</li>
+							<li>
+								<a id='option7' class='' href='javascript:right_load(7, ".$quote."change_admin_div".$quote.");'>
+									<i class='icon-table'></i>&nbsp;&nbsp;".
+									LangUtil::$allTerms['MENU_MGR'].
+								"</a>
+							</li>
+							<li>
+								<a id='option6' class='' href='javascript:right_load(6, ".$quote."del_config_div".$quote.");'>
+									<i class='icon-table'></i>&nbsp;&nbsp;".
+									LangUtil::$allTerms['MENU_DEL']."</a>
+							</li>";										
+						}
+						
+						echo 
+						"<li>
+							<a id='test' class='menu_option' href='javascript:test_setup();'>".LangUtil::$allTerms['Tests']." </a>
+						</li>
+						<div id='test_setup' name='test_setup' style='display:none;'>
+							-<a id='option2' class='menu_option' href='javascript:right_load(2, ".$quote."st_types_div".$quote.");'>".LangUtil::$allTerms['MENU_ST_TYPES']."</a>
+							</li><br><br>
+							-<a id='option5' class='menu_option' href='javascript:right_load(5, ".$quote."target_tat_div".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
+							</li><br><br>
+							-<a href='remarks_edit.php?id=".$_REQUEST['id']."'>".'Results Interpretation'."</a>
+							<br><br>
+						</div>
+						<li>                         
+							<a id='option21' class='menu_option' href='javascript:right_load(21, ".$quote."search_div".$quote.");'>Search</a>
+						</li>
+						<li>
+							<a id='report' class='menu_option' href='javascript:report_setup();'>".LangUtil::$allTerms['Reports']." </a>
+						</li>
+						<div id='report_setup' name='report_setup' style='display:none;'>
+							-<a id='option8' class='menu_option' href='javascript:right_load(8, ".$quote."agg_report_div".$quote.");'>".LangUtil::$allTerms['MENU_INFECTION']."</a>
+							<br><br>
+                            -<a id='option36' class='menu_option' href='javascript:right_load(36, ".$quote."grouped_count_div".$quote.");'>".'Test/Specimen Grouped Reports'."</a>
+							<br><br>
+							-<a id='option11' class='menu_option' href='javascript:right_load(11, ".$quote."report_config_div".$quote.");'>".LangUtil::$allTerms['MENU_REPORTCONFIG']."</a>
+							<br><br>
+							-<a id='option12' class='menu_option' href='javascript:right_load(12, ".$quote."worksheet_config_div".$quote.");'>".LangUtil::$allTerms['MENU_WORKSHEETCONFIG']."</a>
+							<br><br>
+						</div>
+						<li>
+							<a id='option15' class='menu_option' href='javascript:right_load(15, ".$quote."inventory_div".$quote.");'>".LangUtil::$allTerms['Inventory']."</a>
+						</li>
+						<li>
+							<a id='option28' class='menu_option' href='javascript:right_load(28, ".$quote."barcode_div".$quote.");'>".'Barcode Settings'."</a>
+							</li>
+						<li>
+							<a id='option22' class='menu_option' href='javascript:right_load(22, ".$quote."billing_div".$quote.");'>".'Billing'."</a>
+						</li>
+						<li>
+							<a id='option3' class='menu_option' href='javascript:right_load(3, ".$quote."users_div".$quote.");'>".LangUtil::$allTerms['MENU_USERS']."</a>
+						</li>
+						<li>
+							<a id='option4' class='menu_option' href='javascript:right_load(4, ".$quote."fields_div".$quote.");'>".LangUtil::$allTerms['MENU_CUSTOM']."</a>
+						</li>
+						<li>			
+							<a id='option19' class='menu_option' href='javascript:language_div_load();'>".LangUtil::$allTerms['MODIFYLANG']."</a>
+						</li>
+						<li>
+							<a id='option14' class='menu_option' href='javascript:export_html();'>Setup Network</a>
+						</li>";
+						if($SERVER != $ON_ARC) {
+						echo"
+						<li><a id='option13' class='menu_option' href='javascript:right_load(13, ".$quote."backup_revert_div".$quote.");'>".LangUtil::$allTerms['MENU_BACKUP_REVERT']."</a></li>";
+						if(is_super_admin($user) || is_country_dir($user)) { 
+						echo"
+						<li>
+							<a id='option18' class='menu_option' href='javascript:right_load(18, ".$quote."update_database_div".$quote.");'>".'Update Data'."</a>
+						</li>
+						<li>
+							<a id='option34' class='menu_option' href='javascript:right_load(34, ".$quote."import_config_div".$quote.");'>Import Configuration</a><br><br>
+						</li>";
+						}
+						}
+						echo"
+						<li>
+							<a href='export_config?id=".$_REQUEST['id']."' target='_blank'>".LangUtil::$allTerms['MENU_EXPORTCONFIG']."</a>
+						</li>
+                        <div id='old_update_div' style='display:none;'>
+							<li>
+								<a id='option39' class='menu_option' href='javascript:right_load(39, ".$quote."blis_update_div".$quote.");'>Update to New Version</a>
+							</li>
+						</div>";
+							
+										
+					echo "</ul>";
+
+					}#END LAB CONFIG LEFT MENU
 					echo "</li>";
-					}
-					}
+					}#END FOR EACH LOOP
+				}#END TOP MENU OPTIONS
 					?>	
 			</ul>
 			<!-- END SIDEBAR MENU -->

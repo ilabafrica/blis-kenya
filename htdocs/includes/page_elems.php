@@ -129,51 +129,6 @@ class PageElems
 			return;
 		}
 		?>
-		<SCRIPT type="text/javascript" charset="utf-8">
-		    <!--
-			function isNumberKey(evt)
-			{
-				var charCode = (evt.which) ? evt.which : event.keyCode
-				if (charCode > 31 && (charCode < 48 || charCode > 57))
-					return false;
-
-					return true;
-			}
-			//-->
-
-		Date.format = '<?php echo $date_format_js; ?>';
-		$(function()
-		{
-			$('#<?php echo $picker_id; ?>').datePicker({startDate:'<?php echo $start_date; ?>'});
-		});
-
-		$(function()
-		{
-			$('#<?php echo $picker_id; ?>')
-				.datePicker({createButton:false})
-				.bind(
-					'click',
-					function()
-					{
-						$(this).dpDisplay();
-						this.blur();
-						return false;
-					}
-				)
-				.bind(
-					'dateSelected',
-					function(e, selectedDate, $td)
-					{
-						var date_selected = $('#<?php echo $picker_id; ?>').val();
-						var date_parts = date_selected.split('-');
-						$('#<?php echo $id_list[$order_list[0]]; ?>').attr("value", date_parts[0]);
-						$('#<?php echo $id_list[$order_list[1]]; ?>').attr("value", date_parts[1]);
-						$('#<?php echo $id_list[$order_list[2]]; ?>').attr("value", date_parts[2]);
-					}
-				);
-		});
-		
-		</SCRIPT>
 				
 		<style type='text/css'>
 		a.dp-choose-date {
@@ -1180,13 +1135,6 @@ class PageElems
 	{
 		# Returns HTML table listing all test types in catalog
 		?>
-		
-		<script type='text/javascript'>
-			$(document).ready(function(){
-				$('#testTypeTable').tablesorter();
-			});
-		</script>
-		
 		<?php
 		$ttype_list = get_test_types_catalog($lab_config_id);
 		if(count($ttype_list) == 0)

@@ -6,7 +6,8 @@ default theme
 Reset and overrides  
 ***/
 body { 
-  background-color:#ffffff!important;
+  background-color: rgb(61, 61, 61);
+  /*background-color:#ffffff!important;*/
 }
 
 /***

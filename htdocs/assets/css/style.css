@@ -422,7 +422,7 @@ Page content
 ***/
 .page-content {  
   margin-top: 0px;
-  /*min-height: 800px; */   
+  min-height: 550px;
   padding: 0px;
   background-color: #fff; 
 }
