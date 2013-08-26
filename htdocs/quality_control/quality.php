@@ -1,13 +1,4 @@
 <?php 
-#
-# (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre
-# Main page for showing list of test/specimen types in catalog, with options to add/modify
-#
-
-include("../users/accesslist.php");
-if( !(isAdmin(get_user_by_id($_SESSION['user_id'])) && in_array(basename($_SERVER['PHP_SELF']), $adminPageList)) )
-	header( 'Location: home.php' );
-	
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("quality");
@@ -140,7 +131,7 @@ if(is_super_admin($user) || is_country_dir($user))
 	<div id='quality_controls_div' class=''>
 		<p style="text-align: right;"><a rel='facebox' href='#QualityControls_tc'>Page Help</a></p>
 		<b><?php echo 'Quality Controls'; ?></b>
-		| <a href='quality_control_new.php' title='Click to Add a New Quality Control'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		| <a href='quality_control.php' title='Click to Add a New Quality Control'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
         <!------
         --->
         <h1>jQuery Form Builder Plugin Demo</h1>
@@ -169,7 +160,7 @@ if(is_super_admin($user) || is_country_dir($user))
     <div id='quality_control_field_groups_div' class='content_div'>
 		<p style="text-align: right;"><a rel='facebox' href='#QualityControlFieldGroups_tc'>Page Help</a></p>
 		<b><?php echo 'Quality Control Field Groups'; ?></b>
-		| <a href='quality_control_field_groups_new.php' title='Click to Add a New Quality Control Field Group'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		| <a href='quality_control_field_groups.php' title='Click to Add a New Quality Control Field Group'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qcfgdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>

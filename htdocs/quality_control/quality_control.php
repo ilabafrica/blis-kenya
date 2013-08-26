@@ -4,8 +4,8 @@
 #
 include("redirect.php");
 include("includes/header.php");
-LangUtil::setPageId("catalog");
-$script_elems->enableLatencyRecord();
+LangUtil::setPageId("quality");
+$script_elems->enableFormBuilder();
 ?>
 <script type='text/javascript'>
 function check_input()
@@ -23,20 +23,20 @@ function check_input()
 
 </script>
 <br>
-<b><?php echo LangUtil::$pageTerms['NEW_LAB_SECTION']; ?></b>
+<b><?php echo "New Quality Control"; ?></b>
 | <a href='catalog.php?show_tc=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br><br>
 <div class='pretty_box'>
 <form name='new_test_category_form' id='new_test_category_form' action='test_category_add.php' method='post'>
-<table class='smaller_font'>
-<tr>
-<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='category_name' id='category_name' class='uniform_width' /></td>
-</tr>
-<tr valign='top'>
-<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-<td><textarea name='category_descr' id='category_descr' class='uniform_width'></textarea></td>
-<td></td></tr></table>
+<table width="100%" border="0">
+  <tr>
+    <th scope="col">New Quality Control Definition. Fields marked <?php $page_elems->getAsterisk(); ?> are mandatory.</th>
+  </tr>
+  <tr>
+    <td><p><a href="form_builder/example-html.php">View sample rendered html</a>.</p>
+		<div id="my_form_builder"></div></td>
+  </tr>
+</table>
 <br><br>
 <input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
 &nbsp;&nbsp;&nbsp;&nbsp;
