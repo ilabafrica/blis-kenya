@@ -1,4 +1,13 @@
 <?php 
+#
+# (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre
+# Main page for showing list of test/specimen types in catalog, with options to add/modify
+#
+
+include("../users/accesslist.php");
+if( !(isAdmin(get_user_by_id($_SESSION['user_id'])) && in_array(basename($_SERVER['PHP_SELF']), $adminPageList)) )
+	header( 'Location: home.php' );
+	
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("quality");

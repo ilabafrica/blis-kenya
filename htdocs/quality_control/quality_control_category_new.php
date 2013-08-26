@@ -1,6 +1,6 @@
 <?php
 #
-# Main page for adding new test category
+# Main page for adding new quality control category
 #
 include("redirect.php");
 include("includes/header.php");
@@ -11,14 +11,14 @@ $script_elems->enableLatencyRecord();
 function check_input()
 {
 	// Validate
-	var category_name = $('#category_name').attr("value");
+	var category_name = $('#quality_category_name').val();
 	if(category_name == "")
 	{
 		alert("<?php echo "Missing Quality Control Category Name"; ?>");
 		return;
 	}
 	// All OK
-	$('#new_test_category_form').submit();
+	$('#new_quality_control_category_form').submit();
 }
 
 </script>
@@ -30,19 +30,19 @@ function check_input()
 <form name='new_quality_control_category_form' id='new_quality_control_category_form' action='quality_control_category_add.php' method='post'>
 <table class='smaller_font'>
 <tr>
-<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='category_name' id='category_name' class='uniform_width' /></td>
+<td style='width:150px;'><?php echo "Quality Control Category Name"; ?><?php $page_elems->getAsterisk(); ?></td>
+<td><input type='text' name='quality_category_name' id='quality_category_name' class='uniform_width' /></td>
 </tr>
 </table>
 <br><br>
-<input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
+<input type='button' onclick='check_input();' value='Submit' />
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href='quality.php?show_qc=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </form>
 </div>
 <div id='quality_control_category_help' style='display:none'>
 <small>
-Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test category you are looking for.
+Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the quality control category you are looking for.
 </small>
 </div>
 <?php include("includes/footer.php"); ?>
