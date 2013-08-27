@@ -319,7 +319,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					switch($page_value[0]){
 					case 'find_patient':
 						echo "<ul class='sub'>".
-							"<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Lab Test Requests' 
+							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
 									class='' id='patient_lookup_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
