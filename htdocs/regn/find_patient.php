@@ -95,6 +95,9 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 				</span>
 				</form>
+				<div id='add_anyway_div' style='display:none'>
+					<a id='add_anyway_link' href='new_patient.php'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+				</div>
 				<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
 					<ul>
 						<?php
