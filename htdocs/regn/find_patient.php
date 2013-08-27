@@ -251,6 +251,14 @@ function right_load(destn_div)
 	$('.menu_option').removeClass('current_menu_option');
 	$('#'+destn_div+'_menu').addClass('current_menu_option');
 	$('#'+destn_div+'_subdiv_help').show();
+	if(destn_div == "lab_requests")
+	{
+		<!--load_unreported_results();-->
+	}
+	else if(destn_div == "sample_collection"){
+		fetch_patient_specimens_accept_reject();
+		
+	}
 	
 }
 /**
