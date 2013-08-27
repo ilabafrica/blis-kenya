@@ -5,51 +5,8 @@
 include("redirect.php");
 include("includes/header.php");
 include("../includes/ajax_lib.php");
-$script_elems->enableJQueryForm();
-$script_elems->enableJQueryValidate();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
-$script_elems->enableTokenInput();
 LangUtil::setPageId("specimen_info");
 ?>
-
-<script type='text/javascript'>
-function checkandsubmit()
-{
-	$('#specimen_result_progress').show();
-	// TODO: Add validation
-	$('#specimen_result_form').submit();
-}
-
-function update_remarks(test_type_id, measure_id)
-{
-	/*
-	var values_csv = "";
-	var remarks_input_id = "comments_"+test_type_id;
-	var results_field_list = $(".results_entry");
-	for(var i = 0; i < results_field_list.length; i++)
-	{
-		var elem = results_field_list[i];
-		var val = elem.value;
-		values_csv += val+"_";
-	}
-	var url_string = "ajax/fetch_remarks.php";
-	var data_string = "lid=<?php echo $_SESSION['lab_config_id']; ?>&ttype="+test_type_id+"&values_csv="+values_csv;
-	$.ajax({
-		type: "POST",
-		url: url_string,
-		data: data_string,
-		success: function(msg) {
-			$("#"+remarks_input_id).attr("value", msg)
-		}
-	});
-	*/
-	var result_field_name = 'result_'+test_type_id+"_"+measure_id;
-	var result_field_value = $("#"+result_field_name).val();
-	var comments_field_name = 'comments_'+test_type_id+"_"+measure_id;
-	$("#"+comments_field_name).val(result_field_value);
-}
-</script>
 <br>
 <?php
 $tips_string = LangUtil::$pageTerms['TIPS_ENTRY'];
@@ -299,4 +256,50 @@ $test_list = get_tests_by_specimen_id($specimen->specimenId);
 </form>
 </div>
 <br>
+<?php 
+include("includes/scripts.php");
+$script_elems->enableJQueryForm();
+$script_elems->enableJQueryValidate();
+$script_elems->enableTableSorter();
+$script_elems->enableLatencyRecord();
+$script_elems->enableTokenInput();
+?>
+<script type='text/javascript'>
+function checkandsubmit()
+{
+	$('#specimen_result_progress').show();
+	// TODO: Add validation
+	$('#specimen_result_form').submit();
+}
+
+function update_remarks(test_type_id, measure_id)
+{
+	/*
+	var values_csv = "";
+	var remarks_input_id = "comments_"+test_type_id;
+	var results_field_list = $(".results_entry");
+	for(var i = 0; i < results_field_list.length; i++)
+	{
+		var elem = results_field_list[i];
+		var val = elem.value;
+		values_csv += val+"_";
+	}
+	var url_string = "ajax/fetch_remarks.php";
+	var data_string = "lid=<?php echo $_SESSION['lab_config_id']; ?>&ttype="+test_type_id+"&values_csv="+values_csv;
+	$.ajax({
+		type: "POST",
+		url: url_string,
+		data: data_string,
+		success: function(msg) {
+			$("#"+remarks_input_id).attr("value", msg)
+		}
+	});
+	*/
+	var result_field_name = 'result_'+test_type_id+"_"+measure_id;
+	var result_field_value = $("#"+result_field_name).val();
+	var comments_field_name = 'comments_'+test_type_id+"_"+measure_id;
+	$("#"+comments_field_name).val(result_field_value);
+}
+</script>
+
 <?php include("includes/footer.php"); ?>
