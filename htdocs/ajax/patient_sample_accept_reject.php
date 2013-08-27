@@ -357,15 +357,17 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			</td>
 			<?php if($attrib_type == 10)
     		{?>
-			<td style='width:100px;'><a href="javascript:start_test(<?php echo $specimen->specimenId; ?>);" title='Click to begin testing this Specimen' class="btn red mini">
-				<i class="icon-ok"></i> <?php echo LangUtil::$generalTerms['START_TEST']; ?></a>
-			</td>
-			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Assign Specimen to a technician' class="btn blue mini">
-				<i class="icon-group"></i> <?php echo LangUtil::$generalTerms['ASSIGN_TO']; ?></a>
-			</td>
-			<?php }else{?>
-			<td style='width:100px;'><a href="javascript:fetch_specimen2(<?php echo $specimen->specimenId; ?>);" title='Click to Enter Results for this Specimen'class="btn green mini">
-				<i class="icon-pencil"></i> <?php echo LangUtil::$generalTerms['ENTER_RESULTS']; ?></a>
+			<td style='width:100px;'><div class="btn-group">
+										<a class="btn green" href="#" data-toggle="dropdown">
+										<i class="icon-user"></i> Settings
+										<i class="icon-angle-down"></i>
+										</a>
+										<ul class="dropdown-menu">
+											<li><a href="#"><i class="icon-thumbs-down"></i> Reject Sample</a></li>
+											<li class="divider"></li>
+											<li><a href="#"><i class="icon-thumbs-up"></i> Accept Sample</a></li>
+										</ul>
+									</div>
 			</td>
 			<?php }?>
 		</tr>

@@ -250,7 +250,7 @@ function continue_fetch_patients()
 
 function right_load(destn_div)
 {
-	$('.reg_subdiv').hide();
+	$('.results_subdiv').hide();
 	$("#"+destn_div).show();
 	$('#specimen_id').focus();
 	$('.menu_option').removeClass('current_menu_option');
