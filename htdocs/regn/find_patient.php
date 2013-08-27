@@ -16,10 +16,10 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home"></i>
-								<a href="index.html">Home</a> 
+								<a href="index.php">Home</a> 
 								<span class="icon-angle-right"></span>
 							</li>
-							<li><a href="#">Registration</a>
+							<li><a href="#">Reception</a>
 							<span class="icon-angle-right"></span></li>
 							<li><a href="#"></a></li>
 						</ul>
@@ -51,7 +51,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <div id="patient_lookup" class='reg_subdiv' style='display:none;'>
 <div class="portlet box blue">
 <div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Patient Look-up" ?></h4>
+<h4><i class="icon-reorder"></i>Sample collection</h4>
 <div class="tools">
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
@@ -103,30 +103,12 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 </div>
 <!-- BEGIN PATIENT LOOK UP -->
 
-<!-- BEGIN NEW PATIENT REGISTRATION -->
-<div id="new_patient" class='reg_subdiv' style='display:none;'>
-<div class="portlet box blue">
-<div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Register new patient" ?></h4>
-<div class="tools">
-<a href="javascript:;" class="collapse"></a>
-<a href="#portlet-config" data-toggle="modal" class="config"></a>
-<a href="javascript:;" class="reload"></a>
-<a href="javascript:;" class="remove"></a>
-</div>
-</div>
-<div class="portlet-body form">
-<?php //include 'new_patient.php';?>
-</div>
-</div>
-</div>
-<!-- END NEW PATIENT REGISTRATION -->
 
 <!-- BEGIN LAB REQUESTS -->
 <div id="lab_requests" class='reg_subdiv' style='display:none;'>
 <div class="portlet box blue">
 <div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Lab Requests" ?></h4>
+<h4><i class="icon-reorder"></i>Lab Requests</h4>
 <div class="tools">
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
