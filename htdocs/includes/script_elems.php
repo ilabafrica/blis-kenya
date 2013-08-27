@@ -34,8 +34,8 @@ class ScriptElems
 		{
 		?>
 
-			<script src="js/jquery.js"></script>
-            <script src="js/bootstrap.js"></script>
+			<!-- script src="js/jquery.js"></script>
+            <script src="js/bootstrap.js"></script-->
 			<script src="assets/js/jquery-1.8.3.min.js"></script>
 
 			<script type='text/javascript'>
