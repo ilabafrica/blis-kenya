@@ -60,44 +60,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 </div>
 </div>
 <div class="portlet-body">
-<div class="scroller" data-height="200px" data-always-visible="1">
-<form>
-<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
-<?php $page_elems->getPatientSearchAttribSelect(); ?>
-</select>
-&nbsp;&nbsp;
-<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
-&nbsp;&nbsp;
-<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
-&nbsp;&nbsp;&nbsp;
-<span id='psearch_progress_spinner'>
-<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-</span>
-</form>
-<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
-	<ul>
-		<?php
-		if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
-			echo "<li>";
-			echo LangUtil::$pageTerms['TIPS_REGISTRATION_1'];
-			echo "</li>";
-		}	
-		if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
-			echo "<li>"; 
-			echo LangUtil::$pageTerms['TIPS_REGISTRATION_2'];
-			echo "</li>";
-		}
-		if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
-			echo "<li>"; 
-			echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
-			echo "</li>"; 
-		}
-		?>
-	</ul>
-</div>
-<div id='patients_found' style='position:relative;left:10px;'>
-</div>
-</div>
+
 </div>
 </div>
 </div>
@@ -116,9 +79,51 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <a href="javascript:;" class="remove"></a>
 </div>
 </div>
-<div class="portlet-body form">
-<?php //include 'new_patient.php';?>
-</div>
+		<div class="portlet-body form">
+
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<form>
+				<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
+				<?php $page_elems->getPatientSearchAttribSelect(); ?>
+				</select>
+				&nbsp;&nbsp;
+				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
+				&nbsp;&nbsp;
+				<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
+				&nbsp;&nbsp;&nbsp;
+				<span id='psearch_progress_spinner'>
+				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+				</span>
+				</form>
+				<div id='add_anyway_div' style='display:none'>
+					<a id='add_anyway_link' href='new_patient.php'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+				</div>
+				<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
+					<ul>
+						<?php
+						if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
+							echo "<li>";
+							echo LangUtil::$pageTerms['TIPS_REGISTRATION_1'];
+							echo "</li>";
+						}	
+						if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
+							echo "<li>"; 
+							echo LangUtil::$pageTerms['TIPS_REGISTRATION_2'];
+							echo "</li>";
+						}
+						if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
+							echo "<li>"; 
+							echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
+							echo "</li>"; 
+						}
+						?>
+					</ul>
+				</div>
+				<div id='patients_found' style='position:relative;left:10px;'>
+				</div>
+				</div>
+		
+		</div>
 </div>
 </div>
 <!-- END LAB REQUESTS -->
@@ -227,7 +232,6 @@ function continue_fetch_patients()
 		{q: patient_id, a: search_attrib}, 
 		function(response)
 		{
-			$('#psearch_progress_spinner').hide();
 			if(search_attrib == 1)
 			{
 				$('#add_anyway_link').html(" If not this name '<b>"+patient_id+"</b>' <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?>&raquo;");
@@ -239,6 +243,7 @@ function continue_fetch_patients()
 				$('#add_anyway_link').attr("href", "new_patient.php");
 			}
 			$('#add_anyway_div').show();
+			$('#psearch_progress_spinner').hide();
 		}
 	);
 }

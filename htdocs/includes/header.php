@@ -67,7 +67,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				<!-- BEGIN LOGO -->
-				<a class="brand" href="index.html">
+				<a class="brand" href="index.php">
 				<!--img src="assets/img/logo.png" alt="logo" /-->
 				BLIS v<?php echo $VERSION; ?> - Kenya
 				</a>

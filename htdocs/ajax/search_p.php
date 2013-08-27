@@ -120,7 +120,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 }
 # Build HTML table
 ?>
-<table class='hor-minimalist-c' id='patientListTable' name='patientListTable'>
+<table class='table table-striped table-hover' id='patientListTable' name='patientListTable'>
 	<thead>
 		<tr valign='top'>
 			<?php
