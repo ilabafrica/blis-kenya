@@ -126,6 +126,32 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <!-- END SPAN 12 -->
 </div>
 
+<!-- BEGIN SPECIMEN REGISTRATION-->	
+<div id="sample_collection" class='sample_collection_subdiv' style='display:none;'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Sample Collection";?></h4>
+			<div class="tools">
+				<a href="javascript:fetch_patient_specimens_accept_reject();" class="reload"></a>
+				<a href="javascript:;" class="collapse"></a>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<div id='fetched_specimens_entry'>
+				<!--PENDING SPECIMENTS LOADED IN THIS DIV-->
+				</div>
+				<div id="fetched_specimen">
+				<?php
+					if(isset($_REQUEST['ajax_response']))
+						echo $_REQUEST['ajax_response'];
+				?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PSPECIMEN REGISTRATION PORTLET-->
 <!-- END REGISTRATION PORTLETS-->   
 <p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
 
@@ -226,6 +252,23 @@ function right_load(destn_div)
 	$('#'+destn_div+'_menu').addClass('current_menu_option');
 	$('#'+destn_div+'_subdiv_help').show();
 	
+}
+/**
+ * FETCH PATIENTS AND SPECIMENS
+ */
+function fetch_patient_specimens_accept_reject()
+{	
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'ajax/patient_sample_accept_reject.php';
+	$("#sample_collection").load(url, 
+		{a: '', t: 10}, 
+		function() 
+		{
+			handleDataTable(10);
+			App.unblockUI(el);
+		}
+	);
 }
 </script>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
