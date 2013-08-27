@@ -98,15 +98,12 @@ function delete_quality_data()
 <tr valign='top'>
 <td id='left_pane' class='left_menu' width='150'>
 <a href="javascript:load_right_pane('quality_controls_div');" class='menu_option' id='quality_controls_div_menu'>
-	<?php echo 'Quality Controls'; ?>
 </a>
 <br><br>
 <a href="javascript:load_right_pane('quality_control_categories_div');" class='menu_option' id='quality_control_categories_div_menu'>
-	<?php echo 'Quality Control Categories'; ?>
 </a>
 <br><br>
 <a href="javascript:load_right_pane('quality_control_field_groups_div');" class='menu_option' id='quality_control_field_groups_div_menu'>
-	<?php echo 'Quality Control Field Groups'; ?>
 </a>
 <br><br>
 <?php
@@ -130,7 +127,7 @@ if(is_super_admin($user) || is_country_dir($user))
 	</div>
 	<div id='quality_controls_div' class=''>
 		<p style="text-align: right;"><a rel='facebox' href='#QualityControls_tc'>Page Help</a></p>
-		<b><?php echo 'Quality Controls'; ?></b>
+		<b><?php echo LangUtil::$generalTerms['QUALITY_CONTROLS']; ?></b>
 		| <a href='quality_control.php' title='Click to Add a New Quality Control'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
         <!------
         --->
@@ -148,7 +145,7 @@ if(is_super_admin($user) || is_country_dir($user))
     
     <div id='quality_control_categories_div' class='content_div'>
 		<p style="text-align: right;"><a rel='facebox' href='#QualityControlCategories_tc'>Page Help</a></p>
-		<b><?php echo 'Quality Control Categories'; ?></b>
+		<b><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_CATEGORIES']; ?></b>
 		| <a href='quality_control_category_new.php' title='Click to Add a New Quality Control Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
@@ -159,7 +156,7 @@ if(is_super_admin($user) || is_country_dir($user))
     
     <div id='quality_control_field_groups_div' class='content_div'>
 		<p style="text-align: right;"><a rel='facebox' href='#QualityControlFieldGroups_tc'>Page Help</a></p>
-		<b><?php echo 'Quality Control Field Groups'; ?></b>
+		<b><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']; ?></b>
 		| <a href='quality_control_field_groups.php' title='Click to Add a New Quality Control Field Group'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
