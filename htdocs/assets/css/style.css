@@ -1,7 +1,13 @@
 /***
 Import fonts
 ***/
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(opensansfont.woff) format('woff');
+}
+
 
 /***
 Colors
