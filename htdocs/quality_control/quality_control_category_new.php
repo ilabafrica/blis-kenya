@@ -5,23 +5,7 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("quality");
-$script_elems->enableLatencyRecord();
 ?>
-<script type='text/javascript'>
-function check_input()
-{
-	// Validate
-	var category_name = $('#category_name').val();
-	if(category_name == "")
-	{
-		alert("<?php echo "Error: Missing quality control category name"; ?>");
-		return;
-	}
-	// All OK
-	$('#new_quality_control_category_form').submit();
-}
-
-</script>
 <br>
 <b><?php echo "New Quality Control Category"; ?></b>
 | <a href='quality.php?show_qc=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
@@ -45,4 +29,25 @@ function check_input()
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test category you are looking for.
 </small>
 </div>
+<?php include("includes/scripts.php");
+$script_elems->enableLatencyRecord();
+$script_elems->enableDatePicker();
+$script_elems->enableJQueryForm();
+?>
+<script type='text/javascript'>
+function check_input()
+{
+	// Validate
+	var category_name = $('#category_name').val();
+	if(category_name == "")
+	{
+		alert("<?php echo "Error: Missing quality control category name"; ?>");
+		return;
+	}
+	// All OK
+	$('#new_quality_control_category_form').submit();
+}
+
+</script>
+
 <?php include("includes/footer.php"); ?>
