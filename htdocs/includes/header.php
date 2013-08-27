@@ -325,18 +325,13 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
 								"</a>
 							</li>
-							<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Patient Lookup' 
+							<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_PATIENT_LOOKUP'].
 								"</a>
 							</li>
-							<li><a href='javascript:right_load(".$quote."new_patient".$quote.");'  title='New Patient'
-									class='' id='new_patient_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
-									.LangUtil::$allTerms['NEW_PATIENT'].
-							"</a></li>".
-						"</ul>";
+						</ul>";
 					break;
 					case 'results_entry':
 						echo "<ul class='sub'>".
