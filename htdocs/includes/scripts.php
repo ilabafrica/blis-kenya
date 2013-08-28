@@ -56,7 +56,8 @@
 			<script type="text/javascript" src="assets/bootstrap-daterangepicker/date.js"></script>
 			<script type="text/javascript" src="assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 			<script type="text/javascript" src="assets/data-tables/jquery.dataTables.js"></script>
-			<script type="text/javascript" src="assets/data-tables/DT_bootstrap.js"></script>	
+			<script type="text/javascript" src="assets/data-tables/DT_bootstrap.js"></script>
+			<script type="text/javascript" src="assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
 			<script src="assets/js/app.js"></script>				
 			<script>
 				jQuery(document).ready(function() {		
@@ -138,7 +139,7 @@ function handleDataTable(table_id) {
 
     	function fnCreateSelect( aData )
     	{
-    		var r='<select><option value=""></option>', i, iLen=aData.length;
+    		var r='<select class="chosen" data-placeholder="Select" tabindex="1"><option value=""/>All</option>', i, iLen=aData.length;
     		for ( i=0 ; i<iLen ; i++ )
     		{
     			r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
@@ -244,18 +245,40 @@ function handleDataTable(table_id) {
     jQuery('#sample_3_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
     jQuery('#sample_3_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
     /* Add a select menu for each TH element in the table footer */
-	$("#test_category").each( function ( i ) {
+    $("#section").each( function ( i ) {
+		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(3) );
+		$(".chosen").chosen();
+		$('select', this).change( function () {
+			oTable.fnFilter( $(this).val(), 3 );
+			$section = $(this).val();
+			$('.section-name').html('All Sections');
+			if($section==''){
+			}else
+			$('.section-name').html($section);
+		} );
+	} );
+	$("#specimen_type").each( function ( i ) {
 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(4) );
+		$(".chosen").chosen();
 		$('select', this).change( function () {
 			oTable.fnFilter( $(this).val(), 4 );
 		} );
 	} );
 	$("#test_type").each( function ( i ) {
 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(5) );
+		$(".chosen").chosen();
 		$('select', this).change( function () {
 			oTable.fnFilter( $(this).val(), 5);
 		} );
 	} );
+	$("#status").each( function ( i ) {
+		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(6) );
+		$(".chosen").chosen();
+		$('select', this).change( function () {
+			oTable.fnFilter(status , 6);
+		} );
+	} );
+	
 	
 }
 </script>

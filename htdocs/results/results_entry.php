@@ -7,6 +7,7 @@ include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("results_entry");
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
+$test_categories = TestCategory::geAllTestCategories($lab_config_id);
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
 						<h3>
@@ -20,6 +21,24 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 							<li><a href="#">Tests</a>
 							<span class="icon-angle-right"></span></li>
 							<li><a href="#"></a></li>
+							<!--
+							<li class="pull-right no-text-shadow">
+							<div class="sections-select">
+                                 <select class="chosen" data-placeholder="Select a section" tabindex="1">
+                                    <option value=""><option/>
+                                    <?php foreach($test_categories as $test_category)
+                                    {?>
+                                    <option value="<?php echo $test_category['test_category_id']?>" >
+                                    <?php echo $test_category['name']?>
+                                    </option>
+                                  	<?php 
+                                    }?>
+                                 </select>
+                         
+                           </div>
+							</li>
+							<li class="pull-right no-text-shadow sections"> Select Section: </li>
+							-->
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
@@ -41,7 +60,7 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 <div id="pending_tests" class='results_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Pending Tests";?></h4>
+			<h4><i class="icon-reorder"></i><?php echo "Tests - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
 				<a href="javascript:fetch_pending_results();" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
@@ -68,7 +87,7 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 <div id="pending_results" class='results_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Pending Results";?></h4>
+			<h4><i class="icon-reorder"></i><?php echo "Tests - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
 				<a href="javascript:fetch_pending_results();" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
@@ -578,7 +597,7 @@ function fetch_pending_specimens()
 {	
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
-	var url = 'ajax/result_entry_patient_dyn.php';
+	var url = 'ajax/result_entry_tests.php';
 	$("#fetched_specimens_entry").load(url, 
 		{a: '', t: 10}, 
 		function() 

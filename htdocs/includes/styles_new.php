@@ -16,6 +16,7 @@
 <link href="assets/jqvmap/jqvmap/jqvmap.css" media="screen" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
+ <link rel="stylesheet" type="text/css" href="assets/chosen-bootstrap/chosen/chosen.css" />
 <style>
 .page-sidebar{
   /*background-color: rgb(61, 61, 61)!important;
@@ -24,4 +25,19 @@
 html{
  height:100%;
 }
+.sections{
+  padding-top: -1px;
+  margin-right: 0px;
+  margin-top: -8px;
+  padding: 8px;
+  padding-bottom: 7px;
+  cursor: pointer;
+  width: 475x;
+  color: #fff;
+  background-color: #e02222;
+}
+.sections-select{
+  margin-top: -10px;
+}
+
 </style>
