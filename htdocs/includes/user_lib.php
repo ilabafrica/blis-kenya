@@ -34,12 +34,12 @@ function get_top_menu_options($user_role)
 	$page_list[LangUtil::getPageTitle("home")] = "home.php";
 	if($user_role == $LIS_CLERK)
 	{
-		$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
+		$page_list["Reception"] = "find_patient.php";
 		$page_list[LangUtil::getPageTitle("search")] = "search.php";
 	}
 	else if($user_role == $LIS_TECH_RW || $user_role == $LIS_TECH_SHOWPNAME)
 	{
-		$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
+		$page_list["Reception"] = "find_patient.php";
 		$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
 		$page_list[LangUtil::getPageTitle("search")] = "search.php";
 		$page_list[LangUtil::getPageTitle("reports")] = "reports.php";
@@ -108,7 +108,7 @@ function get_top_menu_options($user_role)
 				break;
 			case $LIS_100:
 				# Regn only
-				$page_list[LangUtil::getPageTitle("regn")] = "find_patient.php";
+				$page_list["Reception"] = "find_patient.php";
 				$page_list[LangUtil::getPageTitle("search")] = "search.php";
 				break;
 			case $LIS_101:

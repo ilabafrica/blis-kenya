@@ -53,8 +53,10 @@
 			<script type="text/javascript" src="assets/gritter/js/jquery.gritter.js"></script>
 			<script type="text/javascript" src="assets/uniform/jquery.uniform.min.js"></script>	
 			<script type="text/javascript" src="assets/js/jquery.pulsate.min.js"></script>
+			<script type="text/javascript" src="assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 			<script type="text/javascript" src="assets/bootstrap-daterangepicker/date.js"></script>
 			<script type="text/javascript" src="assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+			<script type="text/javascript" src="assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
 			<script type="text/javascript" src="assets/data-tables/jquery.dataTables.js"></script>
 			<script type="text/javascript" src="assets/data-tables/DT_bootstrap.js"></script>
 			<script type="text/javascript" src="assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>

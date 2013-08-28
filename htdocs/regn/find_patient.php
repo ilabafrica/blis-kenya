@@ -16,10 +16,10 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home"></i>
-								<a href="index.html">Home</a> 
+								<a href="index.php">Home</a> 
 								<span class="icon-angle-right"></span>
 							</li>
-							<li><a href="#">Registration</a>
+							<li><a href="#">Reception</a>
 							<span class="icon-angle-right"></span></li>
 							<li><a href="#"></a></li>
 						</ul>
@@ -51,7 +51,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <div id="patient_lookup" class='reg_subdiv' style='display:none;'>
 <div class="portlet box blue">
 <div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Patient Look-up" ?></h4>
+<h4><i class="icon-reorder"></i>Sample collection</h4>
 <div class="tools">
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
@@ -60,73 +60,18 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 </div>
 </div>
 <div class="portlet-body">
-<div class="scroller" data-height="200px" data-always-visible="1">
-<form>
-<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
-<?php $page_elems->getPatientSearchAttribSelect(); ?>
-</select>
-&nbsp;&nbsp;
-<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
-&nbsp;&nbsp;
-<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
-&nbsp;&nbsp;&nbsp;
-<span id='psearch_progress_spinner'>
-<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-</span>
-</form>
-<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
-	<ul>
-		<?php
-		if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
-			echo "<li>";
-			echo LangUtil::$pageTerms['TIPS_REGISTRATION_1'];
-			echo "</li>";
-		}	
-		if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
-			echo "<li>"; 
-			echo LangUtil::$pageTerms['TIPS_REGISTRATION_2'];
-			echo "</li>";
-		}
-		if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
-			echo "<li>"; 
-			echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
-			echo "</li>"; 
-		}
-		?>
-	</ul>
-</div>
-<div id='patients_found' style='position:relative;left:10px;'>
-</div>
-</div>
+
 </div>
 </div>
 </div>
 <!-- BEGIN PATIENT LOOK UP -->
 
-<!-- BEGIN NEW PATIENT REGISTRATION -->
-<div id="new_patient" class='reg_subdiv' style='display:none;'>
-<div class="portlet box blue">
-<div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Register new patient" ?></h4>
-<div class="tools">
-<a href="javascript:;" class="collapse"></a>
-<a href="#portlet-config" data-toggle="modal" class="config"></a>
-<a href="javascript:;" class="reload"></a>
-<a href="javascript:;" class="remove"></a>
-</div>
-</div>
-<div class="portlet-body form">
-<?php //include 'new_patient.php';?>
-</div>
-</div>
-</div>
-<!-- END NEW PATIENT REGISTRATION -->
 
 <!-- BEGIN LAB REQUESTS -->
 <div id="lab_requests" class='reg_subdiv' style='display:none;'>
 <div class="portlet box blue">
 <div class="portlet-title">
-<h4><i class="icon-reorder"></i><?php echo "Lab Requests" ?></h4>
+<h4><i class="icon-reorder"></i>Lab Requests</h4>
 <div class="tools">
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
@@ -134,11 +79,91 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <a href="javascript:;" class="remove"></a>
 </div>
 </div>
-<div class="portlet-body form">
-<?php //include 'new_patient.php';?>
+		<div class="portlet-body form">
+
+			<div class="scroller" data-height="400px" data-always-visible="1">
+				<form>
+				<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
+				<?php $page_elems->getPatientSearchAttribSelect(); ?>
+				</select>
+				&nbsp;&nbsp;
+				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
+				&nbsp;&nbsp;
+				<input class="btn green button-submit" type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
+				&nbsp;&nbsp;&nbsp;
+				<span id='psearch_progress_spinner'>
+				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+				</span>
+				</form>
+				<div id='add_anyway_div' style='display:none'>
+					<a id='add_anyway_link' href='javascript:right_load('new_patient')'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+				</div>
+				<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
+					<ul>
+						<?php
+						if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
+							echo "<li>";
+							echo LangUtil::$pageTerms['TIPS_REGISTRATION_1'];
+							echo "</li>";
+						}	
+						if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
+							echo "<li>"; 
+							echo LangUtil::$pageTerms['TIPS_REGISTRATION_2'];
+							echo "</li>";
+						}
+						if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
+							echo "<li>"; 
+							echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
+							echo "</li>"; 
+						}
+						?>
+					</ul>
+				</div>
+				<div id='patients_found' style='position:relative;left:10px;'>
+				</div>
+				</div>
+		
+		</div>
 </div>
 </div>
+<!-- END LAB REQUEST -->
+
+<!-- BEGIN PATIENT REGISTATION -->
+<div id="patient_registration" class='reg_subdiv' style='display:none;'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i>Patient Registration</h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				<a href="javascript:;" class="reload"></a>
+				<a href="javascript:;" class="remove"></a>
+			</div>
+		</div>
+		<div class="portlet-body form">
+			<div id='patients_registration_body' style='position:relative;left:10px;'> </div>					
+		</div>
+	</div>
 </div>
+<!-- END PATIENT REGISTATION -->
+
+<!-- BEGIN SPECIMEN REGISTATION -->
+<div id="specimen_reg" class='reg_subdiv' style='display:none;'>
+	<div class="portlet box blue">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i>Specimen Registration</h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				<a href="javascript:;" class="reload"></a>
+				<a href="javascript:;" class="remove"></a>
+			</div>
+		</div>
+		<div class="portlet-body form">
+			<div id='specimen_reg_body' style='position:relative;left:10px;'> </div>					
+		</div>
+	</div>
+</div>
+<!-- END SPECIMEN REGISTRATION -->
+
 <!-- END LAB REQUESTS -->
 </div>
 <!-- END SPAN 12 -->
@@ -150,12 +175,15 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <?php
 include("includes/scripts.php");
 ?>
-<?php $script_elems->enableDatePicker();
-$script_elems->enableJQueryForm();?>
+<?php 
+$script_elems->enableDatePicker();
+$script_elems->enableJQueryForm();
+
+?>
 <script type='text/javascript'>
 $(document).ready(function() {
 	$('#psearch_progress_spinner').hide();
-	$('#add_anyway_link').attr("href", "new_patient.php");
+	$('#add_anyway_link').attr("href", "javascript:right_load('new_patient')");
 	$('#pq').focus();
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
@@ -192,7 +220,8 @@ function fetch_patients()
 			if(response == "false" && search_attrib == 1)
 			{
 				$('#psearch_progress_spinner').hide();
-				window.location="new_patient.php?n="+patient_id+"&jmp=1";
+				//window.location="new_patient.php?n="+patient_id+"&jmp=1";
+				$('#add_anyway_link').attr("href", "javascript:right_load('new_patient')");
 			}
 			else
 			{
@@ -219,18 +248,18 @@ function continue_fetch_patients()
 		{q: patient_id, a: search_attrib}, 
 		function(response)
 		{
-			$('#psearch_progress_spinner').hide();
 			if(search_attrib == 1)
 			{
-				$('#add_anyway_link').html(" If not this name '<b>"+patient_id+"</b>' <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?>&raquo;");
-				$('#add_anyway_link').attr("href", "new_patient.php?n="+patient_id);
+				$('#add_anyway_link').html(" If not this name register '<b>"+patient_id+"</b>' <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?>&raquo;");
+				$('#add_anyway_link').attr("href", "javascript:load_patient_reg()");
 			}
 			else
 			{
-				$('#add_anyway_link').html("If not this name. <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;");
-				$('#add_anyway_link').attr("href", "new_patient.php");
+				$('#add_anyway_link').html("If not this name register <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;");
+				$('#add_anyway_link').attr("href", "javascript:load_patient_reg()");
 			}
 			$('#add_anyway_div').show();
+			$('#psearch_progress_spinner').hide();
 		}
 	);
 }
@@ -245,6 +274,28 @@ function right_load(destn_div)
 	$('#'+destn_div+'_subdiv_help').show();
 	
 }
+
+function load_patient_reg()
+{
+	$('.reg_subdiv').hide();
+	var patient_id = $.trim($('#pq').val());
+	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
+	//Load new_patient2.php via ajax
+	var url = 'regn/new_patient2.php';
+	$('#patients_registration_body').load(url, {n: patient_id});		
+	$('#patient_registration').show();
+}
+
+function load_specimen_reg(patient_id)
+{
+	$('.reg_subdiv').hide();
+	var patientid = patient_id;
+	//Load new_specimen2.php via ajax
+	var url = 'regn/new_specimen2.php';
+	$('#specimen_reg_body').load(url, {pid: patient_id});		
+	$('#specimen_reg').show();
+}
+
 </script>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
 <?php include("includes/footer.php");?>

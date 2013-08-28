@@ -67,7 +67,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				<!-- BEGIN LOGO -->
-				<a class="brand" href="index.html">
+				<a class="brand" href="index.php">
 				<!--img src="assets/img/logo.png" alt="logo" /-->
 				BLIS v<?php echo $VERSION; ?> - Kenya
 				</a>
@@ -320,23 +320,16 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					case 'find_patient':
 						echo "<ul class='sub'>".
 							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
-									class='' id='specimen_results_menu'>
+									class='' id='patient_lookup_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
 								"</a>
 							</li>
-							<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Patient Lookup' 
+							<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
-									.LangUtil::$allTerms['MENU_PATIENT_LOOKUP'].
-								"</a>
+									<i class='icon-table'></i>&nbsp;&nbsp;Sample collection</a>
 							</li>
-							<li><a href='javascript:right_load(".$quote."new_patient".$quote.");'  title='New Patient'
-									class='' id='new_patient_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
-									.LangUtil::$allTerms['NEW_PATIENT'].
-							"</a></li>".
-						"</ul>";
+						</ul>";
 					break;
 					case 'results_entry':
 						echo "<ul class='sub'>".
@@ -377,6 +370,29 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						</ul>";
 						
 					break;
+					
+					case "quality":
+						echo 
+						"<ul class='sub'>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."quality_controls_div".$quote.");' class='menu_option' id='quality_control_div_menu'>
+								".LangUtil::$generalTerms['QUALITY_CONTROLS']."
+								</a>
+							</li>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."quality_control_categories_div".$quote.");' class='menu_option' id='quality_control_categories_div_menu'>
+								".LangUtil::$generalTerms['QUALITY_CONTROL_CATEGORIES']."
+								</a>
+							</li>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."quality_control_field_groups_div".$quote.");' class='menu_option' id='quality_control_field_groups_div_menu'>
+								".LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']."
+								</a>
+							</li>
+						</ul>";
+						
+					break;
+					
 					case "reports":
 						echo "<ul class='sub'>";
 						$site_list = get_site_list($_SESSION['user_id']);
@@ -453,7 +469,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 											} else {
 												echo "
 												<li class='menu_option' id='summary_menu'>
-													<a href='javascript:show_selection(".$quote."summar".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
+													<a href='javascript:show_selection(".$quote."summary".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
 												</li>
 												<li class='menu_option' id='specimen_count_menu'>
 													<a href='javascript:show_selection(".$quote."specimen_count".$quote.");'>".LangUtil::$allTerms['MENU_COUNTS']."</a>
