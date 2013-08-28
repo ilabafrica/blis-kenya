@@ -3864,7 +3864,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<table class='regn_form_table'>
 			<tbody>
-			<tr valign='top' <?php
+			<tr  <?php
 				if(is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0)
 				{
 					# Hide if daily num not in use
@@ -3873,18 +3873,16 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				?>
 			>
 				<td>
-					<label for='dnum'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?></label>
+					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
-				<td>   </td>
 				<td>
 					<input type="text" name="dnum" id="dnum" value=<?php echo $dnum; ?> size="20" class='uniform_width'> </input>
 				</td>
 			</tr>
-			<tr valign='top'>				
+			<tr >				
 				<td>
-					<label for='stype'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?><?php $this->getAsterisk(); ?></label>
+					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?><?php $this->getAsterisk(); ?>
 				</td>
-				<td>   </td>
 				<td>
 					<select
 						name='stype'
@@ -3899,9 +3897,8 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			</tr>
 			<tr valign='top'>
 				<td>
-					<label for='tests'><?php echo LangUtil::$generalTerms['TESTS']; ?> <?php $this->getAsterisk(); ?></label>
+					<?php echo LangUtil::$generalTerms['TESTS']; ?> <?php $this->getAsterisk(); ?>
 				</td>
-				<td>   </td>
 				<td>
 					<span id='<?php echo $testbox_id; ?>' class='uniform_width'>
 						-<?php echo LangUtil::$pageTerms['MSG_SELECT_STYPE']; ?>-
@@ -3917,7 +3914,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 					<label for='sid'>DB Key
 					<?php if($_SESSION['sid'] == 2) $this->getAsterisk(); ?></label>
 				</td>
-				<td>   </td>
+				
 				<td>
 					<!--
 					<input type="text" name="specimen_id" id="<?php echo $specimen_id_div_id; ?>" value="" onblur="javascript:check_specimen_id('<?php echo $specimen_id_div_id; ?>', '<?php echo $specimen_err_div_id; ?>');" size="20" class='uniform_width'>
@@ -3933,9 +3930,9 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 					echo " style='display:none;' ";
 			?>>
 				<td>
-					<label for='addlid'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?><?php if($_SESSION['s_addl'] == 2) $this->getAsterisk(); ?> </label>
+					<?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?><?php if($_SESSION['s_addl'] == 2) $this->getAsterisk(); ?> 
 				</td>
-				<td>   </td>
+				
 				<td>
 					<input type="text" name="addl_id" id="addl_id" value="" size="20" class='uniform_width'> </input>
 				</td>
@@ -3945,79 +3942,12 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				echo " style='display:none;' ";
 			?>>
 				<td>
-					<label><?php echo LangUtil::$generalTerms['R_DATE']; ?> <?php if($_SESSION['rdate'] == 2) $this->getAsterisk(); ?></label>
+					<?php echo LangUtil::$generalTerms['R_DATE']; ?> <?php if($_SESSION['rdate'] == 2) $this->getAsterisk(); ?>
 				</td>
-				<td>  </td>
+				
 				<td>
-					<?php
-					$today = date("Y-m-d");
-					$today_array = explode("-", $today);
-					$name_list = array("receipt_yyyy", "receipt_mm", "receipt_dd");
-					$id_list = array($form_id."_receipt_yyyy", $form_id."_receipt_mm", $form_id."_receipt_dd");
-					$value_list = array($today_array[0], $today_array[1], $today_array[2]);
-					$this->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-				</td>
-			</tr>
-			<tr valign='top' style='display:none;'>
-				<td>
-					<label><?php echo LangUtil::$generalTerms['C_DATE']; ?></label>
-				</td>
-				<td>  </td>
-				<td>
-					<?php
-					$today = date("Y-m-d");
-					$today_array = explode("-", $today);
-					$name_list = array("collect_yyyy", "collect_mm", "collect_dd");
-					$id_list = array($form_id."_collect_yyyy", $form_id."_collect_mm", $form_id."_collect_dd");
-					$value_list = array($today_array[0], $today_array[1], $today_array[2]);
-					$this->getDatePicker($name_list, $id_list, $value_list, false);
-					?>
-				</td>
-			</tr>
-			<tr valign='top' style='display:none;'>
-				<td>
-					<label><?php echo LangUtil::$generalTerms['C_TIME']; ?></label>
-				</td>
-				<td>
-					<select name='ctime_hh' autocomplete="OFF">
-					<?php
-					$time = date("H:i");
-					$time_parts = explode(":", $time);
-					for($i = 0; $i < 24; $i++)
-					{
-						if($i < 10)
-							$option = '0'.$i;
-						else
-							$option = $i;
-						echo "<option value='$option' ";
-						if($option == $time_parts[0])
-						//if($option == 9)
-							echo "selected ";
-						echo ">$option</option>";
-						
-						
-					}
-					?>
-					</select>
-					:
-					<select name='ctime_mm' autocomplete="OFF">
-					<?php
-					for($i = 0; $i < 60; $i++)
-					{
-						if($i < 10)
-							$option = '0'.$i;
-						else
-							$option = $i;
-						echo "<option value='$option' ";
-						if($option == $time_parts[1])
-						//if($option == "00")
-							echo "selected ";
-						echo ">$option</option>";
-					}
-					?>
-					</select>
-					&nbsp;&nbsp;hrs
+					<div class="input-append date date-picker" data-date="<?php echo date("d/m/Y"); ?>" data-date-format="dd/mm/yyyy"> 
+					<input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="<?php echo date("d/m/Y"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
 				</td>
 			</tr>
 			<tr valign='top'<?php
@@ -4025,8 +3955,9 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				echo " style='display:none;' ";
 			?>>
 				<td>
-					<label for='comments' valign='top'><?php echo LangUtil::$generalTerms['COMMENTS']; ?><?php if($_SESSION['comm'] == 2) $this->getAsterisk(); ?></label>
-				</td><td>   </td>
+					<?php echo LangUtil::$generalTerms['COMMENTS']; ?><?php if($_SESSION['comm'] == 2) $this->getAsterisk(); ?>
+				</td>
+				
 				<td>
 					<textarea name="comments" id="comments" class='uniform_width'></textarea>
 				</td>

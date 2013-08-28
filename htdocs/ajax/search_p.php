@@ -263,7 +263,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				{
 					# Called from find_patient.php. Show 'profile' and 'register specimen' link
 					?>
-					<a href='#=<?php echo $patient->patientId; ?>' title='Click to add lab request'>Lab request</a>
+					<a href='javascript:load_specimen_reg(<?php echo $patient->patientId; ?>)' title='Click to add lab request'>Lab request</a>
 					</td><td>
 					<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' title='Click to View Patient Profile'><?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a>
 					<?php
