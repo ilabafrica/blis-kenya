@@ -140,19 +140,18 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 			</div>
 		</div>
 	<div class="portlet-body form">
-		<table cellspacing='0px'>
+		<table>
 		<tr valign='top'>
-		<td>
 		<div id='patient_new'>
 		<div class='pretty_box' style='width:500px'>
 		<form name="new_record" action="add_patient.php" method="post" id="new_record" class="form-horizontal" role="form">
 			<?php # Hidden field for db key ?>
 			
 			<input type='hidden' name='card_num' id='card_num' value="<?php echo get_max_patient_id()+1; ?>" ></input>
-			<table cellpadding="2" class='regn_form_table'>
+			<table cellpadding="2" class='regn_form_table' >
 			<tr>	
 			<div class="control-group" <?php if($_SESSION['pid'] == 0) echo " style='display:none;' ";?> >
-			 <td>
+			 <td width="200">
 				   <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?>
 					
 					<?php
@@ -167,7 +166,11 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 			</tr>
 			<tr>
 				<td>  Date of Registration </td>
-				<td><input type="text" id="datepicker" />	</td>			
+				<td>
+					<div class="input-append date date-picker" data-date="<?php echo date("d/m/Y"); ?>" data-date-format="dd/mm/yyyy"> 
+					<input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="<?php echo date("d/m/Y"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+					</div>
+				</td>			
 			</tr>
 			<tr <?php
 			if($_SESSION['p_addl'] == 0)
@@ -248,14 +251,11 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 						$page_elems->getAsterisk();
 					?>
 				</td>
-				<td>
-				<?php
-				$name_list = array("yyyy", "mm", "dd");
-				$id_list = $name_list;
-				$value_list = array("", "", "");
-				$page_elems->getDatePicker($name_list, $id_list, $value_list); 
-				?>
-				</td>
+				<td>                               
+                  <div class="input-append date date-picker" data-date="<?php echo date("d/m/Y"); ?>" data-date-format="dd/mm/yyyy"> 
+					<input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="<?php echo date("d/m/Y"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+					</div>
+                </td>
 			</tr>
 				
 		</form>
@@ -296,14 +296,13 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 		<!--</form>-->
 		</div>
 		<small>
-		<span style='float:right'>
+		<span style='float:left'>
 			<?php $page_elems->getAsteriskMessage(); ?>
 		</span>
 		</small>
 		</div>
 		</td>
 		<td>
-		&nbsp;&nbsp;&nbsp;
 		</td>
 		<td>
 		<div>
@@ -313,7 +312,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 				<li><?php echo LangUtil::$pageTerms['TIPS_REGN'];?></li>
 			</ul>
 			</div>
-			<br><br><br><br><br><br><br>
+			
 			<div id='patient_prompt_div'>
 			
 			</div>
@@ -326,6 +325,80 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 </div>
 <!-- END NEW PATIENT REGISTRATION -->
 
+<!-- BEGIN SPECIMEN REGISTATION -->
+<div id="specimen_reg" class='reg_subdiv' style='display:none;'>
+	<p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
+	<span class='page_title'><?php echo LangUtil::getTitle(); ?></span>
+	 | <?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
+	 | <a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+	<br>
+	<br>
+	<?php
+	# Check if Patient ID is valid
+	$patient = get_patient_by_id($pid);
+	if($patient == null)
+	{
+		?>
+		<div class='sidetip_nopos'>
+		<?php
+		echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['PATIENT_ID']." ".$pid." ".LangUtil::$generalTerms['MSG_NOTFOUND']; ?>.
+		<br><br>
+		<a href='find_patient.php'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+		</div>
+		<?php
+		
+	}
+	?>
+	<table cellpadding='5px'>
+		<tbody>
+			<tr valign='top'>
+				<td>
+					<span id='specimenboxes'>
+					<?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num); ?>
+					</span>
+					<br>
+					<a href='javascript:add_specimenbox();'><?php echo LangUtil::$pageTerms['ADD_ANOTHER_SPECIMEN']; ?> &raquo;</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<span id='sbox_progress_spinner' style='display:none;'>
+						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+					</span>
+				</td>
+				<td>
+					<div>
+						<?php echo $page_elems->getPatientInfo($pid, 400); ?>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	&nbsp;&nbsp;
+	<input type="button" name="add_sched" id="add_button" onclick="add_specimens();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<small><a href='javascript:askandback();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<div id='NEW_SPECIMEN' class='right_pane' style='display:none;margin-left:10px;'>
+		<ul>
+			<?php
+			if(LangUtil::$pageTerms['TIPS_REGISTRATION_SPECIMEN']!="-") {
+				echo "<li>";
+				echo LangUtil::$pageTerms['TIPS_REGISTRATION_SPECIMEN'];
+				echo "</li>";
+			}	
+			if(LangUtil::$pageTerms['TIPS_REGISTRATION_SPECIMEN_1']!="-") {
+				echo "<li>";
+				echo LangUtil::$pageTerms['TIPS_REGISTRATION_SPECIMEN_1'];
+				echo "</li>";
+			}	
+			?>
+		</ul>
+	</div>
+	<span id='progress_spinner' style='display:none;'>
+		<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+	</span>
+	<br>
+</div>
+<!-- END SPECIMEN REGISTRATION -->
 
 <!-- END LAB REQUESTS -->
 </div>
@@ -338,8 +411,11 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <?php
 include("includes/scripts.php");
 ?>
-<?php $script_elems->enableDatePicker();
-$script_elems->enableJQueryForm();?>
+<?php 
+$script_elems->enableDatePicker();
+$script_elems->enableJQueryForm();
+
+?>
 <script type='text/javascript'>
 $(document).ready(function() {
 	$('#psearch_progress_spinner').hide();
