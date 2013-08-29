@@ -2588,9 +2588,6 @@ class PageElems
 		}
 		?>
 		<script type='text/javascript'>
-		$(document).ready(function(){
-			$('#test_history_table').tablesorter();
-		});
 		
 		function get_report(pid,sid)
 		{
@@ -2598,7 +2595,7 @@ class PageElems
 	window.open(url_string);
 		}
 		</script>
-		<table class='tablesorter' id='test_history_table'>
+		<table class="table table-striped table-bordered dataTable" id='test_history_table'>
 			<thead>
 				<tr valign='top'>
 					<?php
@@ -3858,13 +3855,13 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 		?>
 		<div id='<?php echo $div_id; ?>'>
-		<div class='pretty_box' style='width:530px;'>
+		<div class='pretty_box' style='width:630px;'>
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<table class='regn_form_table'>
 			<tbody>
-			<tr  <?php
+			<tr <?php
 				if(is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0)
 				{
 					# Hide if daily num not in use
@@ -3872,7 +3869,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				}
 				?>
 			>
-				<td>
+				<td width="250px" >
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
 				<td>
@@ -3942,6 +3939,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				echo " style='display:none;' ";
 			?>>
 				<td>
+					<br />
 					<?php echo LangUtil::$generalTerms['R_DATE']; ?> <?php if($_SESSION['rdate'] == 2) $this->getAsterisk(); ?>
 				</td>
 				
@@ -3966,7 +3964,6 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				<td>
 					<label for='report_to' valign='top'>Report To</label>
 				</td>
-				<td>  </td>
 				<td>
 					<select name='report_to' class='uniform_width'>
 					<?php
@@ -3982,7 +3979,8 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			if($_SESSION['doctor'] == 0)
 				echo " style='display:none;' ";
 			?>>
-				<td><label for='doctor' valign='top'><?php echo LangUtil::$generalTerms['DOCTOR']; ?><?php if($_SESSION['doctor'] == 2) $this->getAsterisk(); ?></label></label>
+				<td>
+					<label for='doctor' valign='top'><?php echo LangUtil::$generalTerms['DOCTOR']; ?><?php if($_SESSION['doctor'] == 2) $this->getAsterisk(); ?></label></label>
 				</td>
 				<td>
 					<SELECT name='title' id='<?php echo $doc_row_id; ?>_title'>
@@ -4003,7 +4001,8 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 					}
 					?>
 					</SELECT>
-				</td>
+				</td>		
+				
 				<td>
 					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $doc; ?>' ></input>
 				</td>
@@ -4016,7 +4015,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				?>
 				<tr valign='top'>
 					<td><?php echo $custom_field->fieldName; ?></td>
-					<td></td>
+					
 					<td><?php $this->getCustomFormField($custom_field); ?></td>
 				</tr>
 				<?php
@@ -4030,7 +4029,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				<td>
 					<label for='ref_out' valign='top'><?php echo LangUtil::$generalTerms['REF_OUT']; ?>? <?php if($_SESSION['refout'] == 2) $this->getAsterisk(); ?></label>
 				</td>
-				<td>   </td>
+				
 				<td>
 					<INPUT TYPE=RADIO NAME="ref_out" id='<?php echo $ref_out_check_id; ?>' VALUE="Y" onchange="javascript:checkandtoggle_ref('<?php echo $ref_out_check_id; ?>', '<?php echo $ref_out_row_id; ?>');"><?php echo LangUtil::$generalTerms['YES']; ?>
 					<INPUT TYPE=RADIO NAME="ref_out" onchange="javascript:checkandtoggle_ref('<?php echo $ref_out_check_id; ?>', '<?php echo $ref_out_row_id; ?>');" VALUE="N" checked><?php echo LangUtil::$generalTerms['NO']; ?>

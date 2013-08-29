@@ -82,12 +82,13 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 		<div class="portlet-body form">
 
 			<div class="scroller" data-height="400px" data-always-visible="1">
+				<p>Search existing patients</p>
 				<form>
 				<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
 				<?php $page_elems->getPatientSearchAttribSelect(); ?>
 				</select>
 				&nbsp;&nbsp;
-				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" />
+				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)"  />
 				&nbsp;&nbsp;
 				<input class="btn green button-submit" type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
 				&nbsp;&nbsp;&nbsp;
@@ -95,8 +96,9 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 				</span>
 				</form>
-				<div id='add_anyway_div' style='display:none'>
-					<a id='add_anyway_link' href='javascript:right_load('new_patient')'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+				<br />
+				<div id='add_anyway_div' >
+					<a id='add_anyway_link' href='javascript:load_patient_reg()'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
 				</div>
 				<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
 					<ul>
@@ -150,7 +152,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 <div id="specimen_reg" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Specimen Registration</h4>
+			<h4><i class="icon-reorder"></i>Lab request form</h4>
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>
 				<a href="javascript:;" class="reload"></a>
@@ -177,13 +179,12 @@ include("includes/scripts.php");
 ?>
 <?php 
 $script_elems->enableDatePicker();
-$script_elems->enableJQueryForm();
 
 ?>
 <script type='text/javascript'>
 $(document).ready(function() {
 	$('#psearch_progress_spinner').hide();
-	$('#add_anyway_link').attr("href", "javascript:right_load('new_patient')");
+	$('#add_anyway_link').attr("href", "javascript:load_patient_reg()");
 	$('#pq').focus();
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
@@ -259,9 +260,9 @@ function continue_fetch_patients()
 				$('#add_anyway_link').attr("href", "javascript:load_patient_reg()");
 			}
 			$('#add_anyway_div').show();
-			$('#psearch_progress_spinner').hide();
 		}
 	);
+	$('#psearch_progress_spinner').hide();
 }
 
 function right_load(destn_div)
