@@ -274,10 +274,14 @@ function handleDataTable(table_id) {
 		} );
 	} );
 	$("#status").each( function ( i ) {
-		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(6) );
+		var test_status = new Array();
+		test_status[0] = "Pending";
+		test_status[1] = "Started";
+		test_status[2] = "Completed";
+		this.innerHTML = fnCreateSelect( test_status );
 		$(".chosen").chosen();
 		$('select', this).change( function () {
-			oTable.fnFilter(status , 6);
+			oTable.fnFilter($(this).val() , 6);
 		} );
 	} );
 	

@@ -380,11 +380,11 @@ if(count($resultset) == 0 || $resultset == null)
 				echo 'label-success">Completed';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
-				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
+			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to view results" class="btn blue-stripe mini">
+				<i class="icon-search"></i>View Results</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Assign Specimen to a technician" class="btn blue mini">
-				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
+			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Click to view report" class="btn green-stripe mini">
+				<i class="icon-file"></i>View Report</a>
 			</td>';
 			}else
 			if($status == Specimen::$STATUS_REFERRED){
@@ -443,7 +443,7 @@ if(count($resultset) == 0 || $resultset == null)
 			</td>';
 			}else
 			if($status == Specimen::$STATUS_PENDING_RESULTS){
-				echo 'label-warning">Pending Results';
+				echo 'label-warning">Started';
 				echo '</span></td>';
 				echo '
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
