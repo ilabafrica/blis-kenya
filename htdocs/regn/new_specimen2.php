@@ -7,6 +7,7 @@ include("redirect.php");
 require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
 require_once("includes/script_elems.php");
+require_once("includes/user_lib.php");
 $page_elems = new PageElems();
 $script_elems = new ScriptElems();
 
@@ -47,6 +48,9 @@ var data=data_string.split("%");
 $("#doc_row_1_input").autocomplete(data);
   });
   </script>
+  <script>
+	App.init(); // init the rest of plugins and elements
+</script>
 <script>
 // <!-- <![CDATA[
 specimen_count = 1;
@@ -391,6 +395,7 @@ if($patient == null)
 			</td>
 			<td>
 				<div>
+					<u><b>Patient details</b></u>
 					<?php echo $page_elems->getPatientInfo($pid, 400); ?>
 				</div>
 			</td>
@@ -399,9 +404,12 @@ if($patient == null)
 </table>
 <br>
 &nbsp;&nbsp;
-<input type="button" name="add_sched" id="add_button" onclick="add_specimens();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
+<input type="button" name="add_sched" class="btn green" id="add_button" onclick="add_specimens();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
 &nbsp;&nbsp;&nbsp;&nbsp;
-<small><a href='javascript:askandback();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+<small><a href='javascript:askandback();' class="btn red icn-only"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+<hr />
+<u><b><?php echo LangUtil::$generalTerms['CMD_THISTORY']; ?></b></u>
+<?php $page_elems->getPatientHistory($pid); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <div id='NEW_SPECIMEN' class='right_pane' style='display:none;margin-left:10px;'>
 	<ul>

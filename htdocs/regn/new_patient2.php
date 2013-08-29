@@ -4,6 +4,9 @@ require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
 $page_elems = new PageElems();
 ?>
+<script>
+	App.init(); // init the rest of plugins and elements
+</script>
 <table>
   	<tr valign='top'>
 		<div id='patient_new'>
@@ -12,7 +15,7 @@ $page_elems = new PageElems();
 			<?php # Hidden field for db key ?>
 			
 			<input type='hidden' name='card_num' id='card_num' value="<?php echo get_max_patient_id()+1; ?>" ></input>
-			<table cellpadding="2" class='regn_form_table' >
+			<table cellpadding="2" class='regn_form_table' >	
 			<tr>	
 			<div class="control-group" <?php if($_SESSION['pid'] == 0) echo " style='display:none;' ";?> >
 			 <td width="200">
@@ -164,27 +167,19 @@ $page_elems = new PageElems();
 						</span>
 					</small>
 				</td>
-				<td></td>	
+				<td>				
+				</td>	
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td>
+					<div id='patient_prompt_div'></div>
+				</td>
 			</tr>
 		</table>
 		<!--</form>-->
 		</div>
-		</div>
-		</td>
-		<td>
-		</td>
-		<td>
-		<div>
-			<div id='regn_sidetip' class='right_pane' style='display:none;margin-left:10px;'>
-			<ul>
-				<li><?php echo LangUtil::$pageTerms['TIPS_REGN_NEW'];?></li>
-				<li><?php echo LangUtil::$pageTerms['TIPS_REGN'];?></li>
-			</ul>
-			</div>
-			
-			<div id='patient_prompt_div'>
-			
-			</div>
 		</div>
 		</td>
 		</tr>
@@ -493,5 +488,4 @@ function reset_new_patient()
 {
 	$('#new_record').resetForm();
 }
-
 </script>

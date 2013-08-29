@@ -9,7 +9,6 @@ include("../includes/script_elems.php");
 LangUtil::setPageId("find_patient");
 
 $script_elems = new ScriptElems();
-//$script_elems->enableTableSorter();
 
 $saved_session = SessionUtil::save();
 $q = $_REQUEST['q'];
@@ -27,12 +26,6 @@ $uiinfo = "op=".$a."&qr=".$q;
 putUILog('search_p', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 ?>
-
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#patientListTable').tablesorter();
-	});
-</script>
 
 <?php
 if(isset($_REQUEST['l']))
@@ -120,7 +113,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 }
 # Build HTML table
 ?>
-<table class='table table-striped table-hover' id='patientListTable' name='patientListTable'>
+<table class='table table-striped table-bordered dataTable' id='patientListTable' name='patientListTable'>
 	<thead>
 		<tr valign='top'>
 			<?php
