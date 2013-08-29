@@ -17,7 +17,8 @@
 <link rel="stylesheet" type="text/css" href="assets/bootstrap-datepicker/css/datepicker.css" />
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
- <link rel="stylesheet" type="text/css" href="assets/chosen-bootstrap/chosen/chosen.css" />
+<link rel="stylesheet" type="text/css" href="assets/chosen-bootstrap/chosen/chosen.css" />
+<link rel="stylesheet" type="text/css" href="assets/bootstrap-daterangepicker/daterangepicker.css" />
 <style>
 .page-sidebar{
   /*background-color: rgb(61, 61, 61)!important;

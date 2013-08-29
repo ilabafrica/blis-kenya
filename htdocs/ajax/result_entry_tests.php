@@ -9,6 +9,8 @@ LangUtil::setPageId("results_entry");
 
 $attrib_value = $_REQUEST['a'];
 $attrib_type = $_REQUEST['t'];
+$date_from = $_REQUEST['df'];
+$date_to = $_REQUEST['dt'];
 $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
@@ -159,7 +161,7 @@ else
 						LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-						LIMIT 2000";
+						WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";
     }
     elseif($attrib_type == 11)
     {
@@ -184,32 +186,7 @@ if($attrib_type == 12)
 } else 
 	$resultset = query_associative_all($query_string, $row_count);
 
-if(count($resultset) == 0 || $resultset == null)
-{
-	?>
-	<div class='sidetip_nopos'>
-	<?php 
-	if($attrib_type == 0)
-		echo " ".LangUtil::$generalTerms['PATIENT_ID']." ";
-	else if($attrib_type == 1)
-		echo " ".LangUtil::$generalTerms['PATIENT_NAME']." ";
-	else if($attrib_type == 3)
-		echo " ".LangUtil::$generalTerms['PATIENT_DAILYNUM']." ";
-        if($attrib_type == 9)
-        {
-            echo LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
-            echo '<br>'.'Try searching by patient name';
-        }
-        else
-        {
-	echo "<b>".$attrib_value."</b>";
-	echo " - ".LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
-        }
-	?>
-	</div>
-	<?php
-	return;
-}
+
 // $specimen_id_list = array();
 // foreach($resultset as $record)
 // {
@@ -219,10 +196,49 @@ if(count($resultset) == 0 || $resultset == null)
 //$specimen_id_list = array_values(array_unique($specimen_id_list));
 ?>
 <div class="row-fluid">
-<div class="span3">Lab Section: <span id="section"></span> </div>
-<div class="span3">Status: <span id="status"></span> </div>
-<div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
-<div class="span3">Test Type: <span id="test_type"></span> </div>
+	<div class="span3">Lab Section: <span id="section"></span> </div>
+	<div class="span3">Status: <span id="status"></span> </div>
+	<div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
+	<div class="span3">Test Type: <span id="test_type"></span> </div>
+</div>
+<div class="clearfix"><br></div>
+<div class="row-fluid">
+	<div class="span4">Date: <br>
+		<div id="form-date-range" class="btn date-range">
+			<i class="icon-calendar"></i> &nbsp;<span></span> 
+			<b class="caret"></b>
+		</div>
+	</div>
+	<br>
+	<div class="span3 alert alert-info">
+		
+		<div class='sidetip_nopos'>
+		<?php 
+		$no_of_records = count($resultset);
+		if($no_of_records == 0 || $resultset == null)
+		{
+		
+		if($attrib_type == 0)
+			echo " ".LangUtil::$generalTerms['PATIENT_ID']." ";
+		else if($attrib_type == 1)
+			echo " ".LangUtil::$generalTerms['PATIENT_NAME']." ";
+		else if($attrib_type == 3)
+			echo " ".LangUtil::$generalTerms['PATIENT_DAILYNUM']." ";
+	   	if($attrib_type == 9)
+	    {
+	       echo LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
+	       echo '<br>'.'Try searching by patient name';
+	    }
+	    else
+	    {
+			echo LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
+	    }
+	    
+	    }
+	    else echo $no_of_records." records found.";
+		?> 
+		</div></div>
+	</div>
 </div>
 <div class="clearfix"><br></div>
 <table class="table table-striped table-condensed" id="<?php echo $attrib_type; ?>">
@@ -238,7 +254,7 @@ if(count($resultset) == 0 || $resultset == null)
 			if($_SESSION['dnum'] != 0)
 			{
 			?>
-				<th style='width:100px;'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></th>
+				<th style='width:100px;'><?php echo "Lab. No;" ?></th>
 			<?php
 			}
 			if($_SESSION['p_addl'] != 0)

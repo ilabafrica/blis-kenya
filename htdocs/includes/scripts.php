@@ -333,5 +333,79 @@ function handleDataTable(table_id) {
 		});
 		
 		</SCRIPT>
+<script>
+function enableAdvancedDatePicker(date_from, date_to){
+	$('#form-date-range').daterangepicker({
+	    ranges: {
+	        'Today': ['today', 'today'],
+	        'Yesterday': ['yesterday', 'yesterday'],
+	        'Last 7 Days': [Date.today().add({
+	            days: -6
+	        }), 'today'],
+	        'Last 30 Days': [Date.today().add({
+	            days: -29
+	        }), 'today'],
+	        'This Month': [Date.today().moveToFirstDayOfMonth(), Date.today().moveToLastDayOfMonth()],
+	        'Last Month': [Date.today().moveToFirstDayOfMonth().add({
+	            months: -1
+	        }), Date.today().moveToFirstDayOfMonth().add({
+	            days: -1
+	        })]
+	    },
+	    opens: 'right',
+	    format: 'MM/dd/yyyy',
+	    separator: ' to ',
+	    startDate: Date.today().add({
+	        days: -29
+	    }),
+	    endDate: Date.today(),
+	    minDate: '01/01/2011',
+	    maxDate: '12/31/2014',
+	    locale: {
+	        applyLabel: 'Submit',
+	        fromLabel: 'From',
+	        toLabel: 'To',
+	        customRangeLabel: 'Custom Range',
+	        daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+	        monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+	        firstDay: 1
+	    },
+	    showWeekNumbers: true,
+	    buttonClasses: ['btn-danger']
+	},
 	
+	function (start, end) {
+	    $('#form-date-range span').html(start.toString('MMMM d, yyyy') + ' - ' + end.toString('MMMM d, yyyy'));
+	});
+	
+	$('#form-date-range span').html(Date.today().add({
+	    days: -6
+	}).toString('MMMM d, yyyy') + ' - ' + Date.today().toString('MMMM d, yyyy'));	
+
+	if(date_from!=null && date_to!=null){
+		nd_f = new Date(Date.parse(date_from));
+   		nd_t = new Date(Date.parse(date_to));
+
+   		$('#form-date-range span').html(nd_f.toString('MMMM d, yyyy') + ' - ' + nd_t.toString('MMMM d, yyyy'));
+
+	}
+	
+	
+	
+	$('#form-date-range span').bind('DOMSubtreeModified', function(event) {
+	   		var html =  this.innerHTML;
+	   		var dates = html.split(" - ");
+	   		date_from = dates[0];
+	   		date_to = dates[1];
+	   		nd_f = new Date(Date.parse(date_from));
+	   		nd_t = new Date(Date.parse(date_to));
+	   		ndf = nd_f.toString('yyyy-MM-dd')+' '+'00:00:00';
+	   		ndt = nd_t.toString('yyyy-MM-dd')+' '+'23:59:59';
+	        refresh_date_range(ndf,ndt);
+	    
+	});
+}
+
+
+</script>
 <!-- END JAVASCRIPTS -->
