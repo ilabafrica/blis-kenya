@@ -598,7 +598,6 @@ function fetch_pending_specimens()
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	var url = 'ajax/result_entry_tests.php';
-
 	var date_from = Date.today().add({days: -6}).toString('yyyy-MM-dd')+' '+'00:00:00';
 	var date_to = Date.today().toString('yyyy-MM-dd')+' '+'23:59:59';
 	$("#fetched_specimens_entry").load(url, 
@@ -616,7 +615,6 @@ function refresh_date_range(date_from,date_to)
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	var url = 'ajax/result_entry_tests.php';
-
 	$("#fetched_specimens_entry").load(url, 
 		{a: '', t: 10, df:date_from, dt:date_to}, 
 		function() 

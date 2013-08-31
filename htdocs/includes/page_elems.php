@@ -3869,6 +3869,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 					echo " style='display:none;' ";
 				}
 				?>
+
 				<td width="250px" >
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>

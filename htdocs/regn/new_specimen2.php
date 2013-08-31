@@ -48,7 +48,6 @@ var data=data_string.split("%");
 $("#doc_row_1_input").autocomplete(data);
   });
   </script>
-
   <script>
 	App.init(); // init the rest of plugins and elements
 </script>
@@ -396,7 +395,6 @@ if($patient == null)
 			</td>
 			<td>
 				<div>
-
 					<u><b>Patient details</b></u>
 					<?php echo $page_elems->getPatientInfo($pid, 400); ?>
 				</div>

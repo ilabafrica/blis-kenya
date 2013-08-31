@@ -4,11 +4,9 @@ require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
 $page_elems = new PageElems();
 ?>
-
 <script>
 	App.init(); // init the rest of plugins and elements
 </script>
-
 <table>
   	<tr valign='top'>
 		<div id='patient_new'>
@@ -179,7 +177,6 @@ $page_elems = new PageElems();
 				<td>
 					<div id='patient_prompt_div'></div>
 				</td>
-
 			</tr>
 		</table>
 		<!--</form>-->
