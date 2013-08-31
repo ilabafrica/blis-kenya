@@ -15,6 +15,7 @@
 <link href="assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
 <link href="assets/jqvmap/jqvmap/jqvmap.css" media="screen" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="assets/bootstrap-datepicker/css/datepicker.css" />
+<link rel="stylesheet" type="text/css" href="assets/bootstrap-timepicker/compiled/timepicker.css" />
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="assets/chosen-bootstrap/chosen/chosen.css" />

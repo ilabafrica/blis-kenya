@@ -189,6 +189,7 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
+	javascript:right_load("lab_requests");
 });
 
 function restrictCharacters(e) {

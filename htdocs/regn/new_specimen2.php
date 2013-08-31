@@ -183,43 +183,7 @@ function add_specimens()
 			alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['MSG_SID_INVALID']; ?>");
 			return;
 		}
-		var ry = $("#"+form_id+" [name='receipt_yyyy']").val();
-		ry = ry.replace(/[^0-9]/gi,'');
-		var rm = $("#"+form_id+" [name='receipt_mm']").val();
-		rm = rm.replace(/[^0-9]/gi,'');
-		var rd = $("#"+form_id+" [name='receipt_dd']").val();
-		rd = rd.replace(/[^0-9]/gi,'');
-		var cy = $("#"+form_id+" [name='collect_yyyy']").val();
-		cy = cy.replace(/[^0-9]/gi,'');
-		var cm = $("#"+form_id+" [name='collect_mm']").val();
-		cm = cm.replace(/[^0-9]/gi,'');
-		var cd = $("#"+form_id+" [name='collect_dd']").val();
-		cd = cd.replace(/[^0-9]/gi,'');
-		var ch = $("#"+form_id+" [name='ctime_hh']").val();
-		ch = ch.replace(/[^0-9]/gi,'');
-		var cmm = $("#"+form_id+" [name='ctime_mm']").val();
-		cmm = cmm.replace(/[^0-9]/gi,'');
-		if(checkDate(ry, rm, rd) == false)
-		{
-			var answer = confirm("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['MSG_RDATE_INVALID']; ?> . Are you sure you want to continue?");
-			if (answer == false)
-				return;
-		}
-		if(cy.trim() == ""  && cm.trim() == "" && cd.trim() == "")
-		{
-			//Collection date not entered (optional field)
-			//Do nothing
-		}
-		else
-		{
-			//Collection date entered. Check date string
-			if(checkDate(cy, cm, cd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['MSG_CDATE_INVALID']; ?>");
-				return;
-			}
-		}
-		//All okay
+			//All okay
 	}
 	$('#progress_spinner').show();
 	

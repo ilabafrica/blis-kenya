@@ -13,10 +13,7 @@ $addl_id = $_REQUEST['addl_id'];
 $name = ucwords(strtolower($_REQUEST['name']));
 $age = $_REQUEST['age'];
 $age_param = $_REQUEST['agep'];
-$receipt_yyyy = $_REQUEST['receipt_yyyy'];
-$receipt_mm = $_REQUEST['receipt_mm'];
-$receipt_dd = $_REQUEST['receipt_dd'];
-$date_receipt=trim($_REQUEST['receipt_yyyy'])."-".trim($_REQUEST['receipt_mm'])."-".trim($_REQUEST['receipt_dd'])." 00:00:00";//mktime(0, 0, 0, $receipt_mm, $receipt_dd, $receipt_yyyy);
+$date_receipt=$_REQUEST['patient_reg_date'];
 $pid = $_REQUEST['pid']; # Surrogate key
 # Check partial DOB flags
 $dob = "";
@@ -25,7 +22,7 @@ $partial_dob = "";
 $uiinfo = "agep=".$age_param;
 putUILog('patient_add', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
-if(trim($_REQUEST['yyyy']) == "" && trim($_REQUEST['mm']) == "" && trim($_REQUEST['dd']) == "")
+if(trim($_REQUEST['patient_birth_date']) == "")
 {
 	# Only age specified
 	# Set year in partial_dob field to auto-update age value in the future
@@ -98,6 +95,7 @@ if(trim($_REQUEST['yyyy']) == "" && trim($_REQUEST['mm']) == "" && trim($_REQUES
 	if($age_param != 5)
 		$age = 0;
 }
+/*
 else if($_REQUEST['pd_ym'] == 1)
 {
 	# Partial DOB with year-month only
@@ -116,6 +114,8 @@ else
 	$dob = trim($_REQUEST['yyyy'])."-".trim($_REQUEST['mm'])."-".trim($_REQUEST['dd']);
 	$partial_dob = "";
 }
+*/
+$dob = trim($_REQUEST['patient_birth_date']);
 if($age == "")
 	$age = 0;
 $sex = $_REQUEST['sex'];
