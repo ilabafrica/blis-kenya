@@ -1152,6 +1152,7 @@ class TestType
 	public $hidePatientName;
 	public $prevalenceThreshold;
 	public $targetTat;
+	public $test_name;
 	
 	public static function getObject($record)
 	{
@@ -1175,6 +1176,12 @@ class TestType
 		{
 			$test_type->isPanel = false;
 		}
+		
+		if(isset($record['test_name']))
+			$test_type->test_name = $record['test_name'];
+		else
+			$test_type->test_name = null;
+		
 		return $test_type;
 	}
 	
@@ -1188,6 +1195,19 @@ class TestType
 		else
 		{
 			return $this->name;
+		}
+	}
+	
+	public function getTestName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getTestName($this->test_name);
+		}
+		else
+		{
+			return $this->test_name;
 		}
 	}
 	
@@ -1327,6 +1347,7 @@ class SpecimenType
 	public $specimenTypeId;
 	public $name;
 	public $description;
+	public $specimen_name;
 	
 	public static function getObject($record)
 	{
@@ -1349,6 +1370,11 @@ class SpecimenType
 			$specimen_type->description = $record['description'];
 		else
 			$specimen_type->description = null;
+		
+		if(isset($record['specimen_name']))
+			$specimen_type->specimen_name = $record['specimen_name'];
+		else
+			$specimen_type->specimen_name = null;
 			
 		return $specimen_type;
 	}
@@ -1358,11 +1384,24 @@ class SpecimenType
 		global $CATALOG_TRANSLATION;
 		if($CATALOG_TRANSLATION === true)
 		{
-			return LangUtil::getSpecimenName($this->specimenTypeId);
+			return LangUtil::getSpecimenName($this->name);
 		}
 		else
 		{
 			return $this->name;
+		}
+	}
+	
+	public function getSpecimenName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getSpecimenName($this->specimen_name);
+		}
+		else
+		{
+			return $this->specimen_name;
 		}
 	}
 	
@@ -1428,6 +1467,7 @@ class TestCategory
 	public $testCategoryId;
 	public $name;
 	public $description;
+	public $category_name;
 	
 	public static function getObject($record)
 	{
@@ -1450,6 +1490,11 @@ class TestCategory
 			$test_category->description = $record['description'];
 		else
 			$test_category->description = null;
+		
+		if(isset($record['category_name']))
+			$test_category->category_name = $record['category_name'];
+		else
+			$test_category->category_name = null;
 			
 		return $test_category;
 	}
@@ -1464,6 +1509,19 @@ class TestCategory
 		else
 		{
 			return $this->name;
+		}
+	}
+	
+	public function getCategoryName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return $this->category_name;
+		}
+		else
+		{
+			return $this->category_name;
 		}
 	}
 	
@@ -1508,6 +1566,25 @@ class TestCategory
 			"UPDATE test_category SET disabled=1 WHERE test_category_id=$test_category_id";
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
+	}
+	
+	public static function geAllTestCategories($lab_config_id)
+	{
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+		$query_string =
+		"SELECT test_category_id, name FROM test_category";
+	
+		$retval = array();
+		$section_details =  array();
+		$resultset = query_associative_all($query_string, $row_count);
+		foreach($resultset as $record)
+		{
+			$section_details['test_category_id'] = $record['test_category_id'];
+			$section_details['name'] = $record['name'];
+			array_push($retval, $section_details);
+		}
+		DbUtil::switchRestore($saved_db);
+		return $retval;
 	}
 }
 
@@ -1961,6 +2038,7 @@ class Patient
 	public $createdBy; # user ID who registered this patient
 	public $hashValue; # hash value for this patient (based on name, dob, sex)
 	public $regDate;
+	public $patient_name;
 	public static function getObject($record)
 	{
 		# Converts a patient record in DB into a Patient object
@@ -1993,6 +2071,10 @@ class Patient
 			$patient->hashValue = $record['hash_value'];
 		else
 			$patient->hashValue = null;
+		if(isset($record['patient_name']))
+			$patient->patient_name = $record['patient_name'];
+		else
+			$patient->patient_name = null;
 		return $patient;
 	}
 	
@@ -2016,6 +2098,14 @@ class Patient
 			return " - ";
 		else
 			return $this->name;
+	}
+	
+	public function getPatientName()
+	{
+		if(trim($this->patient_name) == "")
+			return " - ";
+		else
+			return $this->patient_name;
 	}
 	
 	public function getAddlId()
@@ -2361,7 +2451,7 @@ class Specimen
 	public static $STATUS_TOVERIFY = 3;
 	public static $STATUS_REPORTED = 4;
 	public static $STATUS_RETURNED = 5;
-	
+	public static $STATUS_REJECTED = 6;
 	public static $STATUS_PENDING_RESULTS = 7;
 
 	public static function getObject($record)
@@ -2646,6 +2736,7 @@ class Test
 	public $dateVerified;
 	public $timestamp;
 	public $ts;
+	public $status;
 	
 	public static function getObject($record)
 	{
@@ -2709,7 +2800,16 @@ class Test
 		else
 			$test->test_category = null;
 		
+		if(isset($record['status']))
+			$test->status = $record['status'];
+		else
+			$test->status = null;
+		
 		return $test;
+	}
+	public function getStatusCode()
+	{
+	return $this->status;
 	}
 	
 	public static function getById($test_id)

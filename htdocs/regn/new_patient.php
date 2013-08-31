@@ -13,7 +13,6 @@ $page_start = $load_time;
 include("includes/header.php");
 LangUtil::setPageId("new_patient");*/
  
-$script_elems->enableDatePicker();
 $script_elems->enableJQueryForm();
 $script_elems->enableFacebox();
 

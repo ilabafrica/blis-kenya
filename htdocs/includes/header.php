@@ -319,7 +319,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					switch($page_value[0]){
 					case 'find_patient':
 						echo "<ul class='sub'>".
-							"<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Lab Test Requests' 
+							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
 									class='' id='patient_lookup_menu'>
 									<i class='icon-table'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
@@ -338,23 +338,9 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 									"<li>
 										<a href='javascript:right_load(".$quote."pending_tests".$quote.");' title='Lab Test Requests'
 										class='' id='specimen_results_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;"
-										.LangUtil::$allTerms['MENU_PENDING_TESTS'].
-										"</a>
-									</li>
-									<li>
-										<a href='javascript:right_load(".$quote."pending_results".$quote.");' title='Pending Results'
-										class='' id='patient_lookup_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;"
-										.LangUtil::$allTerms['MENU_PENDING_RESULTS'].
-										"</a>
-									</li>
-									<li>
-										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Verify Results'
-										class='' id='new_patient_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;"
-										.LangUtil::$allTerms['MENU_VERIFYRESULTS'].
-										"</a>
+										<i class='icon-table'></i>&nbsp;&nbsp;
+										Tests
+										</a>
 									</li>
 									<li>
 										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Quality Controls'

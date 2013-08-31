@@ -9,7 +9,6 @@ include("../includes/script_elems.php");
 LangUtil::setPageId("find_patient");
 
 $script_elems = new ScriptElems();
-//$script_elems->enableTableSorter();
 
 $saved_session = SessionUtil::save();
 $q = $_REQUEST['q'];
@@ -27,12 +26,6 @@ $uiinfo = "op=".$a."&qr=".$q;
 putUILog('search_p', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 ?>
-
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#patientListTable').tablesorter();
-	});
-</script>
 
 <?php
 if(isset($_REQUEST['l']))
@@ -120,7 +113,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 }
 # Build HTML table
 ?>
-<table class='table table-striped table-hover' id='patientListTable' name='patientListTable'>
+<table class='table table-striped table-bordered dataTable' id='patientListTable' name='patientListTable'>
 	<thead>
 		<tr valign='top'>
 			<?php
@@ -263,7 +256,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				{
 					# Called from find_patient.php. Show 'profile' and 'register specimen' link
 					?>
-					<a href='new_specimen.php?pid=<?php echo $patient->patientId; ?>' title='Click to Register New Specimen for this Patient'><?php echo LangUtil::$pageTerms['CMD_REGISTERSPECIMEN']; ?></a>
+					<a href='javascript:load_specimen_reg(<?php echo $patient->patientId; ?>)' title='Click to add lab request'>Lab request</a>
 					</td><td>
 					<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' title='Click to View Patient Profile'><?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a>
 					<?php

@@ -20,7 +20,7 @@ foreach($resultset as $record)
 	$patient_list[] = Patient::getObject($record);
 }
 ?>
-<table class='hor-minimalist-c' style='width:450px;'>
+<table class='class="table table-striped table-hover"' style='width:450px;'>
 	<thead>
 		<tr valign='top'>
 			<th>
