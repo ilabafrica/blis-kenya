@@ -337,7 +337,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 										<a href='javascript:right_load(".$quote."pending_tests".$quote.");' title='Lab Test Requests'
 										class='' id='specimen_results_menu'>
 										<i class='icon-table'></i>&nbsp;&nbsp;
-										Tests
+										Test Queue
 										</a>
 									</li>
 									<li>

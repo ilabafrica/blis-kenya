@@ -557,7 +557,14 @@ function hide_worksheet_link()
 	document.getElementById("worksheet_link").innerHTML = "";
 }
 
-function hide_result_form(specimen_id)
+function hide_test_result_form(test_id)
+{
+	var target_div_id = "result_form_pane_"+test_id;
+	$("#"+target_div_id).modal('hide');
+	
+}
+
+function hide_result_form(test_id)
 {
 	var target_div_id = "result_form_pane_"+specimen_id;
 	$("#"+target_div_id).html("");
@@ -660,20 +667,26 @@ function fetch_verify_results()
 		}
 	);
 }
-function start_test(specimen_id)
+function start_test(test_id)
 {
-	$('#'+specimen_id).show();
 	var r=confirm("Start test?");
 	if (r==true)
    	{
-   		//Mark test as cancelled
-  		var url = 'ajax/result_entry_patient_dyn.php';
-		$("#fetched_pending_results_entry").load(url, 
-		{a: specimen_id, t: 12}, 
-		function() 
+		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+		App.blockUI(el);
+		//Mark test as cancelled
+  		var url = 'ajax/result_entry_tests.php';
+  		$.post(url, 
+		{a: test_id, t: 12}, 
+		function(result) 
 		{
-			$('#fetch_progress_bar').hide();
-			$('#'+specimen_id).hide();	
+			$('#span'+test_id).removeClass('label-important');
+			$('#span'+test_id).addClass('label-warning');
+			$('#span'+test_id).html('Started');
+			actions = result.split('%');
+			$('#actionA'+test_id).html(actions[0]);
+			$('#actionB'+test_id).html(actions[1]);
+			App.unblockUI(el);
 		}
 	);
 		
@@ -682,6 +695,30 @@ function start_test(specimen_id)
   	{
   		//Cancel Starting test
   	}
+}
+
+function fetch_test_result_form(test_id)
+{
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var pg=2;
+	$('#fetch_progress_bar').show();
+	var url = 'ajax/result_form_fetch.php';
+	//var target_div = "fetch_specimen";
+	$('.result_form_pane').html("");
+	var target_div = "result_form_pane_"+test_id;
+	$("#"+target_div).load(url, 
+		{tid: test_id , page_id:pg}, 
+		function() 
+		{
+			$('#'+target_div).modal('show'); 
+			App.unblockUI(el);
+		}
+	);
+}
+function remove(test_id){
+	var target_div = "result_form_pane_"+test_id;
+	$('#'+target_div).modal('hide'); 
 }
 
 function fetch_specimen2(specimen_id)
@@ -737,29 +774,31 @@ function toggle_form(form_id, checkbox_obj)
 
 function submit_forms(specimen_id)
 {
-	var form_id_csv = $('#form_id_list').val();
-	var form_id_list = form_id_csv.split(",");
-	$('.result_cancel_link').hide();
-	$('.result_progress_spinner').show();
-	//var target_div_id = "fetched_specimen";
-	var target_div_id = "result_form_pane_"+specimen_id;
-	for(var i = 0; i < form_id_list.length; i++)
-	{
-		if($('#'+form_id_list[i]+'_skip').is(':checked'))
-		{
-			continue;
-		}
-		var params = $('#'+form_id_list[i]).formSerialize();
-			$.ajax({
-			type: "POST",
-			url: "ajax/result_add.php",
-			data: params,
-			success: function(msg) {
-				$("#"+target_div_id).html(msg);
-			}
-		});
-	}
-	$('.result_progress_spinner').hide();
+	$('#tester').val();
+	alert("started here."+specimen_id+$('#tester').val());
+// 	var form_id_csv = $('#form_id_list').val();
+// 	var form_id_list = form_id_csv.split(",");
+// 	$('.result_cancel_link').hide();
+// 	$('.result_progress_spinner').show();
+// 	//var target_div_id = "fetched_specimen";
+// 	var target_div_id = "result_form_pane_"+specimen_id;
+// 	for(var i = 0; i < form_id_list.length; i++)
+// 	{
+// 		if($('#'+form_id_list[i]+'_skip').is(':checked'))
+// 		{
+// 			continue;
+// 		}
+// 		var params = $('#'+form_id_list[i]).formSerialize();
+// 			$.ajax({
+// 			type: "POST",
+// 			url: "ajax/result_add.php",
+// 			data: params,
+// 			success: function(msg) {
+// 				$("#"+target_div_id).html(msg);
+// 			}
+// 		});
+// 	}
+// 	$('.result_progress_spinner').hide();
 }
 
 function get_batch_form()

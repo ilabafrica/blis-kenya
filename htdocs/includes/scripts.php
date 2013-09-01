@@ -60,6 +60,8 @@
 			<script type="text/javascript" src="assets/data-tables/jquery.dataTables.js"></script>
 			<script type="text/javascript" src="assets/data-tables/DT_bootstrap.js"></script>
 			<script type="text/javascript" src="assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
+			<script src="assets/bootstrap/js/bootstrap-modalmanager.js"></script>
+			<script src="assets/bootstrap/js/bootstrap-modal.js"></script>
 			<script src="assets/js/app.js"></script>				
 			<script>
 				jQuery(document).ready(function() {		
@@ -387,7 +389,6 @@ function enableAdvancedDatePicker(date_from, date_to){
    		nd_t = new Date(Date.parse(date_to));
 
    		$('#form-date-range span').html(nd_f.toString('MMMM d, yyyy') + ' - ' + nd_t.toString('MMMM d, yyyy'));
-
 	}
 	
 	

@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="assets/chosen-bootstrap/chosen/chosen.css" />
 <link rel="stylesheet" type="text/css" href="assets/bootstrap-daterangepicker/daterangepicker.css" />
+<link href="assets/bootstrap/css/bootstrap-modal.css" rel="stylesheet" />
 <style>
 .page-sidebar{
   /*background-color: rgb(61, 61, 61)!important;
