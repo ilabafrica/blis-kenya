@@ -325,9 +325,11 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
 								"</a>
 							</li>
-							<li><a href='javascript:right_load(".$quote."patient_lookup".$quote.");' title='Sample collection' 
+							<li><a href='javascript:right_load(".$quote."sample_collection".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;Sample collection</a>
+									<i class='icon-table'></i>&nbsp;&nbsp;"
+									.LangUtil::$allTerms['MENU_SPECIMEN_REGISTRATION'].
+								"</a>
 							</li>
 						</ul>";
 					break;

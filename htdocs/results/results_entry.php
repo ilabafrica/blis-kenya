@@ -622,7 +622,6 @@ function refresh_date_range(date_from,date_to)
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	var url = 'ajax/result_entry_tests.php';
-	
 	$("#fetched_specimens_entry").load(url, 
 		{a: '', t: 10, df:date_from, dt:date_to}, 
 		function() 

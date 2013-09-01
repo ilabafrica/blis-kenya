@@ -3861,14 +3861,15 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<table class='regn_form_table'>
 			<tbody>
-			<tr <?php
+
+			<tr valign='top' <?php
 				if(is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0)
 				{
 					# Hide if daily num not in use
 					echo " style='display:none;' ";
 				}
 				?>
-			>
+				>
 				<td width="250px" >
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
@@ -3939,13 +3940,25 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				echo " style='display:none;' ";
 			?>>
 				<td>
+
 					<br />
 					<?php echo LangUtil::$generalTerms['R_DATE']; ?> <?php if($_SESSION['rdate'] == 2) $this->getAsterisk(); ?>
 				</td>
 				
 				<td>
-					<div class="input-append date date-picker" data-date="<?php echo date("d/m/Y"); ?>" data-date-format="dd/mm/yyyy"> 
-					<input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="<?php echo date("d/m/Y"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+					<div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
+					<input class="m-wrap m-ctrl-medium" size="16" name="spec_date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Lab receipt time <?php $this->getAsterisk(); ?>
+				</td>
+				<td>
+					<div class="input-append bootstrap-timepicker-component">
+                                    <input class="m-wrap m-ctrl-small timepicker-24" name="spec_time" type="text" placeholder="24hr time">
+                                    <span class="add-on"><i class="icon-time"></i></span>
+                     </div>
 				</td>
 			</tr>
 			<tr valign='top'<?php

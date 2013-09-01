@@ -2,7 +2,17 @@
 include("redirect.php");
 require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
+require_once("includes/script_elems.php");
+require_once("includes/user_lib.php");
 $page_elems = new PageElems();
+$script_elems = new ScriptElems();
+
+LangUtil::setPageId("new_patient");
+
+$script_elems->enableDatePicker();
+$script_elems->enableLatencyRecord();
+$script_elems->enableJQueryForm();
+$script_elems->enableAutocomplete();
 ?>
 <script>
 	App.init(); // init the rest of plugins and elements
@@ -16,6 +26,7 @@ $page_elems = new PageElems();
 			
 			<input type='hidden' name='card_num' id='card_num' value="<?php echo get_max_patient_id()+1; ?>" ></input>
 			<table cellpadding="2" class='regn_form_table' >	
+
 			<tr>	
 			<div class="control-group" <?php if($_SESSION['pid'] == 0) echo " style='display:none;' ";?> >
 			 <td width="200">
@@ -34,8 +45,8 @@ $page_elems = new PageElems();
 			<tr>
 				<td>  Date of Registration </td>
 				<td>
-					<div class="input-append date date-picker" data-date="<?php echo date("d/m/Y"); ?>" data-date-format="dd/mm/yyyy"> 
-					<input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="<?php echo date("d/m/Y"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+					<div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
+					<input class="m-wrap m-ctrl-medium" size="16" name="patient_reg_date" id="patient_regist_date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
 					</div>
 				</td>			
 			</tr>
@@ -77,9 +88,18 @@ $page_elems = new PageElems();
 			?>>
 				<td><?php echo LangUtil::$generalTerms['GENDER']; ?><?php $page_elems->getAsterisk();?> </td>
 				<td>
-					<INPUT TYPE=RADIO NAME="sex" id="sex" VALUE="M" checked> <?php echo LangUtil::$generalTerms['MALE']; ?>
-					&nbsp;
-					<INPUT TYPE=RADIO NAME="sex" VALUE="F"><?php echo LangUtil::$generalTerms['FEMALE']; ?>
+					<div class="controls">
+						<label class="radio">
+							<span><input type="radio"  name="sex" value="M" checked> <?php echo LangUtil::$generalTerms['MALE']; ?></span>
+							</label>
+					</div>
+					<div class="controls">
+						<label class="radio">
+							<span>
+								<input type="radio" name="sex" value="F"><?php echo LangUtil::$generalTerms['FEMALE']; ?>
+							</span>
+						</label>
+					</div>
 				<br>
 					
 				</td>
@@ -93,9 +113,9 @@ $page_elems = new PageElems();
 					if($_SESSION['age'] == 2)
 						$page_elems->getAsterisk();
 					?>
+					<!-- <font style='color:red'><?php echo LangUtil::$pageTerms['TIPS_DOB_AGE'];?></font> -->
 				</td>
 				<td>
-				<font style='color:red'><?php echo LangUtil::$pageTerms['TIPS_DOB_AGE'];?></font>
 					<input type="text" name="age" id="age" value="" size="4" maxlength="10" class='uniform_width' />
 					
 					<select name='age_param' id='age_param'>
@@ -120,8 +140,8 @@ $page_elems = new PageElems();
 					?>
 				</td>
 				<td>                               
-                  <div class="input-append date date-picker" data-date="<?php echo date("d/m/Y"); ?>" data-date-format="dd/mm/yyyy"> 
-					<input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="<?php echo date("d/m/Y"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+                  <div class="input-append date date-picker" data-date="" data-date-format="yyyy-mm-dd"> 
+					<input class="m-wrap m-ctrl-medium" size="16" name="patient_birth_date" id="patient_b_day" type="text" value=""><span class="add-on"><i class="icon-calendar"></i></span>
 					</div>
                 </td>
 			</tr>
@@ -236,38 +256,27 @@ function add_patient()
 	var addl_id = $("#addl_id").val();
 	var name = $("#name").val();
 	name = name.replace(/[^a-z ]/gi,'');
-	var yyyy = $("#yyyy").val();
-	yyyy = yyyy.replace(/[^0-9]/gi,'');
-	var mm = $("#mm").val();
-	mm = mm.replace(/[^0-9]/gi,'');
-	var dd = $("#dd").val();
-	dd = dd.replace(/[^0-9]/gi,'');
-	var receipt_yyyy = $("#receipt_yyyy").val();
-	receipt_yyyy = receipt_yyyy.replace(/[^0-9]/gi,'');
-	var receipt_mm = $("#receipt_mm").val();
-	receipt_mm = receipt_mm.replace(/[^0-9]/gi,'');
-	var receipt_dd = $("#receipt_dd").val();
-	receipt_dd = receipt_dd.replace(/[^0-9]/gi,'');
+	var pat_reg_date = $('#patient_reg_date').val();
 	var age = $("#age").val();
 	age = age.replace(/[^0-9]/gi,'');
 	var age_param = $('#age_param').val();
 	age_param = age_param.replace(/[^0-9]/gi,'');
 	var sex = "";
 	var pid = $('#pid').val();
-	for(i = 0; i < document.new_record.sex.length; i++)
+	var radio_sex = document.getElementsByName("sex");
+	for(i = 0; i < radio_sex.length; i++)
 	{
-		if(document.new_record.sex[i].checked)
-			sex = document.new_record.sex[i].value;
+		if(radio_sex[i].checked)
+			sex = radio_sex[i].value;
 	}
 	var email = $("#email").val();
 	var phone = $("#phone").val();
 	var error_message = "";
 	var error_flag = 0;
-	var partial_dob_ym = 0;
-	var partial_dob_y = 0; 
-	for(i = 0; i < document.new_record.sex.length; i++)
+	var patient_birth_date = $('#patient_b_day').val();
+	for(i = 0; i < radio_sex.length; i++)
 	{
-		if(document.new_record.sex[i].checked)
+		if(radio_sex[i].checked)
 		{
 			error_flag = 2;
 			break;
@@ -298,45 +307,13 @@ function add_patient()
 	//Age not given
 	if(age.trim() == "")
 	{
-		//Check partial DoB
-		var currentTime = new Date();
-		if(yyyy.trim() != "" && mm.trim() != "" && dd.trim() == "")
-		{
-			dd = currentTime.getDate();
-			if(checkDate(yyyy, mm, dd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']; ?>");
-				return;
-			}
-			partial_dob_ym =  1;
-			
-		}
-		else if(yyyy.trim() != "" && mm.trim() == "" && dd.trim() == "")
-		{
-			dd = currentTime.getDate();
-			mm = currentTime.getMonth();
-			if(checkDate(yyyy, mm, dd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']; ?>");
-				return;
-			}
-			partial_dob_y =  1;
-		}
-		else if(yyyy.trim() == "" && mm.trim() == "" && dd.trim() == "")
+		
+		if(patient_birth_date.trim() == "")
 		{
 			error_message += "Please enter either Age or Date of Birth\n";//<br>";
 			error_flag = 1;
 			alert("Error: Please enter either Age or Date of Birth");
 			return;
-		}
-		else
-		{
-			//Full DoB - check
-			if(checkDate(yyyy, mm, dd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']; ?>");
-				return;
-			}
 		}
 	}
 	else if (isNaN(age))
@@ -366,7 +343,10 @@ function add_patient()
 	<?php
 	}
 	?>
-	var data_string = "card_num="+card_num+"&addl_id="+addl_id+"&name="+name+"&yyyy="+yyyy+"&mm="+mm+"&dd="+dd+"&age="+age+"&sex="+sex+"&pd_ym="+partial_dob_ym+"&pd_y="+partial_dob_y+"&agep="+age_param+"&pid="+pid+"&receipt_yyyy="+receipt_yyyy+"&receipt_mm="+receipt_mm+"&receipt_dd="+receipt_dd;
+	var data_string = "card_num="+card_num+"&addl_id="+addl_id
+	+"&name="+name+"&dob="+patient_birth_date+"&age="
+	+age+"&sex="+sex
+	+"&agep="+age_param+"&pid="+pid+"&receipt_date"+pat_reg_date;
 	if(error_flag == 0)
 	{
 		$("#progress_spinner").show();
