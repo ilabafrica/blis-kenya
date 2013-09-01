@@ -175,13 +175,18 @@ else
 	}else if($attrib_type == 12)
 	{	
 		# Update speciment to started status code
-			$query_string = "UPDATE specimen SET status_code_id = 7 where specimen_id ='$attrib_value'";
+			$query_string = "UPDATE test SET status_code_id = 7 where test_id ='$attrib_value'";
 
 	}
 }
+//RUN QUERY DEPENDING ON PARAMENTERS
 if($attrib_type == 12)
 {
 	$resultset = query_update($query_string);
+	
+	echo '<a href="javascript:fetch_test_result_form('.$quote.$attrib_value.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini"><i class="icon-ok"></i>Enter Results</a>%
+          <a href="javascript:fetch_specimen2('.$quote.$attrib_value.$quote.');" title="View test details" class="btn mini"><i class="icon-search"></i> View Details</a>';
+	return;
 
 } else 
 	$resultset = query_associative_all($query_string, $row_count);
@@ -195,13 +200,6 @@ if($attrib_type == 12)
 # Remove duplicates that might come due to multiple pending tests
 //$specimen_id_list = array_values(array_unique($specimen_id_list));
 ?>
-<div class="row-fluid">
-	<div class="span3">Lab Section: <span id="section"></span> </div>
-	<div class="span3">Status: <span id="status"></span> </div>
-	<div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
-	<div class="span3">Test Type: <span id="test_type"></span> </div>
-</div>
-<div class="clearfix"><br></div>
 <div class="row-fluid">
 	<div class="span4">Date: <br>
 		<div id="form-date-range" class="btn date-range">
@@ -229,6 +227,12 @@ if($attrib_type == 12)
 	       echo LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
 	       echo '<br>'.'Try searching by patient name';
 	    }
+	    if($attrib_type == 12)
+	    {
+	    	echo LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
+	    	echo '<br>'.'Try searching by patient name';
+	    }
+	    
 	    else
 	    {
 			echo LangUtil::$pageTerms['MSG_PENDINGNOTFOUND'];
@@ -237,9 +241,17 @@ if($attrib_type == 12)
 	    }
 	    else echo $no_of_records." records found.";
 		?> 
-		</div></div>
-	</div>
+		</div>
+		</div>
 </div>
+<div class="clearfix"></div>
+<div class="row-fluid">
+	<div class="span3">Lab Section: <span id="section"></span> </div>
+	<div class="span3">Status: <span id="status"></span> </div>
+	<div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
+	<div class="span3">Test Type: <span id="test_type"></span> </div>
+</div>
+
 <div class="clearfix"><br></div>
 <table class="table table-striped table-condensed" id="<?php echo $attrib_type; ?>">
 	<thead>
@@ -254,7 +266,7 @@ if($attrib_type == 12)
 			if($_SESSION['dnum'] != 0)
 			{
 			?>
-				<th style='width:100px;'><?php echo "Lab. No;" ?></th>
+				<th style='width:100px;'><?php echo "Lab. No"; ?></th>
 			<?php
 			}
 			if($_SESSION['p_addl'] != 0)
@@ -292,9 +304,9 @@ if($attrib_type == 12)
 			}
 			?>
 		
-			<th style='width:100px;'><?php echo "Lab Section";?></th>
+			<th style='width:100px;'><?php echo "Section";?></th>
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
-			<th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
+			<th style='width:100px;'><?php echo "Test"; ?></th>
 			<th style='width:100px;'><?php echo "Status";?></th>
 			<th style='width:100px;'></th>
 			<?php if($attrib_type==10){
@@ -379,28 +391,28 @@ if($attrib_type == 12)
 			</td>
 			<?php $status = $test->getStatusCode();
 			
-			echo '<td class="hidden-phone"><span class="label ';
+			echo '<td class="hidden-phone"><span id=span'.$test->testId.' class="label ';
 			
 			if($status == Specimen::$STATUS_PENDING){
 				echo 'label-important">Pending';
 				echo '</span></td>';
-				echo '
-			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
-				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
+				echo '<div id=action'.$test->testId.'>
+			<td id=actionA'.$test->testId.' style="width:100px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+				<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Assign Specimen to a technician" class="btn mini">
-				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
-			</td>';
+			<td id=actionB'.$test->testId.' style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$test->testId.$quote.');" title="Reject specimen" class="btn black mini">
+				<i class="icon-remove"></i>Reject Sample</a>
+			</td></div>';
 			}else
 			if($status == Specimen::$STATUS_DONE){
 				echo 'label-success">Completed';
 				echo '</span></td>';
 				echo '
 			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to view results" class="btn blue-stripe mini">
-				<i class="icon-search"></i>View Results</a>
+				<i class="icon-search"></i> View Results</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Click to view report" class="btn green-stripe mini">
-				<i class="icon-file"></i>View Report</a>
+				<i class="icon-file"></i> View Report</a>
 			</td>';
 			}else
 			if($status == Specimen::$STATUS_REFERRED){
@@ -462,11 +474,11 @@ if($attrib_type == 12)
 				echo 'label-warning">Started';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
+			<td id=action'.$test->testId.' style="width:100px;"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
 				<i class="icon-ok"></i>Enter Results</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View test details" class="btn mini">
-				<i class="icon-search"></i>View Details</a>
+				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else{
 				echo '';
@@ -475,7 +487,8 @@ if($attrib_type == 12)
 			?>
 		</tr>
 		
-		<div class='result_form_pane' id='result_form_pane_<?php echo $specimen->specimenId; ?>'>
+		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+	
 		</div>
 		<?php
 		$count++;
@@ -483,6 +496,9 @@ if($attrib_type == 12)
 	?>
 	</tbody>
 </table>
+<div class='modal hide fade' id='long' role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+	<img style="height: 800px" src="http://i.imgur.com/KwPYo.jpg">
+</div>
 <?php
 if($attrib_type == 3 && $count > 2)
 {
@@ -492,4 +508,5 @@ if($attrib_type == 3 && $count > 2)
 	<br><br>
 	<?php
 }
+
 ?>

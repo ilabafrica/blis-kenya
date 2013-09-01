@@ -2,7 +2,17 @@
 include("redirect.php");
 require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
+require_once("includes/script_elems.php");
+require_once("includes/user_lib.php");
 $page_elems = new PageElems();
+$script_elems = new ScriptElems();
+
+LangUtil::setPageId("new_patient");
+
+$script_elems->enableDatePicker();
+$script_elems->enableLatencyRecord();
+$script_elems->enableJQueryForm();
+$script_elems->enableAutocomplete();
 ?>
 <script>
 	App.init(); // init the rest of plugins and elements
@@ -36,7 +46,7 @@ $page_elems = new PageElems();
 				<td>  Date of Registration </td>
 				<td>
 					<div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
-					<input class="m-wrap m-ctrl-medium" size="16" name="patient_reg_date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+					<input class="m-wrap m-ctrl-medium" size="16" name="patient_reg_date" id="patient_regist_date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
 					</div>
 				</td>			
 			</tr>
@@ -103,9 +113,9 @@ $page_elems = new PageElems();
 					if($_SESSION['age'] == 2)
 						$page_elems->getAsterisk();
 					?>
+					<!-- <font style='color:red'><?php echo LangUtil::$pageTerms['TIPS_DOB_AGE'];?></font> -->
 				</td>
 				<td>
-				<font style='color:red'><?php echo LangUtil::$pageTerms['TIPS_DOB_AGE'];?></font>
 					<input type="text" name="age" id="age" value="" size="4" maxlength="10" class='uniform_width' />
 					
 					<select name='age_param' id='age_param'>
@@ -246,6 +256,7 @@ function add_patient()
 	var addl_id = $("#addl_id").val();
 	var name = $("#name").val();
 	name = name.replace(/[^a-z ]/gi,'');
+	var pat_reg_date = $('#patient_reg_date').val();
 	var age = $("#age").val();
 	age = age.replace(/[^0-9]/gi,'');
 	var age_param = $('#age_param').val();
@@ -335,8 +346,7 @@ function add_patient()
 	var data_string = "card_num="+card_num+"&addl_id="+addl_id
 	+"&name="+name+"&dob="+patient_birth_date+"&age="
 	+age+"&sex="+sex
-	+"&agep="+age_param+"&pid="+pid+"&receipt_yyyy="+receipt_yyyy
-	+"&receipt_mm="+receipt_mm+"&receipt_dd="+receipt_dd;
+	+"&agep="+age_param+"&pid="+pid+"&receipt_date"+pat_reg_date;
 	if(error_flag == 0)
 	{
 		$("#progress_spinner").show();

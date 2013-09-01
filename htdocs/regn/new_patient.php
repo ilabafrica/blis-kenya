@@ -12,8 +12,8 @@ $page_start = $load_time;
 /*include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("new_patient");*/
- 
 $script_elems->enableJQueryForm();
+$script_elems->enableAutocomplete();
 $script_elems->enableFacebox();
 
 $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
