@@ -256,11 +256,12 @@ function add_patient()
 	var addl_id = $("#addl_id").val();
 	var name = $("#name").val();
 	name = name.replace(/[^a-z ]/gi,'');
-	var pat_reg_date = $('#patient_reg_date').val();
+	var pat_reg_date = $('#patient_regist_date').val();
 	var age = $("#age").val();
 	age = age.replace(/[^0-9]/gi,'');
 	var age_param = $('#age_param').val();
 	age_param = age_param.replace(/[^0-9]/gi,'');
+	var patient_birth_date = $('#patient_b_day').val();
 	var sex = "";
 	var pid = $('#pid').val();
 	var radio_sex = document.getElementsByName("sex");
@@ -344,9 +345,9 @@ function add_patient()
 	}
 	?>
 	var data_string = "card_num="+card_num+"&addl_id="+addl_id
-	+"&name="+name+"&dob="+patient_birth_date+"&age="
-	+age+"&sex="+sex
-	+"&agep="+age_param+"&pid="+pid+"&receipt_date"+pat_reg_date;
+	+"&name="+name+"&dob="+patient_birth_date+"&age="+age+"&sex="+sex
+	+"&agep="+age_param+"&pid="+pid+"&receipt_date="+pat_reg_date;
+	
 	if(error_flag == 0)
 	{
 		$("#progress_spinner").show();

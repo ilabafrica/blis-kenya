@@ -334,7 +334,6 @@ function load_patient_reg()
 	$('.reg_subdiv').hide();
 	var patient_id = $.trim($('#pq').val());
 	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
-	//Load new_patient2.php via ajax
 	var url = 'regn/new_patient2.php';
 	$('#patients_registration_body').load(url, {n: patient_id});		
 	$('#patient_registration').show();
@@ -354,7 +353,6 @@ function load_specimen_rejection(specimen_id)
 {
 	$('.reg_subdiv').hide();
 	var specimen_id = specimen_id;
-	//Load new_specimen2.php via ajax
 	var url = 'regn/specimen_rejection.php';
 	$('#specimen_rejection_body').load(url, {sid: specimen_id});		
 	$('#specimen_rejection').show();
