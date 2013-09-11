@@ -26,7 +26,8 @@ class ScriptElems
 	public $enabledDragTable = false;
 	public $enabledEditInPlace = false;
 	public $enabledAutocomplete = false;
-        public $enabledJQueryMask = false;
+    public $enabledJQueryMask = false;
+    public $enabledBootstrap = false;
 	
 	public function enableJQuery()
 	{
@@ -170,6 +171,20 @@ class ScriptElems
 			<SCRIPT type="text/javascript" src="js/jquery.timePicker.js"></SCRIPT>
 		<?php
 			$this->enabledTimePicker = true;
+		}
+	}
+
+	public function enableBootstrap()
+	{
+		# Enable the jquery
+
+		if($this->enabledBootstrap === false)
+		{
+		?>
+			<!-- Bootstrap JS: compiled and minified -->
+    	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<?php
+			$this->enabledBootstrap = true;
 		}
 	}
 	

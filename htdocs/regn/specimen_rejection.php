@@ -11,7 +11,7 @@ $page_elems = new PageElems();
 $script_elems = new ScriptElems();
 
 LangUtil::setPageId("specimen_rejection");
-
+putUILog('specimen_rejection', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 $script_elems->enableLatencyRecord();
 $script_elems->enableJQueryForm();
 $script_elems->enableAutocomplete();
@@ -52,10 +52,9 @@ if ( substr($session_num,strpos($session_num, "-")+1 ) )
 	$session_num = substr($session_num,0,strpos($session_num, "-"))."-".$dnum;
 */	
 $uiinfo = "sid=".$_REQUEST['sid']."&dnum=".$_REQUEST['dnum'];
-putUILog('specimen_rejection', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 ?>
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
-<span class='page_title'><?php echo LangUtil::getTitle(); ?></span>
+<span class='page_title'><?php echo "Specimen Rejection"; ?></span>
  | <?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
  | <a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br>
