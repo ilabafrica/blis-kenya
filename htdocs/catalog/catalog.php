@@ -135,7 +135,11 @@ if(is_super_admin($user) || is_country_dir($user))
 </div>
 </div>
 <!-- END ROW-FLUID-->  
-<?php include("includes/scripts.php");?>
+<?php include("includes/scripts.php");
+require_once("includes/script_elems.php");
+$script_elems = new ScriptElems();
+$script_elems->enableDatePicker();
+?>
 <script type='text/javascript'>
 $(document).ready(function(){
 	$('div.content_div').hide();

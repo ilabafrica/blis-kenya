@@ -543,14 +543,6 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						"<li>
 							<a id='test' class='menu_option' href='javascript:test_setup();'>".LangUtil::$allTerms['Tests']." </a>
 						</li>
-						<div id='test_setup' name='test_setup' style='display:none;'>
-							-<a id='option2' class='menu_option' href='javascript:right_load(2, ".$quote."st_types_div".$quote.");'>".LangUtil::$allTerms['MENU_ST_TYPES']."</a>
-							</li><br><br>
-							-<a id='option5' class='menu_option' href='javascript:right_load(5, ".$quote."target_tat_div".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
-							</li><br><br>
-							-<a href='remarks_edit.php?id=".$_REQUEST['id']."'>".'Results Interpretation'."</a>
-							<br><br>
-						</div>
 						<li>                         
 							<a id='option21' class='menu_option' href='javascript:right_load(21, ".$quote."search_div".$quote.");'>Search</a>
 						</li>

@@ -1889,7 +1889,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-bordered table-hover'>
 			<tbody>
 				<tr>
 					<td>Facility Name</td>
@@ -4276,11 +4276,11 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		$lab_config = get_lab_config_by_id($lab_config_id);
 		$tat_list = $lab_config->getGoalTatValues();
 		?>
-		<table class='tablesorter' style='width:600px;'>
+		<table class="table table-striped table-bordered table-advance table-hover" style='width:600px;'>
 			<thead>
 				<tr valign='top'>
-					<th><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></th>
-					<th><?php echo LangUtil::$generalTerms['TAT']; ?></th>
+					<th><i class="icon-table"></i> <?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></th>
+					<th><i class="icon-time"></i> <?php echo LangUtil::$generalTerms['TAT']; ?></th>
 				</tr>
 			</thead>
 			<tbody>
