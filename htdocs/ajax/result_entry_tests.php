@@ -161,7 +161,10 @@ else
 						LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-						WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";
+                    	WHERE t.status_code_id=".Specimen::$STATUS_PENDING_RESULTS."
+                    	OR t.status_code_id=".Specimen::$STATUS_PENDING."
+                    	ORDER BY s.ts DESC LIMIT 5000 ";
+						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
     }
     elseif($attrib_type == 11)
     {
@@ -248,8 +251,8 @@ if($attrib_type == 12)
 <div class="row-fluid">
 	<div class="span3">Lab Section: <span id="section"></span> </div>
 	<div class="span3">Status: <span id="status"></span> </div>
-	<div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
-	<div class="span3">Test Type: <span id="test_type"></span> </div>
+	<!-- div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
+	<div class="span3">Test Type: <span id="test_type"></span> </div-->
 </div>
 
 <div class="clearfix"><br></div>
@@ -334,7 +337,7 @@ if($attrib_type == 12)
 			# Fetching by patient daily number. Hide all records except the latest one
 			echo " class='old_pnum_records' style='display:none' ";
 		}
-		?> id="<?php echo $specimen->specimenId; ?>">
+		?> id="<?php echo $test->testId; ?>">
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
@@ -487,7 +490,7 @@ if($attrib_type == 12)
 			?>
 		</tr>
 		
-		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true" data-backdrop="static">
 	
 		</div>
 		<?php

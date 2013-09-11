@@ -86,6 +86,15 @@
 		</center>
 	</div>
 	<!-- END FOOTER -->
+	<div id="cancel" class="modal hide fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	  <div class="modal-body">
+	    <p>Are you sure you want to cancel? Unsaved changes will be lost</p>
+	  </div>
+	  <div class="modal-footer">
+	    <button type="button" data-dismiss="modal" class="btn" onclick='javascript:cancel_hide()'>No</button>
+	    <span id="yes"> </span>
+	  </div>
+	</div>
 </body>
 <!-- END BODY -->
 </html>

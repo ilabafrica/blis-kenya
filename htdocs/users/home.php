@@ -13,7 +13,6 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 							<li>
 								<i class="icon-home"></i>
 								<a href="index.php">Home</a> 
-								<span class="icon-angle-right"></span>
 							</li>
 							<!--li><a href="#">Home</a></li-->
 							<li class="pull-right no-text-shadow">

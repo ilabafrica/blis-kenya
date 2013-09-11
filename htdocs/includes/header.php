@@ -83,52 +83,39 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					<li class="dropdown" id="header_notification_bar">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-warning-sign"></i>
-						<span class="badge">6</span>
+						<span class="badge">4</span>
 						</a>
 						<ul class="dropdown-menu extended notification">
+						<!-- TODO: ALERTS FUNCTIONALITY-->
 							<li>
-								<p>You have 14 new notifications</p>
+								<p>You have 4 new alerts.</p>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-success"><i class="icon-plus"></i></span>
-								New user registered. 
+								Critical values recorded. 
 								<span class="time">Just now</span>
 								</a>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-important"><i class="icon-bolt"></i></span>
-								Server #12 overloaded. 
+								Low reagent levels. 
 								<span class="time">15 mins</span>
 								</a>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-warning"><i class="icon-bell"></i></span>
-								Server #2 not respoding.
+								Follow up test.
 								<span class="time">22 mins</span>
 								</a>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-info"><i class="icon-bullhorn"></i></span>
-								Application error.
+								Test queue critical.
 								<span class="time">40 mins</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								<span class="label label-important"><i class="icon-bolt"></i></span>
-								Database overloaded 68%. 
-								<span class="time">2 hrs</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								<span class="label label-important"><i class="icon-bolt"></i></span>
-								2 user IP blocked.
-								<span class="time">5 hrs</span>
 								</a>
 							</li>
 							<li class="external">
@@ -145,16 +132,13 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						</a>
 						<ul class="dropdown-menu extended tasks">
 							<li>
-								<p>You have 12 pending tasks</p>
+								<p>Notifications</p>
 							</li>
 							<li>
 								<a href="#">
 								<span class="task">
-								<span class="desc">New release v1.2</span>
-								<span class="percent">30%</span>
-								</span>
-								<span class="progress progress-success ">
-								<span style="width: 30%;" class="bar"></span>
+								<span class="desc">Heamatology</span>
+								<span class="percent">2 tasks</span>
 								</span>
 								</a>
 							</li>
@@ -311,47 +295,71 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					{
 						echo " class='' ";
 					}
-					echo "><i class='icon-table'></i>".$key;
+					echo ">";
+				
+					//echo $key;
+					
 					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
-						echo "<span class='selected'></span></a>";
-					}else echo "<span class='arrow'></span></a>";
+						$selected = "<span class='selected'></span></a>";
+					}else $selected = "<span class='arrow'></span></a>";
 					
 					switch($page_value[0]){
+					case 'home':
+						echo "<i class='icon-home'></i>";
+						echo $key.$selected;
+					break;
+					
+					case 'view_stock':
+						echo "<i class='icon-truck'></i>";
+						echo $key.$selected;
+					break;
+					
+					case '':
+						echo "<i class='icon-truck'></i>";
+						echo $key.$selected;
+					break;
+					
 					case 'find_patient':
+						echo "<i class='icon-download-alt'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>".
 							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
+									<i class='icon-inbox'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
 								"</a>
 							</li>
 							<li><a href='javascript:right_load(".$quote."sample_collection".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
+									<i class='icon-tint'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_SPECIMEN_REGISTRATION'].
 								"</a>
 							</li>
 						</ul>";
 					break;
 					case 'results_entry':
+						echo "<i class='icon-beaker'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>".
 									"<li>
 										<a href='javascript:right_load(".$quote."pending_tests".$quote.");' title='Lab Test Requests'
 										class='' id='specimen_results_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;
+										<i class='icon-tasks'></i>&nbsp;&nbsp;
 										Test Queue
 										</a>
 									</li>
 									<li>
 										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Quality Controls'
 										class='' id='new_patient_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;"
+										<i class='icon-ok-sign'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
 										"</a>
 									</li>".
 								"</ul>";
 					break;
 					case "catalog":
+						echo "<i class='icon-cogs'></i>";
+						echo $key.$selected;
 						echo 
 						"<ul class='sub'>
 							<li>
@@ -374,6 +382,8 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					break;
 					
 					case "quality":
+						echo "<i class='icon-dashboard'></i>";
+						echo $key.$selected;
 						echo 
 						"<ul class='sub'>
 							<li>
@@ -396,6 +406,8 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					break;
 					
 					case "reports":
+						echo "<i class='icon-bar-chart'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>";
 						$site_list = get_site_list($_SESSION['user_id']);
 						if ( !is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) {
@@ -502,6 +514,8 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					}
 					#LAB CONFIG LEFT MENU
 					if($page_value1[0]=='lab_config'){
+						echo "<i class='icon-wrench'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>";
 						$user = get_user_by_id($_SESSION['user_id']);
 						if(is_super_admin($user) || is_country_dir($user)) {

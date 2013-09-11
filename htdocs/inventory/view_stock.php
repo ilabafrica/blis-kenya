@@ -20,53 +20,26 @@ if(is_admin(get_user_by_id($_SESSION['user_id']))) {
             $view_edit = 1;
             //header( 'Location: home.php' );
 }
-
-$script_elems->enableFlotBasic();
-$script_elems->enableFlipV();
-$script_elems->enableTableSorter();
-   $script_elems->enableJQueryForm();
-$script_elems->enableDatePicker();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
-    $lid = $_SESSION['$lab_config_id'];
+$lid = $_SESSION['$lab_config_id'];
 ?>
-<style>
-    #barcodeSearch
-    {       
-        border:1px solid #a1a1a1;
-        padding:10px 10px; 
-        width:600px;
-        border-radius:10px;
-    }
- 
-    #barcode_search_result
-    {
-        font-size: 13px;
-        padding:10px 40px
-    }
-    
-</style>
-<script type='text/javascript'>
-	$(document).ready(function(){
-             $("#barcode_search_field").focus();
 
-			$('#current_inventory').tablesorter();
-	});
 
-function getBarcodeSearchResults()
-{
-    var code = $('#barcode_search_field').val();
-    if(code == '')
-    {
-        $('#error_empty').show();
-        return;
-    }
-    //alert(code);
-    $('#barcode_search_result').html('');
-    var url = "inventory/get_barcode_scan_results.php?code="+code;
-    $('#barcode_search_result').load(url);
-}
-</script>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-truck"></i>
+								<a href="index.php">Inventory</a> 
+							</li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+ 				<!-- BEGIN REGISTRATION PORTLETS-->   
+<div class="row-fluid">
+<div class="span12 sortable">
 <p style="text-align: right;"><a rel='facebox' href='#view_stocks_help'>Page Help</a></p>
 <div id="barcodeSearch" >
 Barcode Scan Search: <input type="text" id="barcode_search_field" name="barcode_search_field" />
@@ -173,8 +146,42 @@ Barcode Scan Search: <input type="text" id="barcode_search_field" name="barcode_
 </ul>
 </div>
 
+</div>
+<!-- END SPAN 12 -->
+</div>
+<?php include("includes/scripts.php");?>
 <?php
 $script_elems->bindEnterToClick("#barcode_search_field", "#barcode_search_button");
+$script_elems->enableFlotBasic();
+$script_elems->enableFlipV();
+$script_elems->enableTableSorter();
+$script_elems->enableJQueryForm();
+$script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
+$script_elems->enableLatencyRecord();
+?>
 
+<script type='text/javascript'>
+	$(document).ready(function(){
+             $("#barcode_search_field").focus();
+
+			$('#current_inventory').tablesorter();
+	});
+
+function getBarcodeSearchResults()
+{
+    var code = $('#barcode_search_field').val();
+    if(code == '')
+    {
+        $('#error_empty').show();
+        return;
+    }
+    //alert(code);
+    $('#barcode_search_result').html('');
+    var url = "inventory/get_barcode_scan_results.php?code="+code;
+    $('#barcode_search_result').load(url);
+}
+</script>
+<?php
 include("includes/footer.php");
 ?>

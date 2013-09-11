@@ -41,7 +41,7 @@ function get_top_menu_options($user_role)
 	{
 		$page_list["Reception"] = "find_patient.php";
 		$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
-		$page_list[LangUtil::getPageTitle("search")] = "search.php";
+		//$page_list[LangUtil::getPageTitle("search")] = "search.php";
 		$page_list[LangUtil::getPageTitle("reports")] = "reports.php";
 		$page_list["Inventory"]="view_stock.php";
 		$id=get_lab_config_id($_SESSION['user_id']);
@@ -51,7 +51,7 @@ function get_top_menu_options($user_role)
 				$id=$lab_config_list[0]->id;
 		}
 		//$page_list[LangUtil::$pageTerms['MENU_BACKUP']] = "data_backup?id=".$id;
-		$page_list[LangUtil::$pageTerms['MENU_BACKUP']] = "backupDataUI.php?id=".$id;
+		//$page_list[LangUtil::$pageTerms['MENU_BACKUP']] = "backupDataUI.php?id=".$id;
 		}
 	else if($user_role == $LIS_TECH_RO || $user_role == $LIS_TECH_SHOWPNAME)
 	{
