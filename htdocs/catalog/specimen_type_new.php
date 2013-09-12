@@ -44,14 +44,15 @@ function check_input()
 <br><br>
 <div class='pretty_box'>
 <form name='new_specimen_form' id='new_specimen_form' action='specimen_type_add.php' method='post'>
-<table class='smaller_font'>
+<table class='table table-bordered table-hover'>
+<tbody>
 <tr>
 <td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='specimen_name' id='specimen_name' class='uniform_width' /></td>
+<td><input type='text' name='specimen_name' id='specimen_name' class='span6 m-wrap' /></td>
 </tr>
 <tr valign='top'>
 <td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-<td><textarea name='specimen_descr' id='specimen_descr' class='uniform_width'></textarea></td>
+<td><textarea name='specimen_descr' id='specimen_descr' class='span6 m-wrap'></textarea></td>
 </tr>
 <tr valign='top'>
 <td>
@@ -59,15 +60,18 @@ function check_input()
 </td>
 <td>
 <?php $page_elems->getTestTypeCheckboxes(); ?>
-<br><br>
-<input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
-&nbsp;&nbsp;&nbsp;&nbsp;
-<a href='catalog.php?show_s=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+<div class="form-actions">
+                      <button type="submit" onclick='check_input();' class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
+                      <a href='catalog.php?show_s=1' class='btn'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+                </div>
+
 </form>
 </div>
+</td></table>
 <div id='test_help' style='display:none'>
 <small>
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
 </small>
 </div>
+
 <?php include("includes/footer.php"); ?>

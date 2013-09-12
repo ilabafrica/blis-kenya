@@ -1143,13 +1143,12 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b tablesorter' id='testTypeTable' >
+		<table class='table table-bordered table-hover' id='testTypeTable' >
 			<thead>
 					<th>#</th>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></th>
-					<th></th>
-					<th></th>
+					<th><?php echo "Action(s)"; ?></th>
 			</thead>
 		<tbody>
 		<?php
@@ -1168,8 +1167,6 @@ class PageElems
 			</td>
 			<td>
 				<?php echo $cat_name; ?>
-			</td>
-			<td>
 			</td>
 			<td>
 				<a href='test_type_edit.php?tid=<?php echo $key; ?>' title='Click to Edit Test Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
@@ -1205,7 +1202,14 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-bordered table-hover'>
+        <thead>
+										<tr>
+											<th>#</th>
+											<th><?php echo "Name"; ?></th>
+											<th><?php echo "Action(s)"; ?></th>
+										</tr>
+									</thead>
 		<tbody>
 		<?php
 		$count = 1;
@@ -1253,7 +1257,14 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-bordered table-hover'>
+        <thead style="background-color:#CCC;">
+                <tr>
+                    <th><?php echo "Number"; ?></th>
+                    <th><?php echo "Name"; ?></th>
+                    <th><?php echo "Action(s)"; ?></th>
+                </tr>
+		</thead>
 		<tbody>
 		<?php
 		$count = 1;
@@ -1290,7 +1301,37 @@ class PageElems
 		</table>
 		<?php
 	}
-	
+	/////////////////////begin function to get quality control information//////////////////////////////
+	public function getQualityControlCategoryInfo($qcc_name, $show_db_name=false)
+	{
+		# Returns HTML for displaying quality control category information
+		# Fetch quality control category type record
+		$qcc = get_quality_control_category_by_name($qcc_name);
+		?>
+		<table class='table table-bordered table-hover'>
+			<tbody>
+				<tr valign='top'>
+					<td style='width:150px;'><strong><?php echo LangUtil::$generalTerms['NAME']; ?></strong></td>
+					<td>
+						<?php
+						if($show_db_name === true)
+						{
+							# Show original name stored in DB
+							echo $qcc->name;
+						}
+						else
+						{
+							# Show name store din locale string
+							echo $qcc->getName();
+						}
+						?>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
+	////////////////////end getQualityControlInfo function////////////////////
 	
 	public function getOperatorForm($num_entries)
 	{
@@ -8254,6 +8295,61 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			echo ">$value</option><br>";
 			$count++;
 		}
+	}
+	
+	public function getQualityControlCategoriesTable($lab_config_id)
+	{
+		# Returns HTML table listing all Quality Control categories in catalog
+		$qcc_list = get_quality_control_categories($lab_config_id);
+		if(count($qcc_list) == 0)
+		{
+			echo "<div class='sidetip_nopos'>"."No Quality Control Categories Found."."</div>";
+			return;
+		}
+		?>
+		<table class='table table-bordered table-hover'>
+        <thead style="background-color:#CCC;">
+                <tr>
+                    <th><?php echo "#"; ?></th>
+                    <th><?php echo "Description"; ?></th>
+                    <th><?php echo "Action(s)"; ?></th>
+                </tr>
+		</thead>
+		<tbody>
+		<?php
+		$count = 1;
+		foreach($qcc_list as $key => $value)
+		{
+			?>
+			<tr>
+			<td>
+				<?php echo $count; ?>.
+			</td>
+			<td>
+				<?php echo $value; ?>
+			</td>
+			<td>
+				<a href='quality_control_category_edit.php?qccid=<?php echo $key; ?>' title='Click to Edit Quality Control Category Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+			</td>
+			<?php
+			$user = get_user_by_id($_SESSION['user_id']);
+			if(is_country_dir($user) || is_super_admin($user))
+			{
+			?>
+			<td>
+				<a href='quality_control_category_delete.php?qccid=<?php echo $key; ?>'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+			</td>
+			<?php
+			}
+			?>
+			</tr>
+			<?php
+			$count++;
+		}
+		?>
+		</tbody>
+		</table>
+		<?php
 	}
 }
 

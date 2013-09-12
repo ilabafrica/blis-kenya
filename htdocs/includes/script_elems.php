@@ -28,6 +28,7 @@ class ScriptElems
 	public $enabledAutocomplete = false;
     public $enabledJQueryMask = false;
     public $enabledBootstrap = false;
+    public $enabledBootstrapFormBuilder = false;
 	
 	public function enableJQuery()
 	{
@@ -141,6 +142,19 @@ class ScriptElems
 			</script>
 		<?php
 			$this->enabledFacebox = true;
+		}
+	}
+
+	public function enableBootstrapFormBuilder(){
+		# Enable bootstrap form builder
+		if($this->enabledBootstrapFormBuilder === false)
+		{
+		?>
+			<link href="form/assets/css/custom.css" rel="stylesheet">
+		    <script data-main="form/assets/js/main-built.js" src="form/assets/js/lib/require.js" ></script>
+			
+		<?php
+			$this->enabledBootstrapFormBuilder = true;
 		}
 	}
 	

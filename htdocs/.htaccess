@@ -151,8 +151,8 @@ RewriteRule ^viewPatientInfo\.php$ search/viewPatientInfo.php
 RewriteRule ^quality\.php$ quality_control/quality.php
 RewriteRule ^quality_control\.php$ quality_control/quality_control.php
 RewriteRule ^quality_control_category_new\.php$ quality_control/quality_control_category_new.php
-RewriteRule ^quality_control_category_add\.php$ catalog/test_category_add.php
-RewriteRule ^quality_control_category_added\.php$ catalog/test_category_added.php
+RewriteRule ^quality_control_category_add\.php$ quality_control/quality_control_category_add.php
+RewriteRule ^quality_control_category_added\.php$ quality_control/quality_control_category_added.php
 RewriteRule ^quality_control_category_edit\.php$ catalog/test_category_edit.php
 RewriteRule ^quality_control_category_updated\.php$ catalog/test_category_updated.php
 RewriteRule ^quality_control_category_delete\.php$ catalog/test_category_delete.php

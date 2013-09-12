@@ -11,7 +11,7 @@ putUILog('quality_control_category_add', 'X', basename($_SERVER['REQUEST_URI'], 
 
 	# Add new test category to catalog
 	$new_quality_control_cat_name = $_REQUEST['category_name'];
-	$new_quality_control_cat_id = add_quality_control_category($new_quality_control_cat_name, "$user");
+	$new_quality_control_cat_id = add_quality_control_category($new_quality_control_cat_name);
 	//$cat_code = $new_cat_id;
 
 # Update locale XML and generate PHP list again.
@@ -23,5 +23,5 @@ echo "<br>";
 print_r($submeasure_names);
 */
 
-header("location: quality_control_category_added.php?qc=$new_quality_control_cat_name");
+header("location: quality_control_category_added.php?qcc=$new_quality_control_cat_name");
 ?>

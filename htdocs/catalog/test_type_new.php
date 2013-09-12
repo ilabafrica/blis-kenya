@@ -8,8 +8,6 @@ LangUtil::setPageId("catalog");
 
 putUILog('test_type_new', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
-
-$script_elems->enableLatencyRecord();
 ?>
 <script type='text/javascript'>
 var num_measures = 1;
@@ -820,4 +818,8 @@ To represent data like 56^5-65^5 ml add the range as 56-65 and the unit as 5:ml.
 It is used for test which are alphanumeric and autocomplete. The default value for that measure can be recorded in this section.
 </small>
 </div>
-<?php include("includes/footer.php"); ?>
+<?php 
+$script_elems->enableJQuery();
+$script_elems->enableLatencyRecord();
+include("includes/scripts.php");
+include("includes/footer.php"); ?>

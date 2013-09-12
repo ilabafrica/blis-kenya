@@ -372,29 +372,6 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						</ul>";
 						
 					break;
-					
-					case "quality":
-						echo 
-						"<ul class='sub'>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."quality_controls_div".$quote.");' class='menu_option' id='quality_control_div_menu'>
-								".LangUtil::$generalTerms['QUALITY_CONTROLS']."
-								</a>
-							</li>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."quality_control_categories_div".$quote.");' class='menu_option' id='quality_control_categories_div_menu'>
-								".LangUtil::$generalTerms['QUALITY_CONTROL_CATEGORIES']."
-								</a>
-							</li>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."quality_control_field_groups_div".$quote.");' class='menu_option' id='quality_control_field_groups_div_menu'>
-								".LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']."
-								</a>
-							</li>
-						</ul>";
-						
-					break;
-					
 					case "reports":
 						echo "<ul class='sub'>";
 						$site_list = get_site_list($_SESSION['user_id']);

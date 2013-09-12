@@ -21,7 +21,7 @@ LangUtil::setPageId("quality");
 <br><br>
 <input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
 &nbsp;&nbsp;&nbsp;&nbsp;
-<a href='quality.php?show_qc=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+<a href='quality.php?show_qcc=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </form>
 </div>
 <div id='quality_control_category_help' style='display:none'>
