@@ -280,14 +280,20 @@ function handleDataTable(table_id) {
 		test_status[0] = "Pending";
 		test_status[1] = "Started";
 		test_status[2] = "Completed";
+		test_status[3] = "Verified";
 		this.innerHTML = fnCreateSelect( test_status );
-		$(".chosen").chosen();
 		$('select', this).change( function () {
-			oTable.fnFilter($(this).val() , 6);
+			//oTable.fnFilter($(this).val() , 6);
+			var val = $(this).val();
+			if(val=="Pending"){
+				fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
+			} else if (val=="Started"){
+				fetch_tests(<?php echo Specimen::$STATUS_PENDING_RESULTS?>);
+			}else if (val=="Completed"){
+				fetch_tests(<?php echo Specimen::$STATUS_DONE?>);
+			}
 		} );
 	} );
-	
-	
 }
 </script>
 	<SCRIPT type="text/javascript" charset="utf-8">

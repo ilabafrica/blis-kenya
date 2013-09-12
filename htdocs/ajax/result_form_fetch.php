@@ -9,7 +9,7 @@ include("../includes/page_elems.php");
 include("../includes/ajax_lib.php");
 include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
-//$page_elems = new PageElems();
+$page_elems = new PageElems();
 
 function get_result_form($test_type, $test_id, $num_tests, $patient)
 {
@@ -183,30 +183,36 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 		$count++;
 	}
 	?>
-	<table><tr><td>
-	<label for='<?php echo $curr_form_id; ?>_comments'>
-		Result Interpretation
-	</label></td><td>
-	<span id='<?php echo $curr_form_id; ?>_comments_span'>
-		<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php // echo $patient->getAgeNumber(); ?>, '<?php // echo $patient->sex;?>');" ></textarea>
-		<textarea name='comments' id='tester'  class='uniform_width'></textarea>
-		<input name='comment1' id='tester1'  class='uniform_width'/>
-	</span></td><tr><td>
-	<label for='<?php echo $curr_form_id; ?>_comments_1'>
-		<?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?> (<?php echo LangUtil::$generalTerms['OPTIONAL']; ?>)
-	</label></td><td>
-	<span id='<?php echo $curr_form_id; ?>_comments_span'>
-		<textarea name='comments_1' id='<?php echo $curr_form_id; ?>_comments_1'  class='uniform_width'></textarea>
-	</td></tr>
+	<table>
 	<tr>
-	<td>
-	<label for='<?php echo $curr_form_id; ?>_date_1'>
-		Date of Entry
-	</label>
-	</td>
-	<td>
+		<td>
+			<label for='<?php echo $curr_form_id; ?>_comments'>
+				Result Interpretation
+			</label>
+		
+			<span id='<?php echo $curr_form_id; ?>_comments_span'>
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php // echo $patient->getAgeNumber(); ?>, '<?php // echo $patient->sex;?>');" ></textarea>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for='<?php echo $curr_form_id; ?>_comments_1'>
+				<?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?> (<?php echo LangUtil::$generalTerms['OPTIONAL']; ?>)
+			</label>
 	
-	</td>
+			<span id='<?php echo $curr_form_id; ?>_comments_span'>
+				<textarea name='comments_1' id='<?php echo $curr_form_id; ?>_comments_1'  class='uniform_width'></textarea>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<label for='<?php echo $curr_form_id; ?>_date_1'>
+			Date of Entry
+		</label>
+		
+		</td>
 	</tr>
 	</table>
 	</form>
@@ -219,7 +225,6 @@ $test_id = $_REQUEST['tid'];
 $test = Test::getById($test_id);
 $specimen_id = $test->specimenId;
 $specimen = get_specimen_by_id($specimen_id);
-echo "patient id:" .$specimen->patientId;
 $patient = Patient::getById($specimen->patientId);
 if($test_id == "")
 {
@@ -277,9 +282,26 @@ $test_type = get_test_type_by_id($test_type_id);
 	<h4><i class="icon-pencil"></i> Results form - <?php echo $test_type->getName(); ?></h4>
 </div>
 <div class="modal-body">
-	<?php 		
+	<div class="row-fluid">
+	<div class="span6 sortable">
+	<?php	
 	get_result_form($test_type, $test_id, 0, $patient);
 	?>
+	</div>
+	<div class="span6 sortable">
+	
+	<div class="portlet box grey">
+		<div class="portlet-title">
+			<h4>Patient Test history</h4>
+		</div>		
+	<div class="portlet-body">
+	<?php 		
+	$page_elems->getPatientHistory($patient->patientId);
+	?>
+	</div>
+	</div>
+	</div>
+	</div>
 </div>
 <div class="modal-footer">
 	<input type='button' class="btn" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>);'></input>

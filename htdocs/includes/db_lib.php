@@ -6802,7 +6802,8 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 		"UPDATE `test` SET result='$result_field', ".
 		"comments='$comments', ".
 		"user_id=$user_id, ".
-		"ts='$current_ts' ".
+		"ts='$current_ts', ".
+		"status_code_id='".Specimen::$STATUS_RETURNED."' ".
 		"WHERE test_id=$test_id ";
 	
 	query_blind($query_string);
