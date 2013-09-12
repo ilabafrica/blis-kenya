@@ -41,15 +41,6 @@
 			<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 			<script src="assets/js/jquery.blockui.js"></script>	
 			<script src="assets/js/jquery.cookie.js"></script>
-<!-- 			<script src="assets/jqvmap/jqvmap/jquery.vmap.js" type="text/javascript"></script>	 -->
-<!-- 			<script src="assets/jqvmap/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script> -->
-<!-- 			<script src="assets/jqvmap/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script> -->
-<!-- 			<script src="assets/jqvmap/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script> -->
-<!-- 			<script src="assets/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script> -->
-<!-- 			<script src="assets/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script> -->
-<!-- 			<script src="assets/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>	 -->
-<!-- 			<script src="assets/flot/jquery.flot.js"></script> -->
-<!-- 			<script src="assets/flot/jquery.flot.resize.js"></script> -->
 			<script type="text/javascript" src="assets/gritter/js/jquery.gritter.js"></script>
 			<script type="text/javascript" src="assets/uniform/jquery.uniform.min.js"></script>	
 			<script type="text/javascript" src="assets/js/jquery.pulsate.min.js"></script>
@@ -69,18 +60,6 @@
 					App.init(); // init the rest of plugins and elements
 				});
 			</script>
-			<!--script type="text/javascript">
-			  var _gaq = _gaq || [];
-			  _gaq.push(['_setAccount', 'UA-37564768-1']);
-			  _gaq.push(['_setDomainName', 'keenthemes.com']);
-			  _gaq.push(['_setAllowLinker', true]);
-			  _gaq.push(['_trackPageview']);
-			  (function() {
-			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
-			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			  })();
-			</script-->
 <script>
 function handleDataTable(table_id) {
     if (!jQuery().dataTable) {
