@@ -7,8 +7,7 @@ include("includes/header.php");
 include("includes/ajax_lib.php");
 LangUtil::setPageId("catalog");
 
-$script_elems->enableJQueryForm();
-$script_elems->enableTokenInput();
+
 $test_category = get_test_category_by_id($_REQUEST['tcid']);
 ?>
 <script type='text/javascript'>
@@ -84,4 +83,8 @@ $page_elems->getTestCategoryInfo($test_category->name, true);
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
 </small>
 </div>
-<?php include("includes/footer.php"); ?>
+<?php 
+$script_elems->enableJQuery();
+$script_elems->enableJQueryForm();
+$script_elems->enableTokenInput();
+include("includes/footer.php"); ?>

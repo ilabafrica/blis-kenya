@@ -37,12 +37,195 @@ db_get_current();
 
 <div class="col-lg-7">
 <div class="panel panel-primary">
-	
+    
+	<div class="portlet box green reports_subdiv" id="test_history_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Patient Report</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+    <div class="portlet-body" >           
+        <div id='test_history'>
+            <div class='reports_subdiv_help' id='test_history_div_help' style='display:none'>
+                <?php
+                    //Patient Report
+                    $tips_string = "Select Patient Name, Number or ID to retrieve patient's lab reports";
+                    $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                ?>
+            </div>
+            <form name='test_history_form' id='test_history_form'>
+                <table cellpadding='4px'>
+                <?php
+                $site_list = get_site_list($_SESSION['user_id']);
+                if(count($site_list) == 1)
+                {
+                    foreach($site_list as $key=>$value)
+                        echo "<input type='hidden' name='location' id='location8' value='$key'></input>";
+                }
+                else
+                {
+                ?>
+                    <tr class="location_row" id="location_row">
+                        <td><?php echo LangUtil::$generalTerms['FACILITY']; ?></td>
+                        <td>
+                            <select name='location' id='location8' class='uniform_width'>
+                            <option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+                            <?php
+                                $page_elems->getSiteOptions();
+                            ?>
+                            </select>
+                        </td>
+                    </tr>
+                <?php
+                }
+                ?>
+                    <tr>
+                        <td>
+                        <select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
+                            <?php $page_elems->getPatientSearchAttribSelect(); ?>
+                        </select>
+                        </td>
+                        <td>
+                            <input type='text' name='patient_id' id='patient_id8' class='uniform_width'></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type='button' id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
+                            &nbsp;&nbsp;&nbsp;
+                            <span id='test_history_progress_spinner'  style='display:none;'>
+                                <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div id='phistory_list'>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    
+    <div class="portlet box green reports_subdiv" id="daily_report_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Daily Log</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+    <div class="portlet-body" >   
+    <div id='daily_report'>
+        <div class='reports_subdiv_help' id='daily_report_div_help' style='display:none'>
+        <?php
+            //Daily Log
+            $tips_string = LangUtil::$pageTerms['TIPS_DAILYLOGS'];
+            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+        ?>
+        </div>
+        <table cellpadding='4px'>
+            <tbody>
+            <?php
+            $site_list = get_site_list($_SESSION['user_id']);
+            if(count($site_list) == 1)
+            {
+                foreach($site_list as $key=>$value)
+                    echo "<input type='hidden' name='location' id='location13' value='$key'></input>";
+            }
+            else
+            {
+            ?>
+                <tr class="location_row" id="location_row">
+                    <td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <select name='location' id='location13' class='uniform_width' onchange='handleChange(this)'>
+                        <option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+                        <?php
+                            $page_elems->getSiteOptions();
+                        ?>
+                        </select>
+                    </td>
+                </tr>
+            <?php
+            }
+            ?>
+                <tr>
+                    <td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></td>
+                    <td>
+                        <div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
+                            <input class="m-wrap m-ctrl-medium" size="16" name="from-report-date" id="from-date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><?php echo LangUtil::$generalTerms['TO_DATE']; ?></td>
+                    <td>
+                    <div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
+                            <input class="m-wrap m-ctrl-medium" size="16" name="to-report-date" id="to-date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+                     </div>
+                    </td>
+                </tr>
+                
+                <tr valign='top'>
+                    <td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <div class="controls">
+                        <label class="radio">
+                            <span><input type="radio"  name='rectype13' value='1' checked> <?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?></span>
+                            </label>
+                        </div>
+                        <div class="controls">
+                        <label class="radio">
+                            <span>
+                                <input type="radio" name='rectype13' value='2'> <?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
+                            </span>
+                        </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr id='cat_row13'>
+                    <td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <select name='cat_code' id='cat_code13' class='uniform_width'>
+                            <option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+                            <?php
+                            if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) )
+                                $page_elems->getTestCategoryCountrySelect();
+                            else {
+                                $page_elems->getTestCategorySelect();
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr id='ttype_row13'>
+                    <td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
+                    <td>
+                        <select name='ttype' id='ttype13' class='uniform_width'>
+                            <option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+                        </select>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+    </div>
+    
 <table name="page_panes" cellpadding="10px">
-	<tr valign='top'>
-		
-
-		
+	<tr valign='top'>	
 	<td id="right_pane" class="right_pane" valign='top'>
 	<div id='reports_div' style='display:none;' class='reports_subdiv'>
 		<b>Patient Results Report</b>
@@ -1086,64 +1269,9 @@ db_get_current();
 			</table>
                     </div>
 		</form>
-                </div>
-            
-	<div id='test_history_div' class='reports_subdiv'  style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_PATIENT']; ?></b>
-		<br><br>
-		<form name='test_history_form' id='test_history_form'>
-			<table cellpadding='4px'>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location8' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?></td>
-					<td>
-						<select name='location' id='location8' class='uniform_width'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td>
-					<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
-						<?php $page_elems->getPatientSearchAttribSelect(); ?>
-					</select>
-					</td>
-					<td>
-						<input type='text' name='patient_id' id='patient_id8' class='uniform_width'></input>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<span id='test_history_progress_spinner'  style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-						</span>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<div id='phistory_list'>
-			</div>
-		</form>
-	</div>
-	
+    </div>
+    
+    
 	<div id='test_report_div' class='reports_subdiv'  style='display:none'>
 		<b>Single Test Report</b>
 		<br><br>
@@ -1259,104 +1387,7 @@ db_get_current();
 		</div>
 	</div>
 	
-	<div id='daily_report_div' class='reports_subdiv' style='display:none'>
-		<b><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></b>
-		<br><br>
-		<table cellpadding='4px'>
-			<tbody>
-			<?php
-			$site_list = get_site_list($_SESSION['user_id']);
-			if(count($site_list) == 1)
-			{
-				foreach($site_list as $key=>$value)
-					echo "<input type='hidden' name='location' id='location13' value='$key'></input>";
-			}
-			else
-			{
-			?>
-				<tr class="location_row" id="location_row">
-					<td><?php echo LangUtil::$generalTerms['FACILITY']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='location' id='location13' class='uniform_width' onchange='handleChange(this)'>
-						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php
-							$page_elems->getSiteOptions();
-						?>
-						</select>
-					</td>
-				</tr>
-			<?php
-			}
-			?>
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></td>
-					<td>
-					<?php		
-// 					$today = date("Y-m-d");
-// 					$value_list = explode("-", $today);
-// 					$name_list = array("daily_yyyy", "daily_mm", "daily_dd");
-// 					$id_list = $name_list;
-// 					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-					</td>
-				</tr>
-				
-				<tr>
-					<td><?php echo LangUtil::$generalTerms['TO_DATE']; ?></td>
-					<td>
-					<?php		
-// 					$name_list = array("daily_yyyy_to", "daily_mm_to", "daily_dd_to");
-// 					$id_list = $name_list;
-// 					$page_elems->getDatePicker($name_list, $id_list, $value_list, true);
-					?>
-					</td>
-				</tr>
-				
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<input type='radio' name='rectype13' value='1' checked>
-							<?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?>
-						</input>
-						<br>
-						<input type='radio' name='rectype13' value='2'>
-							<?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
-						</input>
-					</td>
-				</tr>
-				<tr id='cat_row13'>
-					<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?> &nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<select name='cat_code' id='cat_code13' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-							<?php
-							if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) )
-								$page_elems->getTestCategoryCountrySelect();
-							else {
-								$page_elems->getTestCategorySelect();
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr id='ttype_row13'>
-					<td><?php echo LangUtil::$generalTerms['TEST']; ?></td>
-					<td>
-						<select name='ttype' id='ttype13' class='uniform_width'>
-							<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						</select>
-					</td>
-				</tr>
-				
-				<tr>
-					<td></td>
-					<td>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	
             
 	<div id='daily_report_div' class='reports_subdiv' style='display:none'>
 		<b><?php echo LangUtil::$pageTerms['MENU_DAILYLOGS']; ?></b>
@@ -1954,20 +1985,6 @@ db_get_current();
 	$page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
 ?>
 </div>
-<div class='reports_subdiv_help' id='test_history_div_help' style='display:none'>
-<?php
-	//Patient Report
-	$tips_string = "Select Patient Name, Number or ID to retrieve patient's lab reports";
-	$page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-?>
-</div>
-<div class='reports_subdiv_help' id='daily_report_div_help' style='display:none'>
-<?php
-	//Daily Log
-	$tips_string = LangUtil::$pageTerms['TIPS_DAILYLOGS'];
-	$page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-?>
-</div>
 <div class='reports_subdiv_help' id='disease_report_div_help' style='display:none'>
 <?php
 	//Infection report
@@ -1997,7 +2014,12 @@ db_get_current();
 </div>
 </div>
 
-<?php include("includes/scripts.php");?>
+<?php 
+include("includes/scripts.php");
+require_once("includes/script_elems.php");
+$script_elems = new ScriptElems();
+$script_elems->enableDatePicker();
+?>
 <script type='text/javascript' src="facebox/facebox.js"></script>
 <script type='text/javascript'>
 $(document).ready(function(){
@@ -3302,14 +3324,10 @@ function print_daily_patients()
 function print_daily_specimens()
 {
 	var l = $("#location13").attr("value");
-	var yf = $("#daily_yyyy").attr("value");
-	var mf = $("#daily_mm").attr("value");
-	var df = $("#daily_dd").attr("value");
-	var yt = $("#daily_yyyy_to").attr("value");
-	var mt = $("#daily_mm_to").attr("value");
-	var dt = $("#daily_dd_to").attr("value");
+	var from_date = $("#from-date").attr("value");
+	var to_date = $("#to-date").attr("value");
 	
-	if(checkDate(yt, mt, dt) == false || checkDate(yf, mf, df) == false)
+	if(checkDate(from_date) == false || checkDate(to_date) == false)
 	{
 		alert("<?php echo LangUtil::$generalTerms['TIPS_DATEINVALID']; ?>");
 		return;

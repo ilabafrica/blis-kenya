@@ -8225,7 +8225,7 @@ function update_test_category($updated_entry, $updated_test_category_list)
 		"UPDATE test_category ".
 		"SET name='$updated_entry->name', ".
 		"description='$updated_entry->description', ".
-		"WHERE qcc_id=$updated_entry->testCategoryId";
+		"WHERE test_category_id=$updated_entry->testCategoryId";
 	query_blind($query_string);
 	DbUtil::switchRestore($saved_db);
 }

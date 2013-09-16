@@ -36,8 +36,7 @@ header('Content-Type: text/html; charset=UTF-8');
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
-<!-- BEGIN HEAD -->
-<head>
+<!-- BEGIN HEAD --><head>
 	<meta charset="utf-8" />
 	<title>BLIS <?php echo $VERSION; ?> - Kenya</title>
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -50,6 +49,17 @@ header('Content-Type: text/html; charset=UTF-8');
 	
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
+<style>
+ul.subb {
+    list-style-type: none;
+}
+
+ul.subb li a {
+    color:white;
+    padding-left:20px;
+}
+</style>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="fixed-top">
@@ -83,52 +93,39 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					<li class="dropdown" id="header_notification_bar">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-warning-sign"></i>
-						<span class="badge">6</span>
+						<span class="badge">4</span>
 						</a>
 						<ul class="dropdown-menu extended notification">
+						<!-- TODO: ALERTS FUNCTIONALITY-->
 							<li>
-								<p>You have 14 new notifications</p>
+								<p>You have 4 new alerts.</p>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-success"><i class="icon-plus"></i></span>
-								New user registered. 
+								Critical values recorded. 
 								<span class="time">Just now</span>
 								</a>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-important"><i class="icon-bolt"></i></span>
-								Server #12 overloaded. 
+								Low reagent levels. 
 								<span class="time">15 mins</span>
 								</a>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-warning"><i class="icon-bell"></i></span>
-								Server #2 not respoding.
+								Follow up test.
 								<span class="time">22 mins</span>
 								</a>
 							</li>
 							<li>
 								<a href="#">
 								<span class="label label-info"><i class="icon-bullhorn"></i></span>
-								Application error.
+								Test queue critical.
 								<span class="time">40 mins</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								<span class="label label-important"><i class="icon-bolt"></i></span>
-								Database overloaded 68%. 
-								<span class="time">2 hrs</span>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								<span class="label label-important"><i class="icon-bolt"></i></span>
-								2 user IP blocked.
-								<span class="time">5 hrs</span>
 								</a>
 							</li>
 							<li class="external">
@@ -145,16 +142,13 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						</a>
 						<ul class="dropdown-menu extended tasks">
 							<li>
-								<p>You have 12 pending tasks</p>
+								<p>Notifications</p>
 							</li>
 							<li>
 								<a href="#">
 								<span class="task">
-								<span class="desc">New release v1.2</span>
-								<span class="percent">30%</span>
-								</span>
-								<span class="progress progress-success ">
-								<span style="width: 30%;" class="bar"></span>
+								<span class="desc">Heamatology</span>
+								<span class="percent">2 tasks</span>
 								</span>
 								</a>
 							</li>
@@ -311,47 +305,69 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					{
 						echo " class='' ";
 					}
-					echo "><i class='icon-table'></i>".$key;
+					echo ">";
+				
+					//echo $key;
+					
 					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
-						echo "<span class='selected'></span></a>";
-					}else echo "<span class='arrow'></span></a>";
+						$selected = "<span class='selected'></span></a>";
+					}else $selected = "<span class='arrow'></span></a>";
 					
 					switch($page_value[0]){
+					case 'home':
+						echo "<i class='icon-home'></i>";
+						echo $key.$selected;
+					break;
+					
+					case 'view_stock':
+						echo "<i class='icon-truck'></i>";
+						echo $key.$selected;
+					break;
+					
+					case '':
+						echo "<i class='icon-truck'></i>";
+						echo $key.$selected;
+					break;
+					
 					case 'find_patient':
+						echo "<i class='icon-download-alt'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>".
 							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
+									<i class='icon-inbox'></i>&nbsp;&nbsp;"
 									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
 								"</a>
 							</li>
 							<li><a href='javascript:right_load(".$quote."sample_collection".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-table'></i>&nbsp;&nbsp;"
-									.LangUtil::$allTerms['MENU_SPECIMEN_REGISTRATION'].
-								"</a>
+									<i class='icon-tint'></i>&nbsp;&nbsp;Specimen registration</a>
 							</li>
 						</ul>";
 					break;
 					case 'results_entry':
+						echo "<i class='icon-beaker'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>".
 									"<li>
 										<a href='javascript:right_load(".$quote."pending_tests".$quote.");' title='Lab Test Requests'
 										class='' id='specimen_results_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;
+										<i class='icon-tasks'></i>&nbsp;&nbsp;
 										Test Queue
 										</a>
 									</li>
 									<li>
 										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Quality Controls'
 										class='' id='new_patient_menu'>
-										<i class='icon-table'></i>&nbsp;&nbsp;"
+										<i class='icon-ok-sign'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
 										"</a>
 									</li>".
 								"</ul>";
 					break;
 					case "catalog":
+						echo "<i class='icon-cogs'></i>";
+						echo $key.$selected;
 						echo 
 						"<ul class='sub'>
 							<li>
@@ -372,49 +388,48 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						</ul>";
 						
 					break;
+					
+					case "quality":
+						echo "<i class='icon-dashboard'></i>";
+						echo $key.$selected;
+									
+					break;
+					
 					case "reports":
+						echo "<i class='icon-bar-chart'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>";
 						$site_list = get_site_list($_SESSION['user_id']);
 						if ( !is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) {
-										echo '<li>'.LangUtil::$allTerms['MENU_DAILY'].'</li>'; 
+									echo '<li><a>'.LangUtil::$allTerms['MENU_DAILY'].'</a></li>'; 
 									echo "
-									<ul>
-										<!--
-										<li class='menu_option' id='patient_report_menu'>
-											<a href='javascript:show_patient_report_form();'><". LangUtil::$allTerms['MENU_PATIENT']."</a>
-										</li>
-										-->
+									<ul class='subb'>
 										<li class='menu_option' id='test_history_menu'>
-											<!--<a href='javascript:show_test_history_form();'>".LangUtil::$allTerms['MENU_PHISTORY']."</a>-->
-											<a href='javascript:show_test_history_form();'>".LangUtil::$allTerms['MENU_PATIENT']."</a>
-										</li>";
-										echo "
+											 <a href='javascript:show_test_history_form();'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_PATIENT']."</a>
+										</li>
 										<li class='menu_option' id='session_report_menu' <";
 										
 										if($SHOW_SPECIMEN_REPORT === false)
 											echo " style='display:none;' ";
-									
-										echo "
-										>
-											<a href='javascript:show_session_report_form();'>".LangUtil::$allTerms['MENU_SPECIMEN']."</a>
+																	
+										echo ">	<a href='javascript:show_session_report_form();'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_SPECIMEN']."</a>
 										</li>
 										<li class='menu_option' id='print_menu'";
 										if($SHOW_TESTRECORD_REPORT === false)
 											echo " style='display:none;' ";
-										echo "
-										>
-											<a href='javascript:show_print_form();'>".LangUtil::$allTerms['MENU_TESTRECORDS']."</a>
+										
+										echo " > <a href='javascript:show_print_form();'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_TESTRECORDS']."</a>
 										</li>
 										
 										<li class='menu_option' id='daily_report_menu'>
-											<a href='javascript:show_daily_report_form();'>".LangUtil::$allTerms['MENU_DAILYLOGS']."</a>
+											<a href='javascript:show_daily_report_form();'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_DAILYLOGS']."</a>
 										</li>
 										<li class='menu_option' id='print_menu'";
 										if($SHOW_PENDINGTEST_REPORT === false)
 											echo " style='display:none;' ";
 										echo "
 										>
-											<a href='javascript:show_pending_tests_form();'>".LangUtil::$allTerms['MENU_PENDINGTESTS']."</a>
+											<a href='javascript:show_pending_tests_form();'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_PENDINGTESTS']."</a>
 										</li>
 										<!--
 										# Space for menu entries corresponding to a new daily report
@@ -424,51 +439,51 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 									</ul>";
 									 } else { echo
 										".Report Settings.
-										<ul>
+										<ul class='subb'>
 											<li class='menu_option' id='location_settings' >
 											<a href='lab_pin.php'>"."Location Settings"."</a>
 											</li>
 										</ul>";
 									} echo 
-									"<li>".LangUtil::$allTerms['MENU_AGGREPORTS']."</li>
-									<ul>";
+									"<li><a>".LangUtil::$allTerms['MENU_AGGREPORTS']."</a></li>
+									<ul class='subb'>";
 								
 											$site_list = get_site_list($_SESSION['user_id']);
 											if( is_country_dir( get_user_by_id($_SESSION['user_id'] ) ) ) { 
 												echo "
 												<li class='menu_option' id='country_aggregate_menu'>
-													<a href='javascript:show_selection(".$quote."prevalance_aggregate".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
+													<a href='javascript:show_selection(".$quote."prevalance_aggregate".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
 												</li>
 												<li class='menu_option' id='tat_menu'>
-													<a href='javascript:show_selection(".$quote."tat_aggregate".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
+													<a href='javascript:show_selection(".$quote."tat_aggregate".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_TAT']."</a>
 												</li>
 												<!--<li class='menu_option' id='disease_report_menu'>
-													<a href='javascript:show_selection(".$quote."infection_aggregate".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONREPORT']."</a>
+													<a href='javascript:show_selection(".$quote."infection_aggregate".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_INFECTIONREPORT']."</a>
 												</li>-->";
 											} else {
 												echo "
 												<li class='menu_option' id='summary_menu'>
-													<a href='javascript:show_selection(".$quote."summary".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
+													<a href='javascript:show_selection(".$quote."summary".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_INFECTIONSUMMARY']."</a>
 												</li>
 												<li class='menu_option' id='specimen_count_menu'>
-													<a href='javascript:show_selection(".$quote."specimen_count".$quote.");'>".LangUtil::$allTerms['MENU_COUNTS']."</a>
+													<a href='javascript:show_selection(".$quote."specimen_count".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_COUNTS']."</a>
 												</li>
 												<li class='menu_option' id='tat_menu'>
-													<a href='javascript:show_selection(".$quote."tat".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
+													<a href='javascript:show_selection(".$quote."tat".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_TAT']."</a>
 												</li>
 												<li class='menu_option' id='disease_report_menu'>
-													<a href='javascript:show_selection(".$quote."disease_report".$quote.");'>".LangUtil::$allTerms['MENU_INFECTIONREPORT']."</a>
+													<a href='javascript:show_selection(".$quote."disease_report".$quote.");'> <i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_INFECTIONREPORT']."</a>
 												</li>";
 						                     	if(is_admin(get_user_by_id($_SESSION['user_id'])))
 						                        { 
 						                        echo "
 						                            <li class='menu_option' id='user_stats_menu'>
-														<a href='javascript:show_selection(".$quote."user_stats".$quote.");'>User Statistics</a>
+														<a href='javascript:show_selection(".$quote."user_stats".$quote.");'> <i class='icon-tag'></i> User Statistics</a>
 													</li>";
 						                        }
 						                        echo "
 						                        <li class='menu_option' id='stock_report_menu'>
-													<a href='javascript:show_selection(".$quote."stock_report".$quote.");'>Previous Inventory Data</a>
+													<a href='javascript:show_selection(".$quote."stock_report".$quote.");'> <i class='icon-tag'></i> Previous Inventory Data</a>
 												</li>";                          
 											} 
 						
@@ -479,6 +494,8 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					}
 					#LAB CONFIG LEFT MENU
 					if($page_value1[0]=='lab_config'){
+						echo "<i class='icon-wrench'></i>";
+						echo $key.$selected;
 						echo "<ul class='sub'>";
 						$user = get_user_by_id($_SESSION['user_id']);
 						if(is_super_admin($user) || is_country_dir($user)) {
@@ -506,14 +523,6 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						"<li>
 							<a id='test' class='menu_option' href='javascript:test_setup();'>".LangUtil::$allTerms['Tests']." </a>
 						</li>
-						<div id='test_setup' name='test_setup' style='display:none;'>
-							-<a id='option2' class='menu_option' href='javascript:right_load(2, ".$quote."st_types_div".$quote.");'>".LangUtil::$allTerms['MENU_ST_TYPES']."</a>
-							</li><br><br>
-							-<a id='option5' class='menu_option' href='javascript:right_load(5, ".$quote."target_tat_div".$quote.");'>".LangUtil::$allTerms['MENU_TAT']."</a>
-							</li><br><br>
-							-<a href='remarks_edit.php?id=".$_REQUEST['id']."'>".'Results Interpretation'."</a>
-							<br><br>
-						</div>
 						<li>                         
 							<a id='option21' class='menu_option' href='javascript:right_load(21, ".$quote."search_div".$quote.");'>Search</a>
 						</li>

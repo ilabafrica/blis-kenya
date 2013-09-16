@@ -16,7 +16,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 	#Returns HTML form elements for given test type results
 	global $form_id_list, $specimen_id, $page_elems;
 
-	$curr_form_id = 'test_'.$test_type->testTypeId;
+	$curr_form_id = 'test_'.$test_id;
 	$form_id_list[] = $curr_form_id;
 	?>
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method=''>
@@ -190,6 +190,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 	<span id='<?php echo $curr_form_id; ?>_comments_span'>
 		<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php // echo $patient->getAgeNumber(); ?>, '<?php // echo $patient->sex;?>');" ></textarea>
 		<textarea name='comments' id='tester'  class='uniform_width'></textarea>
+		<input name='comment1' id='tester1'  class='uniform_width'/>
 	</span></td><tr><td>
 	<label for='<?php echo $curr_form_id; ?>_comments_1'>
 		<?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?> (<?php echo LangUtil::$generalTerms['OPTIONAL']; ?>)
@@ -215,7 +216,11 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 
 $form_id_list = array();
 $test_id = $_REQUEST['tid'];
-
+$test = Test::getById($test_id);
+$specimen_id = $test->specimenId;
+$specimen = get_specimen_by_id($specimen_id);
+echo "patient id:" .$specimen->patientId;
+$patient = Patient::getById($specimen->patientId);
 if($test_id == "")
 {
 	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
@@ -223,8 +228,6 @@ if($test_id == "")
 }
 ?>
 <?php
-//$specimen = get_specimen_by_id($specimen_id);
-//$patient = Patient::getById($specimen->patientId);
 $test_type_id = get_test_type_id_from_test_id($test_id);
 if($test_id == null)
 {
@@ -275,7 +278,7 @@ $test_type = get_test_type_by_id($test_type_id);
 </div>
 <div class="modal-body">
 	<?php 		
-	get_result_form($test_type, $test->testId, 0, null);
+	get_result_form($test_type, $test_id, 0, $patient);
 	?>
 </div>
 <div class="modal-footer">
@@ -283,21 +286,3 @@ $test_type = get_test_type_by_id($test_type_id);
 	<a href='javascript:hide_test_result_form(<?php echo $test_id ?>);' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
-
-<div id="stack2" class="modal hide fade" tabindex="-1" data-focus-on="input:first">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3>Stack Two</h3>
-  </div>
-  <div class="modal-body">
-    <p>One fine body…</p>
-    <p>One fine body…</p>
-    <input type="text" data-tabindex="1">
-    <input type="text" data-tabindex="2">
-    <button class="btn" data-toggle="modal" href="#stack3">Launch modal</button>
-  </div>
-  <div class="modal-footer">
-    <button type="button" data-dismiss="modal" class="btn">Close</button>
-    <button type="button" class="btn btn-primary">Ok</button>
-  </div>
-</div>

@@ -245,31 +245,156 @@ if($lab_config == null)
 				</div>
 				<!-- END PAGE HEADER-->
 <!-- BEGIN ROW-FLUID-->   
-<div class="row-fluid">
-<div class="span12 sortable">
-	
+<div class="portlet box green right_pane" id="site_info_div" >
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Summary</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        
+        <div class="portlet-body" >
+                <div id='site_info' style='margin-left:10px;'>
+                    <p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
+                        <div id='main_msg' class='clean-orange' style='display:none;width:350px;'>
+                        </div>
+                        
+                        <?php
+                        $page_elems->getLabConfigInfo($lab_config->id);
+                        ?>
+                        <form id='backup_form' name='backup_form' action='data_backup' method='post' target='_blank'>
+                            <input type='hidden' name='id' value='<?php echo $_REQUEST['id']; ?>'></input>
+                        </form>
+                    </div>
+        </div>     
+    </div>    
+<div class="portlet box green right_pane" id="test_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Tests</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a href="#portlet-config" data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        
+        <div class="portlet-body" >
+            <!--BEGIN TABS-->
+                       <div class="tabbable tabbable-custom">
+                           <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#tab_1_1" data-toggle="tab">Specimen/Test Types </a></li>
+                                                <li><a href="#tab_1_2" data-toggle="tab">Turnaround Time </a></li>
+                                                <li><a href="#tab_1_3" data-toggle="tab">Results Interpretation </a></li>
+                                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1_1">
+                                                    <div class='st_pane' id='st_types_div' style='margin-left:10px;'>
+                                                        <p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
+                                                            
+                                                            <div id='sttypes_msg' class='clean-orange' style='display:none;width:350px;'>
+                                                            </div>
+                                                            <form id='st_types_form' name='st_types_form' action='ajax/st_types_update.php' method='post'>
+                                                            <input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>                 
+                                                            <?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?>
+                                                            <small><a id='stype_link' href='javascript:stype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
+                                                            <div class='pretty_box' id='stype_box' style='display:none'>
+                                                            <b><u><?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?></u></b>
+                                                                <?php $page_elems->getSpecimenTypeCheckboxes($lab_config->id); ?>
+                                                            </div>
+                                                            <br>
+                                                            <br>
+                                                            <?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
+                                                            <small><a id='ttype_link' href='javascript:ttype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
+                                                            <div class='pretty_box' id='ttype_box' style='display:none'>
+                                                            <b><u><?php echo LangUtil::$generalTerms['TEST_TYPES']; ?></u></b>
+                                                                                
+                                                                                <?php
+                                                                                //NC3065
+                                                                                
+                                                                                $user = get_user_by_id($_SESSION['user_id']);
+                                                                                if(is_super_admin($user) || is_country_dir($user))
+                                                                                {
+                                                                                    $page_elems->getTestTypeCheckboxes_dir($lab_config->id);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    $page_elems->getTestTypeCheckboxes($lab_config->id); 
+                                                                                }
+                                                                                //NC3065
+                                                            ?>
+                                                                                
+                                                                                 <?php //$page_elems->getTestTypeCheckboxes($lab_config->id); ?>
+                                                                                
+                                                            </div>
+                                                            <br><br>
+                                                            <input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='checkandsubmit_st_types()'>
+                                                            </input>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span id='st_types_progress' style='display:none;'>
+                                                                          
+                                                                <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                                                            </span>
+                                                            </form>
+                                                        </div>
+                                                </div>
+                                <div class="tab-pane" id="tab_1_2">
+                                                    <div class='target_tat' id='target_tat_div' style='margin-left:10px;'>
+                                                        <p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
+                                                            <b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
+                                                             | <a href="javascript:toggletatdivs();" id='toggletat_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+                                                            <br><br>
+                                                            <div id='tat_msg' class='clean-orange' style='display:none;width:350px;'>
+                                                            </div>
+                                                            <div id='goal_tat_list'>
+                                                            <?php $page_elems->getGetGoalTatTable($lab_config->id); ?>
+                                                            </div>
+                                                            <form id='goal_tat_form' style='display:none' name='goal_tat_form' action='ajax/lab_config_tat_update.php' method='post'>
+                                                                <?php $page_elems->getGoalTatForm($lab_config->id); ?>
+                                                                <input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_goal_tat();'></input>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <small><a href='javascript:toggletatdivs();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <span id='tat_progress_spinner' style='display:none;'>
+                                                                    <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                                                                </span>
+                                                            </form>
+                                                        </div>
+                                                </div>
+                                            <div class="tab-pane" id="tab_1_3">
+                                                 <p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p><br/>
+                                                     <?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <select name='ttype' id='ttype'>
+                                                            <?php $page_elems->getTestTypesSelect($lab_config->id); ?>
+                                                        </select>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <input type='button' onclick='javascript:fetch_remarks_form();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
+                                                        &nbsp;&nbsp;
+                                                        <span id='remarks_fetch_progress' style='display:none;'>
+                                                            <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+                                                        </span>
+                                                        &nbsp;
+                                                        <span id='updated_msg' class='clean-orange' style='display:none;width:140px;'>
+                                                            <?php echo LangUtil::$generalTerms['MSG_UPDATED']; ?>
+                                                        </span>
+                                                        
+                                                        <br><br>
+                                                        <div id='remarks_form_pane'>
+                                                        </div>
+                                                </div>
+                       </div>
+             </div>                                
+                       <!--END TABS-->
+         </div>
+     </div>  
+            <div class="row-fluid">
+                <div class="span12 sortable">
+	                 
+	                   
 <table>
 	<tbody>
 		<tr valign='top'>
 			<td>
-				<br><br><br><br><br>
-			</td>
-			<td>
-				<div class='right_pane' id='site_info_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
-				<b><?php echo LangUtil::$pageTerms['MENU_SUMMARY']; ?></b>
-					<br><br>
-					<div id='main_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<?php
-					$page_elems->getLabConfigInfo($lab_config->id);
-					?>
-					<form id='backup_form' name='backup_form' action='data_backup' method='post' target='_blank'>
-						<input type='hidden' name='id' value='<?php echo $_REQUEST['id']; ?>'></input>
-					</form>
-				</div>
-                            
                                 <div class='right_pane' id='blis_update_div' style='display:none;margin-left:10px;'>
 				<p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
 				<b><?php echo "BLIS Update"; ?></b>
@@ -291,56 +416,7 @@ if($lab_config == null)
                                         </div>
 				</div>
 				
-				<div class='right_pane' id='st_types_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_ST_TYPES']; ?></b>
-					<br><br>
-					<div id='sttypes_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='st_types_form' name='st_types_form' action='ajax/st_types_update.php' method='post'>
-					<input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>					
-					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?>
-					<small><a id='stype_link' href='javascript:stype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
-					<div class='pretty_box' id='stype_box' style='display:none'>
-					<b><u><?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?></u></b>
-						<?php $page_elems->getSpecimenTypeCheckboxes($lab_config->id); ?>
-					</div>
-					<br>
-					<br>
-					<?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
-					<small><a id='ttype_link' href='javascript:ttype_toggle();'><?php echo LangUtil::$generalTerms['CMD_SHOW']; ?></a></small>
-					<div class='pretty_box' id='ttype_box' style='display:none'>
-					<b><u><?php echo LangUtil::$generalTerms['TEST_TYPES']; ?></u></b>
-                                        
-                                        <?php
-                                        //NC3065
-                                        
-                                        $user = get_user_by_id($_SESSION['user_id']);
-                                        if(is_super_admin($user) || is_country_dir($user))
-                                        {
-                                            $page_elems->getTestTypeCheckboxes_dir($lab_config->id);
-                                        }
-                                        else
-                                        {
-                                            $page_elems->getTestTypeCheckboxes($lab_config->id); 
-                                        }
-                                        //NC3065
-					?>
-                                        
-                                         <?php //$page_elems->getTestTypeCheckboxes($lab_config->id); ?>
-                                        
-					</div>
-					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='checkandsubmit_st_types()'>
-					</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<span id='st_types_progress' style='display:none;'>
-                                  
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-					</form>
-				</div>
+				
 			
                                 <!--NC3065-->
                                 
@@ -837,30 +913,8 @@ if($lab_config == null)
 				<p style="text-align: right;"><a rel='facebox' href='#SetupNet'>Page Help</a></p>
 				Setup can be accessed from BlisSetup.html in the main folder.
 				</div>
-				<div class='right_pane' id='target_tat_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
-					 | <a href="javascript:toggletatdivs();" id='toggletat_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='tat_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<div id='goal_tat_list'>
-					<?php $page_elems->getGetGoalTatTable($lab_config->id); ?>
-					</div>
-					<form id='goal_tat_form' style='display:none' name='goal_tat_form' action='ajax/lab_config_tat_update.php' method='post'>
-						<?php $page_elems->getGoalTatForm($lab_config->id); ?>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_goal_tat();'></input>
-						&nbsp;&nbsp;&nbsp;
-						<small><a href='javascript:toggletatdivs();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
-						&nbsp;&nbsp;&nbsp;
-						<span id='tat_progress_spinner' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-						</span>
-					</form>
-				</div>
 				
-
-                            <div id='view_stocks_help' class='right_pane' style='display:none;margin-left:10px;'>
+                            <div class='right_pane' id='view_stocks_help'  style='display:none;margin-left:10px;'>
                                     <ul>	
                                             <?php
 
@@ -1326,13 +1380,17 @@ if($lab_config == null)
 </table>
 </div>
 </div>
-<?php include("includes/scripts.php");?>
+<?php include("includes/scripts.php");
+require_once("includes/script_elems.php");
+$script_elems = new ScriptElems();
+$script_elems->enableDatePicker();
+?>
 <script type='text/javascript'>
 
 <?php $page_elems->getCompatibilityJsArray("st_map", $lab_config_id); ?>
 
 $(document).ready(function(){
-        $("#inventory_div").load("view_stocks.php");;
+    $("#inventory_div").load("view_stocks.php");;
 	$("input[name='rage']").change(function() {
 		toggle_agegrouplist();
 	});
@@ -1658,11 +1716,8 @@ function performUpdate()
 }
 
 function test_setup()
-{
-if(document.getElementById('test_setup').style.display =='none')
-$('#test_setup').show();
-else
-$('#test_setup').hide();
+{   
+    right_load(2, "test_div");
 }
 
 function report_setup()
@@ -2406,6 +2461,67 @@ $(document).ready(function(){
 		}
 	});
 });
+
+function fetch_remarks_form()
+{
+    $('#updated_msg').hide();
+    var ttype = $("#ttype").attr("value");
+    $('#remarks_fetch_progress').show();
+    var url_string = "ajax/remarks_form_fetch.php?lid=<?php echo $lab_config->id; ?>&ttype="+ttype;
+    $('#remarks_form_pane').load( url_string, {}, function() {
+        $('#remarks_fetch_progress').hide();
+    });
+}
+
+function add_remarks_row(measure_id, range_type)
+{
+    var html_code = "";
+    if(range_type == <?php echo Measure::$RANGE_NUMERIC; ?>)
+    {
+        html_code = "<tr><td><input type='hidden' name='id_"+measure_id+"[]' value=-2 class='uniform_width_less'></input>";
+        html_code += "<input type='text' name='range_l_"+measure_id+"[]' value='' class='uniform_width_less'></input>";
+        html_code += "-<input type='text' name='range_u_"+measure_id+"[]' value='' class='uniform_width_less'></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        html_code += "<input type='text' name='age_l_"+measure_id+"[]' value='' class='uniform_width_less'></input>";
+        html_code += "-<input type='text' name='age_u_"+measure_id+"[]' value='' class='uniform_width_less'></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        html_code += "<input type='text' name='gender_"+measure_id+"[]' value='' size='1px'></input>";
+        html_code += "<td><input type='text' name='remarks_"+measure_id+"[]' value='' class='uniform_width'></input></td></tr>";
+    }
+    var target_table_id = "remarks_table_"+measure_id;
+    $('#'+target_table_id).append(html_code);
+}
+
+function submit_remarks_form()
+{
+    //Validate
+    var numeric_fields = $(".numeric_range");
+    for(var i = 0; i < numeric_fields.length; i++)
+    {
+        var elem = numeric_fields[i];
+        var val = elem.value;
+        if(val.trim() != "")
+        {
+            if(val.trim() != "+" && val.trim() != "-" && isNaN(val))
+            {
+                //alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['RANGE']; ?>");
+                //return;
+            }
+        }
+    }
+    //All okay
+    $('#remarks_submit_progress').show();
+    $('#remarks_form').ajaxSubmit({ success: function() {
+            $('#remarks_submit_progress').hide();
+            hide_remarks_form();
+            $('#updated_msg').show();
+        }
+    });
+}
+
+function hide_remarks_form()
+{
+    $('#remarks_form_pane').html("");
+}
+
 </script>
 
 <?php include("includes/footer.php"); ?>

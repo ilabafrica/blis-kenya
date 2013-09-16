@@ -14,13 +14,9 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 						</h3>
 						<ul class="breadcrumb">
 							<li>
-								<i class="icon-home"></i>
-								<a href="index.html">Home</a> 
-								<span class="icon-angle-right"></span>
+								<i class="icon-beaker"></i>
+								<a href="index.html">Tests</a>
 							</li>
-							<li><a href="#">Tests</a>
-							<span class="icon-angle-right"></span></li>
-							<li><a href="#"></a></li>
 							<!--
 							<li class="pull-right no-text-shadow">
 							<div class="sections-select">
@@ -60,7 +56,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 <div id="pending_tests" class='results_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Tests - ";?><span class="section-name">All Sections</span></h4>
+			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
 				<a href="javascript:fetch_pending_results();" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
@@ -87,7 +83,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 <div id="pending_results" class='results_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Tests - ";?><span class="section-name">All Sections</span></h4>
+			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
 				<a href="javascript:fetch_pending_results();" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
@@ -559,16 +555,31 @@ function hide_worksheet_link()
 
 function hide_test_result_form(test_id)
 {
-	var target_div_id = "result_form_pane_"+test_id;
-	$("#"+target_div_id).modal('hide');
-	
+	cancel_show(test_id);
+}
+
+function hide_test_result_form_confirmed(test_id)
+{	
+	cancel_hide();
+	$('#result_form_pane_'+test_id).modal('hide');
+}
+
+function cancel_show(test_id){
+	$('#yes').html('');
+	$('#yes').append( "<button type='button' class='btn btn-primary' onclick='javascript:hide_test_result_form_confirmed("+test_id+")'>Yes</button>");
+	$('#cancel').modal('show');
+}
+
+function cancel_hide(){
+
+	$('#cancel').modal('hide'); 
 }
 
 function hide_result_form(test_id)
 {
-	var target_div_id = "result_form_pane_"+specimen_id;
-	$("#"+target_div_id).html("");
-	$('#specimen_id').attr("value", "");
+		var target_div_id = "result_form_pane_"+specimen_id;
+		$("#"+target_div_id).html("");
+		$('#specimen_id').attr("value", "");
 }
 
 function fetch_specimen()
@@ -700,6 +711,9 @@ function fetch_test_result_form(test_id)
 {
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
+	
+	console.log("test_"+test_id);
+	
 	var pg=2;
 	$('#fetch_progress_bar').show();
 	var url = 'ajax/result_form_fetch.php';
@@ -710,14 +724,17 @@ function fetch_test_result_form(test_id)
 		{tid: test_id , page_id:pg}, 
 		function() 
 		{
-			$('#'+target_div).modal('show'); 
+			$('#'+target_div).modal('show');
 			App.unblockUI(el);
 		}
 	);
 }
+
 function remove(test_id){
 	var target_div = "result_form_pane_"+test_id;
+	$("#test_"+test_id).remove();
 	$('#'+target_div).modal('hide'); 
+	
 }
 
 function fetch_specimen2(specimen_id)
@@ -771,33 +788,39 @@ function toggle_form(form_id, checkbox_obj)
 	}
 }
 
-function submit_forms(specimen_id)
+function submit_forms(test_id)
 {
-	$('#tester').val();
-	alert("started here."+specimen_id+$('#tester').val());
-// 	var form_id_csv = $('#form_id_list').val();
-// 	var form_id_list = form_id_csv.split(",");
-// 	$('.result_cancel_link').hide();
-// 	$('.result_progress_spinner').show();
-// 	//var target_div_id = "fetched_specimen";
-// 	var target_div_id = "result_form_pane_"+specimen_id;
-// 	for(var i = 0; i < form_id_list.length; i++)
-// 	{
-// 		if($('#'+form_id_list[i]+'_skip').is(':checked'))
-// 		{
-// 			continue;
-// 		}
-// 		var params = $('#'+form_id_list[i]).formSerialize();
-// 			$.ajax({
-// 			type: "POST",
-// 			url: "ajax/result_add.php",
-// 			data: params,
-// 			success: function(msg) {
-// 				$("#"+target_div_id).html(msg);
-// 			}
-// 		});
-// 	}
-// 	$('.result_progress_spinner').hide();
+
+	//alert(test_id+":"+$("#tester").val());
+
+	
+	var form_id_csv = $('#form_id_list').val();
+	var form_id_list = form_id_csv.split(",");
+	$('.result_cancel_link').hide();
+	$('.result_progress_spinner').show();
+	//var target_div_id = "fetched_specimen";
+	var target_div_id = "result_form_pane_"+test_id;
+	for(var i = 0; i < form_id_list.length; i++)
+	{
+		if($('#'+form_id_list[i]+'_skip').is(':checked'))
+		{
+			continue;
+		}
+		var params = $('#'+form_id_list[i]).formSerialize();
+		console.log(params)
+			$.ajax({
+			type: "POST",
+			url: "ajax/result_add.php",
+			data: params,
+			success: function(msg) {
+				$("#test_"+test_id)[0].reset();
+				$("#test_"+test_id).remove();
+				$("#"+target_div_id).html(msg);
+				$("tr#"+test_id).remove();
+			}
+		});
+	}
+	
 }
 
 function get_batch_form()

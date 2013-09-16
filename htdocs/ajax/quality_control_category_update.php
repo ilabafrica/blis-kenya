@@ -11,7 +11,7 @@ $updated_entry = new QualityControlCategories();
 $updated_entry->qccId = $_REQUEST['qccid'];
 $updated_entry->name = $_REQUEST['name'];
 $reff = 1;
-$qcc_list = get_test_categories_catalog($lab_config_id, $reff);
+$qcc_list = get_quality_control_categories($lab_config_id, $reff);
 $updated_qcc_list = array();
 foreach($qcc_list as $key=>$value)
 {

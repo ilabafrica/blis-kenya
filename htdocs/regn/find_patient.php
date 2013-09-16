@@ -26,13 +26,9 @@ if(isset($_REQUEST['show_sc']))
 						</h3>
 						<ul class="breadcrumb">
 							<li>
-								<i class="icon-home"></i>
-								<a href="index.php">Home</a> 
-								<span class="icon-angle-right"></span>
+								<i class="icon-download-alt"></i>
+								<a href="index.php">Reception</a> 
 							</li>
-							<li><a href="#">Reception</a>
-							<span class="icon-angle-right"></span></li>
-							<li><a href="#"></a></li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
@@ -100,15 +96,15 @@ if(isset($_REQUEST['show_sc']))
 				&nbsp;&nbsp;
 				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)"  />
 				&nbsp;&nbsp;
-				<input class="btn green button-submit" type='button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' id='psearch_button' onclick="javascript:fetch_patients();" />
-				&nbsp;&nbsp;&nbsp;
+				<button id='psearch_button' class="btn green button-submit" type="button" onclick="javascript:fetch_patients();">
+				<i class='icon-search'></i> <?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?></button>
 				<span id='psearch_progress_spinner'>
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 				</span>
 				</form>
 				<br />
 				<div id='add_anyway_div' >
-					<a id='add_anyway_link' href='javascript:load_patient_reg()'><?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+					<a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
 				</div>
 				<div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
 					<ul>
@@ -338,7 +334,6 @@ function load_patient_reg()
 	$('.reg_subdiv').hide();
 	var patient_id = $.trim($('#pq').val());
 	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
-	//Load new_patient2.php via ajax
 	var url = 'regn/new_patient2.php';
 	$('#patients_registration_body').load(url, {n: patient_id});		
 	$('#patient_registration').show();
@@ -358,7 +353,6 @@ function load_specimen_rejection(specimen_id)
 {
 	$('.reg_subdiv').hide();
 	var specimen_id = specimen_id;
-	//Load new_specimen2.php via ajax
 	var url = 'regn/specimen_rejection.php';
 	$('#specimen_rejection_body').load(url, {sid: specimen_id});		
 	$('#specimen_rejection').show();

@@ -7,8 +7,6 @@ include("includes/header.php");
 include("includes/ajax_lib.php");
 LangUtil::setPageId("quality");
 
-$script_elems->enableJQueryForm();
-$script_elems->enableTokenInput();
 $qcc = get_quality_control_category_by_id($_REQUEST['qccid']);
 ?>
 <script type='text/javascript'>
@@ -61,7 +59,7 @@ $page_elems->getQualityControlCategoryInfo($qcc->name, true);
 				<td>
                 
                 <div class="form-actions">
-                      <button type="submit" onclick='javascript:update_test_category();' class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
+                      <button type="submit" onclick='javascript:update_quality_control_category();' class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
                       <a href='quality.php?show_qcc=1' class='btn'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
                 </div>
                	<span id='update_qcc_progress' style='display:none;'>
@@ -79,4 +77,7 @@ $page_elems->getQualityControlCategoryInfo($qcc->name, true);
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
 </small>
 </div>
-<?php include("includes/footer.php"); ?>
+<?php 
+$script_elems->enableJQuery();
+$script_elems->enableTokenInput();
+include("includes/footer.php"); ?>

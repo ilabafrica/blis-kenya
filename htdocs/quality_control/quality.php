@@ -154,30 +154,7 @@ function delete_quality_data()
 									</div>
 				</div>
                                     <!-------------------------end div tag to end new quality control category form-------------------->
-										&lt;div class=&quot;tabbable&quot;&gt;
-  &lt;ul class=&quot;nav nav-tabs&quot;&gt;
-    &lt;li class=&quot;active&quot;&gt;&lt;a href=&quot;#pane1&quot; data-toggle=&quot;tab&quot;&gt;Tab 1&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#pane2&quot; data-toggle=&quot;tab&quot;&gt;Tab 2&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#pane3&quot; data-toggle=&quot;tab&quot;&gt;Tab 3&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#pane4&quot; data-toggle=&quot;tab&quot;&gt;Tab 4&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div class=&quot;tab-content&quot;&gt;
-    &lt;div id=&quot;pane1&quot; class=&quot;tab-pane active&quot;&gt;
-      &lt;h4&gt;The Markup&lt;/h4&gt;
-      &lt;pre&gt;Code here ...&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;pane2&quot; class=&quot;tab-pane&quot;&gt;
-    &lt;h4&gt;Pane 2 Content&lt;/h4&gt;
-      &lt;p&gt; and so on ...&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;pane3&quot; class=&quot;tab-pane&quot;&gt;
-      &lt;h4&gt;Pane 3 Content&lt;/h4&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;pane4&quot; class=&quot;tab-pane&quot;&gt;
-      &lt;h4&gt;Pane 4 Content&lt;/h4&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;&lt;!-- /.tab-content --&gt;
-&lt;/div&gt;&lt;!-- /.tabbable --&gt;</pre>
+									</pre>
 									</div>
 									<div class="tab-pane" id="tabs1-pane3">
 										<p style="text-align: right;"><a rel='facebox' href='#QualityControlFieldGroups_tc'>Page Help</a></p>
@@ -207,30 +184,7 @@ function delete_quality_data()
 									</div>
 				</div>
                                     <!-------------------------end div tag to end new quality control field groups-------------------->
-										&lt;div class=&quot;tabbable&quot;&gt;
-  &lt;ul class=&quot;nav nav-tabs&quot;&gt;
-    &lt;li class=&quot;active&quot;&gt;&lt;a href=&quot;#pane1&quot; data-toggle=&quot;tab&quot;&gt;Tab 1&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#pane2&quot; data-toggle=&quot;tab&quot;&gt;Tab 2&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#pane3&quot; data-toggle=&quot;tab&quot;&gt;Tab 3&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#pane4&quot; data-toggle=&quot;tab&quot;&gt;Tab 4&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div class=&quot;tab-content&quot;&gt;
-    &lt;div id=&quot;pane1&quot; class=&quot;tab-pane active&quot;&gt;
-      &lt;h4&gt;The Markup&lt;/h4&gt;
-      &lt;pre&gt;Code here ...&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;pane2&quot; class=&quot;tab-pane&quot;&gt;
-    &lt;h4&gt;Pane 2 Content&lt;/h4&gt;
-      &lt;p&gt; and so on ...&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;pane3&quot; class=&quot;tab-pane&quot;&gt;
-      &lt;h4&gt;Pane 3 Content&lt;/h4&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;pane4&quot; class=&quot;tab-pane&quot;&gt;
-      &lt;h4&gt;Pane 4 Content&lt;/h4&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;&lt;!-- /.tab-content --&gt;
-&lt;/div&gt;&lt;!-- /.tabbable --&gt;</pre>
+									</pre>
 									</div>
 									</div><!-- /.tab-content -->
 							</div><!-- /.tabbable -->

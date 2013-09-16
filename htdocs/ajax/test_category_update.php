@@ -1,11 +1,13 @@
 <?php
 #
-# Main page for updating specimen type info
-# Called via Ajax from specimen_type_edit.php
+# Main page for test category type info
+# Called via Ajax from test_category_edit.php
 #
 
 include("../includes/db_lib.php");
 include("../lang/lang_xml2php.php");
+
+putUILog('test_category_update', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 $updated_entry = new TestCategory();
 $updated_entry->testCategoryId = $_REQUEST['tcid'];
