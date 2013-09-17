@@ -8307,7 +8307,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			return;
 		}
 		?>
-		<table class=''>
+		<table class='hor-minimalist-b'>
         <thead style="background-color:#CCC;">
                 <tr>
                     <th><?php echo "#"; ?></th>

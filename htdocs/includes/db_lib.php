@@ -8210,7 +8210,7 @@ function add_quality_control_category($qcc_description)
 }
 
 ////////////function to test categories//////////////////
-function update_test_category($updated_entry, $updated_test_category_list)
+function update_test_category($updated_entry)
 {
 	# Updates specimen type info in DB catalog
 	$saved_db = DbUtil::switchToLabConfigRevamp();

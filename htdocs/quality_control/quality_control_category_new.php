@@ -8,7 +8,7 @@ LangUtil::setPageId("quality");
 ?>
 <br>
 <b><?php echo "New Quality Control Category"; ?></b>
-| <a href='quality.php?show_qc=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+| <a href='quality.php?show_qcc=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br><br>
 <div class='pretty_box'>
 <form name='new_quality_control_category_form' id='new_quality_control_category_form' action='quality_control_category_add.php' method='post'>

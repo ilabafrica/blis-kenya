@@ -7,8 +7,7 @@ include("includes/header.php");
 include("includes/ajax_lib.php");
 LangUtil::setPageId("catalog");
 
-$script_elems->enableJQueryForm();
-$script_elems->enableTokenInput();
+
 $specimen_type = get_specimen_type_by_id($_REQUEST['sid']);
 ?>
 
@@ -75,6 +74,10 @@ Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you
 <?php
 include("includes/scripts.php");
 $script_elems->enableDatePicker();
+$script_elems->enableJQuery();
+$script_elems->enableFacebox();
+$script_elems->enableJQueryForm();
+$script_elems->enableTokenInput();
 ?>
 <script type='text/javascript'>
 $(document).ready(function(){

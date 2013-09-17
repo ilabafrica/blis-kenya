@@ -10,23 +10,7 @@ LangUtil::setPageId("catalog");
 
 $test_category = get_test_category_by_id($_REQUEST['tcid']);
 ?>
-<script type='text/javascript'>
-function update_test_category()
-{
-	if($('#name').attr("value").trim() == "")
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_CATNAME']; ?>");
-		return;
-	}
-	$('#update_testcategory_progress').show();
-	$('#edit_testcategory_form').ajaxSubmit({
-		success: function(msg) {
-			$('#update_testcategory_progress').hide();
-			window.location="test_category_updated.php?tcid=<?php echo $_REQUEST['tcid']; ?>";
-		}
-	});
-}
-</script>
+
 <br>
 <b><?php echo "Edit Test Category"; ?></b>
 | <a href="catalog.php?show_tc=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
@@ -65,10 +49,11 @@ $page_elems->getTestCategoryInfo($test_category->name, true);
 				<td>
                 
                 <div class="form-actions">
-                      <button type="submit" onclick='javascript:update_test_category();' class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
+
+                      <input class='btn yellow' type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:update_test_category();'></input>
                       <a href='catalog.php?show_tc=1' class='btn'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
                 </div>
-               	<span id='update_stype_progress' style='display:none;'>
+               	<span id='update_testcategory_progress' style='display:none;'>
 						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
 					</span>
 				</td>
@@ -83,8 +68,28 @@ $page_elems->getTestCategoryInfo($test_category->name, true);
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
 </small>
 </div>
+<script type='text/javascript'>
+function update_test_category()
+{
+	if($('#name').attr("value").trim() == "")
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_CATNAME']; ?>");
+		return;
+	}
+	$('#update_testcategory_progress').show();
+	$('#edit_testcategory_form').ajaxSubmit({
+		success: function(msg) {
+			$('#update_testcategory_progress').hide();
+			window.location="test_category_updated.php?tcid=<?php echo $_REQUEST['tcid']; ?>";
+		}
+	});
+}
+</script>
 <?php 
+include("includes/scripts.php");
+$script_elems->enableDatePicker();
 $script_elems->enableJQuery();
 $script_elems->enableJQueryForm();
 $script_elems->enableTokenInput();
+$script_elems->enableFacebox();
 include("includes/footer.php"); ?>

@@ -16,7 +16,7 @@ $(document).ready(function(){
 	$('div.content_div').hide();
 	$('#quality_controls_div').hide();
 	$('#quality_control_categories_div').hide();
-	$('#quality_control_field_groups_div').hide();
+	//$('#quality_control_field_groups_div').hide();
 	$('#<?php echo $dialog_id; ?>').show();
 	<?php
 	if(isset($_REQUEST['show_qc']))
@@ -31,12 +31,12 @@ $(document).ready(function(){
 		load_right_pane('quality_control_categories_div');
 		<?php
 	}
-	else if(isset($_REQUEST['show_qcfg']))
+	/*else if(isset($_REQUEST['show_qcfg']))
 	{
 		?>
 		load_right_pane('quality_control_field_groups_div');
 		<?php
-	}
+	}*/
 	else if(isset($_REQUEST['qcdel']))
 	{
 		?>
@@ -102,7 +102,6 @@ function delete_quality_data()
 	<div id='rm_msg' class='clean-orange' style='display:none;width:200px;'>
 		<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('rm_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 	</div>
-    <!--- Tabbable tabs --->
     <div class="row-fluid ">
 					<div class="span12">				
 					<div class="tab-content">
@@ -111,19 +110,18 @@ function delete_quality_data()
 								<ul class="nav nav-tabs">
 									<li class="active"><a href="#tabs1-pane1" data-toggle="tab"><?php echo LangUtil::$generalTerms['QUALITY_CONTROLS']; ?></a></li>
 									<li><a href="#tabs1-pane2" data-toggle="tab"><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_CATEGORIES']; ?></a></li>
-									<li><a href="#tabs1-pane3" data-toggle="tab"><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']; ?></a></li>
+									<!--<li><a href="#tabs1-pane3" data-toggle="tab"><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']; ?></a></li>-->
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active" id="tabs1-pane1">
 										<p style="text-align: right;"><a rel='facebox' href='#QualityControls_tc'>Page Help</a></p>
 		<h5><?php echo LangUtil::$generalTerms['QUALITY_CONTROLS']; ?>
-		| <a href='#tabs1-pane4' data-toggle='tab' title='Click to Add a New Quality Control'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></h5></a>
+		| <a href='quality_control_new.php' title='Click to Add a New Quality Control'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></h5></a>
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php //$page_elems->getQualityControlsTable($_SESSION['lab_config_id']); ?>
-										<pre>
-										</pre>
+										
 									</div>
 									<div class="tab-pane" id="tabs1-pane2">
 										<p style="text-align: right;"><a rel='facebox' href='#QualityControlCategories_tc'>Page Help</a></p>
@@ -133,28 +131,6 @@ function delete_quality_data()
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qccdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php $page_elems->getQualityControlCategoriesTable($_SESSION['lab_config_id']); ?>
-										<pre>
-										
-											<!-------------------------div tag to begin new quality control category form-------------------->
-                                    
-                                   <div id='quality_control_category_new' class='right_pane' style='display:none;margin-left:10px;'>
-					<div class="modal-header">
-										<h4 id="myModalLabel1"><?php echo "New Quality Control Category"; ?></h4>
-									</div>
-									<div class="modal-body">
-										<div class="controls">
-                                        <form id="new_quality_control_category_form" method="post" action="quality_control_category_add.php">
-                                        
-                                          <input type='text' name='category_name' id='category_name' class='span4 m-wrap' />
-                                       </div>
-									</div>
-									<div class="modal-footer">
-									<input type='button' class="btn yellow" onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
-									</form>
-									</div>
-				</div>
-                                    <!-------------------------end div tag to end new quality control category form-------------------->
-									</pre>
 									</div>
 									<div class="tab-pane" id="tabs1-pane3">
 										<p style="text-align: right;"><a rel='facebox' href='#QualityControlFieldGroups_tc'>Page Help</a></p>
@@ -164,43 +140,11 @@ function delete_quality_data()
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qcfgdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php //$page_elems->getQualityControlFieldGroupsTable($_SESSION['lab_config_id']); ?>
-										<pre>
-										<!-------------------------div tag to begin new quality control field groups-------------------->
-                                    
-                                   <div id='quality_control_field_group_new' class='right_pane' style='display:none;margin-left:10px;'>
-					<div class="modal-header">
-										<h4 id="myModalLabel1"><?php echo "New Quality Control Field Group"; ?></h4>
-									</div>
-									<div class="modal-body">
-										<div class="controls">
-                                        <form id="new_quality_control_field_group" method="post">
-                                        
-                                          <input type='text' name='field_group_name' id='field_group_name' class='span4 m-wrap' />
-                                       </div>
-									</div>
-									<div class="modal-footer">
-									<input name='qcfg' id='qcfg' type='button' class="btn yellow" onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
-									</form>
-									</div>
-				</div>
-                                    <!-------------------------end div tag to end new quality control field groups-------------------->
-									</pre>
+										
 									</div>
 									</div><!-- /.tab-content -->
 							</div><!-- /.tabbable -->
 						</div><!-- .tabs-basic -->
-
-<div class="tab-pane" id="tabs1-pane4">
-										<p style="text-align: right;"><a rel='facebox' href='#QualityControls_tc'>Page Help</a></p>
-		<h5><?php echo LangUtil::$generalTerms['QUALITY_CONTROLS']; ?>
-		| <a href='#quality_control_new' rel='facebox' title='Click to Add a New Quality Control'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></h5></a>
-		<div id='tdel_msg' class='clean-orange' style='display:none;'>
-			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-		</div>
-		<?php //$page_elems->getQualityControlsTable($_SESSION['lab_config_id']); ?>
-										<pre><div id="my_form_builder"></div></pre>
-									</div>
-
 						</div>
 						<!-- END TAB PORTLET-->
 
