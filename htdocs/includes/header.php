@@ -341,7 +341,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 							</li>
 							<li><a href='javascript:right_load(".$quote."sample_collection".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-tint'></i>&nbsp;&nbsp;Specimen registration</a>
+									<i class='icon-tint'></i>&nbsp;&nbsp;Sample Collection</a>
 							</li>
 						</ul>";
 					break;
