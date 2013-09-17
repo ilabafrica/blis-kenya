@@ -58,7 +58,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
-				<a href="javascript:fetch_pending_results();" class="reload"></a>
+				<a href="javascript:fetch_tests(<?php echo Specimen::$STATUS_PENDING_RESULTS?>);" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
 			</div>
 		</div>
@@ -513,7 +513,7 @@ function right_load(destn_div)
 		load_unreported_results();
 	}
 	else if(destn_div == "pending_tests"){
-		fetch_pending_specimens();
+		fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
 		
 	}
 	else if(destn_div == "pending_results"){
@@ -611,7 +611,7 @@ function fetch_specimen()
 /**
  * FETCH PENDING SPECIMENS
  */
-function fetch_pending_specimens()
+function fetch_tests(status)
 {	
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
@@ -619,11 +619,19 @@ function fetch_pending_specimens()
 	var date_from = Date.today().add({days: -6}).toString('yyyy-MM-dd')+' '+'00:00:00';
 	var date_to = Date.today().toString('yyyy-MM-dd')+' '+'23:59:59';
 	$("#fetched_specimens_entry").load(url, 
-		{a: '', t: 10, df:date_from, dt:date_to}, 
+		{a: '', t: 10, df:date_from, dt:date_to, s:status}, 
 		function() 
 		{
 			handleDataTable(10);
 			enableAdvancedDatePicker(date_from, date_to);
+			if (status==<?php echo Specimen::$STATUS_PENDING;?>){
+				$('select', '#status')[0].selectedIndex = 1;
+			}else if (status==<?php echo Specimen::$STATUS_PENDING_RESULTS;?>){
+				$('select', '#status')[0].selectedIndex = 2;
+			}else if (status==<?php echo Specimen::$STATUS_DONE;?>){
+				$('select', '#status')[0].selectedIndex = 3;
+			}
+			$(".chosen").chosen();
 			App.unblockUI(el);
 		}
 	);

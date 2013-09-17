@@ -11,6 +11,7 @@ $attrib_value = $_REQUEST['a'];
 $attrib_type = $_REQUEST['t'];
 $date_from = $_REQUEST['df'];
 $date_to = $_REQUEST['dt'];
+$status = $_REQUEST['s'];
 $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
@@ -161,8 +162,7 @@ else
 						LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-                    	WHERE t.status_code_id=".Specimen::$STATUS_PENDING_RESULTS."
-                    	OR t.status_code_id=".Specimen::$STATUS_PENDING."
+                    	WHERE t.status_code_id=".$status."
                     	ORDER BY s.ts DESC LIMIT 5000 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
     }
@@ -408,14 +408,14 @@ if($attrib_type == 12)
 			</td></div>';
 			}else
 			if($status == Specimen::$STATUS_DONE){
-				echo 'label-success">Completed';
+				echo 'label-info">Completed';
 				echo '</span></td>';
 				echo '
 			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to view results" class="btn blue-stripe mini">
 				<i class="icon-search"></i> View Results</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Click to view report" class="btn green-stripe mini">
-				<i class="icon-file"></i> View Report</a>
+				<i class="icon-ok"></i> Verify</a>
 			</td>';
 			}else
 			if($status == Specimen::$STATUS_REFERRED){

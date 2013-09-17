@@ -2636,7 +2636,7 @@ class PageElems
 	window.open(url_string);
 		}
 		</script>
-		<table class="table table-striped table-bordered dataTable" id='test_history_table'>
+		<table class="table table-striped table-condensed" id='test_history_table'>
 			<thead>
 				<tr valign='top'>
 					<?php
