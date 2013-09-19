@@ -228,15 +228,9 @@ if($lab_config == null)
 
 
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
-						<h3>
-						</h3>
+						<h3></h3>
 						<ul class="breadcrumb">
-							<li>
-								<i class="icon-home"></i>
-								<a href="index.html">Home</a> 
-								<span class="icon-angle-right"></span>
-							</li>
-							<li><a href="#">Lab Configuration</a>
+							<li><a href="#"><i class='icon-wrench'></i> Lab Configuration</a>
 							<span class="icon-angle-right"></span></li>
 							<li><a href="#"></a></li>
 						</ul>

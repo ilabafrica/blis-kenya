@@ -7,6 +7,49 @@ include("includes/header.php");
 LangUtil::setPageId("catalog");
 $script_elems->enableLatencyRecord();
 ?>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li><i class='icon-cogs'></i> Test Catalog
+							</li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+<!-- BEGIN ROW-FLUID-->   
+<div class="row-fluid">
+<div class="span12 sortable">
+<br>
+<b><?php echo LangUtil::$pageTerms['NEW_SPECIMEN_TYPE']; ?></b>
+| <a href='catalog.php?show_s=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+<br><br>
+<form name='new_specimen_form' id='new_specimen_form' action='specimen_type_add.php' method='post'>
+
+
+<?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?>
+<input type='text' name='specimen_name' id='specimen_name' class='uniform_width' />
+<?php echo LangUtil::$generalTerms['DESCRIPTION']; ?>
+<textarea name='specimen_descr' id='specimen_descr' class='uniform_width'></textarea>
+
+<?php echo LangUtil::$generalTerms['COMPATIBLE_TESTS']; ?> <?php $page_elems->getAsterisk(); ?>[<a href='#test_help' rel='facebox'>?</a>]
+
+<?php $page_elems->getTestTypeCheckboxes(); ?>
+
+<input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href='catalog.php?show_s=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+</form>
+<div id='test_help' style='display:none'>
+<small>
+Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
+</small>
+</div>
+</div>
+</div>
+
+<?php include("includes/scripts.php");?>
 <script type='text/javascript'>
 function check_input()
 {
@@ -38,36 +81,6 @@ function check_input()
 }
 
 </script>
-<br>
-<b><?php echo LangUtil::$pageTerms['NEW_SPECIMEN_TYPE']; ?></b>
-| <a href='catalog.php?show_s=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-<br><br>
-<div class='pretty_box'>
-<form name='new_specimen_form' id='new_specimen_form' action='specimen_type_add.php' method='post'>
-<table class='smaller_font'>
-<tr>
-<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='specimen_name' id='specimen_name' class='uniform_width' /></td>
-</tr>
-<tr valign='top'>
-<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-<td><textarea name='specimen_descr' id='specimen_descr' class='uniform_width'></textarea></td>
-</tr>
-<tr valign='top'>
-<td>
-<?php echo LangUtil::$generalTerms['COMPATIBLE_TESTS']; ?> <?php $page_elems->getAsterisk(); ?>[<a href='#test_help' rel='facebox'>?</a>]
-</td>
-<td>
-<?php $page_elems->getTestTypeCheckboxes(); ?>
-<br><br>
-<input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
-&nbsp;&nbsp;&nbsp;&nbsp;
-<a href='catalog.php?show_s=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-</form>
-</div>
-<div id='test_help' style='display:none'>
-<small>
-Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
-</small>
-</div>
+
+
 <?php include("includes/footer.php"); ?>

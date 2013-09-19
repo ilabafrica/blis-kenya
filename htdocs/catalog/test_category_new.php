@@ -3,7 +3,11 @@
 # Main page for adding new test category
 #
 include("redirect.php");
-include("includes/header.php");
+include("../includes/page_elems.php");
+require_once("includes/script_elems.php");
+$script_elems = new ScriptElems();
+$page_elems = new PageElems();
+
 LangUtil::setPageId("catalog");
 $script_elems->enableLatencyRecord();
 ?>
@@ -11,7 +15,7 @@ $script_elems->enableLatencyRecord();
 function check_input()
 {
 	// Validate
-	var category_name = $('#category_name').attr("value");
+	var category_name = $('#category_name').val();
 	if(category_name == "")
 	{
 		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_CATNAME']; ?>");
@@ -48,4 +52,4 @@ function check_input()
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test category you are looking for.
 </small>
 </div>
-<?php include("includes/footer.php"); ?>
+<?php //include("includes/footer.php"); ?>

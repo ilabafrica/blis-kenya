@@ -10,14 +10,8 @@ db_get_current();
 						<h3>
 						</h3>
 						<ul class="breadcrumb">
-							<li>
-								<i class="icon-home"></i>
-								<a href="index.html">Home</a> 
-								<span class="icon-angle-right"></span>
+							<li><i class='icon-wrench'></i> Reports
 							</li>
-							<li><a href="#">Reports</a>
-							<span class="icon-angle-right"></span></li>
-							<li><a href="#"></a></li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
@@ -33,10 +27,7 @@ db_get_current();
 
 <!-- BEGIN ROW-FLUID-->   
 <div class="row-fluid">
-<div class="span12 sortable"
-
-<div class="col-lg-7">
-<div class="panel panel-primary">
+<div class="span12 sortable">
     
 	<div class="portlet box green reports_subdiv" id="test_history_div" style="display: none">
         <div class="portlet-title" >

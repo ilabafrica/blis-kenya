@@ -1971,7 +1971,7 @@ class Measure
 		# Updates an existing measure entry in DB
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"INSERT INTO measure (name, range, unit) ".
+			"INSERT INTO measure (name, range, unit_id) ".
 			"VALUES ('$this->name', '$this->range', '$this->unit')".
 		query_insert_one($query_string);
 		DbUtil::switchRestore($saved_db);
@@ -8204,7 +8204,7 @@ function add_measure($measure, $range, $unit)
 	$unit = mysql_real_escape_string($unit, $con);
 	$saved_db = DbUtil::switchToLabConfigRevamp();
 	$query_string = 
-		"INSERT INTO measure(name, range, unit) ".
+		"INSERT INTO measure(name, measure_range, unit_id) ".
 		"VALUES ('$measure', '$range', '$unit')";
 	query_insert_one($query_string);
 	# Return primary key of the record just inserted

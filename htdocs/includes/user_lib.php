@@ -72,7 +72,7 @@ function get_top_menu_options($user_role)
 				# Back up data option
 				$lab_config_list = get_lab_configs($_SESSION['user_id']);
 				//$page_list[LangUtil::$pageTerms['MENU_BACKUP']] = "data_backup?id=".$lab_config_list[0]->id;
-				$page_list[LangUtil::$pageTerms['MENU_BACKUP']] = "backupDataUI.php?id=".$lab_config_list[0]->id;
+				//$page_list[LangUtil::$pageTerms['MENU_BACKUP']] = "backupDataUI.php?id=".$lab_config_list[0]->id;
 			}
 		}
 		//$page_list["Inventory"]="stock_add.php";

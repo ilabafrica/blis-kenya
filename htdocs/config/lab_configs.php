@@ -22,6 +22,87 @@ if(User::onlyOneLabConfig($_SESSION['user_id'], $_SESSION['user_level']))
 include("includes/header.php");
 LangUtil::setPageId("lab_configs");
 ?>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3></h3>
+						<ul class="breadcrumb">
+							<li><a href="#"><i class='icon-wrench'></i> <?php echo LangUtil::getTitle(); ?></a>
+							<span class="icon-angle-right"></span></li>
+							<li><a href="#"></a></li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+<!-- END PAGE HEADER-->
+
+ | <a href='lab_config_new.php'><?php echo LangUtil::$pageTerms['CMD_ADDNEWLAB']; ?></a>
+  | <a href='lab_backups.php'><?php echo 'Import Lab Data'; ?></a>
+
+     <?php /* Enable when data merging is implemented
+ | <a href='updateNationalDatabaseUI.php'><?php echo "Update National Database"; ?></a>
+ | <a rel='facebox' href='exportNationalDatabaseUI.php'><?php echo "Export National Database"; ?></a>
+ */ ?>
+<br><br>
+<?php
+if(isset($_REQUEST['msg']))
+{
+	?>
+	<div class='clean-orange' id='server_msg' style='top-margin:20px;width:300px;'>
+	<?php echo base64_decode($_REQUEST['msg']); ?>
+	&nbsp;&nbsp;
+	<small><a href="javascript:toggle('server_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a></small>
+	</div>
+	<?php
+}
+?>
+<p>
+	<input type='text' name="lab_search_term" id="lab_search_term" />
+	&nbsp;&nbsp;
+	<input type='button' onclick='javascript:search_labs(0);' name='lab_search_button' id='lab_search_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' title='Enter full or partial name of the lab to search' />
+	&nbsp;&nbsp;
+	<a href='javascript:search_labs(1)' id='viewall_link' style='display:none;' title='Click to View All Lab Configurations'><small><?php echo LangUtil::$pageTerms['CMD_VIEWALL']; ?></small></a>
+	&nbsp;&nbsp;
+	<span id='lab_search_progress_bar' style='display:none;'>
+		<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+	</span>
+</p>
+<?php 
+$admin_user_id = $_SESSION['user_id'];
+$lab_config_list = get_lab_configs($admin_user_id);
+$lab_config_list_imported = get_lab_configs_imported();
+//print_r($lab_config_list);
+//echo "<br>";
+//print_r($lab_config_list_imported);
+?>
+<div id='lab_config_list_imported'>
+       <br>
+    <b>Lab Backups</b>
+	<?php $page_elems->getLabConfigTableImported($lab_config_list_imported);  ?>
+</div>
+    <br>
+<div id='lab_config_list'>
+    <b>Lab Config Templates</b>
+	<?php $page_elems->getLabConfigTable($lab_config_list);  ?>
+</div>
+<br>
+ <div id='update_success' class='clean-orange' style='display:none;width:350px;'>
+	Updated Successfully&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_success');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+</div>
+ <div id='update_failure' class='clean-orange' style='display:none;width:350px;'>
+	Update Failed&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_failure');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?>
+</div>
+<br>
+<small><a href='lab_config_new.php'><?php echo LangUtil::$pageTerms['CMD_ADDNEWLAB']; ?> &raquo;</a> | </small> 
+<?php
+/* Need to fix bug
+<small><a href='javascript:update_database_submit();'><?php echo 'Update All Labs Data from Backups'; ?></a> | </small>
+*/
+?>
+<small><a rel='facebox' href='update/blis_update.php'><?php echo 'Update To New Version'; ?></a></small>
+<span id='update_database_progress' style='display:none'>
+	<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+</span>
+<?php
+include("includes/scripts.php");?>
 <script type='text/javascript'>
 $(document).ready(function(){
 	<?php
@@ -106,73 +187,4 @@ function search_labs(view_all)
 }
 </script>
 <?php $script_elems->bindEnterToClick("#lab_search_term", "#lab_search_button"); ?>
-<br>
-<b><?php echo LangUtil::getTitle(); ?></b>
- | <a href='lab_config_new.php'><?php echo LangUtil::$pageTerms['CMD_ADDNEWLAB']; ?></a>
-  | <a href='lab_backups.php'><?php echo 'Import Lab Data'; ?></a>
-
-     <?php /* Enable when data merging is implemented
- | <a href='updateNationalDatabaseUI.php'><?php echo "Update National Database"; ?></a>
- | <a rel='facebox' href='exportNationalDatabaseUI.php'><?php echo "Export National Database"; ?></a>
- */ ?>
-<br><br>
-<?php
-if(isset($_REQUEST['msg']))
-{
-	?>
-	<div class='clean-orange' id='server_msg' style='top-margin:20px;width:300px;'>
-	<?php echo base64_decode($_REQUEST['msg']); ?>
-	&nbsp;&nbsp;
-	<small><a href="javascript:toggle('server_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a></small>
-	</div>
-	<?php
-}
-?>
-<p>
-	<input type='text' name="lab_search_term" id="lab_search_term" />
-	&nbsp;&nbsp;
-	<input type='button' onclick='javascript:search_labs(0);' name='lab_search_button' id='lab_search_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' title='Enter full or partial name of the lab to search' />
-	&nbsp;&nbsp;
-	<a href='javascript:search_labs(1)' id='viewall_link' style='display:none;' title='Click to View All Lab Configurations'><small><?php echo LangUtil::$pageTerms['CMD_VIEWALL']; ?></small></a>
-	&nbsp;&nbsp;
-	<span id='lab_search_progress_bar' style='display:none;'>
-		<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-	</span>
-</p>
-<?php 
-$admin_user_id = $_SESSION['user_id'];
-$lab_config_list = get_lab_configs($admin_user_id);
-$lab_config_list_imported = get_lab_configs_imported();
-//print_r($lab_config_list);
-//echo "<br>";
-//print_r($lab_config_list_imported);
-?>
-<div id='lab_config_list_imported'>
-       <br>
-    <b>Lab Backups</b>
-	<?php $page_elems->getLabConfigTableImported($lab_config_list_imported);  ?>
-</div>
-    <br>
-<div id='lab_config_list'>
-    <b>Lab Config Templates</b>
-	<?php $page_elems->getLabConfigTable($lab_config_list);  ?>
-</div>
-<br>
- <div id='update_success' class='clean-orange' style='display:none;width:350px;'>
-	Updated Successfully&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_success');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-</div>
- <div id='update_failure' class='clean-orange' style='display:none;width:350px;'>
-	Update Failed&nbsp;&nbsp;&nbsp;<a href="javascript:toggle_div('update_failure');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?>
-</div>
-<br>
-<small><a href='lab_config_new.php'><?php echo LangUtil::$pageTerms['CMD_ADDNEWLAB']; ?> &raquo;</a> | </small> 
-<?php
-/* Need to fix bug
-<small><a href='javascript:update_database_submit();'><?php echo 'Update All Labs Data from Backups'; ?></a> | </small>
-*/
-?>
-<small><a rel='facebox' href='update/blis_update.php'><?php echo 'Update To New Version'; ?></a></small>
-<span id='update_database_progress' style='display:none'>
-	<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-</span>
 <?php include("includes/footer.php"); ?>

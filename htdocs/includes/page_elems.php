@@ -1143,7 +1143,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b tablesorter' id='testTypeTable' >
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 500px;">
 			<thead>
 					<th>#</th>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
@@ -1172,7 +1172,7 @@ class PageElems
 			<td>
 			</td>
 			<td>
-				<a href='test_type_edit.php?tid=<?php echo $key; ?>' title='Click to Edit Test Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+				<a href='test_type_edit.php?tid=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Test Info'><i class='icon-pencil'></i>  <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
 			</td>
 			<?php
 			$user = get_user_by_id($_SESSION['user_id']);
@@ -1180,7 +1180,7 @@ class PageElems
 			{
 			?>
 			<td>
-				<a href='test_type_delete.php?id=<?php echo $key; ?>'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+				<a href='test_type_delete.php?id=<?php echo $key; ?>' class="btn mini red"><i class='icon-remove'></i>  <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}
@@ -1205,7 +1205,16 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 400px;">
+		<thead>
+		<tr>
+		<th>
+		Specimen Type
+		</th>
+		<th>
+		</th>
+		</tr>
+		</thead>
 		<tbody>
 		<?php
 		$count = 1;
@@ -1214,13 +1223,10 @@ class PageElems
 			?>
 			<tr>
 			<td>
-				<?php echo $count; ?>.
-			</td>
-			<td>
 				<?php echo $value; ?>
 			</td>
 			<td>
-				<a href='specimen_type_edit.php?sid=<?php echo $key; ?>' title='Click to Edit Specimen Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+				<a href='specimen_type_edit.php?sid=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Specimen Info'><i class='icon-pencil'></i> <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
 			</td>
 			<?php
 			$user = get_user_by_id($_SESSION['user_id']);
@@ -1228,7 +1234,7 @@ class PageElems
 			{
 			?>
 			<td>
-				<a href='specimen_type_delete.php?id=<?php echo $key; ?>'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+				<a href='specimen_type_delete.php?id=<?php echo $key; ?>' class="btn mini red"> <i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}
@@ -1253,7 +1259,13 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 400px;">
+		<thead>
+		<tr>
+		<th>Section Name</th>
+		<th></th>
+		</tr>
+		</thead>
 		<tbody>
 		<?php
 		$count = 1;
@@ -1261,14 +1273,12 @@ class PageElems
 		{
 			?>
 			<tr>
-			<td>
-				<?php echo $count; ?>.
-			</td>
+			
 			<td>
 				<?php echo $value; ?>
 			</td>
 			<td>
-				<a href='test_category_edit.php?tcid=<?php echo $key; ?>' title='Click to Edit Test Category Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+				<a href='test_category_edit.php?tcid=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Test Category Info'><i class='icon-pencil'></i> <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
 			</td>
 			<?php
 			$user = get_user_by_id($_SESSION['user_id']);
@@ -1276,7 +1286,7 @@ class PageElems
 			{
 			?>
 			<td>
-				<a href='test_category_delete.php?tcid=<?php echo $key; ?>'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+				<a href='test_category_delete.php?tcid=<?php echo $key; ?>' class="btn mini red"><i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}

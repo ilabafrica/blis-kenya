@@ -34,14 +34,8 @@ if(is_super_admin($user) || is_country_dir($user))
 						<h3>
 						</h3>
 						<ul class="breadcrumb">
-							<li>
-								<i class="icon-home"></i>
-								<a href="index.html">Home</a> 
-								<span class="icon-angle-right"></span>
+							<li><i class='icon-cogs'></i> Test Catalog
 							</li>
-							<li><a href="#">Test Catalog</a>
-							<span class="icon-angle-right"></span></li>
-							<li><a href="#"></a></li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>
@@ -54,35 +48,66 @@ if(is_super_admin($user) || is_country_dir($user))
 		<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('rm_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 	</div>
 	<div id='test_types_div' class='content_div'>
+		<div class="portlet box green">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo LangUtil::$generalTerms['TEST_TYPES']; ?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				
+			</div>
+		</div>
+		<div class="portlet-body">
 		<p style="text-align: right;"><a rel='facebox' href='#TestType_tc'>Page Help</a></p>
-		<b><?php echo LangUtil::$generalTerms['TEST_TYPES']; ?></b>
-		| <a href='test_type_new.php' title='Click to Add a New Test Type'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		 <a href='test_type_new.php' class="btn blue-stripe" title='Click to Add a New Test Type'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php $page_elems->getTestTypeTable($_SESSION['lab_config_id']); ?>
+		</div>
+		</div>
 	</div>
+	
 	<div id='specimen_types_div' class='content_div'>
+	<div class="portlet box green">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				
+			</div>
+		</div>
+		<div class="portlet-body">
 		<p style="text-align: right;"><a rel='facebox' href='#SpecimenType_tc'>Page Help</a></p>
-		<b><?php echo LangUtil::$generalTerms['SPECIMEN_TYPES']; ?></b>
-		| <a href='specimen_type_new.php'  title='Click to Add a New Specimen Type'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		<a href='specimen_type_new.php' class="btn blue-stripe" title='Click to Add a New Specimen Type'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='sdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('sdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php $page_elems->getSpecimenTypeTable($_SESSION['lab_config_id']); ?>
+		</div>
+	</div>
 	</div>
     
     <div id='test_categories_div' class='content_div'>
+    <div class="portlet box green">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo "Lab Sections"; ?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				
+			</div>
+		</div>
+		<div class="portlet-body">
 		<p style="text-align: right;"><a rel='facebox' href='#TestCategory_tc'>Page Help</a></p>
-		<b><?php echo LangUtil::$generalTerms['TEST_CATEGORIES']; ?></b>
-		| <a href='test_category_new.php'  title='Click to Add a New Test Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		<a href='javascript:add_section();' class="btn blue-stripe" title='Click to Add a New Test Category'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='sdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php $page_elems->getTestCategoryTable($_SESSION['lab_config_id']); ?>
+		</div>
+	</div>
 	</div>
 	
 	<div id='TestType_tc' class='right_pane' style='display:none;margin-left:10px;'>
@@ -133,6 +158,9 @@ if(is_super_admin($user) || is_country_dir($user))
 	?>
 
 </div>
+</div>
+<div class='modal container hide fade' id='form' role="dialog" data-backdrop="static">
+	
 </div>
 <!-- END ROW-FLUID-->  
 <?php include("includes/scripts.php");
@@ -223,5 +251,25 @@ function delete_catalog_data()
 		}
 	});
 }
+function add_section(){
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	
+	var url = 'catalog/test_category_new.php';
+	$('#form').html("");
+	var target_div = "form";
+	$("#"+ target_div).load(url, 
+		{lab_config: "" }, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+	
+}
+$(document).ready(function(){
+	load_right_pane('test_categories_div');
+});
 </script>
 <?php include("includes/footer.php"); ?>

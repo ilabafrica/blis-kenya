@@ -719,9 +719,6 @@ function fetch_test_result_form(test_id)
 {
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
-	
-	console.log("test_"+test_id);
-	
 	var pg=2;
 	$('#fetch_progress_bar').show();
 	var url = 'ajax/result_form_fetch.php';
