@@ -8195,6 +8195,63 @@ function add_test_category($cat_name, $cat_descr="")
 	return get_max_test_cat_id();
 }
 
+function add_quality_control_category($qcc_description)
+{
+	global $con;
+	$qcc_description = mysql_real_escape_string($qcc_description, $con);
+	# Adds a new test category to catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string = 
+		"INSERT INTO quality_control_category(description) ".
+		"VALUES ('$qcc_description')";
+	query_insert_one($query_string);
+	# Return primary key of the record just inserted
+	DbUtil::switchRestore($saved_db);
+	return get_max_qcc_id();
+}
+
+////////////function to test categories//////////////////
+function update_test_category($updated_entry)
+{
+	# Updates specimen type info in DB catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$existing_entry = get_test_category_by_id($updated_entry->testCategoryId);
+	if($existing_entry == null)
+	{
+		# No record found
+		DbUtil::switchRestore($saved_db);
+		return;
+	}
+	$query_string =
+		"UPDATE test_category ".
+		"SET name='$updated_entry->name', ".
+		"description='$updated_entry->description', ".
+		"WHERE test_category_id=$updated_entry->testCategoryId";
+	query_blind($query_string);
+	DbUtil::switchRestore($saved_db);
+}
+///////////////////////////////////////////////////////////////////////////
+////////////function to update quality control categories//////////////////
+function update_quality_control_category($updated_entry, $updated_qcc_list)
+{
+	# Updates specimen type info in DB catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$existing_entry = get_quality_control_category_by_id($updated_entry->qccId);
+	if($existing_entry == null)
+	{
+		# No record found
+		DbUtil::switchRestore($saved_db);
+		return;
+	}
+	$query_string =
+		"UPDATE quality_control_category ".
+		"SET description='$updated_entry->name', ".
+		"WHERE qcc_id=$updated_entry->qccId";
+	query_blind($query_string);
+	DbUtil::switchRestore($saved_db);
+}
+///////////////////////////////////////////////////////////////////////////
+
 function add_measure($measure, $range, $unit)
 {
 	# Adds a new measure to catalog
@@ -8312,6 +8369,43 @@ function get_test_categories_catalog($lab_config_id=null, $reff=null)
 				$retval[$record['test_category_id']] = LangUtil::getLabSectionName($record['test_category_id']);
 			else
 				$retval[$record['test_category_id']] = $record['name'];
+		}
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}
+
+/******/
+
+/******/
+function get_quality_control_categories($lab_config_id=null, $reff=null)
+{
+	# Returns a list of all specimen types available in catalog
+	global $CATALOG_TRANSLATION;
+        //NC3065
+        //global $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR;
+        if($reff == 1)
+        {
+            $user = get_user_by_id($_SESSION['user_id']);
+            $lab_config_id = $user->labConfigId;
+        }
+        //-NC3065
+
+	if($lab_config_id == null)
+		return;
+	else
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+	$query_qccs =
+		"SELECT qcc_id, description FROM quality_control_category ORDER BY description";
+	$resultset = query_associative_all($query_qccs, $row_count);
+	$retval = array();
+	if($resultset) {
+		foreach($resultset as $record)
+		{
+			if($CATALOG_TRANSLATION === true)
+				$retval[$record['qcc_id']] = LangUtil::getQccName($record['qcc_id']);
+			else
+				$retval[$record['qcc_id']] = $record['description'];
 		}
 	}
 	DbUtil::switchRestore($saved_db);
@@ -8577,6 +8671,22 @@ function get_test_category_by_name($test_category_name)
 	return TestCategory::getObject($record);
 }
 
+//get quality control category by name
+function get_quality_control_category_by_name($qcc_name)
+{
+	global $con;
+	$qcc_name = mysql_real_escape_string($qcc_name, $con);
+	# Returns specimen type record in DB
+	$user = get_user_by_id($_SESSION['user_id']);
+	$lab_config_id = $user->labConfigId;
+	$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
+	$query_string = 
+		"SELECT * FROM quality_control_category WHERE description='$qcc_name' LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return QualityControlCategories::getObject($record);
+}
+
 function get_test_type_by_name($test_name)
 {
 	global $con;
@@ -8668,6 +8778,14 @@ function get_test_type_by_id($test_type_id)
 	# Returns test type record in DB
 	return TestType::getById($test_type_id);
 }
+function get_quality_control_category_by_id($qcc_id)
+{
+	global $con;
+	$qcc_id = mysql_real_escape_string($qcc_id, $con);
+	# Returns test type record in DB
+	return QualityControlCategories::getById($qcc_id);
+}
+
 
 function get_specimen_type_by_id($specimen_type_id)
 {
@@ -8842,6 +8960,16 @@ function get_max_test_cat_id()
 	$saved_db = DbUtil::switchToLabConfigRevamp();
 	$query_string =
 		"SELECT MAX(test_category_id) as maxval FROM test_category";
+	$resultset = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return $resultset['maxval'];
+}
+function get_max_qcc_id()
+{
+	# Returns the largest test category type ID
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string =
+		"SELECT MAX(qcc_id) as maxval FROM quality_control_category";
 	$resultset = query_associative_one($query_string);
 	DbUtil::switchRestore($saved_db);
 	return $resultset['maxval'];
@@ -14720,6 +14848,111 @@ Class AuditTrail {
 		
 		DbUtil::switchRestore($saved_db);	
 		
+	}
+}
+
+class QualityControlCategories{
+	public $qcc_id;
+	public $qcc_name;
+	
+	public static function getObject($record)
+	{
+		if($record == null)
+			return null;
+			
+		$qcc = new QualityControlCategories();
+		
+		if(isset($record['qcc_id']))
+			$qcc->qccId = $record['qcc_id'];
+		else
+			$qcc->qccId = null;
+		
+		if(isset($record['description']))
+			$qcc->name = $record['description'];
+		else
+			$qcc->name = null;
+			
+		return $qcc;
+	}
+	
+	public function getName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getQccName($this->qccId);
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public function getQccName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return $this->name;
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public static function getById($qcc_id)
+	{
+		# Returns a lab section entry fetch by ID
+		global $con;
+		$qcc_id = mysql_real_escape_string($qcc_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT * FROM quality_control_category ".
+			"WHERE qcc_id=$qcc_id";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return QualityControlCategories::getObject($record);
+	}
+	/****
+	public static function deleteById($qcc_id)
+	{
+		# Deletes test category from database
+		# 1. Delete entries in lab_config_test_category
+		global $con;
+		$qcc_id = mysql_real_escape_string($qcc_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"DELETE FROM lab_config_quality_control_category WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		# 2. Delete entries from specimen_test
+		$query_string =
+			"DELETE FROM specimen_test WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		# 3. Set disabled flag in test_category entry
+		$query_string =
+			"UPDATE test_category SET disabled=1 WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		DbUtil::switchRestore($saved_db);
+	}***/
+	
+	public static function geAllQualityControlCategories($lab_config_id)
+	{
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+		$query_string =
+		"SELECT qcc_id, description FROM quality_control_category";
+	
+		$retval = array();
+		$qcc_details =  array();
+		$resultset = query_associative_all($query_string, $row_count);
+		foreach($resultset as $record)
+		{
+			$qcc_details['qcc_id'] = $record['qcc_id'];
+			$qcc_details['description'] = $record['description'];
+			array_push($retval, $qcc_details);
+		}
+		DbUtil::switchRestore($saved_db);
+		return $retval;
 	}
 }
 

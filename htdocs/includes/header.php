@@ -36,8 +36,7 @@ header('Content-Type: text/html; charset=UTF-8');
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
-<!-- BEGIN HEAD -->
-<head>
+<!-- BEGIN HEAD --><head>
 	<meta charset="utf-8" />
 	<title>BLIS <?php echo $VERSION; ?> - Kenya</title>
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -50,6 +49,7 @@ header('Content-Type: text/html; charset=UTF-8');
 	
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
 <style>
 ul.subb {
     list-style-type: none;
@@ -220,7 +220,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 							</li>
 							<li><a href='javascript:right_load(".$quote."sample_collection".$quote.");' title='Sample collection' 
 									class='' id='patient_lookup_menu'>
-									<i class='icon-tint'></i>&nbsp;&nbsp;Specimen registration</a>
+									<i class='icon-tint'></i>&nbsp;&nbsp;Sample Collection</a>
 							</li>
 						</ul>";
 					break;
@@ -271,25 +271,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					case "quality":
 						echo "<i class='icon-dashboard'></i>";
 						echo $key.$selected;
-						echo 
-						"<ul class='sub'>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."quality_controls_div".$quote.");' class='menu_option' id='quality_control_div_menu'>
-								".LangUtil::$generalTerms['QUALITY_CONTROLS']."
-								</a>
-							</li>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."quality_control_categories_div".$quote.");' class='menu_option' id='quality_control_categories_div_menu'>
-								".LangUtil::$generalTerms['QUALITY_CONTROL_CATEGORIES']."
-								</a>
-							</li>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."quality_control_field_groups_div".$quote.");' class='menu_option' id='quality_control_field_groups_div_menu'>
-								".LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']."
-								</a>
-							</li>
-						</ul>";
-						
+									
 					break;
 					
 					case "reports":

@@ -11,10 +11,6 @@ LangUtil::setPageId("catalog");
 putUILog('test_type_edit', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 
-$script_elems->enableJQueryForm();
-$script_elems->enableJQueryMask();
-$script_elems->enableTokenInput();
-
 # Helper function
 
 function specimen_list_to_json($specimen_list)
@@ -1350,4 +1346,9 @@ To represent data like 56^5-65^5 ml add the range as 56-65 and the unit as 5:ml.
 It is used for test which are alphanumeric and autocomplete. The default value for that measure can be recorded in this section.
 </small>
 </div>
-<?php include("includes/footer.php"); ?>
+
+<?php
+$script_elems->enableJQueryForm();
+$script_elems->enableJQueryMask();
+$script_elems->enableTokenInput();
+include("includes/footer.php"); ?>

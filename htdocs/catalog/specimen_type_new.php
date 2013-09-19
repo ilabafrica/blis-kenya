@@ -81,6 +81,4 @@ function check_input()
 }
 
 </script>
-
-
 <?php include("includes/footer.php"); ?>

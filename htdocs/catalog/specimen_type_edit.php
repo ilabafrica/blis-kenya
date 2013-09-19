@@ -7,55 +7,10 @@ include("includes/header.php");
 include("includes/ajax_lib.php");
 LangUtil::setPageId("catalog");
 
-$script_elems->enableJQueryForm();
-$script_elems->enableTokenInput();
+
 $specimen_type = get_specimen_type_by_id($_REQUEST['sid']);
 ?>
-<script type='text/javascript'>
-$(document).ready(function(){
-	<?php
-	$test_list = get_compatible_tests($specimen_type->specimenTypeId);
-	foreach($test_list as $test_type_id)
-	{
-		# Mark existing compatible tests as checked
-		?>
-		$('#t_type_<?php echo $test_type_id; ?>').attr("checked", "checked"); 
-		<?php
-	}
-	?>
-});
 
-function update_stype()
-{
-	if($('#name').attr("value").trim() == "")
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SPECIMENNAME']; ?>");
-		return;
-	}
-	var ttype_entries = $('.ttype_entry');
-	var ttype_selected = false;
-	for(var i = 0; i < ttype_entries.length; i++)
-	{
-		if(ttype_entries[i].checked)
-		{
-			ttype_selected = true;
-			break;
-		}
-	}
-	if(ttype_selected == false)
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDTESTS']; ?>");
-		return;
-	}
-	$('#update_stype_progress').show();
-	$('#edit_stype_form').ajaxSubmit({
-		success: function(msg) {
-			$('#update_stype_progress').hide();
-			window.location="specimen_type_updated.php?sid=<?php echo $_REQUEST['sid']; ?>";
-		}
-	});
-}
-</script>
 <br>
 <b><?php echo LangUtil::$pageTerms['EDIT_SPECIMEN_TYPE']; ?></b>
 | <a href="catalog.php?show_s=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
@@ -116,4 +71,57 @@ $page_elems->getSpecimenTypeInfo($specimen_type->name, true);
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test name you are looking for.
 </small>
 </div>
+<?php
+include("includes/scripts.php");
+$script_elems->enableDatePicker();
+$script_elems->enableJQuery();
+$script_elems->enableFacebox();
+$script_elems->enableJQueryForm();
+$script_elems->enableTokenInput();
+?>
+<script type='text/javascript'>
+$(document).ready(function(){
+	<?php
+	$test_list = get_compatible_tests($specimen_type->specimenTypeId);
+	foreach($test_list as $test_type_id)
+	{
+		# Mark existing compatible tests as checked
+		?>
+		$('#t_type_<?php echo $test_type_id; ?>').attr("checked", "checked"); 
+		<?php
+	}
+	?>
+});
+
+function update_stype()
+{
+	if($('#name').attr("value").trim() == "")
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SPECIMENNAME']; ?>");
+		return;
+	}
+	var ttype_entries = $('.ttype_entry');
+	var ttype_selected = false;
+	for(var i = 0; i < ttype_entries.length; i++)
+	{
+		if(ttype_entries[i].checked)
+		{
+			ttype_selected = true;
+			break;
+		}
+	}
+	if(ttype_selected == false)
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDTESTS']; ?>");
+		return;
+	}
+	$('#update_stype_progress').show();
+	$('#edit_stype_form').ajaxSubmit({
+		success: function(msg) {
+			$('#update_stype_progress').hide();
+			window.location="specimen_type_updated.php?sid=<?php echo $_REQUEST['sid']; ?>";
+		}
+	});
+}
+</script>
 <?php include("includes/footer.php"); ?>

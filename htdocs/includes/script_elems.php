@@ -28,6 +28,7 @@ class ScriptElems
 	public $enabledAutocomplete = false;
     public $enabledJQueryMask = false;
     public $enabledBootstrap = false;
+    public $enabledBootstrapFormBuilder = false;
 	
 	public function enableJQuery()
 	{

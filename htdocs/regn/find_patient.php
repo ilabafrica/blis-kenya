@@ -158,7 +158,7 @@ if(isset($_REQUEST['show_sc']))
 <div id="specimen_reg" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Specimen Registration</h4>
+			<h4><i class="icon-reorder"></i><?php echo "Sample Collection"; ?></h4>
 
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>

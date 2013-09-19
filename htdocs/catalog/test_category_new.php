@@ -9,7 +9,6 @@ $script_elems = new ScriptElems();
 $page_elems = new PageElems();
 
 LangUtil::setPageId("catalog");
-$script_elems->enableLatencyRecord();
 ?>
 <script type='text/javascript'>
 function check_input()
@@ -35,16 +34,17 @@ function check_input()
 <table class='smaller_font'>
 <tr>
 <td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='category_name' id='category_name' class='uniform_width' /></td>
+<td><input type='text' name='category_name' id='category_name' class='span12 m-wrap' /></td>
 </tr>
 <tr valign='top'>
 <td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-<td><textarea name='category_descr' id='category_descr' class='uniform_width'></textarea></td>
+<td><textarea name='category_descr' id='category_descr' class='span12 m-wrap'></textarea></td>
 <td></td></tr></table>
 <br><br>
-<input type='button' onclick='check_input();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' />
-&nbsp;&nbsp;&nbsp;&nbsp;
-<a href='catalog.php?show_tc=1'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+<div class="form-actions">
+                              <button type="submit" onclick='check_input();' class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
+                              <a href='catalog.php?show_tc=1' class='btn'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+                              </div>
 </form>
 </div>
 <div id='test_category_help' style='display:none'>
@@ -53,3 +53,4 @@ Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you
 </small>
 </div>
 <?php //include("includes/footer.php"); ?>
+
