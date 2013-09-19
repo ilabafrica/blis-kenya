@@ -39,7 +39,7 @@ if($dynamic == 0)
                     "WHERE p.patient_id=s.patient_id ".
                     "AND s.aux_id='$attrib_value'".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' ";
+                    "AND t.result = '' LIMIT 0,$rcap ";
     }
     if($attrib_type == 0)
     {
@@ -49,7 +49,7 @@ if($dynamic == 0)
                     "WHERE p.patient_id=s.patient_id ".
                     "AND p.surr_id='$attrib_value'".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' ";
+                    "AND t.result = '' LIMIT 0,$rcap ";
     }
     else if($attrib_type == 1)
     {
@@ -81,7 +81,7 @@ if($dynamic == 0)
                     "WHERE daily_num LIKE '%-$attrib_value' ".
                     "AND ( status_code_id=".Specimen::$STATUS_PENDING." ".
                     "OR status_code_id=".Specimen::$STATUS_REFERRED." ) ".
-                    "ORDER BY date_collected DESC";
+                    "ORDER BY date_collected DESC LIMIT 0,$rcap ";
     }
 }
 else
@@ -157,23 +157,9 @@ else
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (status_code_id=".Specimen::$STATUS_PENDING.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = ''";
+                    "AND t.result = '' LIMIT 0,$rcap ";
     }
-    elseif($attrib_type == 11)
-    {
-		    # Get all specimens that have been started with pending results
-		    	$query_string =
-		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
-		        "WHERE p.patient_id=s.patient_id ".
-		        "AND (status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
-		        "AND s.specimen_id=t.specimen_id ".
-		        "AND t.result = ''";
-	}else if($attrib_type == 12)
-	{	
-		# Update speciment to started status code
-			$query_string = "UPDATE specimen SET status_code_id = 7 where specimen_id ='$attrib_value'";
 
-	}
 }
 if($attrib_type == 12)
 {
