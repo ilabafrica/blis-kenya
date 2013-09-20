@@ -12,8 +12,10 @@
 	<div class="footer">
 			<center>
 				<small>
-		
+		<a href='userguide/BLIS_User_Guide.pdf' target='_blank' >User Guide |</a>
 		<?php
+		//Disabling language switching functionality
+		/*
 		if($_SESSION['locale'] == "en")
 		{
 			echo "<a href='userguide/BLIS_User_Guide.pdf' target='_blank' >User Guide |</a>";
@@ -26,11 +28,14 @@
 		{
 			echo "<a href='userguide/BLIS_User_Guide.pdf' target='_blank'>User Guide |</a>";
 		}
+         * */
 		?>
 		
 		<a rel='facebox' href='feedback/comments.php?src=<?php echo $_SERVER['PHP_SELF']; ?>'><?php echo "Comments" ?>?</a> |
 		C4G BLIS v<?php echo $VERSION; ?> - <?php echo LangUtil::$allTerms["FOOTER_MSG"]; ?>
+		| English 
 		<?php
+		/*
 		if($_SESSION['locale'] !== "en")
 		{
 			?>
@@ -62,6 +67,7 @@
 			echo " | Default";
 		}
 		/*Change Theme: <a href=javascript:changeTheme('Blue');>Blue</a> | <a href=javascript:changeTheme('Grey');>Grey*/
+		
 		if($TRACK_LOADTIME)
 		{
 			$endtime = microtime();

@@ -38,7 +38,7 @@ $script_elems->enableJQueryForm();
 			});
 		}
 		</script>
-		<?php include("../includes/styles.php"); ?>
+		
 		
 	</head>
 	<body>
