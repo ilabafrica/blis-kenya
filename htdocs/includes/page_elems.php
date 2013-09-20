@@ -3284,7 +3284,7 @@ public function getTestsDoneStatsTable($stat_list)
 			$('#testsdone_table').tablesorter();
 		});
 		</script>
-		<table class='tablesorter' id='testsdone_table' style='width:500px'>
+		<table class='table table-striped table-bordered table-advance ' id='testsdone_table' >
 		<thead>
 			<tr>
 				<th><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></th>
@@ -3390,7 +3390,7 @@ public function getTestsDoneStatsTable($stat_list)
 			$('#specimencount_table').tablesorter();
 		});
 		</script>
-		<table class='tablesorter' id='specimencount_table' style='width:500px'>
+		<table class='table table-striped table-bordered table-advance' id='specimencount_table' >
 		<thead>
 			<tr>
 				<th><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>

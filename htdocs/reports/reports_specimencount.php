@@ -5,39 +5,12 @@
 include("redirect.php");
 include("includes/header.php");
 include("includes/stats_lib.php");
+include("includes/scripts.php");
 LangUtil::setPageId("reports");
-
-$script_elems->enableFlotBasic();
-$script_elems->enableFlipV();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
 
 $uiinfo = "from=".$date_from."%to=".$date_to;
 ?>
-<script type='text/javascript'>
-$(window).load(function(){
-	$('#stat_graph').hide();
-});
-function toggle_stat_table()
-{
-	$('#stat_graph').toggle();
-	var linktext = $('#showtablelink').text();
-	if(linktext.indexOf("<?php echo LangUtil::$pageTerms['MSG_SHOWGRAPH']; ?>") != -1)
-		$('#showtablelink').text("<?php echo LangUtil::$pageTerms['MSG_HIDEGRAPH']; ?>");
-	else
-		$('#showtablelink').text("<?php echo LangUtil::$pageTerms['MSG_SHOWGRAPH']; ?>");
-}
-</script>
-<style type='text/css'>
-.flipv_up {
-	font-size: 12px;
-	font-family: Tahoma;
-}
-.flipv {
-	font-size: 12px;
-	font-family: Tahoma;
-}
-</style>
+
 <br>
 <b><?php echo LangUtil::$pageTerms['COUNT_SPECIMEN']; ?></b>
  <?php /*| <a href="javascript:toggle_stat_table();" id='showtablelink'># echo LangUtil::$pageTerms['MSG_SHOWGRAPH']; </a> */ ?>
@@ -45,8 +18,8 @@ function toggle_stat_table()
 <br><br>
 <?php
 $lab_config_id = $_REQUEST['location'];
-$date_from = $_REQUEST['yyyy_from']."-".$_REQUEST['mm_from']."-".$_REQUEST['dd_from'];
-$date_to = $_REQUEST['yyyy_to']."-".$_REQUEST['mm_to']."-".$_REQUEST['dd_to'];
+$date_from = $_REQUEST['from-report-date'];
+$date_to = $_REQUEST['to-report-date'];
 $uiinfo = "from=".$date_from."&to=".$date_to;
 putUILog('reports_specimen_count_ungrouped', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
@@ -173,4 +146,27 @@ foreach($stat_chunks as $stat_chunk)
 <div id='stat_table'>
 	<?php $page_elems->getSpecimenCountStatsTable($stat_list); ?>
 </div>
+<?php
+include("includes/scripts.php");
+$script_elems = new ScriptElems();
+$script_elems->enableDatePicker();
+$script_elems->enableFlotBasic();
+$script_elems->enableFlipV();
+$script_elems->enableTableSorter();
+$script_elems->enableLatencyRecord();
+?>
+<script type='text/javascript'>
+$(window).load(function(){
+    $('#stat_graph').hide();
+});
+function toggle_stat_table()
+{
+    $('#stat_graph').toggle();
+    var linktext = $('#showtablelink').text();
+    if(linktext.indexOf("<?php echo LangUtil::$pageTerms['MSG_SHOWGRAPH']; ?>") != -1)
+        $('#showtablelink').text("<?php echo LangUtil::$pageTerms['MSG_HIDEGRAPH']; ?>");
+    else
+        $('#showtablelink').text("<?php echo LangUtil::$pageTerms['MSG_SHOWGRAPH']; ?>");
+}
+</script>
 <?php include("includes/footer.php"); ?>
