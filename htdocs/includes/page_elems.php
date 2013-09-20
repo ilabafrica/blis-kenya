@@ -2636,7 +2636,7 @@ class PageElems
 	window.open(url_string);
 		}
 		</script>
-		<table class="table table-striped table-condensed" id='test_history_table'>
+		<table class="table table-striped table-bordered table-advance" id='test_history_table'>
 			<thead>
 				<tr valign='top'>
 					<?php
@@ -3329,10 +3329,10 @@ public function getTestsDoneStatsTable($stat_list)
 			$('#doctorstats_table').tablesorter();
 		});
 		</script>
-		<table class='tablesorter' id='doctorstats_table' style='width:500px'>
+		<table class='table table-striped table-bordered table-advance' id='doctorstats_table' >
 		<thead>
 			<tr>
-				<th><?php echo LangUtil::$generalTerms['DOCTOR_NAME']; ?></th>
+				<th>Doctor name </th>
 				<th><?php echo LangUtil::$pageTerms['TOTAL_PATIENTS']; ?></th>
 				<th><?php echo LangUtil::$pageTerms['TOTAL_SPECIMENS']; ?></th>
 				<th><?php echo LangUtil::$pageTerms['TOTAL_TESTS']; ?></th>
@@ -4124,6 +4124,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			<?php $this->getAsteriskMessage(); ?>
 		</span>
 		</small>
+		<hr />
 		<br>
 		</div>
 		<?php

@@ -379,11 +379,9 @@ LangUtil::setPageId("reports");
  <!-- END-ROW-FLUID--> 
 <?php
 include("includes/scripts.php");
-require_once("includes/script_elems.php");
 $script_elems->enableFlotBasic();
 $script_elems->enableFlipV();
 $script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
 ?>
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script type='text/javascript'>
