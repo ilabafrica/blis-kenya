@@ -33,7 +33,6 @@
 		
 		<a rel='facebox' href='feedback/comments.php?src=<?php echo $_SERVER['PHP_SELF']; ?>'><?php echo "Comments" ?>?</a> |
 		C4G BLIS v<?php echo $VERSION; ?> - <?php echo LangUtil::$allTerms["FOOTER_MSG"]; ?>
-		| English 
 		<?php
 		/*
 		if($_SESSION['locale'] !== "en")

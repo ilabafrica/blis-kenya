@@ -2,7 +2,6 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("reports");
-putUILog('reports', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 db_get_current();
 ?>
 
@@ -2142,7 +2141,15 @@ $(document).ready(function(){
 		$('#report_updated_msg').html("<?php echo LangUtil::$generalTerms['MSG_UPDATED']; ?>&nbsp;&nbsp;&nbsp;<a href=\"javascript:toggle('report_updated_msg');\"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>");
 		$('#report_updated_msg').show();
 		show_selection("infection_report_settings");
-	<?php } ?>
+	<?php 
+    }
+	else 
+	{
+	?>
+        show_test_history_form();
+        <?php
+	}
+    ?>
 });
 
 function changeAvailableLocations(dropdown) {
