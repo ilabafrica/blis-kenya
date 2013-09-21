@@ -38,23 +38,6 @@ if(isset($_REQUEST['show_sc']))
 				<div class="row-fluid">
 				<div class="span12 sortable">
 				
-<!-- <div class="portlet box blue"> -->
-<!-- <div class="portlet-title"> -->
-<!-- <h4><i class="icon-reorder"></i>Portlet</h4> -->
-<!-- <div class="tools"> -->
-<!-- <a href="javascript:;" class="collapse"></a> -->
-<!-- <a href="#portlet-config" data-toggle="modal" class="config"></a> -->
-<!-- <a href="javascript:;" class="reload"></a> -->
-<!-- <a href="javascript:;" class="remove"></a> -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- <div class="portlet-body"> -->
-<!-- <div class="scroller" data-height="200px" data-always-visible="1"> -->
-<!-- testter -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- BEGIN PATIENT SAMPLE REJECTION -->
 <div id="sample_collection" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
@@ -180,7 +163,7 @@ if(isset($_REQUEST['show_sc']))
 <div id="specimen_reg" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Sample Collection"; ?></h4>
+			<h4><i class="icon-reorder"></i>Lab request form</h4>
 
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>

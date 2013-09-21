@@ -65,8 +65,8 @@ if($lab_config == null)
 	echo LangUtil::$generalTerms['MSG_NOTFOUND'];
 	return;
 }
-$date_from = $_REQUEST['yyyy_from']."-".$_REQUEST['mm_from']."-".$_REQUEST['dd_from'];
-$date_to = $_REQUEST['yyyy_to']."-".$_REQUEST['mm_to']."-".$_REQUEST['dd_to'];
+$date_from = $_REQUEST['from-report-date'];
+$date_to = $_REQUEST['to-report-date'];
 $ust = new UserStats();
 //echo "<pre>";
 //echo "</pre>";
