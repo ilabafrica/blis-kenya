@@ -8,13 +8,8 @@ include("includes/header.php");
 include("barcode/barcode_lib.php");
 LangUtil::setPageId("patient_profile");
 
-putUILog('patient_profile', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
 $pid = $_REQUEST['pid'];
-$script_elems->enableJQueryForm();
-$script_elems->enableDatePicker();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
+
 
 $barcodeSettings = get_lab_config_settings_barcode();
 //  print_r($barcodeSettings);
@@ -23,129 +18,19 @@ $bar_width = $barcodeSettings['width']; //2;
 $bar_height = $barcodeSettings['height']; //40;
 $font_size = $barcodeSettings['textsize']; //11;
 ?>
-<script type="text/javascript" src="facebox/facebox.js"></script>
-<script type='text/javascript'>
-$(document).ready(function(){
-    var code = $('#patientID').val();
-    $("#patientBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'bmp'});         
-    
-});
-function toggle_profile_divs()
-{
-	$('#profile_div').toggle();
-	$('#profile_update_div').toggle();
-	$('#profile_update_form').resetForm();
-}
-
-function print_specimen_barcode(pid, sid)
-{
-    s_id = parseInt(sid);
-    url = "ajax/getSpecimenBarcode.php?sid="+sid;
-    $.ajax({
-		type: "GET",
-		url: url,
-                async: false,
-		success: function(data) {
-                         code = data;
-
-		}
-	});
-    $("#specimenBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'bmp'});         
-    Popup($('#specimenBarcodeDiv').html());
-}
-
-function print_patient_barcode()
-{
-    Popup($('#patientBarcodeDiv').html());
-}
-
-function Popup(data) 
-    {
-        var mywindow = window.open('', 'my div', 'height=400,width=600');
-        mywindow.document.write('<html><head><title>Barcode</title>');
-        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
-        mywindow.document.write('</head><body >');
-        mywindow.document.write(data);
-        mywindow.document.write('</body></html>');
-
-        mywindow.print();
-        mywindow.close();
-        //mywindow.document.show
-        return true;
-    }
-
-function update_profile()
-{
-	$('#pd_ym').attr("value", "0");
-	$('#pd_y').attr("value", "0");
-	var yyyy = $('#yyyy').attr("value");
-	var mm = $('#mm').attr("value");
-	var dd = $('#dd').attr("value");
-	var age = $('#age').attr("value");
-	var error_message = "";
-	var error_flag = 0;
-	//Age not given
-	if(age.trim() == "")
-	{
-		//Check partial DoB
-		if(yyyy.trim() != "" && mm.trim() != "" && dd.trim() == "")
-		{
-			dd = "01";
-			if(checkDate(yyyy, mm, dd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']." ".LangUtil::$generalTerms['INVALID']; ?>");
-				return;
-			}
-			$('#pd_ym').attr("value", "1");
-			
-		}
-		else if(yyyy.trim() != "" && mm.trim() == "" && dd.trim() == "")
-		{
-			mm = "01";
-			dd = "01";
-			if(checkDate(yyyy, mm, dd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']." ".LangUtil::$generalTerms['INVALID']; ?>");
-				return;
-			}
-			$('#pd_y').attr("value", "1");
-		}
-		else if(yyyy.trim() == "" && mm.trim() == "" && dd.trim() == "")
-		{
-			error_message += "Please enter either Age or Date of Birth\n";//<br>";
-			error_flag = 1;
-			alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['TIPS_AGEORDOB']; ?>");
-			return;
-		}
-		else
-		{
-			//Full DoB - check
-			if(checkDate(yyyy, mm, dd) == false)
-			{
-				alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']." ".LangUtil::$generalTerms['INVALID']; ?>");
-				return;
-			}
-		}
-	}
-	else if (isNaN(age))
-	{
-		alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['AGE']." ".LangUtil::$generalTerms['INVALID']; ?>");
-		return;
-	}	
-	
-	$('#update_profile_progress').show();
-	var params = $('#profile_update_form').formSerialize();
-	$.ajax({
-		type: "POST",
-		url: "ajax/patient_update.php",
-		data: params,
-		success: function(msg) {
-			$('#update_profile_progress').hide();
-			window.location.reload();
-		}
-	});	
-}
-</script>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
+                        <h3>
+                        </h3>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="icon-download-alt"></i>
+                                <a href="index.php">ent Pati</a> 
+                            </li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
 <br>
 <b><?php echo LangUtil::getTitle(); ?></b>
  | <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
@@ -179,4 +64,139 @@ function update_profile()
 <br><br>
 <div id="specimenBarcodeDiv"></div>
 </div>
+<?php
+include("includes/scripts.php");
+
+$script_elems->enableJQueryForm();
+$script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
+$script_elems->enableLatencyRecord();
+?>
+<script type="text/javascript" src="facebox/facebox.js"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
+    var code = $('#patientID').val();
+    $("#patientBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'bmp'});         
+    
+});
+function toggle_profile_divs()
+{
+    $('#profile_div').toggle();
+    $('#profile_update_div').toggle();
+    $('#profile_update_form').resetForm();
+}
+
+function print_specimen_barcode(pid, sid)
+{
+    s_id = parseInt(sid);
+    url = "ajax/getSpecimenBarcode.php?sid="+sid;
+    $.ajax({
+        type: "GET",
+        url: url,
+                async: false,
+        success: function(data) {
+                         code = data;
+
+        }
+    });
+    $("#specimenBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'bmp'});         
+    Popup($('#specimenBarcodeDiv').html());
+}
+
+function print_patient_barcode()
+{
+    Popup($('#patientBarcodeDiv').html());
+}
+
+function Popup(data) 
+    {
+        var mywindow = window.open('', 'my div', 'height=400,width=600');
+        mywindow.document.write('<html><head><title>Barcode</title>');
+        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+
+        mywindow.print();
+        mywindow.close();
+        //mywindow.document.show
+        return true;
+    }
+
+function update_profile()
+{
+    $('#pd_ym').attr("value", "0");
+    $('#pd_y').attr("value", "0");
+    var yyyy = $('#yyyy').attr("value");
+    var mm = $('#mm').attr("value");
+    var dd = $('#dd').attr("value");
+    var age = $('#age').attr("value");
+    var error_message = "";
+    var error_flag = 0;
+    //Age not given
+    if(age.trim() == "")
+    {
+        //Check partial DoB
+        if(yyyy.trim() != "" && mm.trim() != "" && dd.trim() == "")
+        {
+            dd = "01";
+            if(checkDate(yyyy, mm, dd) == false)
+            {
+                alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']." ".LangUtil::$generalTerms['INVALID']; ?>");
+                return;
+            }
+            $('#pd_ym').attr("value", "1");
+            
+        }
+        else if(yyyy.trim() != "" && mm.trim() == "" && dd.trim() == "")
+        {
+            mm = "01";
+            dd = "01";
+            if(checkDate(yyyy, mm, dd) == false)
+            {
+                alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']." ".LangUtil::$generalTerms['INVALID']; ?>");
+                return;
+            }
+            $('#pd_y').attr("value", "1");
+        }
+        else if(yyyy.trim() == "" && mm.trim() == "" && dd.trim() == "")
+        {
+            error_message += "Please enter either Age or Date of Birth\n";//<br>";
+            error_flag = 1;
+            alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['TIPS_AGEORDOB']; ?>");
+            return;
+        }
+        else
+        {
+            //Full DoB - check
+            if(checkDate(yyyy, mm, dd) == false)
+            {
+                alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['DOB']." ".LangUtil::$generalTerms['INVALID']; ?>");
+                return;
+            }
+        }
+    }
+    else if (isNaN(age))
+    {
+        alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['AGE']." ".LangUtil::$generalTerms['INVALID']; ?>");
+        return;
+    }   
+    
+    $('#update_profile_progress').show();
+    var params = $('#profile_update_form').formSerialize();
+    $.ajax({
+        type: "POST",
+        url: "ajax/patient_update.php",
+        data: params,
+        success: function(msg) {
+            $('#update_profile_progress').hide();
+            window.location.reload();
+        }
+    }); 
+}
+</script>
+
+
+
+
 <?php include("includes/footer.php"); ?>
