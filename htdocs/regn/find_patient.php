@@ -60,12 +60,12 @@ if(isset($_REQUEST['show_sc']))
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i>Sample Collection</h4>
 			<div class="tools">
-				<a href="javascript:;" class="collapse"></a>
-				<a href="javascript:;" class="reload"></a>
-				<a href="javascript:;" class="remove"></a>
+			<a href="javascript:;" class="collapse"></a>
+			<a href="javascript:;" class="reload"></a>
 			</div>
-		</div>
+			</div>
 		<div class="portlet-body form">
+		<p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
 			<div id='sample_collection_body' style='position:relative;left:10px;'> </div>					
 		</div>
 	</div>
@@ -86,6 +86,7 @@ if(isset($_REQUEST['show_sc']))
 </div>
 </div>
 		<div class="portlet-body form">
+		<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
 
 			<div class="scroller" data-height="400px" data-always-visible="1">
 				<p>Search existing patients</p>
@@ -122,6 +123,27 @@ if(isset($_REQUEST['show_sc']))
 						if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
 							echo "<li>"; 
 							echo LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP'];
+							echo "</li>"; 
+						}
+						?>
+					</ul>
+				</div>
+				<div id='Rejection' class='right_pane' style='display:none;margin-left:10px;'>
+					<ul>
+						<?php
+						if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
+							echo "<li>";
+							echo "This page allows us to lookup existing specimens based on patients name, patient ID or number.";
+							echo "</li>";
+						}	
+						if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
+							echo "<li>"; 
+							echo "Once a specimen has been registered, we can use this page to accept or reject the specimen.";
+							echo "</li>";
+						}
+						if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")	{
+							echo "<li>"; 
+							echo "To Accept/Reject a specimen, use the buttons as shown clearly.";
 							echo "</li>"; 
 						}
 						?>
@@ -196,7 +218,7 @@ if(isset($_REQUEST['show_sc']))
 	</div>
 </div>
 <!-- END SPECIMEN REJECTION-->   
-<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
+
 
 <?php
 include("includes/scripts.php");
@@ -319,7 +341,7 @@ function fetch_patient_specimens_accept_reject()
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	var url = 'ajax/patient_sample_accept_reject.php';
-	$("#sample_collection").load(url, 
+	$("#sample_collection_body").load(url, 
 		{a: '', t: 10}, 
 		function() 
 		{

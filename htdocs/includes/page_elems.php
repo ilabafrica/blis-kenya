@@ -8307,8 +8307,20 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
-        <thead style="background-color:#CCC;">
+		<div class="portlet box green">
+							<div class="portlet-title">
+								<h4><i class="icon-reorder"></i><?php echo "Quality Control Categories" ?></h4>
+								<div class="tools">
+									<a href="javascript:;" class="collapse"></a>
+									<a href="javascript:;" class="reload"></a>
+								</div>
+							</div>
+							<div class="portlet-body">
+							<p style="text-align: right;"><a href='quality_control_category_new.php' title='Click to Add a New Quality Control Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		|<a rel='facebox' href='#QualityControlCategories_tc'>Page Help</a></p>
+							
+		<table class='table table-bordered table-hover'>
+        <thead>
                 <tr>
                     <th><?php echo "#"; ?></th>
                     <th><?php echo "Description"; ?></th>
@@ -8349,6 +8361,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		?>
 		</tbody>
 		</table>
+		</div>
 		<?php
 	}
 }

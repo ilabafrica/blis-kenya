@@ -16,6 +16,7 @@ $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 $uiinfo = "op=".$_REQUEST['t']."&qr=".$_REQUEST['a'];
 putUILog('patient_sample_accept_reject', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 ?>
+
 <?php
 //echo "Bungoma District Hospital";
 if(!isset($_REQUEST['result_cap']))
@@ -159,7 +160,21 @@ else
                     "AND s.specimen_id=t.specimen_id ".
                     "AND t.result = '' LIMIT 0,$rcap ";
     }
+    elseif($attrib_type == 11)
+    {
+		    # Get all specimens that have been started with pending results
+		    	$query_string =
+		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
+		        "WHERE p.patient_id=s.patient_id ".
+		        "AND (status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
+		        "AND s.specimen_id=t.specimen_id ".
+		        "AND t.result = '' LIMIT 0,$rcap ";
+	}else if($attrib_type == 12)
+	{	
+		# Update speciment to started status code
+			$query_string = "UPDATE specimen SET status_code_id = 7 where specimen_id ='$attrib_value'";
 
+	}
 }
 if($attrib_type == 12)
 {
@@ -339,7 +354,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			</td>
 			<?php if($attrib_type == 10)
     		{?>
-			<td style='width:100px;'><a href="#" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+			<td style='width:100px;'><a href="javascript:print_specimen_barcode(<?php echo $specimen->specimenId; ?>, )" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
             <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
 			</td>
 			<?php }?>
@@ -347,6 +362,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 		
 		<div class='result_form_pane' id='result_form_pane_<?php echo $specimen->specimenId; ?>'>
 		</div>
+
 		<?php
 		$count++;
 	}
@@ -354,16 +370,4 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 	</tbody>
 </table>
 
-
-<?php
-if($attrib_type == 3 && $count > 2)
-{
-	# Show "view more" link for revealing earlier patient records
-	?>
-	<a href='javascript:show_more_pnum();' id='show_more_pnum_link'><small>View older entries &raquo;</small></a>
-	<br><br>
-	<?php
-}
-
-?>
 
