@@ -225,24 +225,53 @@ if($lab_config == null)
 	return;
 }
 ?>
-
-
-<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
-						<h3></h3>
-						<ul class="breadcrumb">
-							<li><a href="#"><i class='icon-wrench'></i> Lab Configuration</a>
-							<span class="icon-angle-right"></span></li>
-							<li><a href="#"></a></li>
-						</ul>
-						<!-- END PAGE TITLE & BREADCRUMB-->
-					</div>
-				</div>
-				<!-- END PAGE HEADER-->
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
+                        <h3></h3>
+                        <ul class="breadcrumb">
+                            <li><a href="#"><i class='icon-wrench'></i> Lab Configuration</a>
+                            <span class="icon-angle-right"></span></li>
+                            <li><a href="#"></a></li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
 <!-- BEGIN ROW-FLUID-->   
+
+
+<div class="portlet box green right_pane" id="users_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        
+        <div class="portlet-body">
+                <div  style='margin-left:10px;'>
+                    <?php
+                    $reload_url = "lab_config_home.php?id=$lab_config_id";
+                    ?>
+                    <p style="text-align: right;"><a rel='facebox' href='#UserAccounts_config'>Page Help</a></p>
+                   
+                     <a rel='facebox' href='lab_user_new.php?ru=<?php echo $reload_url; ?>&lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['CMD_ADDNEWACCOUNT']; ?></a>
+                    <br><br>
+                    <div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <div id='user_list_table'>
+                    <?php
+                    $user_list = $lab_config->getUsers();
+                    $page_elems->getLabUsersTable($user_list, $lab_config_id);
+                    ?>
+                    </div>
+                </div>
+        </div>
+</div>
 
 <div class="portlet box green right_pane" id="fields_div" style="display: none">
         <div class="portlet-title" >
-                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></b></h4>
+                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></h4>
                                 <div class="tools">
                                     <a href="javascript:;" class="collapse"></a>
                                     <a data-toggle="modal" class="config"></a>
