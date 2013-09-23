@@ -3072,9 +3072,7 @@ class PageElems
 
 	public function getSpecimenInfoTaskList($specimen_id, $patient_id)
 	{
-		# Lists patient-profile related tasks in a tips box
 		$specimenBarcode = specimenBarcodeCheck();
-		global $LIS_CLERK;
 		$specimen = Specimen::getById($specimen_id);
 		?>
 		<div class='sidetip_nopos'>

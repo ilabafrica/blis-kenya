@@ -62,15 +62,15 @@ else if(isset($_REQUEST['re']))
 		</td>
 	</tr>
 </table>
-<span id='fetch_progress_bar' style='display:none;'>
-					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-				</span>	
-<div class='result_form_pane' id='result_form_pane_<?php echo $sid; ?>'>
-		</div>
-<br>
-</div>
-	</div>
-</div>
+<div id="barcodeData" style="display:none;">
+                            <input type="text" id="patientID" value='<?php echo encodePatientBarcode($_REQUEST['pid'],0); ?>' />
+                            <br><br>
+                            <div id="specimenBarcodeDiv"></div>
+                            </div>
+                </div>
+          </div>
+          </div>
+          </div>
 <?php
 include("includes/scripts.php");
 include("barcode/barcode_lib.php");
