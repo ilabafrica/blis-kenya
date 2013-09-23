@@ -5,71 +5,45 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("specimen_info");
-
-$script_elems->enableJQueryForm();
-$script_elems->enableJQueryValidate();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
-$script_elems->enableTokenInput();
-putUILog('specimen_info', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
-
 $sid = $_REQUEST['sid'];
+
+include("includes/scripts.php");
+
+$script_elems->enableTokenInput();
+$script_elems->enableDatePicker();
+
 ?>
-<script type='text/javascript'>
-function submit_forms(specimen_id)
-{
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
+                        <h3>
+                        </h3>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="icon-download-alt"></i>
+                                <a href="index.php">Home</a> 
+                            </li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
+             <div class="row-fluid">
+                <div class="span12 sortable">
 
-	var form_id_csv = $('#form_id_list').attr("value");
-	var form_id_list = form_id_csv.split(",");
-//result_cancel_link').hide();
-	$('.result_progress_spinner').show();
-	//var target_div_id = "fetched_specimen";
-	
-	var target_div_id = "result_form_pane_"+specimen_id;
-	for(var i = 0; i < form_id_list.length; i++)
-	{
-		if($('#'+form_id_list[i]+'_skip').is(':checked'))
-		{
-			continue;
-		}
-		var params = $('#'+form_id_list[i]).formSerialize();
-		$.ajax({
-			type: "POST",
-			url: "ajax/result_add.php",
-			data: params,
-			success: function(msg) {
-				$("#"+target_div_id).html(msg);
-			}
-		});
-	}
-	$('.result_progress_spinner').hide();
-	}
+                    <div class="portlet box green" id="specimenresult_div">
+                        <div class="portlet-title" >
+                            <h4><i class="icon-reorder"></i> <?php echo LangUtil::$pageTerms['EDIT_CUSTOMFIELD']; ?> </h4>           
+                        </div>
+                        
+                          <div class="portlet-body" >
+                                <br>
+                                <b><?php echo LangUtil::getTitle(); ?></b>
+                                 | <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+                                <br><br>
+                          </div>
+                  </div>
+              </div>
+           </div>   
 
-
-function fetch_specimen2(specimen_id)
-{
-	
-	$('#fetch_progress_bar').show();
-	var pg=1;
-	var url = 'ajax/specimen_form_fetch.php';
-	//var target_div = "fetch_specimen";
-	$('.result_form_pane').html("");
-	var target_div = "result_form_pane_"+specimen_id;
-	$("#"+target_div).load(url, 
-		{sid: specimen_id , page_id:pg}, 
-		function() 
-		{
-			$('#fetch_progress_bar').hide();
-			$("#fetched_specimen").show();
-		}
-	);
-}
-</script>
-<br>
-<b><?php echo LangUtil::getTitle(); ?></b>
- | <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
-<br><br>
 <?php
 if(isset($_REQUEST['vd']))
 {
@@ -112,5 +86,57 @@ else if(isset($_REQUEST['re']))
 		</div>
 <br>
 <b><?php echo LangUtil::$pageTerms['REGDTESTS']; ?></b><br>
-<?php $page_elems->getSpecimenTestsTable($sid); ?>
+<?php 
+$page_elems->getSpecimenTestsTable($sid); 
+?>
+<script type='text/javascript'>
+function submit_forms(specimen_id)
+{
+
+    var form_id_csv = $('#form_id_list').attr("value");
+    var form_id_list = form_id_csv.split(",");
+//result_cancel_link').hide();
+    $('.result_progress_spinner').show();
+    //var target_div_id = "fetched_specimen";
+    
+    var target_div_id = "result_form_pane_"+specimen_id;
+    for(var i = 0; i < form_id_list.length; i++)
+    {
+        if($('#'+form_id_list[i]+'_skip').is(':checked'))
+        {
+            continue;
+        }
+        var params = $('#'+form_id_list[i]).formSerialize();
+        $.ajax({
+            type: "POST",
+            url: "ajax/result_add.php",
+            data: params,
+            success: function(msg) {
+                $("#"+target_div_id).html(msg);
+            }
+        });
+    }
+    $('.result_progress_spinner').hide();
+    }
+
+
+function fetch_specimen2(specimen_id)
+{
+    
+    $('#fetch_progress_bar').show();
+    var pg=1;
+    var url = 'ajax/specimen_form_fetch.php';
+    //var target_div = "fetch_specimen";
+    $('.result_form_pane').html("");
+    var target_div = "result_form_pane_"+specimen_id;
+    $("#"+target_div).load(url, 
+        {sid: specimen_id , page_id:pg}, 
+        function() 
+        {
+            $('#fetch_progress_bar').hide();
+            $("#fetched_specimen").show();
+        }
+    );
+}
+</script>
 <?php include("includes/footer.php"); ?>

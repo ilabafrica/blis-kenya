@@ -6,11 +6,6 @@ include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("specimen_info");
 
-$script_elems->enableJQueryForm();
-$script_elems->enableJQueryValidate();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
-$script_elems->enableTokenInput();
 putUILog('specimen_info', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 
@@ -82,6 +77,10 @@ include("barcode/barcode_lib.php");
 
 $script_elems->enableJQueryForm();
 $script_elems->enableDatePicker();
+$script_elems->enableJQueryValidate();
+$script_elems->enableTableSorter();
+$script_elems->enableLatencyRecord();
+$script_elems->enableTokenInput();
 
 $barcodeSettings = get_lab_config_settings_barcode();
 //print_r($barcodeSettings);
