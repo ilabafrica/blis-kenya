@@ -4383,7 +4383,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='table table-hover' style='width:700px;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -4452,7 +4452,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		# Returns HTML form field for adding a new custom field
 		?>
 		<input type='hidden' name='lid' value='<?php echo $lab_config_id; ?>'></input>
-		<table>
+		<table class="table">
 			<tbody>
 				<tr valign='top'>
 					<td>
@@ -4528,10 +4528,10 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 					<td></td>
 					<td>
 					<br>
-					<input type='button' id='cfield_add_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
+					<input type='button' id='cfield_add_button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
 					</input>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<small><a href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+					<small><a class="btn" href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<span id='cfield_progress_spinner' style='display:none;'>
 						<?php $this->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
@@ -7203,7 +7203,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 	public function getRegistrationFieldsSummary($lab_config)
 	{
 		?>
-		<table class='hor-minimalist-b' style='width:auto;'>
+		<table class='table table-hover' style='width:auto;'>
 						<tbody>
 							<tr valign='top'>
 								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
