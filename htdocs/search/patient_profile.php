@@ -16,7 +16,7 @@ $pid = $_REQUEST['pid'];
                         <ul class="breadcrumb">
                             <li>
                                 <i class="icon-download-alt"></i>
-                                <a href="index.php">Patient profile</a> 
+                                <a href="index.php">Home</a> 
                             </li>
                         </ul>
                         <!-- END PAGE TITLE & BREADCRUMB-->
@@ -26,7 +26,7 @@ $pid = $_REQUEST['pid'];
              <div class="row-fluid">
                 <div class="span12 sortable">
 
-                    <div class="portlet box green" id="prevalence_div">
+                    <div class="portlet box green" id="patientprofile_div">
                         <div class="portlet-title" >
                             <h4><i class="icon-reorder"></i> <?php echo LangUtil::getTitle(); ?> </h4>           
                         </div>

@@ -2865,7 +2865,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-hover' style="width: 35%">
 			<tbody>
 				<tr>
 					<td><u><?php echo LangUtil::$generalTerms['TYPE']; ?></u></td>
