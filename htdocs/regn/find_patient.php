@@ -185,7 +185,7 @@ if(isset($_REQUEST['show_sc']))
 
 <!-- BEGIN SPECIMEN REJECTION-->	
 <div id="specimen_rejection" class='reg_subdiv' style='display:none;'>
-	<div class="portlet box blue">
+	<div class="portlet box yellow">
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i>Specimen Rejection</h4>
 
@@ -201,6 +201,24 @@ if(isset($_REQUEST['show_sc']))
 	</div>
 </div>
 <!-- END SPECIMEN REJECTION-->   
+<!-- BEGIN SPECIMEN ACCEPTANCE-->	
+<div id="specimen_acceptance" class='reg_subdiv' style='display:none;'>
+	<div class="portlet box green">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i>Specimen Acceptance</h4>
+
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				<a href="javascript:;" class="reload"></a>
+				<a href="javascript:;" class="remove"></a>
+			</div>
+		</div>
+		<div class="portlet-body form">
+			<div id='specimen_acceptance_body' style='position:relative;left:10px;'> </div>					
+		</div>
+	</div>
+</div>
+<!-- END SPECIMEN ACCEPTANCE-->   
 
 
 <?php
@@ -362,7 +380,14 @@ function load_specimen_rejection(specimen_id)
 	$('#specimen_rejection_body').load(url, {sid: specimen_id});		
 	$('#specimen_rejection').show();
 }
-
+function load_specimen_acceptance(specimen_id)
+{
+	$('.reg_subdiv').hide();
+	var specimen_id = specimen_id;
+	var url = 'regn/specimen_acceptance.php';
+	$('#specimen_acceptance_body').load(url, {sid: specimen_id});		
+	$('#specimen_acceptance').show();
+}
 </script>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
 <?php include("includes/footer.php");?>

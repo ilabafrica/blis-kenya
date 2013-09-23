@@ -5,7 +5,8 @@
 #
 include("../includes/db_lib.php");
 include("../includes/user_lib.php");
-LangUtil::setPageId("accept_reject_sample");
+//include("../barcode/barcode_lib.php");
+LangUtil::setPageId("patient_sample_accept_reject");
 
 $attrib_value = $_REQUEST['a'];
 $attrib_type = $_REQUEST['t'];
@@ -13,11 +14,9 @@ $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
-$uiinfo = "op=".$_REQUEST['t']."&qr=".$_REQUEST['a'];
-putUILog('patient_sample_accept_reject', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-?>
 
-<?php
+putUILog('patient_sample_accept_reject', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
+
 //echo "Bungoma District Hospital";
 if(!isset($_REQUEST['result_cap']))
     $result_cap = $rcap;
@@ -354,7 +353,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			</td>
 			<?php if($attrib_type == 10)
     		{?>
-			<td style='width:100px;'><a href="javascript:print_specimen_barcode(<?php echo $specimen->specimenId; ?>, )" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+			<td style='width:100px;'><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
             <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
 			</td>
 			<?php }?>
@@ -369,5 +368,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 	?>
 	</tbody>
 </table>
-
-
+<div id="barcodeData" style="display:none;">
+<br><br>
+<div id="specimenBarcodeDiv"></div>
+</div>

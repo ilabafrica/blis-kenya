@@ -3069,6 +3069,40 @@ class PageElems
 		</div>
 		<?php
 	}
+
+	public function getSpecimenInfoTaskList($specimen_id)
+	{
+		# Lists patient-profile related tasks in a tips box
+		$specimenBarcode = specimenBarcodeCheck();
+		global $LIS_CLERK;
+		$specimen = Specimen::getById($specimen_id);
+		?>
+		<div class='sidetip_nopos'>
+			<?php
+			$date_parts = explode("-", $specimen->dateCollected);
+			$report_url = "reports_testhistory.php?location=".$_SESSION['lab_config_id']."&patient_id=".$specimen->patientId."&yf=$date_parts[0]&mf=$date_parts[1]&df=$date_parts[2]&yt=$date_parts[0]&mt=$date_parts[1]&dt=$date_parts[2]";
+			//$report_url = "reports_specimen.php?location=".$_SESSION['lab_config_id']."specimen_id=".$specimen_id;
+			?>
+			<p><a href='<?php echo $report_url; ?>' title='Click to Generate Specimen Report' target='_blank'><?php echo LangUtil::$generalTerms['CMD_GETREPORT']; ?></a></p>
+			<p><a href='reports_specimenlog.php?location=<?php echo $_SESSION['lab_config_id']; ?>&specimen_id=<?php echo $specimen_id; ?>' title='Click to View a Log of Actions Performed on this Specimen' target='_blank'><?php echo LangUtil::$generalTerms['CMD_TRACK']; ?></a></p>
+			<div class="portlet box">
+			<div class="portlet-body">
+								<div class="row-fluid">
+								 <?php
+                            if($specimenBarcode)
+                            {
+                            ?>
+                            <a href="javascript:print_specimen_barcode(<?php echo $specimen->specimenId;?>,<?php echo $specimen->patientId;?> )" class="icon-btn span12"><i class="icon-barcode"></i><div>Print Barcode</div></a>
+                            <? 
+                            }
+                                
+                        ?>
+									</div>
+								</div>
+								</div>
+		</div>
+		<?php
+	}
 	
 	public function getSpecimenTestsTable($sid)
 	{
