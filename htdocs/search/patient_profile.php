@@ -210,8 +210,4 @@ function update_profile()
     }); 
 }
 </script>
-
-
-
-
 <?php include("includes/footer.php"); ?>

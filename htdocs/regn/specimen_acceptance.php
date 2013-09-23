@@ -6,9 +6,6 @@ include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("specimen_info");
 
-putUILog('specimen_info', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
-
 $sid = $_REQUEST['sid'];
 $pid = $_REQUEST['pid'];
 ?>
