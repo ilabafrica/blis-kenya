@@ -251,17 +251,17 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						"<ul class='sub'>
 							<li>
 								<a href='javascript:load_right_pane(".$quote."test_categories_div".$quote.");' class='menu_option' id='test_categories_div_menu'>
-								Lab Sections
+								<i class='icon-tag'></i> Lab Sections
 								</a>
 							</li>
 							<li>
 								<a href='javascript:load_right_pane(".$quote."specimen_types_div".$quote.");' class='menu_option' id='specimen_types_div_menu'>
-								".LangUtil::$generalTerms['SPECIMEN_TYPES']."
+								<i class='icon-tag'></i> ".LangUtil::$generalTerms['SPECIMEN_TYPES']."
 								</a>
 							</li>
 							<li>
 								<a href='javascript:load_right_pane(".$quote."test_types_div".$quote.");' class='menu_option' id='test_types_div_menu'>
-								".LangUtil::$generalTerms['TEST_TYPES']."
+								<i class='icon-tag'></i> ".LangUtil::$generalTerms['TEST_TYPES']."
 								</a>
 							</li>
 						</ul>";
@@ -369,6 +369,28 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 											echo "</ul>";
 											echo "</ul>";
 					break;
+					case 'lab_admins':
+						echo "<i class='icon-group'></i>";
+						echo $key.$selected;
+					break;
+					
+					case 'country_catalog':
+						echo "<i class='icon-cogs'></i>";
+						echo $key.$selected;
+						echo
+						"<ul class='sub'>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."test_categories_div".$quote.");' class='menu_option' id='test_categories_div_menu'>
+								Lab Sections
+								</a>
+							</li>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."test_types_div".$quote.");' class='menu_option' id='test_types_div_menu'>
+								".LangUtil::$generalTerms['TEST_TYPES']."
+								</a>
+							</li>
+						</ul>";
+					break;
 					
 					}
 					#LAB CONFIG LEFT MENU
@@ -400,52 +422,52 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						
 						echo 
 						"<li>
-							<a id='test' class='menu_option' href='javascript:test_setup();'>".LangUtil::$allTerms['Tests']." </a>
+							<a id='test' class='menu_option' href='javascript:test_setup();'><i class='icon-tag'></i> ".LangUtil::$allTerms['Tests']." </a>
 						</li>
 						<li>                         
-							<a id='option21' class='menu_option' href='javascript:right_load(21, ".$quote."search_div".$quote.");'>Search</a>
+							<a id='option21' class='menu_option' href='javascript:right_load(21, ".$quote."search_div".$quote.");'><i class='icon-tag'></i> Search</a>
 						</li>
 						<li>
-							<a id='report' class='menu_option' href='javascript:report_setup();'>".LangUtil::$allTerms['Reports']." </a>
+							<a id='report' class='menu_option' href='javascript:report_setup();'><i class='icon-tag'></i> ".LangUtil::$allTerms['Reports']." </a>
 						</li>
 						<div id='report_setup' name='report_setup' style='display:none;'>
-							-<a id='option8' class='menu_option' href='javascript:right_load(8, ".$quote."agg_report_div".$quote.");'>".LangUtil::$allTerms['MENU_INFECTION']."</a>
+							-<a id='option8' class='menu_option' href='javascript:right_load(8, ".$quote."agg_report_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_INFECTION']."</a>
 							<br><br>
-                            -<a id='option36' class='menu_option' href='javascript:right_load(36, ".$quote."grouped_count_div".$quote.");'>".'Test/Specimen Grouped Reports'."</a>
+                            -<a id='option36' class='menu_option' href='javascript:right_load(36, ".$quote."grouped_count_div".$quote.");'><i class='icon-tag'></i> ".'Test/Specimen Grouped Reports'."</a>
 							<br><br>
-							-<a id='option11' class='menu_option' href='javascript:right_load(11, ".$quote."report_config_div".$quote.");'>".LangUtil::$allTerms['MENU_REPORTCONFIG']."</a>
+							-<a id='option11' class='menu_option' href='javascript:right_load(11, ".$quote."report_config_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_REPORTCONFIG']."</a>
 							<br><br>
-							-<a id='option12' class='menu_option' href='javascript:right_load(12, ".$quote."worksheet_config_div".$quote.");'>".LangUtil::$allTerms['MENU_WORKSHEETCONFIG']."</a>
+							-<a id='option12' class='menu_option' href='javascript:right_load(12, ".$quote."worksheet_config_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_WORKSHEETCONFIG']."</a>
 							<br><br>
 						</div>
 						<li>
-							<a id='option15' class='menu_option' href='javascript:right_load(15, ".$quote."inventory_div".$quote.");'>".LangUtil::$allTerms['Inventory']."</a>
+							<a id='option15' class='menu_option' href='javascript:right_load(15, ".$quote."inventory_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['Inventory']."</a>
 						</li>
 						<li>
-							<a id='option28' class='menu_option' href='javascript:right_load(28, ".$quote."barcode_div".$quote.");'>".'Barcode Settings'."</a>
+							<a id='option28' class='menu_option' href='javascript:right_load(28, ".$quote."barcode_div".$quote.");'><i class='icon-tag'></i> ".'Barcode Settings'."</a>
 							</li>
 						<li>
-							<a id='option22' class='menu_option' href='javascript:right_load(22, ".$quote."billing_div".$quote.");'>".'Billing'."</a>
+							<a id='option22' class='menu_option' href='javascript:right_load(22, ".$quote."billing_div".$quote.");'><i class='icon-tag'></i> ".'Billing'."</a>
 						</li>
 						<li>
-							<a id='option3' class='menu_option' href='javascript:right_load(3, ".$quote."users_div".$quote.");'>".LangUtil::$allTerms['MENU_USERS']."</a>
+							<a id='option3' class='menu_option' href='javascript:right_load(3, ".$quote."users_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_USERS']."</a>
 						</li>
 						<li>
-							<a id='option4' class='menu_option' href='javascript:right_load(4, ".$quote."fields_div".$quote.");'>".LangUtil::$allTerms['MENU_CUSTOM']."</a>
+							<a id='option4' class='menu_option' href='javascript:right_load(4, ".$quote."fields_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_CUSTOM']."</a>
 						</li>
 						<li>			
-							<a id='option19' class='menu_option' href='javascript:language_div_load();'>".LangUtil::$allTerms['MODIFYLANG']."</a>
+							<a id='option19' class='menu_option' href='javascript:language_div_load();'><i class='icon-tag'></i> ".LangUtil::$allTerms['MODIFYLANG']."</a>
 						</li>
 						<li>
-							<a id='option14' class='menu_option' href='javascript:export_html();'>Setup Network</a>
+							<a id='option14' class='menu_option' href='javascript:export_html();'><i class='icon-tag'></i> Setup Network</a>
 						</li>";
 						if($SERVER != $ON_ARC) {
 						echo"
-						<li><a id='option13' class='menu_option' href='javascript:right_load(13, ".$quote."backup_revert_div".$quote.");'>".LangUtil::$allTerms['MENU_BACKUP_REVERT']."</a></li>";
+						<li><a id='option13' class='menu_option' href='javascript:right_load(13, ".$quote."backup_revert_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_BACKUP_REVERT']."</a></li>";
 						if(is_super_admin($user) || is_country_dir($user)) { 
 						echo"
 						<li>
-							<a id='option18' class='menu_option' href='javascript:right_load(18, ".$quote."update_database_div".$quote.");'>".'Update Data'."</a>
+							<a id='option18' class='menu_option' href='javascript:right_load(18, ".$quote."update_database_div".$quote.");'><i class='icon-tag'></i> ".'Update Data'."</a>
 						</li>
 						<li>
 							<a id='option34' class='menu_option' href='javascript:right_load(34, ".$quote."import_config_div".$quote.");'>Import Configuration</a><br><br>
@@ -454,11 +476,11 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						}
 						echo"
 						<li>
-							<a href='export_config?id=".$_REQUEST['id']."' target='_blank'>".LangUtil::$allTerms['MENU_EXPORTCONFIG']."</a>
+							<a href='export_config?id=".$_REQUEST['id']."' target='_blank'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_EXPORTCONFIG']."</a>
 						</li>
                         <div id='old_update_div' style='display:none;'>
 							<li>
-								<a id='option39' class='menu_option' href='javascript:right_load(39, ".$quote."blis_update_div".$quote.");'>Update to New Version</a>
+								<a id='option39' class='menu_option' href='javascript:right_load(39, ".$quote."blis_update_div".$quote.");'><i class='icon-tag'></i> Update to New Version</a>
 							</li>
 						</div>";
 							

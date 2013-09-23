@@ -5762,6 +5762,18 @@ function add_user($user)
 	DbUtil::switchRestore($saved_db);
 }
 
+function import_users($users)
+{
+	# Adds a new user account
+	$saved_db = DbUtil::switchToGlobal();
+	
+	$query_string =
+	"INSERT INTO user(username, password, actualname, level, created_by, lab_config_id, lang_id, emr_user_id) ".
+	"VALUES ".$users;
+	query_insert_one($query_string);
+	DbUtil::switchRestore($saved_db);
+}
+
 function update_user_profile($updated_entry)
 {
 	# Updates user profile information

@@ -12,6 +12,7 @@ include("includes/stats_lib.php");
 LangUtil::setPageId("lab_config_home");
 
 putUILog('lab_config_home', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
+$imported_users = null
 ?>
 
 
@@ -460,13 +461,27 @@ if($lab_config == null)
                                 <!--NC3065-->
 
                             
-				<div class='right_pane' id='users_div' style='display:none;margin-left:10px;'>
+				<div class='right_pane' id='users_div' style='display:none;width:inherit ;'>
+				<div class="portlet box green">
+					<div class="portlet-title">
+						<h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></h4>
+							<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+							</div>
+					</div>
+					<div class="portlet-body">
 					<?php
 					$reload_url = "lab_config_home.php?id=$lab_config_id";
 					?>
 					<p style="text-align: right;"><a rel='facebox' href='#UserAccounts_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></b>
-					 | <a rel='facebox' href='lab_user_new.php?ru=<?php echo $reload_url; ?>&lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['CMD_ADDNEWACCOUNT']; ?></a>
+					 <a rel='facebox' class="btn blue-stripe" href='lab_user_new.php?ru=<?php echo $reload_url; ?>&lid=<?php echo $lab_config_id; ?>'>
+					 <i class='icon-plus'></i> 
+					 <?php echo LangUtil::$generalTerms['CMD_ADDNEWACCOUNT']; ?>
+					 </a>
+					 <a class="btn blue-stripe" href='javascript:import_users();'>
+					 <i class='icon-download'></i> 
+					 <?php echo 'Import from HMIS' ?>
+					 </a>
 					<br><br>
 					<div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>
 					</div>
@@ -476,6 +491,23 @@ if($lab_config == null)
 					$page_elems->getLabUsersTable($user_list, $lab_config_id);
 					?>
 					</div>
+					<div class='modal container hide fade' id='import_users' role="dialog" data-backdrop="static">
+						<div id='specimen_types_div' class='content_div'>
+						<div class="portlet box green">
+							<div class="portlet-title">
+								<h4><i class="icon-reorder"></i><?php echo 'Sanitas Users' ?></h4>
+							</div>
+							<div class="portlet-body">
+							<table class='table table-striped table-condensed table-hover' id="result">
+							</table>
+							<br>
+							<a href="javascript:import_users();" class="btn blue">Ok</a>
+							
+						</div>
+						</div>
+					</div>
+				</div>
+				</div>
 				</div>
 					
 				<div class='right_pane' id='inventory_div' style='display:none;margin-left:10px;'>
@@ -2514,6 +2546,40 @@ function submit_remarks_form()
 function hide_remarks_form()
 {
     $('#remarks_form_pane').html("");
+}
+
+function import_users(){
+	var jsonUrl = '192.168.1.9:8888/sanitas/bliss/getUsers';
+	var importURL='config/import_users.php';
+	$('#import_users').modal('show');
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	$.getJSON(  
+			importURL,  
+	        {url:jsonUrl},  
+	        function(json) { 
+	        	$('#result').html('');
+		         var thead = '<thead><th>User ID</th><th>Username</th><th>Role name</th></thead>';
+	        	 $('#result').append(thead);
+	        	 var tr;
+	             for (var i = 0; i < json.length; i++) {
+	                 tr = $('<tr/>');
+	                 tr.append("<td>" + json[i].id + "</td>");
+	                 tr.append("<td>" + json[i].username + "</td>");
+	                 tr.append("<td>" + json[i].roleName + "</td>");
+	                 $('#result').append(tr);
+	             }
+	             $.post(
+	             importURL,
+	             {users_data:json},
+	             function (){
+	             }
+	    	             
+	    	     );
+	            App.unblockUI(el);
+	            
+	        }  
+	    ); 
 }
 
 </script>

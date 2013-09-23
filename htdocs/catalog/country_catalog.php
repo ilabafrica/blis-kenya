@@ -16,6 +16,62 @@ LangUtil::setPageId("countrycatalog");
 $script_elems->enableTableSorter();
 ?>
 
+
+<table cellpadding='10px'>
+<tr valign='top'>
+<td id='left_pane' class='left_menu' width='150'>
+    
+<a href="javascript:load_right_pane('test_types_div');" class='menu_option' id='test_types_div_menu'>
+	<?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
+</a>
+<br><br>
+<a href="javascript:load_right_pane('test_category_types_div');" class='menu_option' id='test_category_types_div_menu'>
+	<?php echo LangUtil::$generalTerms['LAB_SECTION']; ?>
+</a>
+<br><br>
+
+</td>
+<td id='right_pane'>
+	<div id='test_types_div' class='content_div' style='display:none;'>
+		<form id="testNamesSelector">
+		<?php $page_elems->getTestNamesSelector(); ?>
+		<span id='progress_test_spinner' style='display:none'><?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?></span>
+		</td>
+		</tr>
+		</table>
+		</form>
+		<hr>
+		<br>
+		<div id='global_test_types_div'>
+			<b>Currently Added Country Wide Tests</b><br><br>
+			<?php $page_elems->getTestTypesCountryLevel(); ?>
+		</div>
+	</div>
+	
+	
+	
+	<div id='test_category_types_div' class='content_div' style='display:none;'>
+		<form id="testCategoryNamesSelector">
+		<?php $page_elems->getTestCategoryNamesSelector(); ?>
+		<span id='progress_tc_spinner' style='display:none'><?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?></span>
+		</td>
+		</tr>
+		</table>
+		</form>
+		<hr>
+		<br>
+		<div id='global_test_category_types_div'>
+			<b>Currently Added Country Wide Specimen</b><br><br>
+			<?php $page_elems->getTestCategoryTypesCountryLevel(); ?>
+		</div>
+	</div>
+	
+	
+</td>
+</tr>
+</table>
+<br>
+<?php include("includes/scripts.php");?>
 <script type="text/javascript">
 $(document).ready(function(){
 	<?php
@@ -182,58 +238,4 @@ function hide_right_pane()
 }
 
 </script>
-<table cellpadding='10px'>
-<tr valign='top'>
-<td id='left_pane' class='left_menu' width='150'>
-    
-<a href="javascript:load_right_pane('test_types_div');" class='menu_option' id='test_types_div_menu'>
-	<?php echo LangUtil::$generalTerms['TEST_TYPES']; ?>
-</a>
-<br><br>
-<a href="javascript:load_right_pane('test_category_types_div');" class='menu_option' id='test_category_types_div_menu'>
-	<?php echo LangUtil::$generalTerms['LAB_SECTION']; ?>
-</a>
-<br><br>
-
-</td>
-<td id='right_pane'>
-	<div id='test_types_div' class='content_div' style='display:none;'>
-		<form id="testNamesSelector">
-		<?php $page_elems->getTestNamesSelector(); ?>
-		<span id='progress_test_spinner' style='display:none'><?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?></span>
-		</td>
-		</tr>
-		</table>
-		</form>
-		<hr>
-		<br>
-		<div id='global_test_types_div'>
-			<b>Currently Added Country Wide Tests</b><br><br>
-			<?php $page_elems->getTestTypesCountryLevel(); ?>
-		</div>
-	</div>
-	
-	
-	
-	<div id='test_category_types_div' class='content_div' style='display:none;'>
-		<form id="testCategoryNamesSelector">
-		<?php $page_elems->getTestCategoryNamesSelector(); ?>
-		<span id='progress_tc_spinner' style='display:none'><?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?></span>
-		</td>
-		</tr>
-		</table>
-		</form>
-		<hr>
-		<br>
-		<div id='global_test_category_types_div'>
-			<b>Currently Added Country Wide Specimen</b><br><br>
-			<?php $page_elems->getTestCategoryTypesCountryLevel(); ?>
-		</div>
-	</div>
-	
-	
-</td>
-</tr>
-</table>
-<br>
 <?php include("includes/footer.php"); ?>

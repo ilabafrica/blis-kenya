@@ -1177,11 +1177,11 @@ class PageElems
 			</td>
 			<?php
 			$user = get_user_by_id($_SESSION['user_id']);
-			if(is_country_dir($user) || is_super_admin($user))
+			if(is_country_dir($user) || is_super_admin($user)|| is_admin($user))
 			{
 			?>
 			<td>
-				<a href='test_type_delete.php?id=<?php echo $key; ?>' class="btn mini red"><i class='icon-remove'></i>  <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+				<a href='test_type_delete.php?id=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i>  <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}
@@ -1231,7 +1231,7 @@ class PageElems
 			</td>
 			<?php
 			$user = get_user_by_id($_SESSION['user_id']);
-			if(is_country_dir($user) || is_super_admin($user))
+			if(is_country_dir($user) || is_super_admin($user) || is_admin($user))
 			{
 			?>
 			<td>
@@ -1283,11 +1283,11 @@ class PageElems
 			</td>
 			<?php
 			$user = get_user_by_id($_SESSION['user_id']);
-			if(is_country_dir($user) || is_super_admin($user))
+			if(is_country_dir($user) || is_super_admin($user)|| is_admin($user))
 			{
 			?>
 			<td>
-				<a href='test_category_delete.php?tcid=<?php echo $key; ?>' class="btn mini red"><i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+				<a href='test_category_delete.php?tcid=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}
@@ -1821,7 +1821,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='table table-striped table-condensed table-bordered table-hover' style='width:700px;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -1866,15 +1866,19 @@ class PageElems
 						{
 						?>
 						<td>
-							<a href='reports_userlog.php?username=<?php echo $user->userId; ?>&location=<?php echo $lab_config_id; ?>' target='_blank'>
+							<a href='reports_userlog.php?username=<?php echo $user->userId; ?>&location=<?php echo $lab_config_id; ?>' class="btn mini blue-stripe" target='_blank'>
+							<i class='icon-bar-chart'></i> 
 							<?php echo LangUtil::$pageTerms['RECENT_ACTIVITY']; ?>
 							</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="lab_user_edit.php?id=<?php echo $user->userId; ?>&backurl=lab_config_home.php?id=<?php echo $lab_config_id; ?>">
+							<a href="lab_user_edit.php?id=<?php echo $user->userId; ?>&backurl=lab_config_home.php?id=<?php echo $lab_config_id; ?>" class="btn mini green-stripe">
+							<i class='icon-pencil'></i>
 							<?php echo LangUtil::$generalTerms['CMD_EDIT']; ?>
 							</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href='javascript:ask_to_delete_user(<?php echo $user->userId; ?>);'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+							<a href='javascript:ask_to_delete_user(<?php echo $user->userId; ?>);' class="btn mini red-stripe" >
+							<i class='icon-remove'></i> 
+							<?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 							<br>
 							<?php
 							$div_id = 'delete_confirm_'.$user->userId;

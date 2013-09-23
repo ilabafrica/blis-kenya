@@ -39,6 +39,7 @@ RewriteRule ^worksheet_custom_added\.php$ config/worksheet_custom_added.php
 RewriteRule ^worksheet_custom_edit\.php$ config/worksheet_custom_edit.php
 RewriteRule ^worksheet_custom_update\.php$ config/worksheet_custom_update.php
 RewriteRule ^worksheet_custom_updated\.php$ config/worksheet_custom_updated.php
+RewriteRule ^import_users\.php$ config/import_users.php
 
 
 ## /reports folder

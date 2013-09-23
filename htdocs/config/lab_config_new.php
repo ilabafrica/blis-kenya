@@ -7,7 +7,7 @@ include("includes/header.php");
 LangUtil::setPageId("lab_configs");
 
 //$script_elems->enableJWizard(); 
-$script_elems->enableDatePicker();
+
 
 putUILog('lab_config_new', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
@@ -15,180 +15,7 @@ putUILog('lab_config_new', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 
 global $labIdArray;
 ?>
 <link rel='stylesheet' type='text/css' href='css/wizard_styles.css' />
-<script type="text/javascript">
 
-<?php //$page_elems->getCompatibilityJsArray("st_map"); ?>
-
-
-$(document).ready(function(){
-	$('#tech_entries').show();
-	$('.2').hide();
-	$('.3').hide();
-	$('.4').hide();
-	$('.5').hide();
-	
-	$('.stype_entry').change(function() {
-		//check_compatible();
-	});
-});
-
-function check_compatible()
-{
-	return;
-	$('.ttype_entry').attr("disabled", "disabled");
-	$('.ttype_entry').removeAttr("checked");
-	for(var i in st_map)
-	{
-		var stype_elem_id = "s_type_"+i;
-		var stype_elem = $('#'+stype_elem_id);
-		if(stype_elem == undefined || stype_elem == null)
-			continue;
-		if(stype_elem.attr("checked"))
-		{
-			var test_csv = st_map[i];
-			if(test_csv == "" || test_csv == null || test_csv == undefined || typeof test_csv != 'string')
-				continue;
-			if(test_csv.contains(","))
-			{
-				var test_list = test_csv.split(",");
-				for(var j in test_list)
-				{
-					var checkbox_elem_id = "t_type_"+j;
-					var checkbox_elem = $('#'+checkbox_elem_id);
-					checkbox_elem.removeAttr("disabled");
-				}
-			}
-			else
-			{
-				var checkbox_elem_id = "t_type_"+test_csv;
-				var checkbox_elem = $('#'+checkbox_elem_id);
-				checkbox_elem.removeAttr("disabled");
-			}
-		}
-	}
-}
-	
-function loadnext(divout,divin){
-	$("." + divout).hide();
-	//$("." + divin).fadeIn("fast");
-	$("." + divin).show();
-}
-
-function get_testbox2(stype_id)
-{
-	//var stype_val = $('#'+stype_id).attr("value");
-        var stype_val = stype_id;
-        $('#test_list_by_site').show();
-	if(stype_val == "")
-	{
-		$('#test_list_by_site').html("-<?php echo 'Select Facility to display its Test Catalog here'; ?>-");
-		return;
-	}
-	$('#test_list_by_site').html("<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>");
-	$('#test_list_by_site').load(
-		"ajax/test_list_by_site.php", 
-		{
-			site_id: stype_val
-		}
-	);
-}
-
-function show_testbox2(st)
-{
-	//var stype_val = $('#'+stype_id).attr("value");
-        $('.test_list_forms').hide();
-        $('#test_list_'+ st).show();
-	
-}
-
-function remove_option(st)
-{
-    $('#iloc_sites').find('select').removeAttr('disabled');
-  $('#iloc_sites').empty();
-       $("#iloc_sites").html($("#iloc_sites_t").html());
-       $('#iloc_sites').find('select').attr('id', 'ilocation');
-        $('#iloc_sites').find('select').attr('name', 'ilocation');
-    $("#ilocation option[value='"+st+"']").remove();
-    if(st == '0')
-        {
-            $('#iloc_sites').find('select').attr('disabled', true);
-        }
-
-
-}
-
-function remove_option2(st)
-{
-   
-    $("#ilocation option[value='"+st+"']").remove();	
-}
-
-function checkandadd()
-{
-	//Validate
-	var name = $('#facility').attr("value");
-	if(name == "")
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_FACILITY']; ?>");
-		return;
-	}
-	var location = $('#location').attr("value");
-	if(location == "")
-	{
-		alert("<?php echo "Facility Location Missing"; ?>");
-		return;
-	}
-	var lab_admin = $('#lab_admin').attr("value");
-	if(lab_admin == "")
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_MGR']; ?>");
-		return;
-	}
-        
-        var bloc = $('#blocation').attr("value");
-	if(bloc == '0')
-	{
-		//alert("<?php echo 'Base Lab Configuration not selected'; ?>");
-		//return;
-	}
-	/*
-	var stype_entries = $('.stype_entry');
-	var stype_selected = false;
-	for(var i = 0; i < stype_entries.length; i++)
-	{
-		if(stype_entries[i].checked)
-		{
-			stype_selected = true;
-			break;
-		}
-	}
-	if(stype_selected == false)
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_STYPES']; ?>");
-		return;
-	}
-	var ttype_entries = $('.ttype_entry');
-	var ttype_selected = false;
-	for(var i = 0; i < ttype_entries.length; i++)
-	{
-		if(ttype_entries[i].checked)
-		{
-			ttype_selected = true;
-			break;
-		}
-	}
-	if(ttype_selected == false)
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_TTYPES']; ?>");
-		return;
-	}
-	//All okay
-	*/
-	$('.5').hide();
-	$('.6').show();
-	$('#new_lab_form').submit();
-}
-</script>
 
 <style type="text/css">
 	#registration { width:950px; margin:20px; background:#F6F6F6; }
@@ -223,8 +50,18 @@ function checkandadd()
 	/*color: #009;*/
 }
 </style>
-<br>
-<b><?php echo LangUtil::$pageTerms['NEW_LAB_CONFIGURATION']; ?>	</b>
+
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3></h3>
+						<ul class="breadcrumb">
+							<li><a href="#"><i class='icon-wrench'></i> <?php echo LangUtil::$pageTerms['NEW_LAB_CONFIGURATION']; ?>	</a>
+							<span class="icon-angle-right"></span></li>
+							<li><a href="#"></a></li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
  | <a href="javascript:history.go(-1);"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br><br>
 <form id='new_lab_form' name='new_lab_form' action='lab_config_add.php' method='post'>
@@ -632,6 +469,182 @@ function checkandadd()
 	
 </form>
 <br>
+<?php include("includes/scripts.php");?>
+<?php $script_elems->enableDatePicker();?>
+<script type="text/javascript">
+
+<?php //$page_elems->getCompatibilityJsArray("st_map"); ?>
+
+
+$(document).ready(function(){
+	$('#tech_entries').show();
+	$('.2').hide();
+	$('.3').hide();
+	$('.4').hide();
+	$('.5').hide();
+	
+	$('.stype_entry').change(function() {
+		//check_compatible();
+	});
+});
+
+function check_compatible()
+{
+	return;
+	$('.ttype_entry').attr("disabled", "disabled");
+	$('.ttype_entry').removeAttr("checked");
+	for(var i in st_map)
+	{
+		var stype_elem_id = "s_type_"+i;
+		var stype_elem = $('#'+stype_elem_id);
+		if(stype_elem == undefined || stype_elem == null)
+			continue;
+		if(stype_elem.attr("checked"))
+		{
+			var test_csv = st_map[i];
+			if(test_csv == "" || test_csv == null || test_csv == undefined || typeof test_csv != 'string')
+				continue;
+			if(test_csv.contains(","))
+			{
+				var test_list = test_csv.split(",");
+				for(var j in test_list)
+				{
+					var checkbox_elem_id = "t_type_"+j;
+					var checkbox_elem = $('#'+checkbox_elem_id);
+					checkbox_elem.removeAttr("disabled");
+				}
+			}
+			else
+			{
+				var checkbox_elem_id = "t_type_"+test_csv;
+				var checkbox_elem = $('#'+checkbox_elem_id);
+				checkbox_elem.removeAttr("disabled");
+			}
+		}
+	}
+}
+	
+function loadnext(divout,divin){
+	$("." + divout).hide();
+	//$("." + divin).fadeIn("fast");
+	$("." + divin).show();
+}
+
+function get_testbox2(stype_id)
+{
+	//var stype_val = $('#'+stype_id).attr("value");
+        var stype_val = stype_id;
+        $('#test_list_by_site').show();
+	if(stype_val == "")
+	{
+		$('#test_list_by_site').html("-<?php echo 'Select Facility to display its Test Catalog here'; ?>-");
+		return;
+	}
+	$('#test_list_by_site').html("<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>");
+	$('#test_list_by_site').load(
+		"ajax/test_list_by_site.php", 
+		{
+			site_id: stype_val
+		}
+	);
+}
+
+function show_testbox2(st)
+{
+	//var stype_val = $('#'+stype_id).attr("value");
+        $('.test_list_forms').hide();
+        $('#test_list_'+ st).show();
+	
+}
+
+function remove_option(st)
+{
+    $('#iloc_sites').find('select').removeAttr('disabled');
+  $('#iloc_sites').empty();
+       $("#iloc_sites").html($("#iloc_sites_t").html());
+       $('#iloc_sites').find('select').attr('id', 'ilocation');
+        $('#iloc_sites').find('select').attr('name', 'ilocation');
+    $("#ilocation option[value='"+st+"']").remove();
+    if(st == '0')
+        {
+            $('#iloc_sites').find('select').attr('disabled', true);
+        }
+
+
+}
+
+function remove_option2(st)
+{
+   
+    $("#ilocation option[value='"+st+"']").remove();	
+}
+
+function checkandadd()
+{
+	//Validate
+	var name = $('#facility').attr("value");
+	if(name == "")
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_FACILITY']; ?>");
+		return;
+	}
+	var location = $('#location').attr("value");
+	if(location == "")
+	{
+		alert("<?php echo "Facility Location Missing"; ?>");
+		return;
+	}
+	var lab_admin = $('#lab_admin').attr("value");
+	if(lab_admin == "")
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_MGR']; ?>");
+		return;
+	}
+        
+        var bloc = $('#blocation').attr("value");
+	if(bloc == '0')
+	{
+		//alert("<?php echo 'Base Lab Configuration not selected'; ?>");
+		//return;
+	}
+	/*
+	var stype_entries = $('.stype_entry');
+	var stype_selected = false;
+	for(var i = 0; i < stype_entries.length; i++)
+	{
+		if(stype_entries[i].checked)
+		{
+			stype_selected = true;
+			break;
+		}
+	}
+	if(stype_selected == false)
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_STYPES']; ?>");
+		return;
+	}
+	var ttype_entries = $('.ttype_entry');
+	var ttype_selected = false;
+	for(var i = 0; i < ttype_entries.length; i++)
+	{
+		if(ttype_entries[i].checked)
+		{
+			ttype_selected = true;
+			break;
+		}
+	}
+	if(ttype_selected == false)
+	{
+		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_TTYPES']; ?>");
+		return;
+	}
+	//All okay
+	*/
+	$('.5').hide();
+	$('.6').show();
+	$('#new_lab_form').submit();
+}
+</script>
 <?php include("includes/footer.php"); ?>
 <!--
 		<table cellpadding='5px'>
