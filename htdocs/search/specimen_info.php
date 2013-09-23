@@ -31,64 +31,64 @@ $script_elems->enableDatePicker();
 
                     <div class="portlet box green" id="specimenresult_div">
                         <div class="portlet-title" >
-                            <h4><i class="icon-reorder"></i> <?php echo LangUtil::$pageTerms['EDIT_CUSTOMFIELD']; ?> </h4>           
+                            <h4><i class="icon-reorder"></i> <?php echo LangUtil::getTitle(); ?> </h4>           
                         </div>
                         
                           <div class="portlet-body" >
                                 <br>
-                                <b><?php echo LangUtil::getTitle(); ?></b>
-                                 | <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+                                 <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
                                 <br><br>
+                                <?php
+                                if(isset($_REQUEST['vd']))
+                                {
+                                    # Directed from specimen_verify_do.php
+                                    ?>
+                                    <span class='clean-orange' id='msg_box'>
+                                        <?php echo LangUtil::$pageTerms['TIPS_VERIFYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
+                                    </span>
+                                    <?php
+                                }
+                                else if(isset($_REQUEST['re']))
+                                {
+                                    # Directed form specimen_result_do.php
+                                    ?>
+                                    <span class='clean-orange' id='msg_box'>
+                                        <?php echo LangUtil::$pageTerms['TIPS_ENTRYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
+                                    </span>
+                                    <?php   
+                                }
+                                
+                                ?>
+                                <table>
+                                    <tr valign='top'>
+                                        <td>
+                                        <?php $page_elems->getSpecimenInfo($sid); ?>
+                                        </td>
+                                        <td>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </td>
+                                        <td>
+                                            <?php $page_elems->getSpecimenTaskList($sid); ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <span id='fetch_progress_bar' style='display:none;'>
+                                                    <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+                                                </span> 
+                                <div class='result_form_pane' id='result_form_pane_<?php echo $sid; ?>'>
+                                        </div>
+                                <br>
+                                <hr />
+                                <b><?php echo LangUtil::$pageTerms['REGDTESTS']; ?></b><br>
+                                <?php 
+                                $page_elems->getSpecimenTestsTable($sid); 
+                                ?>
                           </div>
                   </div>
               </div>
            </div>   
 
-<?php
-if(isset($_REQUEST['vd']))
-{
-	# Directed from specimen_verify_do.php
-	?>
-	<span class='clean-orange' id='msg_box'>
-		<?php echo LangUtil::$pageTerms['TIPS_VERIFYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
-	</span>
-	<?php
-}
-else if(isset($_REQUEST['re']))
-{
-	# Directed form specimen_result_do.php
-	?>
-	<span class='clean-orange' id='msg_box'>
-		<?php echo LangUtil::$pageTerms['TIPS_ENTRYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
-	</span>
-	<?php	
-}
-
-?>
-<table>
-	<tr valign='top'>
-		<td>
-		<?php $page_elems->getSpecimenInfo($sid); ?>
-		</td>
-		<td>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		</td>
-		<td>
-			<?php $page_elems->getSpecimenTaskList($sid); ?>
-		</td>
-	</tr>
-</table>
-<span id='fetch_progress_bar' style='display:none;'>
-					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-				</span>	
-<div class='result_form_pane' id='result_form_pane_<?php echo $sid; ?>'>
-		</div>
-<br>
-<b><?php echo LangUtil::$pageTerms['REGDTESTS']; ?></b><br>
-<?php 
-$page_elems->getSpecimenTestsTable($sid); 
-?>
 <script type='text/javascript'>
 function submit_forms(specimen_id)
 {

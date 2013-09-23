@@ -3123,7 +3123,7 @@ class PageElems
 		});
 		
 		</script>
-		<table class='tablesorter' id='specimen_tests_table'>
+		<table class='table' id='specimen_tests_table'>
 			<thead>
 				<tr valign='top'>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
