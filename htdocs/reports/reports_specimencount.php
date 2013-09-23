@@ -177,7 +177,7 @@ $uiinfo = "from=".$date_from."%to=".$date_to;
                 </div>         
          </div>              
 <?php
-include("includes/scripts.php");
+
 $script_elems = new ScriptElems();
 $script_elems->enableDatePicker();
 $script_elems->enableFlotBasic();

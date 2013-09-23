@@ -2044,7 +2044,7 @@ var App = function () {
         $('.timepicker-default').timepicker();
 
         $('.timepicker-24').timepicker({
-            minuteStep: 15,
+            minuteStep: 1,
             showSeconds: false,
             showMeridian: false
         });

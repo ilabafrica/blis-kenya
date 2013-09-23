@@ -38,7 +38,6 @@ $doc_array= getDoctorList();
 $php_array= addslashes(implode("%", $doc_array));
 	
 $uiinfo = "pid=".$_REQUEST['pid']."&dnum=".$_REQUEST['dnum'];
-putUILog('new_specimen', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 ?>
 	<script>
   $(document).ready(function(){
@@ -242,6 +241,7 @@ function add_specimenbox()
 		success: function(msg){
 			$('#specimenboxes').append(msg);
 			$('#sbox_progress_spinner').hide();
+			App.init();
 		}
 	});
 }
