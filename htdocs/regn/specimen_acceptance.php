@@ -77,6 +77,7 @@ include("barcode/barcode_lib.php");
 
 
 $script_elems->enableJQueryForm();
+$script_elems->enableDatePicker();
 $script_elems->enableJQueryValidate();
 $script_elems->enableTableSorter();
 $script_elems->enableLatencyRecord();

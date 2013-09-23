@@ -40,15 +40,20 @@ $type = $_REQUEST['t'];
                         
                           <div class="portlet-body" >
                               
-<br>
-&nbsp; <a href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'>Back </a>
-<br><br />
-<form name='cfield_edit_form' id='cfield_edit_form' action='ajax/cfield_update.php' method='post'>
-<?php
-$page_elems->getCustomFieldEditForm($field_id, $lab_config_id, $type);
-?>
-</form>
-</div>
+                                <br>
+                                &nbsp; <a href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'>Back </a>
+                                <br><br />
+                                <form name='cfield_edit_form' id='cfield_edit_form' action='ajax/cfield_update.php' method='post'>
+                                <?php
+                                $page_elems->getCustomFieldEditForm($field_id, $lab_config_id, $type);
+                                ?>
+                                </form>
+                              </div>
+                         </div>
+                     </div>
+                 </div>
+  
+                                
 <?php
 include("includes/scripts.php");
 $script_elems->enableJQueryForm();
