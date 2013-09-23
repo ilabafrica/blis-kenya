@@ -5,18 +5,10 @@
 #
 include("redirect.php");
 include("includes/header.php");
-include("barcode/barcode_lib.php");
 LangUtil::setPageId("patient_profile");
 
 $pid = $_REQUEST['pid'];
 
-
-$barcodeSettings = get_lab_config_settings_barcode();
-//  print_r($barcodeSettings);
-$code_type = $barcodeSettings['type']; //"code39";
-$bar_width = $barcodeSettings['width']; //2;
-$bar_height = $barcodeSettings['height']; //40;
-$font_size = $barcodeSettings['textsize']; //11;
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
                         <h3>
@@ -24,53 +16,76 @@ $font_size = $barcodeSettings['textsize']; //11;
                         <ul class="breadcrumb">
                             <li>
                                 <i class="icon-download-alt"></i>
-                                <a href="index.php">ent Pati</a> 
+                                <a href="index.php">Patient profile</a> 
                             </li>
                         </ul>
                         <!-- END PAGE TITLE & BREADCRUMB-->
                     </div>
                 </div>
                 <!-- END PAGE HEADER-->
-<br>
-<b><?php echo LangUtil::getTitle(); ?></b>
- | <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
-<br><br>
-<table>
-	<tr valign='top'>
-		<td>
-			<div id='profile_div'>
-				<?php $page_elems->getPatientInfo($pid); ?>
-			</div>
-			<div id='profile_update_div' style='display:none;' >
-				<?php $page_elems->getPatientUpdateForm($pid); ?>
-			</div>
-		</td>
-		<td>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		</td>
-		<td>
-			<?php $page_elems->getPatientTaskList($pid); ?>
-		</td>
-	</tr>
-</table>
-<br>
-<b><?php echo LangUtil::$generalTerms['CMD_THISTORY']; ?></b><br>
-<?php $page_elems->getPatientHistory($pid); ?>
-<div id="barcodeData" style="display:none;">
-<input type="text" id="patientID" value='<?php echo encodePatientBarcode($_REQUEST['pid'],0); ?>' />
-<br><br>
-<div id="patientBarcodeDiv"></div>
-<br><br>
-<div id="specimenBarcodeDiv"></div>
-</div>
+             <div class="row-fluid">
+                <div class="span12 sortable">
+
+                    <div class="portlet box green" id="prevalence_div">
+                        <div class="portlet-title" >
+                            <h4><i class="icon-reorder"></i> <?php echo LangUtil::getTitle(); ?> </h4>           
+                        </div>
+                        
+                          <div class="portlet-body" >
+                          
+                            <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+                            <br><br>
+                            <table clas="table">
+                            	<tr valign='top'>
+                            		<td>
+                            			<div id='profile_div'>
+                            				<?php $page_elems->getPatientInfo($pid); ?>
+                            			</div>
+                            			<div id='profile_update_div' style='display:none;' >
+                            				<?php $page_elems->getPatientUpdateForm($pid); ?>
+                            			</div>
+                            		</td>
+                            		<td>
+                            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            		</td>
+                            		<td>
+                            			<?php $page_elems->getPatientTaskList($pid); ?>
+                            		</td>
+                            	</tr>
+                            </table>
+                            <hr />
+                            <br>
+                            <b><?php echo LangUtil::$generalTerms['CMD_THISTORY']; ?></b><br>
+                            <?php $page_elems->getPatientHistory($pid); ?>
+                            <div id="barcodeData" style="display:none;">
+                            <input type="text" id="patientID" value='<?php echo encodePatientBarcode($_REQUEST['pid'],0); ?>' />
+                            <br><br>
+                            <div id="patientBarcodeDiv"></div>
+                            <br><br>
+                            <div id="specimenBarcodeDiv"></div>
+                            </div>
+                </div>
+          </div>
+          </div>
+          </div>
+                            
 <?php
 include("includes/scripts.php");
+include("barcode/barcode_lib.php");
 
 $script_elems->enableJQueryForm();
 $script_elems->enableDatePicker();
-$script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
+
+$barcodeSettings = get_lab_config_settings_barcode();
+//print_r($barcodeSettings);
+$code_type = $barcodeSettings['type']; //"code39";
+$bar_width = $barcodeSettings['width']; //2;
+$bar_height = $barcodeSettings['height']; //40;
+$font_size = $barcodeSettings['textsize']; //11;
+
 ?>
 <script type="text/javascript" src="facebox/facebox.js"></script>
 <script type='text/javascript'>

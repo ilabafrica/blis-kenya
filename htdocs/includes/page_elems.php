@@ -2194,7 +2194,7 @@ class PageElems
 		}
 		$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 		?>
-		<table class='hor-minimalist-b' <?php  if($width!="") echo " style='width:".$width."px;' "; ?>>
+		<table class='table table-hover' <?php  if($width!="") echo " style='width:".$width."px;' "; ?>>
 			<tbody>
 				<?php
 				//if($_SESSION['pid'] != 0)
