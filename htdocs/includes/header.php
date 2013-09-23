@@ -355,15 +355,18 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 												</li>";
 						                     	if(is_admin(get_user_by_id($_SESSION['user_id'])))
 						                        { 
-						                        echo "
+						                       echo "
 						                            <li class='menu_option' id='user_stats_menu'>
 														<a href='javascript:show_selection(".$quote."user_stats".$quote.");'> <i class='icon-tag'></i> User Statistics</a>
 													</li>";
 						                        }
-						                        echo "
+                                                
+						                        /* Incomplete
+                                                 * 
+                                                 *  echo "
 						                        <li class='menu_option' id='stock_report_menu'>
 													<a href='javascript:show_selection(".$quote."stock_report".$quote.");'> <i class='icon-tag'></i> Previous Inventory Data</a>
-												</li>";                          
+												</li>";   */                        
 											} 
 						
 											echo "</ul>";

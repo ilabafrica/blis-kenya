@@ -197,7 +197,6 @@ $imported_users = null
 </div>
 
 <?php
-
 $lab_config_id = $_REQUEST['id'];
 $user = get_user_by_id($_SESSION['user_id']);
 if ( !((is_country_dir($user)) || (is_super_admin($user)) ) ) {
@@ -240,6 +239,411 @@ if($lab_config == null)
 				</div>
 				<!-- END PAGE HEADER-->
 <!-- BEGIN ROW-FLUID-->   
+
+<div class="portlet box green right_pane" id="fields_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></b></h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        
+        <div class="portlet-body">
+            <div class='config_reg_details' style='margin-left:10px;'>
+                    <p style="text-align: right;"><a rel='facebox' href='#RegistrationFields_config'>Page Help</a></p>
+                     <a href='javascript:toggle_ofield_div();' id='ofield_toggle_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+                    <br><br>
+                    <div id='cfield_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <div id='ofield_summary' class='pretty_box'>
+                    <?php $page_elems->getRegistrationFieldsSummary($lab_config); ?>
+                    </div>
+                    <div id='ofield_form_div' style='display:none;'>
+                    <form id='otherfields_form' name='otherfields_form' action='ajax/ofield_update.php' method='post'>
+                    <input type='hidden' value='<?php echo $_REQUEST['id']; ?>' name='lab_config_id'></input>
+                    <table class='hor-minimalist-b' style='width:auto;'>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr valign='top'>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_pid' id='use_pid' <?php
+                                    if($lab_config->pid != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_pid_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_pid_radio' value='Y' <?php
+                                        if($lab_config->pid == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_pid_radio' value='N' <?php
+                                        if($lab_config->pid != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr valign='top'>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['ADDL_ID']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_p_addl' id='use_p_addl' <?php
+                                    if($lab_config->patientAddl != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_p_addl_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_p_addl_radio' value='Y' <?php
+                                        if($lab_config->patientAddl == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_p_addl_radio' value='N' <?php
+                                        if($lab_config->patientAddl != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_dnum' id='use_dnum'<?php
+                                    
+                                                                        if($lab_config->dailyNum == 1 || $lab_config->dailyNum == 2 || $lab_config->dailyNum == 11 || $lab_config->dailyNum == 12)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_dnum_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_dnum_radio' value='Y'<?php
+                                        if($lab_config->dailyNum == 2 || $lab_config->dailyNum == 12)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_dnum_radio' value='N' <?php
+                                        if($lab_config->dailyNum != 2 && $lab_config->dailyNum != 12)
+                                            echo " checked ";
+                                        ?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_RESET']; ?>
+                                        <select name='dnum_reset' id='dnum_reset'>
+                                            <option value='<?php echo LabConfig::$RESET_DAILY; ?>'><?php echo LangUtil::$pageTerms['DAILY']; ?></option>
+                                            <option value='<?php echo LabConfig::$RESET_WEEKLY; ?>'><?php echo LangUtil::$pageTerms['WEEKLY']; ?></option>
+                                            <option value='<?php echo LabConfig::$RESET_MONTHLY; ?>'><?php echo LangUtil::$pageTerms['MONTHLY']; ?></option>
+                                            <option value='<?php echo LabConfig::$RESET_YEARLY; ?>'><?php echo LangUtil::$pageTerms['YEARLY']; ?></option>
+                                        </select>
+                                        
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr style='display:none;'>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['NAME']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_pname' id='use_pname'<?php
+                                    if($lab_config->pname != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_pname_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_pname_radio' value='Y'<?php
+                                        if($lab_config->pname == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_pname_radio' value='N' <?php
+                                        if($lab_config->pname != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr style='display:none;'>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['GENDER']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_sex' id='use_sex' <?php
+                                    if($lab_config->sex != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_sex_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['DOB']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_dob' id='use_dob'<?php
+                                    if($lab_config->dob != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_dob_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_dob_radio' value='Y'<?php
+                                        if($lab_config->dob == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_dob_radio' value='N' <?php
+                                        if($lab_config->dob != 2)
+                                            echo " checked ";
+                                        ?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr style='display:none;'>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['AGE']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_age' id='use_age'<?php
+                                                                        if($lab_config->age == 1 || $lab_config->age == 2 || $lab_config->age == 11 || $lab_config->age == 12)
+                                    
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_age_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_age_radio' value='Y'<?php
+                                        if($lab_config->age == 2 || $lab_config->age == 12)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_age_radio' value='N' <?php
+                                        if($lab_config->age != 2 && $lab_config->age != 12)
+                                            echo " checked ";
+                                        ?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo 'Complete Age Display Limit'; ?></td>
+                                <td>
+                                    <input type='text' name='ageLimit' id='ageLimit' size='3' maxlength='3' value='<?php echo $lab_config->ageLimit; ?>'>
+                                    </input>
+                                    <?php echo LangUtil::$generalTerms['YEARS'] ?>
+                                </td>
+                            </tr>
+                            <tr valign='top' style='display:none;'>
+                                <td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_sid' id='use_sid'<?php
+                                    //if($lab_config->sid != 0)
+                                    if(true)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_sid_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_s_addl' id='use_s_addl'<?php
+                                    if($lab_config->specimenAddl != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_s_addl_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_s_addl_radio' value='Y'<?php
+                                        if($lab_config->specimenAddl == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_s_addl_radio' value='N' <?php
+                                        if($lab_config->specimenAddl != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['COMMENTS']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_comm' id='use_comm'<?php
+                                    if($lab_config->comm != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_comm_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_comm_radio' value='Y'<?php
+                                        if($lab_config->comm == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_comm_radio' value='N' <?php
+                                        if($lab_config->comm != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['R_DATE']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_rdate' id='use_rdate'<?php
+                                    if($lab_config->rdate != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_rdate_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_rdate_radio' value='Y'<?php
+                                        if($lab_config->rdate == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_rdate_radio' value='N' <?php
+                                        if($lab_config->rdate != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['REF_OUT']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_refout' id='use_refout'<?php
+                                    if($lab_config->refout != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_refout_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_refout_radio' value='Y'<?php
+                                        if($lab_config->refout == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_refout_radio' value='N' <?php
+                                        if($lab_config->refout != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['DOCTOR']; ?></td>
+                                <td>
+                                    <input type='checkbox' name='use_doctor' id='use_doctor'<?php
+                                    if($lab_config->refout != 0)
+                                        echo " checked ";
+                                    ?>>
+                                    </input>
+                                    <span id='use_doctor_mand' style='display:none;'>
+                                        &nbsp;&nbsp;
+                                        <?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_doctor_radio' value='Y'<?php
+                                        if($lab_config->refout == 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
+                                        &nbsp;&nbsp;
+                                        <input type='radio' name='use_doctor_radio' value='N' <?php
+                                        if($lab_config->refout != 2)
+                                            echo " checked ";
+                                        ?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo LangUtil::$generalTerms['DATE_FORMAT']; ?></td>
+                                <td>
+                                    <select name='dformat' id='dformat'>
+                                        <?php $page_elems->getDateFormatSelect($lab_config); ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <input type='button' value='<?php echo LangUtil::$generalTerms['CMD_UPDATE']; ?>' onclick='javascript:submit_otherfields();'>
+                                    </input>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <span id='otherfields_progress' style='display:none;'>
+                                        <?php echo $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>
+                    </div>
+                    
+                    <br>
+                    <?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['SPECIMENS']; ?>
+                     | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>[<a href='#new_help' rel='facebox'>?</a>]
+                    <div id='specimen_custom_field_list'>
+                    <?php 
+                    $custom_field_list = get_lab_config_specimen_custom_fields($lab_config->id);
+                    $page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 1); 
+                    ?>
+                    </div>
+                    
+                    <br>
+                    <?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['PATIENTS']; ?>
+                     | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
+                    <div id='patient_custom_field_list'>
+                    <?php 
+                    $custom_field_list = get_lab_config_patient_custom_fields($lab_config->id);
+                    $page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 2); 
+                    ?>
+                    </div>
+                    
+                    <br>
+                    <?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - Lab Titles"; ?>
+                     | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
+                    <div id='labtitle_custom_field_list'>
+                    <?php 
+                    $custom_field_list = get_lab_config_labtitle_custom_fields($lab_config->id);
+                    $page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 3); 
+                    ?>
+                    </div>
+                </div>
+                
+        </div>
+  </div>      
+
+
+
+
+
 <div class="portlet box green right_pane" id="site_info_div" >
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Summary</h4>
@@ -264,6 +668,192 @@ if($lab_config == null)
                     </div>
         </div>     
     </div>    
+    
+    
+    
+    <div id='Summary_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>
+    <?php 
+    if(LangUtil::$pageTerms['TIPS_SUMMARY_1'] != '-') {
+        echo "<li>";
+        echo LangUtil::$pageTerms['TIPS_SUMMARY_1'];
+        echo "</li>";
+    }   
+    if(LangUtil::$pageTerms['TIPS_SUMMARY_2']!="-") {
+        echo "<li>"; 
+        echo LangUtil::$pageTerms['TIPS_SUMMARY_2'];
+        echo "</li>";
+    }
+    if(LangUtil::$pageTerms['TIPS_SUMMARY_3']!="-") {
+        echo "<li>"; 
+        echo LangUtil::$pageTerms['TIPS_SUMMARY_3'];
+        echo "</li>"; 
+    }   
+    ?>  
+    </ul>   
+</div>
+
+<div id='Tests_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <h2><u><?php echo LangUtil::$pageTerms['MENU_LABCONFIG']; ?></u></h2>
+    <h3><?php echo LangUtil::$pageTerms['MENU_TESTS']; ?></h3>
+    <p>This has the following options:</p>
+    <ul>
+        <?php
+        if(LangUtil::$pageTerms['TIPS_SPECIMENTESTTYPES']!="-") {
+            echo "<li>";
+            echo LangUtil::$pageTerms['TIPS_SPECIMENTESTTYPES'];
+            echo "</li>";
+        }   
+        if(LangUtil::$pageTerms['TIPS_TARGETTAT']!="-") {
+            echo "<li>"; 
+            echo LangUtil::$pageTerms['TIPS_TARGETTAT'];
+            echo "</li>";
+        }
+        if(LangUtil::$pageTerms['TIPS_RESULTINTERPRETATION']!="-") {
+            echo "<li>"; 
+            echo LangUtil::$pageTerms['TIPS_RESULTINTERPRETATION'];
+            echo "</li>"; 
+        }
+        ?>
+    </ul>
+</div>
+
+<div id='Billing_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <u>This has the following options</u>
+    <ul>
+        <li>Enable Billing: Toggles whether or not your lab uses the billing engine.</li>
+        <li>Currency Name: Denotes what name will be used when printing monetary amounts in the billing engine.</li>
+        <li>Currency Delimiter: Denotes what is used to separate 'dollars' from 
+            'cents' when printing monetary amounts in the billing engine.  For example, the '.' in 10.50</li>
+    </ul>
+</div>
+
+<div id='IR_rc' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>
+            <li><?php echo LangUtil::$pageTerms['TIPS_INFECTIONREPORT']; ?></li>
+        </ul>
+    </div>  
+    
+    <div id='DRS_rc' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>
+            <li><?php echo LangUtil::$pageTerms['TIPS_DAILYREPORTSETTINGS']; ?></li>
+        </ul>
+    </div>
+    
+    <div id='WS_rc' class='right_pane' style='display:none;margin-left:10px;'>
+        <ul>
+            <li><?php echo LangUtil::$pageTerms['TIPS_WORKSHEETS']; ?></li>
+        </ul>
+    </div>
+    
+    <div id='UserAccounts_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>    
+        <?php
+        if(LangUtil::$pageTerms['TIPS_USERACCOUNTS_1']!="-") {
+            echo "<li>";
+            echo LangUtil::$pageTerms['TIPS_USERACCOUNTS_1'];
+            echo "</li>";
+        }   
+        if(LangUtil::$pageTerms['TIPS_USERACCOUNTS_2']!="-") {
+            echo "<li>"; 
+            echo LangUtil::$pageTerms['TIPS_USERACCOUNTS_2'];
+            echo "</li>";
+        }
+        if(LangUtil::$pageTerms['TIPS_USERACCOUNTS_3']!="-") {
+            echo "<li>"; 
+            echo LangUtil::$pageTerms['TIPS_USERACCOUNTS_3'];
+            echo "</li>"; 
+        }
+        ?>
+    </ul>
+    </div>
+    
+    <div id='RegistrationFields_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>    
+        <?php
+        if(LangUtil::$pageTerms['TIPS_REGISTRATIONFIELDS_1']!="-") {
+            echo "<li>";
+            echo LangUtil::$pageTerms['TIPS_REGISTRATIONFIELDS_1'];
+            echo "</li>";
+        }   
+        if(LangUtil::$pageTerms['TIPS_REGISTRATIONFIELDS_2']!="-") {
+            echo "<li>"; 
+            echo LangUtil::$pageTerms['TIPS_REGISTRATIONFIELDS_2'];
+            echo "</li>";
+        }
+        if(LangUtil::$pageTerms['TIPS_REGISTRATIONFIELDS_3']!="-") {
+            echo "<li>"; 
+            echo LangUtil::$pageTerms['TIPS_REGISTRATIONFIELDS_3'];
+            echo "</li>"; 
+        }
+        ?>
+    </ul>
+    </div>
+
+        <!--NC3065-->
+        
+        <div id='search_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>    
+        <?php
+        
+            echo "<li>";
+            echo " Toggle Patient Number or Patient's Age to be displayed as part of Search Results";
+            echo "</li>";
+                        echo "<li>";
+            echo " Choosing to display Patient Number and/or Patient's Age as part of Search results slows down the time taken to search ";
+            echo "</li>";
+                        
+                        
+        
+        ?>
+    </ul>
+    </div>
+        
+        <div id='barcode_config' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>    
+        <?php
+        
+            echo "<li>";
+            echo " Configure your settings for barcode formats";
+            echo "</li>";
+                        echo "<li>";
+            echo " Width and Height are the dimensions of the bars ";
+            echo "</li>";
+                        echo "<li>";
+            echo " Text size os the for the code printed underneath the barcodes";
+            echo "</li>";
+                       
+                        
+                        
+        
+        ?>
+    </ul>
+    </div>
+        
+        <!---NC3065-->
+    
+    <div id='SetupNet' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>
+            <li><?php echo LangUtil::$pageTerms['TIPS_SETUPNETWORK_3']; ?></li>
+    </ul><br>
+            <i><?php echo LangUtil::$pageTerms['TIPS_SETUPNETWORK_4']; ?></i>
+    </div>
+    
+    <div id='Revert' class='right_pane' style='display:none;margin-left:10px;'>
+    <ul>
+        <li><?php echo LangUtil::$pageTerms['TIPS_REVERT']; ?></li>
+    </ul>
+    </div>
+
+<div id='new_help' style='display:none'>
+<small>
+<u>Add New</u> lets you add new registration fields as required for the lab.
+</small>
+</div>
+
+    
+    
+    
 <div class="portlet box green right_pane" id="test_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Tests</h4>
@@ -548,393 +1138,7 @@ if($lab_config == null)
                                     </form>
                                 </div>
 				
-				<div class='right_pane' id='fields_div' style='display:none;margin-left:10px;'>
-					<p style="text-align: right;"><a rel='facebox' href='#RegistrationFields_config'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_CUSTOM']; ?></b>
-					 | <a href='javascript:toggle_ofield_div();' id='ofield_toggle_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='cfield_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<div id='ofield_summary' class='pretty_box'>
-					<?php $page_elems->getRegistrationFieldsSummary($lab_config); ?>
-					</div>
-					<div id='ofield_form_div' style='display:none;'>
-					<form id='otherfields_form' name='otherfields_form' action='ajax/ofield_update.php' method='post'>
-					<input type='hidden' value='<?php echo $_REQUEST['id']; ?>' name='lab_config_id'></input>
-					<table class='hor-minimalist-b' style='width:auto;'>
-						<thead>
-							<tr>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr valign='top'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_pid' id='use_pid' <?php
-									if($lab_config->pid != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_pid_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pid_radio' value='Y' <?php
-										if($lab_config->pid == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pid_radio' value='N' <?php
-										if($lab_config->pid != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr valign='top'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['ADDL_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_p_addl' id='use_p_addl' <?php
-									if($lab_config->patientAddl != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_p_addl_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_p_addl_radio' value='Y' <?php
-										if($lab_config->patientAddl == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_p_addl_radio' value='N' <?php
-										if($lab_config->patientAddl != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></td>
-								<td>
-									<input type='checkbox' name='use_dnum' id='use_dnum'<?php
-									
-                                                                        if($lab_config->dailyNum == 1 || $lab_config->dailyNum == 2 || $lab_config->dailyNum == 11 || $lab_config->dailyNum == 12)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_dnum_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dnum_radio' value='Y'<?php
-										if($lab_config->dailyNum == 2 || $lab_config->dailyNum == 12)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dnum_radio' value='N' <?php
-										if($lab_config->dailyNum != 2 && $lab_config->dailyNum != 12)
-											echo " checked ";
-										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_RESET']; ?>
-										<select name='dnum_reset' id='dnum_reset'>
-											<option value='<?php echo LabConfig::$RESET_DAILY; ?>'><?php echo LangUtil::$pageTerms['DAILY']; ?></option>
-											<option value='<?php echo LabConfig::$RESET_WEEKLY; ?>'><?php echo LangUtil::$pageTerms['WEEKLY']; ?></option>
-											<option value='<?php echo LabConfig::$RESET_MONTHLY; ?>'><?php echo LangUtil::$pageTerms['MONTHLY']; ?></option>
-											<option value='<?php echo LabConfig::$RESET_YEARLY; ?>'><?php echo LangUtil::$pageTerms['YEARLY']; ?></option>
-										</select>
-										
-									</span>
-								</td>
-							</tr>
-							<tr style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['NAME']; ?></td>
-								<td>
-									<input type='checkbox' name='use_pname' id='use_pname'<?php
-									if($lab_config->pname != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_pname_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pname_radio' value='Y'<?php
-										if($lab_config->pname == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_pname_radio' value='N' <?php
-										if($lab_config->pname != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['GENDER']; ?></td>
-								<td>
-									<input type='checkbox' name='use_sex' id='use_sex' <?php
-									if($lab_config->sex != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_sex_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['DOB']; ?></td>
-								<td>
-									<input type='checkbox' name='use_dob' id='use_dob'<?php
-									if($lab_config->dob != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_dob_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dob_radio' value='Y'<?php
-										if($lab_config->dob == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_dob_radio' value='N' <?php
-										if($lab_config->dob != 2)
-											echo " checked ";
-										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['AGE']; ?></td>
-								<td>
-									<input type='checkbox' name='use_age' id='use_age'<?php
-                                                                        if($lab_config->age == 1 || $lab_config->age == 2 || $lab_config->age == 11 || $lab_config->age == 12)
-									
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_age_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_age_radio' value='Y'<?php
-										if($lab_config->age == 2 || $lab_config->age == 12)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_age_radio' value='N' <?php
-										if($lab_config->age != 2 && $lab_config->age != 12)
-											echo " checked ";
-										?> ><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo 'Complete Age Display Limit'; ?></td>
-								<td>
-									<input type='text' name='ageLimit' id='ageLimit' size='3' maxlength='3' value='<?php echo $lab_config->ageLimit; ?>'>
-									</input>
-									<?php echo LangUtil::$generalTerms['YEARS'] ?>
-								</td>
-							</tr>
-							<tr valign='top' style='display:none;'>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_sid' id='use_sid'<?php
-									//if($lab_config->sid != 0)
-									if(true)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_sid_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></td>
-								<td>
-									<input type='checkbox' name='use_s_addl' id='use_s_addl'<?php
-									if($lab_config->specimenAddl != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_s_addl_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_s_addl_radio' value='Y'<?php
-										if($lab_config->specimenAddl == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_s_addl_radio' value='N' <?php
-										if($lab_config->specimenAddl != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['COMMENTS']; ?></td>
-								<td>
-									<input type='checkbox' name='use_comm' id='use_comm'<?php
-									if($lab_config->comm != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_comm_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_comm_radio' value='Y'<?php
-										if($lab_config->comm == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_comm_radio' value='N' <?php
-										if($lab_config->comm != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['R_DATE']; ?></td>
-								<td>
-									<input type='checkbox' name='use_rdate' id='use_rdate'<?php
-									if($lab_config->rdate != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_rdate_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_rdate_radio' value='Y'<?php
-										if($lab_config->rdate == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_rdate_radio' value='N' <?php
-										if($lab_config->rdate != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['REF_OUT']; ?></td>
-								<td>
-									<input type='checkbox' name='use_refout' id='use_refout'<?php
-									if($lab_config->refout != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_refout_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_refout_radio' value='Y'<?php
-										if($lab_config->refout == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_refout_radio' value='N' <?php
-										if($lab_config->refout != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['SPECIMENS']; ?> - <?php echo LangUtil::$generalTerms['DOCTOR']; ?></td>
-								<td>
-									<input type='checkbox' name='use_doctor' id='use_doctor'<?php
-									if($lab_config->refout != 0)
-										echo " checked ";
-									?>>
-									</input>
-									<span id='use_doctor_mand' style='display:none;'>
-										&nbsp;&nbsp;
-										<?php echo LangUtil::$generalTerms['MSG_MANDATORYFIELD']; ?>?
-										&nbsp;&nbsp;
-										<input type='radio' name='use_doctor_radio' value='Y'<?php
-										if($lab_config->refout == 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['YES']; ?></input>
-										&nbsp;&nbsp;
-										<input type='radio' name='use_doctor_radio' value='N' <?php
-										if($lab_config->refout != 2)
-											echo " checked ";
-										?>><?php echo LangUtil::$generalTerms['NO']; ?></input>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td><?php echo LangUtil::$generalTerms['DATE_FORMAT']; ?></td>
-								<td>
-									<select name='dformat' id='dformat'>
-										<?php $page_elems->getDateFormatSelect($lab_config); ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>
-									<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_UPDATE']; ?>' onclick='javascript:submit_otherfields();'>
-									</input>
-									&nbsp;&nbsp;&nbsp;
-									<span id='otherfields_progress' style='display:none;'>
-										<?php echo $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-									</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					</form>
-					</div>
-					
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['SPECIMENS']; ?>
-					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>[<a href='#new_help' rel='facebox'>?</a>]
-					<div id='specimen_custom_field_list'>
-					<?php 
-					$custom_field_list = get_lab_config_specimen_custom_fields($lab_config->id);
-					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 1); 
-					?>
-					</div>
-					
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - ".LangUtil::$generalTerms['PATIENTS']; ?>
-					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
-					<div id='patient_custom_field_list'>
-					<?php 
-					$custom_field_list = get_lab_config_patient_custom_fields($lab_config->id);
-					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 2); 
-					?>
-					</div>
-					
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOMFIELDS']." - Lab Titles"; ?>
-					 | <a href='cfield_new.php?lid=<?php echo $lab_config_id; ?>'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a> [<a href='#new_help' rel='facebox'>?</a>]
-					<div id='labtitle_custom_field_list'>
-					<?php 
-					$custom_field_list = get_lab_config_labtitle_custom_fields($lab_config->id);
-					$page_elems->getCustomFieldTable($lab_config->id, $custom_field_list, 3); 
-					?>
-					</div>
-				</div>
+				
 				<div class='right_pane' id='network_setup_div' style='display:none;margin-left:10px;'>
 				<p style="text-align: right;"><a rel='facebox' href='#SetupNet'>Page Help</a></p>
 				Setup can be accessed from BlisSetup.html in the main folder.

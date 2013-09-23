@@ -121,27 +121,18 @@ function delete_quality_data()
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
 		<?php //$page_elems->getQualityControlsTable($_SESSION['lab_config_id']); ?>
+
 										
 									</div>
 									<div class="tab-pane" id="tabs1-pane2">
-										<p style="text-align: right;"><a rel='facebox' href='#QualityControlCategories_tc'>Page Help</a></p>
-		<h5><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_CATEGORIES']; ?>
-		| <a href='quality_control_category_new.php' title='Click to Add a New Quality Control Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a></h5>
+										
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qccdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
 		</div>
+
 		<?php $page_elems->getQualityControlCategoriesTable($_SESSION['lab_config_id']); ?>
 									</div>
-									<div class="tab-pane" id="tabs1-pane3">
-										<p style="text-align: right;"><a rel='facebox' href='#QualityControlFieldGroups_tc'>Page Help</a></p>
-		<h5><?php echo LangUtil::$generalTerms['QUALITY_CONTROL_FIELD_GROUPS']; ?>
-		| <a href='#quality_control_field_group_new' rel='facebox' title='Click to Add a New Quality Control Field Group'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></h5></a>
-		<div id='tdel_msg' class='clean-orange' style='display:none;'>
-			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('qcfgdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-		</div>
-		<?php //$page_elems->getQualityControlFieldGroupsTable($_SESSION['lab_config_id']); ?>
-										
-									</div>
+									
 									</div><!-- /.tab-content -->
 							</div><!-- /.tabbable -->
 						</div><!-- .tabs-basic -->
@@ -192,6 +183,7 @@ function delete_quality_data()
 			<li><?php echo LangUtil::$pageTerms['TIPS_QCFG_2']; ?></li>
 			<li><?php echo LangUtil::$pageTerms['TIPS_QCFG_3']; ?></li>
 		</ul>
+	</div>
 	</div>
 	
 	<?php

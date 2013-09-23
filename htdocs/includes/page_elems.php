@@ -2198,7 +2198,7 @@ class PageElems
 		}
 		$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 		?>
-		<table class='hor-minimalist-b' <?php  if($width!="") echo " style='width:".$width."px;' "; ?>>
+		<table class='table table-hover' <?php  if($width!="") echo " style='width:".$width."px;' "; ?>>
 			<tbody>
 				<?php
 				//if($_SESSION['pid'] != 0)
@@ -2640,7 +2640,7 @@ class PageElems
 	window.open(url_string);
 		}
 		</script>
-		<table class="table table-striped table-condensed" id='test_history_table'>
+		<table class="table table-striped table-bordered table-advance" id='test_history_table'>
 			<thead>
 				<tr valign='top'>
 					<?php
@@ -2869,7 +2869,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='table table-hover' style="width: 330px">
 			<tbody>
 				<tr>
 					<td><u><?php echo LangUtil::$generalTerms['TYPE']; ?></u></td>
@@ -3073,6 +3073,38 @@ class PageElems
 		</div>
 		<?php
 	}
+
+	public function getSpecimenInfoTaskList($specimen_id, $patient_id)
+	{
+		$specimenBarcode = specimenBarcodeCheck();
+		$specimen = Specimen::getById($specimen_id);
+		?>
+		<div class='sidetip_nopos'>
+			<?php
+			$date_parts = explode("-", $specimen->dateCollected);
+			$report_url = "reports_testhistory.php?location=".$_SESSION['lab_config_id']."&patient_id=".$specimen->patientId."&yf=$date_parts[0]&mf=$date_parts[1]&df=$date_parts[2]&yt=$date_parts[0]&mt=$date_parts[1]&dt=$date_parts[2]";
+			//$report_url = "reports_specimen.php?location=".$_SESSION['lab_config_id']."specimen_id=".$specimen_id;
+			?>
+			<p><a href='<?php echo $report_url; ?>' title='Click to Generate Specimen Report' target='_blank'><?php echo LangUtil::$generalTerms['CMD_GETREPORT']; ?></a></p>
+			<p><a href='reports_specimenlog.php?location=<?php echo $_SESSION['lab_config_id']; ?>&specimen_id=<?php echo $specimen_id; ?>' title='Click to View a Log of Actions Performed on this Specimen' target='_blank'><?php echo LangUtil::$generalTerms['CMD_TRACK']; ?></a></p>
+			<div class="portlet box">
+			<div class="portlet-body">
+								<div class="row-fluid">
+								 <?php
+                            if($specimenBarcode)
+                            {
+                            ?>
+                            <a href="javascript:print_specimen_barcode(<?php echo $specimen->patientId;?>,<?php echo $specimen->specimenId;?> )" class="icon-btn span12"><i class="icon-barcode"></i><div>Print Barcode</div></a>
+                            <? 
+                            }
+                                
+                        ?>
+									</div>
+								</div>
+								</div>
+		</div>
+		<?php
+	}
 	
 	public function getSpecimenTestsTable($sid)
 	{
@@ -3093,7 +3125,7 @@ class PageElems
 		});
 		
 		</script>
-		<table class='tablesorter' id='specimen_tests_table'>
+		<table class='table' id='specimen_tests_table'>
 			<thead>
 				<tr valign='top'>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
@@ -3288,7 +3320,7 @@ public function getTestsDoneStatsTable($stat_list)
 			$('#testsdone_table').tablesorter();
 		});
 		</script>
-		<table class='tablesorter' id='testsdone_table' style='width:500px'>
+		<table class='table table-striped table-bordered table-advance ' id='testsdone_table' >
 		<thead>
 			<tr>
 				<th><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></th>
@@ -3333,10 +3365,10 @@ public function getTestsDoneStatsTable($stat_list)
 			$('#doctorstats_table').tablesorter();
 		});
 		</script>
-		<table class='tablesorter' id='doctorstats_table' style='width:500px'>
+		<table class='table table-striped table-bordered table-advance' id='doctorstats_table' >
 		<thead>
 			<tr>
-				<th><?php echo LangUtil::$generalTerms['DOCTOR_NAME']; ?></th>
+				<th>Doctor name </th>
 				<th><?php echo LangUtil::$pageTerms['TOTAL_PATIENTS']; ?></th>
 				<th><?php echo LangUtil::$pageTerms['TOTAL_SPECIMENS']; ?></th>
 				<th><?php echo LangUtil::$pageTerms['TOTAL_TESTS']; ?></th>
@@ -3394,7 +3426,7 @@ public function getTestsDoneStatsTable($stat_list)
 			$('#specimencount_table').tablesorter();
 		});
 		</script>
-		<table class='tablesorter' id='specimencount_table' style='width:500px'>
+		<table class='table table-striped table-bordered table-advance' id='specimencount_table' >
 		<thead>
 			<tr>
 				<th><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
@@ -3992,7 +4024,8 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				
 				<td>
 					<div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
-					<input class="m-wrap m-ctrl-medium" size="16" name="spec_date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
+					<input class="m-wrap m-ctrl-medium" size="16" name="spec_date" type="text" value="<?php echo date("Y-m-d"); ?>">
+					<span class="add-on"><i class="icon-calendar"></i></span>
 				</td>
 			</tr>
 			<tr>
@@ -4001,8 +4034,8 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 				</td>
 				<td>
 					<div class="input-append bootstrap-timepicker-component">
-                                    <input class="m-wrap m-ctrl-small timepicker-24" name="spec_time" type="text" placeholder="24hr time">
-                                    <span class="add-on"><i class="icon-time"></i></span>
+                    <input class="m-wrap m-ctrl-small timepicker-24" name="spec_time" type="text" value="<?php echo date("H-i"); ?>" >
+                    <span class="add-on"><i class="icon-time"></i></span>
                      </div>
 				</td>
 			</tr>
@@ -4128,6 +4161,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			<?php $this->getAsteriskMessage(); ?>
 		</span>
 		</small>
+		<hr />
 		<br>
 		</div>
 		<?php
@@ -4385,7 +4419,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='table table-hover' style='width:700px;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -4454,7 +4488,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		# Returns HTML form field for adding a new custom field
 		?>
 		<input type='hidden' name='lid' value='<?php echo $lab_config_id; ?>'></input>
-		<table>
+		<table class="table">
 			<tbody>
 				<tr valign='top'>
 					<td>
@@ -4530,10 +4564,10 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 					<td></td>
 					<td>
 					<br>
-					<input type='button' id='cfield_add_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
+					<input type='button' id='cfield_add_button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
 					</input>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<small><a href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+					<small><a class="btn" href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<span id='cfield_progress_spinner' style='display:none;'>
 						<?php $this->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
@@ -4574,7 +4608,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		<input type='hidden' name='id' value='<?php echo $custom_field->id; ?>'></input>
 		<input type='hidden' name='lid' value='<?php echo $lab_config_id; ?>'></input>
 		<input type='hidden' name='t' value='<?php echo $type; ?>'></input>
-		<table>
+		<table class="table table-hover" style="width: 35%">
 			<tbody>
 				<tr valign='top'>
 					<td>
@@ -7205,7 +7239,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 	public function getRegistrationFieldsSummary($lab_config)
 	{
 		?>
-		<table class='hor-minimalist-b' style='width:auto;'>
+		<table class='table table-hover' style='width:auto;'>
 						<tbody>
 							<tr valign='top'>
 								<td><?php echo LangUtil::$generalTerms['PATIENTS']; ?> - <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
@@ -8311,8 +8345,20 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b'>
-        <thead style="background-color:#CCC;">
+		<div class="portlet box green">
+							<div class="portlet-title">
+								<h4><i class="icon-reorder"></i><?php echo "Quality Control Categories" ?></h4>
+								<div class="tools">
+									<a href="javascript:;" class="collapse"></a>
+									<a href="javascript:;" class="reload"></a>
+								</div>
+							</div>
+							<div class="portlet-body">
+							<p style="text-align: right;"><a href='quality_control_category_new.php' title='Click to Add a New Quality Control Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		|<a rel='facebox' href='#QualityControlCategories_tc'>Page Help</a></p>
+							
+		<table class='table table-bordered table-hover'>
+        <thead>
                 <tr>
                     <th><?php echo "#"; ?></th>
                     <th><?php echo "Description"; ?></th>
@@ -8353,6 +8399,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		?>
 		</tbody>
 		</table>
+		</div>
 		<?php
 	}
 }

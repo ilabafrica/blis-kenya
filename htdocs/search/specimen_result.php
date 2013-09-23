@@ -4,265 +4,272 @@
 #
 include("redirect.php");
 include("includes/header.php");
-include("../includes/ajax_lib.php");
 LangUtil::setPageId("specimen_info");
 ?>
-<br>
-<?php
-$tips_string = LangUtil::$pageTerms['TIPS_ENTRY'];
-$page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-$specimen_id = $_REQUEST['sid'];
-$specimen = Specimen::getById($_REQUEST['sid']);
-?>
-<b><?php echo LangUtil::$pageTerms['TITLE_ENTRY']; ?></b>
- | <a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-<br><br>
-<?php
-if($specimen == null)
-{
-	?>
-	<div class='sidetip_nopos'>
-		<?php echo LangUtil::$generalTerms['ERROR'].": ".$_REQUEST['sid']." - ".LangUtil::$generalTerms['SPECIMEN_ID']." ".LangUtil::$generalTerms['MSG_NOTFOUND'] ?>.
-	</div>
-	<?php
-	include("includes/footer.php");
-	return;
-}
-$page_elems->getSpecimenInfo($specimen->specimenId);
-$test_list = get_tests_by_specimen_id($specimen->specimenId);
-?>
-<form name='specimen_verify_form' id='specimen_result_form' action='specimen_result_do.php' method='post'>
-<input type='hidden' name='sid' value='<?php echo $specimen->specimenId; ?>'></input>
-<table class='hor-minimalist-c'>
-	<thead>
-		<tr valign='top'>
-			<th><b><?php echo LangUtil::$generalTerms['TEST']; ?></b></th>
-			<th><b><?php echo LangUtil::$generalTerms['RESULTS']; ?></b></th>
-			<th><b><?php echo LangUtil::$generalTerms['RESULT_COMMENTS']." (".LangUtil::$generalTerms['OPTIONAL'].")"; ?></b></th>
-		</tr>
-	</thead>
-	<tbody>
-	<?php
-	foreach($test_list as $test)
-	{
-		$test_type = get_test_type_by_id($test->testTypeId);
-                
-		$measure_list = $test_type->getMeasures();
-                
-                $submeasure_list = array();
-                $comb_measure_list = array();
-               // print_r($measure_list);
-                
-                foreach($measure_list as $measure)
-                {
-                    
-                    $submeasure_list = $measure->getSubmeasuresAsObj();
-                    //echo "<br>".count($submeasure_list);
-                    //print_r($submeasure_list);
-                    $submeasure_count = count($submeasure_list);
-                    
-                    if($measure->checkIfSubmeasure() == 1)
-                    {
-                        continue;
-                    }
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
+                        <h3>
+                        </h3>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="icon-download-alt"></i>
+                                <a href="index.php">Home</a> 
+                            </li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
+             <div class="row-fluid">
+                <div class="span12 sortable">
+
+                    <div class="portlet box green" id="specimenresult_div">
+                        <div class="portlet-title" >
+                            <h4><i class="icon-reorder"></i> <?php echo LangUtil::$pageTerms['TITLE_ENTRY']; ?> </h4>           
+                        </div>
                         
-                    if($submeasure_count == 0)
-                    {
-                        array_push($comb_measure_list, $measure);
-                    }
-                    else
-                    {
-                        array_push($comb_measure_list, $measure);
-                        foreach($submeasure_list as $submeasure)
-                           array_push($comb_measure_list, $submeasure); 
-                    }
-                }
-                /*
-                                echo "<pre><br>";
-                print_r($measure_list);
- 
-                $measure_list = $comb_measure_list;
-                print_r($measure_list);
-                echo "</pre>";  
-                */
-                $measure_list = $comb_measure_list;
-		$result_list = explode(",", $test->result);
-		?>
-		<tr valign='top'>
-			<td><?php echo $test_type->getName(); ?></td>
-			<?php
-			$i = 0;
-			foreach($measure_list as $measure)
-			{
-				if ($i > 0)
-					echo "<td></td>";
-				echo "<td>";
-				$field_name = 'result_'.$test_type->testTypeId."_".$measure->measureId;
-				$comments_field_name = 'comments_'.$test_type->testTypeId."_".$measure->measureId;
-				$field_id = $field_name;
-				$field_value = $result_list[$i];
-				$range_type = $measure->getRangeType();
-				$range = $measure->range;
-				echo "<span style='float:right'>";
-				echo "<label for='$field_name'>";
-				if(count($measure_list) != 1)
-                                {
-                                    if($measure->checkIfSubmeasure() == 1)
-                                    {
-                                        $decName = $measure->truncateSubmeasureTag();
-                                        echo $decName.":";
-                                    }
-                                    else
-                                    {
-					echo $measure->getName().":";
-                                    }
-                                }
-				echo "&nbsp;".$measure->unit;
-				echo "</label>";
-				if($range_type == Measure::$RANGE_OPTIONS)
-				{
-					# Discrete value range
-					$range_options = $measure->getRangeValues();
-					?>
-					<select name='<?php echo $field_name; ?>' id='<?php echo $field_id; ?>' class='uniform_width results_entry' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo $measure->measureId; ?> );">
-					<?php
-					foreach($range_options as $option)
-					{  $option=str_replace("#" , "/" , $option);
-						?>
-						<option value='<?php echo $option; ?>' <?php
-						if($option === $field_value)
-							echo " selected ";
-						?>><?php echo $option; ?></option>
-						<?php
-					}
-					?>
-					</select>
-				<?php
-				}
-				else if($range_type == Measure::$RANGE_NUMERIC)
-				{
-					# Continuous value range
-					$patient_list=get_patient_by_sp_id($specimen_id);
-					foreach($patient_list as $patient)
-					{
-					$range_bounds = $measure->getRangeValues($patient);
-					}
-					
-					?>
-					<span>
-					&nbsp; <?php echo LangUtil::$generalTerms['RANGE']; ?> (<?php 
-					$unit=$measure->unit;
-					if(stripos($unit,",")!=false) {	
-						$units=explode(",",$unit);
-						$lower_parts=explode(".",$range_bounds[0]);
-						$upper_parts=explode(".",$range_bounds[1]);
-						if($lower_parts[0]!=0)
-						{
-						echo $lower_parts[0];
-						echo $units[0];
-						}
-						if($lower_parts[1]!=0)
-						{
-						echo $lower_parts[1];
-						echo $units[1];
-						}
-						?>-<?php
-						if($upper_parts[0]!=0)
-						{
-						echo $upper_parts[0];
-						echo $units[0];
-						}
-						if($upper_parts[1]!=0)
-						{
-						echo $upper_parts[1];
-						echo $units[1];
-						}
-					?>)<?php
-					}
-					else
-					{	
-						if(stripos($unit,":")!=false) {		
-							$units=explode(":",$unit);
-							echo $range_bounds[0]; ?><sup><?php echo $units[0] ?></sup>-<?php echo $range_bounds[1];?><sup><?php echo $units[0] ?></sup>)
-						<?php 
-						}
-						else {
-							echo $range_bounds[0]; ?>-<?php echo $range_bounds[1];?>)<?php echo "&nbsp;".$measure->unit;} ?>
-							</span>
-							<input class='uniform_width results_entry' type='text' name='<?php echo $field_name; ?>' id='<?php echo $field_id; ?>' value='<?php echo $field_value; ?>' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>);">
-							</input>
-						<?php
-					}	
-				}
-				else if($range_type == Measure::$RANGE_AUTOCOMPLETE)
-				{
-					# Autocomplete values
-					# Use jquery.token-input plugin
-					$url_string = "ajax/measure_autocomplete.php?id=".$measure->measureId;
-					$hint_text = "Type to enter results";
-					echo "<div>";
-					$page_elems->getTokenList(-1, $field_id,"result_".$test_type->testTypeId."_".$measure->measureId, $url_string, $hint_text,"");
-					echo "</div>";
-				}
-                                else if($range_type == Measure::$RANGE_FREETEXT)
-                                {
-                                    # Text box
-                                    echo "<textarea name='$field_name' id='$field_id' class='uniform_width results_entry'></textarea>";
-                                }
-				echo "</span>";
-				echo "</td>";
-				echo "<td>";
-				echo "<input class='uniform_width' name=$comments_field_name id=$comments_field_name value='None'></input>";
-				echo "</td>";
-				echo "</tr>";
-				$i++;
-			}
-			?>
-		</tr>
-		<?php
-	}
-	?>
-	<tr>
-		<td></td>
-		<td>
-			<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit();'></input>
-			&nbsp;&nbsp;&nbsp;
-          <a href="#reject-reason" rel="facebox" ><?php echo LangUtil::$generalTerms['CMD_REJECT']; ?></a>
-			&nbsp;&nbsp;&nbsp;
-			<a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-			&nbsp;&nbsp;&nbsp;
-			<span id='specimen_result_progress' style='display:none'>
-			<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-			</span>
-	</tbody>
-</table>
-</form>
-<div id="reject-reason" style="display:none" >
-<form name="formreject">
-<table width="200" border="0">
-  <tr>
-    <td><strong>Rejection</strong></td>
-    </tr>
-  <tr>
-    <td><p>Reason for rejection</p>
-      <p>
-        <textarea name="reject-reason" id="reject-reason" cols="45" rows="5"></textarea>
-      </p></td>
-    </tr>
-  <tr>
-    <td><input type="submit" name="reject-sample" id="reject-sample" value="Submit" /></td>
-  </tr>
-</table>
-</form>
-</div>
-<br>
+                          <div class="portlet-body" >
+                           
+                            <?php
+                            $tips_string = LangUtil::$pageTerms['TIPS_ENTRY'];
+                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                            $specimen_id = $_REQUEST['sid'];
+                            $specimen = Specimen::getById($_REQUEST['sid']);
+                            ?>
+                            <a href='javascript:history.go(-1);'>Back</a>
+                            <br><br>
+                            <?php
+                            if($specimen == null)
+                            {
+                            	?>
+                            	<div class='sidetip_nopos'>
+                            		<?php echo LangUtil::$generalTerms['ERROR'].": ".$_REQUEST['sid']." - ".LangUtil::$generalTerms['SPECIMEN_ID']." ".LangUtil::$generalTerms['MSG_NOTFOUND'] ?>.
+                            	</div>
+                            	<?php
+                            	include("includes/footer.php");
+                            	return;
+                            }
+                            $page_elems->getSpecimenInfo($specimen->specimenId);
+                            $test_list = get_tests_by_specimen_id($specimen->specimenId);
+                            ?>
+                            <hr />
+                            <form name='specimen_verify_form' id='specimen_result_form' action='specimen_result_do.php' method='post'>
+                            <input type='hidden' name='sid' value='<?php echo $specimen->specimenId; ?>'></input>
+                            <table class='table table-hover'>
+                            	<thead>
+                            		<tr valign='top'>
+                            			<th><b><?php echo LangUtil::$generalTerms['TEST']; ?></b></th>
+                            			<th><b><?php echo LangUtil::$generalTerms['RESULTS']; ?></b></th>
+                            			<th><b><?php echo LangUtil::$generalTerms['RESULT_COMMENTS']." (".LangUtil::$generalTerms['OPTIONAL'].")"; ?></b></th>
+                            		</tr>
+                            	</thead>
+                            	<tbody>
+                            	<?php
+                            	foreach($test_list as $test)
+                            	{
+                            		$test_type = get_test_type_by_id($test->testTypeId);
+                                            
+                            		$measure_list = $test_type->getMeasures();
+                                            
+                                            $submeasure_list = array();
+                                            $comb_measure_list = array();
+                                           // print_r($measure_list);
+                                            
+                                            foreach($measure_list as $measure)
+                                            {
+                                                
+                                                $submeasure_list = $measure->getSubmeasuresAsObj();
+                                                //echo "<br>".count($submeasure_list);
+                                                //print_r($submeasure_list);
+                                                $submeasure_count = count($submeasure_list);
+                                                
+                                                if($measure->checkIfSubmeasure() == 1)
+                                                {
+                                                    continue;
+                                                }
+                                                    
+                                                if($submeasure_count == 0)
+                                                {
+                                                    array_push($comb_measure_list, $measure);
+                                                }
+                                                else
+                                                {
+                                                    array_push($comb_measure_list, $measure);
+                                                    foreach($submeasure_list as $submeasure)
+                                                       array_push($comb_measure_list, $submeasure); 
+                                                }
+                                            }
+                                            /*
+                                                            echo "<pre><br>";
+                                            print_r($measure_list);
+                             
+                                            $measure_list = $comb_measure_list;
+                                            print_r($measure_list);
+                                            echo "</pre>";  
+                                            */
+                                            $measure_list = $comb_measure_list;
+                            		$result_list = explode(",", $test->result);
+                            		?>
+                            		<tr valign='top'>
+                            			<td><?php echo $test_type->getName(); ?></td>
+                            			<?php
+                            			$i = 0;
+                            			foreach($measure_list as $measure)
+                            			{
+                            				if ($i > 0)
+                            					echo "<td></td>";
+                            				echo "<td>";
+                            				$field_name = 'result_'.$test_type->testTypeId."_".$measure->measureId;
+                            				$comments_field_name = 'comments_'.$test_type->testTypeId."_".$measure->measureId;
+                            				$field_id = $field_name;
+                            				$field_value = $result_list[$i];
+                            				$range_type = $measure->getRangeType();
+                            				$range = $measure->range;
+                            				echo "<span style='float:right'>";
+                            				echo "<label for='$field_name'>";
+                            				if(count($measure_list) != 1)
+                                                            {
+                                                                if($measure->checkIfSubmeasure() == 1)
+                                                                {
+                                                                    $decName = $measure->truncateSubmeasureTag();
+                                                                    echo $decName.":";
+                                                                }
+                                                                else
+                                                                {
+                            					echo $measure->getName().":";
+                                                                }
+                                                            }
+                            				echo "&nbsp;".$measure->unit;
+                            				echo "</label>";
+                            				if($range_type == Measure::$RANGE_OPTIONS)
+                            				{
+                            					# Discrete value range
+                            					$range_options = $measure->getRangeValues();
+                            					?>
+                            					<select name='<?php echo $field_name; ?>' id='<?php echo $field_id; ?>' class='uniform_width results_entry' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo $measure->measureId; ?> );">
+                            					<?php
+                            					foreach($range_options as $option)
+                            					{  $option=str_replace("#" , "/" , $option);
+                            						?>
+                            						<option value='<?php echo $option; ?>' <?php
+                            						if($option === $field_value)
+                            							echo " selected ";
+                            						?>><?php echo $option; ?></option>
+                            						<?php
+                            					}
+                            					?>
+                            					</select>
+                            				<?php
+                            				}
+                            				else if($range_type == Measure::$RANGE_NUMERIC)
+                            				{
+                            					# Continuous value range
+                            					$patient_list=get_patient_by_sp_id($specimen_id);
+                            					foreach($patient_list as $patient)
+                            					{
+                            					$range_bounds = $measure->getRangeValues($patient);
+                            					}
+                            					
+                            					?>
+                            					<span>
+                            					&nbsp; <?php echo LangUtil::$generalTerms['RANGE']; ?> (<?php 
+                            					$unit=$measure->unit;
+                            					if(stripos($unit,",")!=false) {	
+                            						$units=explode(",",$unit);
+                            						$lower_parts=explode(".",$range_bounds[0]);
+                            						$upper_parts=explode(".",$range_bounds[1]);
+                            						if($lower_parts[0]!=0)
+                            						{
+                            						echo $lower_parts[0];
+                            						echo $units[0];
+                            						}
+                            						if($lower_parts[1]!=0)
+                            						{
+                            						echo $lower_parts[1];
+                            						echo $units[1];
+                            						}
+                            						?>-<?php
+                            						if($upper_parts[0]!=0)
+                            						{
+                            						echo $upper_parts[0];
+                            						echo $units[0];
+                            						}
+                            						if($upper_parts[1]!=0)
+                            						{
+                            						echo $upper_parts[1];
+                            						echo $units[1];
+                            						}
+                            					?>)<?php
+                            					}
+                            					else
+                            					{	
+                            						if(stripos($unit,":")!=false) {		
+                            							$units=explode(":",$unit);
+                            							echo $range_bounds[0]; ?><sup><?php echo $units[0] ?></sup>-<?php echo $range_bounds[1];?><sup><?php echo $units[0] ?></sup>)
+                            						<?php 
+                            						}
+                            						else {
+                            							echo $range_bounds[0]; ?>-<?php echo $range_bounds[1];?>)<?php echo "&nbsp;".$measure->unit;} ?>
+                            							</span>
+                            							<input class='uniform_width results_entry' type='text' name='<?php echo $field_name; ?>' id='<?php echo $field_id; ?>' value='<?php echo $field_value; ?>' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>);">
+                            							</input>
+                            						<?php
+                            					}	
+                            				}
+                            				else if($range_type == Measure::$RANGE_AUTOCOMPLETE)
+                            				{
+                            					# Autocomplete values
+                            					# Use jquery.token-input plugin
+                            					$url_string = "ajax/measure_autocomplete.php?id=".$measure->measureId;
+                            					$hint_text = "Type to enter results";
+                            					echo "<div>";
+                            					$page_elems->getTokenList(-1, $field_id,"result_".$test_type->testTypeId."_".$measure->measureId, $url_string, $hint_text,"");
+                            					echo "</div>";
+                            				}
+                                                            else if($range_type == Measure::$RANGE_FREETEXT)
+                                                            {
+                                                                # Text box
+                                                                echo "<textarea name='$field_name' id='$field_id' class='uniform_width results_entry'></textarea>";
+                                                            }
+                            				echo "</span>";
+                            				echo "</td>";
+                            				echo "<td>";
+                            				echo "<label> &nbsp;</label> <input class='uniform_width' name=$comments_field_name id=$comments_field_name value='None'></input>";
+                            				echo "</td>";
+                            				echo "</tr>";
+                            				$i++;
+                            			}
+                            			?>
+                            		</tr>
+                            		<?php
+                            	}
+                            	?>
+                            	<tr>
+                            		<td></td>
+                            		<td>
+                            			<input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit();'></input>
+                            			&nbsp;&nbsp;&nbsp;
+                            			<a href='javascript:history.go(-1);' class="btn"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+                            			&nbsp;&nbsp;&nbsp;
+                            			<span id='specimen_result_progress' style='display:none'>
+                            			<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                            			</span>
+                            	</tbody>
+                            </table>
+                            </form>
+                        <br>
+                  </div>
+              </div>
+          </div>
+      </div>
 <?php 
 include("includes/scripts.php");
+include("../includes/ajax_lib.php");
 $script_elems->enableJQueryForm();
 $script_elems->enableJQueryValidate();
 $script_elems->enableTableSorter();
 $script_elems->enableLatencyRecord();
 $script_elems->enableTokenInput();
+$script_elems->enableDatePicker();
 ?>
 <script type='text/javascript'>
 function checkandsubmit()
