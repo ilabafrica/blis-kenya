@@ -3070,7 +3070,7 @@ class PageElems
 		<?php
 	}
 
-	public function getSpecimenInfoTaskList($specimen_id)
+	public function getSpecimenInfoTaskList($specimen_id, $patient_id)
 	{
 		# Lists patient-profile related tasks in a tips box
 		$specimenBarcode = specimenBarcodeCheck();
@@ -3092,7 +3092,7 @@ class PageElems
                             if($specimenBarcode)
                             {
                             ?>
-                            <a href="javascript:print_specimen_barcode(<?php echo $specimen->specimenId;?>,<?php echo $specimen->patientId;?> )" class="icon-btn span12"><i class="icon-barcode"></i><div>Print Barcode</div></a>
+                            <a href="javascript:print_specimen_barcode(<?php echo $specimen->patientId;?>,<?php echo $specimen->specimenId;?> )" class="icon-btn span12"><i class="icon-barcode"></i><div>Print Barcode</div></a>
                             <? 
                             }
                                 
