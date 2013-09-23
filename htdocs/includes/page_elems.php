@@ -4572,7 +4572,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		<input type='hidden' name='id' value='<?php echo $custom_field->id; ?>'></input>
 		<input type='hidden' name='lid' value='<?php echo $lab_config_id; ?>'></input>
 		<input type='hidden' name='t' value='<?php echo $type; ?>'></input>
-		<table>
+		<table class="table table-hover" style="width: 35%">
 			<tbody>
 				<tr valign='top'>
 					<td>
