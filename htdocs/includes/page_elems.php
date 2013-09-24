@@ -8334,6 +8334,77 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			$count++;
 		}
 	}
+
+	public function getQualityControlsTable($lab_config_id)
+	{
+		# Returns HTML table listing all Quality Control categories in catalog
+		$qc_list = get_quality_controls($lab_config_id);
+		if(count($qc_list) == 0)
+		{
+			echo "<div class='sidetip_nopos'>"."No Quality Control Categories Found."."</div>";
+			return;
+		}
+		?>
+		<div class="portlet box green">
+							<div class="portlet-title">
+								<h4><i class="icon-reorder"></i><?php echo "Quality Controls" ?></h4>
+								<div class="tools">
+									<a href="javascript:;" class="collapse"></a>
+									<a href="javascript:;" class="reload"></a>
+								</div>
+							</div>
+							<div class="portlet-body">
+							<p style="text-align: right;"><a href='quality_control_category_new.php' title='Click to Add a New Quality Control Category'><?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		|<a rel='facebox' href='#QualityControlCategories_tc'>Page Help</a></p>
+							
+		<table class='table table-bordered table-hover'>
+        <thead>
+                <tr>
+                    <td><?php echo "QC Number"; ?></td>
+                    <td><?php echo "QC Category"; ?></td>
+                    <td><?php echo "Reference"; ?></td>
+                    <td><?php echo "Description"; ?></td>
+                    <td><?php echo "Created By"; ?></td>
+                    <td><?php echo "Action(s)"; ?></td>
+                </tr>
+		</thead>
+		<tbody>
+		<?php
+		$count = 1;
+		foreach($qc_list as $key => $value)
+		{
+			?>
+			<tr>
+			<td>
+				<?php echo $count; ?>.
+			</td>
+			<td>
+				<?php echo $value; ?>
+			</td>
+			<td>
+				<a href='quality_control_category_edit.php?qccid=<?php echo $key; ?>' title='Click to Edit Quality Control Category Info'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+			</td>
+			<?php
+			$user = get_user_by_id($_SESSION['user_id']);
+			if(is_country_dir($user) || is_super_admin($user))
+			{
+			?>
+			<td>
+				<a href='quality_control_category_delete.php?qccid=<?php echo $key; ?>'><?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+			</td>
+			<?php
+			}
+			?>
+			</tr>
+			<?php
+			$count++;
+		}
+		?>
+		</tbody>
+		</table>
+		</div>
+		<?php
+	}
 	
 	public function getQualityControlCategoriesTable($lab_config_id)
 	{
@@ -8360,9 +8431,9 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		<table class='table table-bordered table-hover'>
         <thead>
                 <tr>
-                    <th><?php echo "#"; ?></th>
-                    <th><?php echo "Description"; ?></th>
-                    <th><?php echo "Action(s)"; ?></th>
+                    <td><?php echo "QC Category Number"; ?></td>
+                    <td><?php echo "Description"; ?></td>
+                    <td><?php echo "Action(s)"; ?></td>
                 </tr>
 		</thead>
 		<tbody>

@@ -434,14 +434,24 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 							<a id='report' class='menu_option' href='javascript:report_setup();'><i class='icon-tag'></i> ".LangUtil::$allTerms['Reports']." </a>
 						</li>
 						<div id='report_setup' name='report_setup' style='display:none;'>
-							-<a id='option8' class='menu_option' href='javascript:right_load(8, ".$quote."agg_report_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_INFECTION']."</a>
+						<ul class='subb'>
+						    <li><br>
+							<a id='option8' class='menu_option' href='javascript:right_load(8, ".$quote."agg_report_div".$quote.");'>".LangUtil::$allTerms['MENU_INFECTION']."</a>
+							<br><br> 
+							</li>
+							<li>
+                            <a id='option36' class='menu_option' href='javascript:right_load(36, ".$quote."grouped_count_div".$quote.");'> ".'Test/Specimen Grouped Reports'."</a>
 							<br><br>
-                            -<a id='option36' class='menu_option' href='javascript:right_load(36, ".$quote."grouped_count_div".$quote.");'><i class='icon-tag'></i> ".'Test/Specimen Grouped Reports'."</a>
+							</li>
+							<li>
+							<a id='option11' class='menu_option' href='javascript:right_load(11, ".$quote."report_config_div".$quote.");'>".LangUtil::$allTerms['MENU_REPORTCONFIG']."</a>
 							<br><br>
-							-<a id='option11' class='menu_option' href='javascript:right_load(11, ".$quote."report_config_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_REPORTCONFIG']."</a>
+							</li>
+							<li>
+							<a id='option12' class='menu_option' href='javascript:right_load(12, ".$quote."worksheet_config_div".$quote.");'> ".LangUtil::$allTerms['MENU_WORKSHEETCONFIG']."</a>
 							<br><br>
-							-<a id='option12' class='menu_option' href='javascript:right_load(12, ".$quote."worksheet_config_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_WORKSHEETCONFIG']."</a>
-							<br><br>
+							</li>
+						</ul>
 						</div>
 						<li>
 							<a id='option15' class='menu_option' href='javascript:right_load(15, ".$quote."inventory_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['Inventory']."</a>
