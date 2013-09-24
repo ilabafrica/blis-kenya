@@ -2078,6 +2078,40 @@ class Patient
 		return $patient;
 	}
 	
+	public static function getLabRequest($record)
+	{
+	# Converts a patient record in DB into a Patient object
+	if($record == null)
+	return null;
+	$patient = new Patient();
+	$patient->patientId = $record['patient_id'];
+	$patient->name = $record['full_name'];
+	$patient->dob = $record['dateOfBirth'];
+	$patient->sex = $record['gender'];
+		
+	if(isset($record['partial_dob']))
+			$patient->partialDob = $record['partial_dob'];
+		else
+						$patient->partialDob = null;
+						if(isset($record['surr_id']))
+			$patient->surrogateId = $record['surr_id'];
+		else
+			$patient->surrogateId = null;
+			if(isset($record['created_by']))
+			$patient->createdBy = $record['created_by'];
+		else
+						$patient->createdBy = null;
+						if(isset($record['hash_value']))
+								$patient->hashValue = $record['hash_value'];
+								else
+									$patient->hashValue = null;
+									if(isset($record['patient_name']))
+									$patient->patient_name = $record['patient_name'];
+									else
+							$patient->patient_name = null;
+			return $patient;
+	}
+	
 	public static function checkNameExists($name)
 	{
 		# Checks if the given patient name (or similar match) already exists
@@ -6107,6 +6141,21 @@ function search_patients_by_id($q)
 		foreach($resultset as $record)
 		{
 			$patient_list[] = Patient::getObject($record);
+		}
+	}else{
+		$query_string = "SELECT * FROM sanitas_lab_request ".
+		"WHERE patient_id='$q'".
+		"ORDER BY requestDate DESC";
+		$saved_db = DbUtil::switchToGlobal();
+		$resultset = query_associative_all($query_string, $row_count);
+		DbUtil::switchRestore($saved_db);
+		
+		if(count($resultset) > 0)
+		{
+			foreach($resultset as $record)
+			{
+				$patient_list[] = Patient::getLabRequest($record);
+			}
 		}
 	}
 	return $patient_list;

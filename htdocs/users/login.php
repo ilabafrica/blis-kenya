@@ -126,13 +126,13 @@ header('Content-Type: text/html; charset=UTF-8');
         Login <i class="m-icon-swapright m-icon-white"></i>
         </button>           
       </div>
-      <div class="forget-password">
+      <!-- div class="forget-password">
         <h4>Forgot your password ?</h4>
         <p>
           no worries, click <a href="javascript:;" class="" id="forget-password">here</a>
           to reset your password.
         </p>
-      </div>
+      </div-->
     </form>
     <!-- END LOGIN FORM -->        
     <!-- BEGIN FORGOT PASSWORD FORM -->
