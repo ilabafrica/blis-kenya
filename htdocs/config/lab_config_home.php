@@ -237,7 +237,38 @@ if($lab_config == null)
                 </div>
                 <!-- END PAGE HEADER-->
 <!-- BEGIN ROW-FLUID-->   
+<div class="portlet box green right_pane" id="barcode_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Configure Barcode Format Settings</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        
+        <div class="portlet-body">
+                <div id='barcode' style='margin-left:10px;'>
+                <p style="text-align: right;"><a rel='facebox' href='#barcode_config'>Page Help</a></p>
+                 
+                    <div id='barcodefield_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <form id='barcodefields_form' name='barcodefields_form' action='ajax/update_barcode_settings.php' method='post'>
+                    <input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>                   
+                        <?php $page_elems->getBarcodeFields($lab_config->id);
+                                                //$page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
+                    <br><br>
+                    <input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_barcodeconfig()'>
+                    </input>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <!--span id='st_types_progress' style='display:none;'-->
+                                        <span id='barcodefields_progress' style='display:none;'>
 
+                        <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                    </span>
+                    </form>
+                </div>
+        </div>
+</div>
 
 <div class="portlet box green right_pane" id="users_div" style="display: none">
         <div class="portlet-title" >
@@ -1055,27 +1086,7 @@ if($lab_config == null)
 					</form>
 				</div>
                                 
-                                <div class='right_pane' id='barcode_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#barcode_config'>Page Help</a></p>
-					<b><?php echo "Configure Barcode Format Settings"; ?></b>
-					<br><br>
-                                        <div id='barcodefield_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<form id='barcodefields_form' name='barcodefields_form' action='ajax/update_barcode_settings.php' method='post'>
-					<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>					
-						<?php $page_elems->getBarcodeFields($lab_config->id);
-                                                //$page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
-					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_barcodeconfig()'>
-					</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<!--span id='st_types_progress' style='display:none;'-->
-                                        <span id='barcodefields_progress' style='display:none;'>
-
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-					</form>
-				</div>
+                                
                                 
                                 <!--NC3065-->
 
@@ -1643,6 +1654,7 @@ if($lab_config == null)
 require_once("includes/script_elems.php");
 $script_elems = new ScriptElems();
 $script_elems->enableDatePicker();
+$script_elems->enableJQueryForm();
 ?>
 <script type='text/javascript'>
 
