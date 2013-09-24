@@ -239,7 +239,7 @@ if($lab_config == null)
 <!-- BEGIN ROW-FLUID-->   
 
 
-<div class="portlet box green right_pane" id="users_div" style="display: none">
+<!--  -div class="portlet box green right_pane" id="users_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></h4>
                                 <div class="tools">
@@ -267,7 +267,7 @@ if($lab_config == null)
                     </div>
                 </div>
         </div>
-</div>
+</div-->
 
 <div class="portlet box green right_pane" id="fields_div" style="display: none">
         <div class="portlet-title" >
@@ -1099,7 +1099,7 @@ if($lab_config == null)
 					 </a>
 					 <a class="btn blue-stripe" href='javascript:import_users();'>
 					 <i class='icon-download'></i> 
-					 <?php echo 'Import from HMIS' ?>
+					 <?php echo 'Import from Sanitas' ?>
 					 </a>
 					<br><br>
 					<div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>

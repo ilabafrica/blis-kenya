@@ -14748,6 +14748,17 @@ class API
              
         return $ret;
     }
+    
+    public static function save_sanitas_lab_request($LabRequest)
+    {
+    	# Adds a new user account
+    	$saved_db = DbUtil::switchToGlobal();
+    	$query_string="INSERT INTO `sanitas_lab_request`
+	(`labNo`, `parentLabNo`, `requestingClinician`, `investigation`, `requestDate`, `patient_id`, `full_name`, `dateOfBirth`, `gender`, `address`, `postalCode`, `phoneNumber`, `city`)
+	"."VALUES ".$LabRequest;
+    	query_insert_one($query_string);
+    	DbUtil::switchRestore($saved_db);
+    }
 }
 	
 
