@@ -3944,7 +3944,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
-		<form name='<?php echo $form_name; ?>' id='formID' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
+		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<table class='regn_form_table'>
@@ -7484,13 +7484,6 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		{
 			$lab_config = LabConfig::getById($_SESSION['lab_config_id']); 
                         $patientBarcodeSearch = patientSearchBarcodeCheck();
-			
-            if($lab_config->pid != 0)
-            {
-              ?>
-              <option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
-              <?php
-             }
 			if($hide_patient_name === false && $lab_config->pname != 0)
 			{
 				?>
@@ -7501,6 +7494,12 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			{
 				?>
 				<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
+				<?php
+			}
+			if($lab_config->pid != 0)
+			{
+				?>
+				<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
 				<?php
 			}
 			if($lab_config->patientAddl != 0)
@@ -7559,11 +7558,10 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 
 			# Show all options
 			?>
-			
-			<option value='0'><?php echo 'Patient Number';//LangUtil::$generalTerms['PATIENT_ID']; ?></option>
 			<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
-			<!--option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option-->
-			<!--option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option-->
+			<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
+			<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
+			<option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option>
                          <?php 
                          if($patientBarcodeSearch != 0 && is_country_dir($userrr) != 1 && is_super_admin($userrr) != 1 ){ ?>
                         				<option value='9'><?php echo 'Barcode Search'; ?></option>
