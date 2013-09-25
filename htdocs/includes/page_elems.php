@@ -2222,6 +2222,17 @@ class PageElems
 				</tr>
 				<?php
 				}
+				if($patient->patientId != 0)
+				{
+				?>
+				<tr>
+					<td><u><?php echo "Registration Number" ?></u></td>
+					<td>
+						<?php echo $patient->patientId; ?>
+					</td>
+				</tr>
+				<?php
+				}
 				?>
 				<tr>
 					<td><u><?php echo LangUtil::$generalTerms['NAME']; ?></u></td>
@@ -3933,7 +3944,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
-		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
+		<form name='<?php echo $form_name; ?>' id='formID' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<table class='regn_form_table'>

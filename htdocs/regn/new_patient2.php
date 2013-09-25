@@ -29,7 +29,7 @@ $script_elems->enableAutocomplete();
 			<tr>	
 			<div class="control-group" <?php if($_SESSION['pid'] == 0) echo " style='display:none;' ";?> >
 			 <td width="200">
-				   <?php echo LangUtil::$generalTerms['PATIENT_ID']; ?>
+				   <?php echo "Registration Number"; ?>
 					
 					<?php
 					if($_SESSION['pid'] == 2)
@@ -37,7 +37,7 @@ $script_elems->enableAutocomplete();
 					?>
 				</td>
 				<td>
-					<input type="text" name="pid" id="pid" value="" size="20" class='uniform_width form-control'>
+					<input type="text" name="pid" id="pid" value="" size="20" class='uniform_width form-control' disabled>
 				</td>
 			 </div>
 			</tr>
