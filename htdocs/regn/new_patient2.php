@@ -23,7 +23,6 @@ $script_elems->enableAutocomplete();
 		<div class='pretty_box' style='width:500px'>
 		<form name="new_record" action="add_patient.php" method="post" id="new_record" class="form-horizontal" role="form">
 			<?php # Hidden field for db key ?>
-			
 			<input type='hidden' name='card_num' id='card_num' value="<?php echo get_max_patient_id()+1; ?>" ></input>
 			<table cellpadding="2" class='regn_form_table' >	
 
@@ -62,10 +61,7 @@ $script_elems->enableAutocomplete();
 				</td>
 				<td><input type="text" name="addl_id" id="addl_id" value="" size="20" class='uniform_width' /></td>
 			</tr>
-			<tr <?php
-			if( is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0 )
-				echo " style='display:none;' ";
-			?>>
+			<tr style='display:none;'> <!-- Hidden as we are doing away with this -->
 				<td><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?>
 				<?php
 					if($_SESSION['dnum'] == 2)
@@ -193,9 +189,6 @@ $script_elems->enableAutocomplete();
 			<tr>
 				<td>
 				</td>
-				<td>
-					<div id='patient_prompt_div'></div>
-				</td>
 			</tr>
 		</table>
 		<!--</form>-->
@@ -213,7 +206,6 @@ $(document).ready(function(){
 		# Prefill patient name field
 		?>
 		$('#name').attr("value", "<?php echo $_REQUEST['n']; ?>");
-		prefetch_pname();
 		<?php
 	}
 	if(isset($_REQUEST['jmp']))
@@ -235,19 +227,6 @@ $(document).ready(function(){
 		return false; 
 	});
 });
-
-function prefetch_pname()
-{
-	var name = $('#name').val();
-	name = name.replace(" ", "%20");
-	if(name == "" || name.length < 3)
-	{
-		$('#patient_prompt_div').html("");
-		return;
-	}
-	var url_string = "ajax/patient_prompt_match.php?q="+name;
-	$('#patient_prompt_div').load(url_string);
-}
 
 function add_patient()
 {
@@ -331,19 +310,7 @@ function add_patient()
 		alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['GENDER']; ?>");
 		return;
 	}
-	<?php
-	if($_SESSION['dnum'] != 0)
-	{
-	?>
-		var dnum = $("#dnum").val();
-		if(dnum.trim() == "" || !dnum)
-		{
-			alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?>");
-			return;
-		}
-	<?php
-	}
-	?>
+	
 	var data_string = "card_num="+card_num+"&addl_id="+addl_id
 	+"&name="+name+"&dob="+patient_birth_date+"&age="+age+"&sex="+sex
 	+"&agep="+age_param+"&pid="+pid+"&receipt_date="+pat_reg_date;
@@ -368,32 +335,11 @@ function add_patient()
 				var pidEnd = data.indexOf(",",pidStart);
 				var new_card_num = data.substring(pidStart,pidEnd);
 				
-				/* If DB key used was different from one sent, increase daily num if set in session and card_num to new DB key 
-				if ( new_card_num != card_num ) {
-						<?php 
-							if($_SESSION['dnum'] != 0) 
-							{
-						?>
-								dnum = parseInt(dnum) + 1;
-						<?php
-							}
-						?>
-				*/
-					card_num = new_card_num;
-				<?php
-				if( is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] != 0 ) 
-				{
-				?>
-					window.location = "new_specimen.php?pid="+card_num+"&dnum="+dnum+"&session_num=<?php echo $session_num ?>";
-				<?php
-				}
-				else
-				{
-				?>
-					window.location = "new_specimen.php?pid="+card_num+"&session_num=<?php echo $session_num ?>";
-				<?php
-				}
-				?>
+				card_num = new_card_num;	
+				var url = 'regn/new_specimen2.php';
+                $('#specimen_reg_body').load(url, {pid: card_num });  
+                $('.reg_subdiv').hide();     
+                $('#specimen_reg').show();
 			}
 		});
 		//Patient added
@@ -402,67 +348,6 @@ function add_patient()
 	{
 		alert(error_message);
 	}
-}
-
-function fetchPatientAjax()
-{
-	var card_num = $("#card_num").val();
-	if(card_num == "")
-	{
-		document.getElementById("card_num_msg").innerHTML = "";
-		return;
-	}
-	if(isNaN(card_num))
-	{
-		var msg_string = "<small><font color='red'>"+"Invalid ID. Only numbers allowed.</font></small>";
-		document.getElementById("card_num_msg").innerHTML = msg_string;
-		return;
-	}
-	var url = "ajax/patient_check_id.php?card_num="+card_num;
-	var xmlHttp;
-	try
-	{
-		// Firefox, Opera 8.0+, Safari
-		xmlHttp=new XMLHttpRequest();
-	}
-	catch (e)
-	{
-		// Internet Explorer
-		try
-		{
-			xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
-		}
-		catch (e)
-		{
-			try
-			{
-				xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			catch (e)
-			{
-				alert("Your browser does not support AJAX!");
-				return false;
-			}
-		}
-	}
-	xmlHttp.onreadystatechange=function()
-    {
-		if(xmlHttp.readyState==4)
-		{
-			if(xmlHttp.responseText == "0")
-			{
-				var msg_string = "";
-				document.getElementById("card_num_msg").innerHTML = msg_string;
-			}
-			else
-			{
-				var msg_string = "<small><font color='red'>"+"ID "+card_num+" already exists</font></small>";
-				document.getElementById("card_num_msg").innerHTML = msg_string;
-			}
-		}
-	}
-	xmlHttp.open("GET", url, true);
-	xmlHttp.send(null);
 }
 
 function reset_new_patient()

@@ -261,67 +261,6 @@ function add_patient()
 	}
 }
 
-function fetchPatientAjax()
-{
-	var card_num = $("#card_num").val();
-	if(card_num == "")
-	{
-		document.getElementById("card_num_msg").innerHTML = "";
-		return;
-	}
-	if(isNaN(card_num))
-	{
-		var msg_string = "<small><font color='red'>"+"Invalid ID. Only numbers allowed.</font></small>";
-		document.getElementById("card_num_msg").innerHTML = msg_string;
-		return;
-	}
-	var url = "ajax/patient_check_id.php?card_num="+card_num;
-	var xmlHttp;
-	try
-	{
-		// Firefox, Opera 8.0+, Safari
-		xmlHttp=new XMLHttpRequest();
-	}
-	catch (e)
-	{
-		// Internet Explorer
-		try
-		{
-			xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
-		}
-		catch (e)
-		{
-			try
-			{
-				xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			catch (e)
-			{
-				alert("Your browser does not support AJAX!");
-				return false;
-			}
-		}
-	}
-	xmlHttp.onreadystatechange=function()
-    {
-		if(xmlHttp.readyState==4)
-		{
-			if(xmlHttp.responseText == "0")
-			{
-				var msg_string = "";
-				document.getElementById("card_num_msg").innerHTML = msg_string;
-			}
-			else
-			{
-				var msg_string = "<small><font color='red'>"+"ID "+card_num+" already exists</font></small>";
-				document.getElementById("card_num_msg").innerHTML = msg_string;
-			}
-		}
-	}
-	xmlHttp.open("GET", url, true);
-	xmlHttp.send(null);
-}
-
 function reset_new_patient()
 {
 	$('#new_record').resetForm();
