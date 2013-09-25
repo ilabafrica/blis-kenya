@@ -7548,10 +7548,11 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 
 			# Show all options
 			?>
-			<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
+			
+			<option value='0'><?php echo 'Patient Number';//LangUtil::$generalTerms['PATIENT_ID']; ?></option>
 			<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
-			<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
-			<option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option>
+			<!--option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option-->
+			<!--option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option-->
                          <?php 
                          if($patientBarcodeSearch != 0 && is_country_dir($userrr) != 1 && is_super_admin($userrr) != 1 ){ ?>
                         				<option value='9'><?php echo 'Barcode Search'; ?></option>

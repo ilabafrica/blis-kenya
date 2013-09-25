@@ -2373,38 +2373,48 @@ class Patient
 		return Patient::getObject($record);
 	}
 	
+	public static function getBySurrId($surr_id)
+	{
+		# Returns patient record by ID
+		global $con;
+		$patient_id = mysql_real_escape_string($surr_id, $con);
+		$query_string = "SELECT * FROM patient WHERE surr_id=$surr_id";
+		$record = query_associative_one($query_string);
+		//return 1;
+		return Patient::getObject($record);
+	}
+	
 	public static function getBySanitasId($patient_id)
 	{
-	# Returns patient record by ID
-	global $con;
-	$patient_id = mysql_real_escape_string($patient_id, $con);
-	$query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id";
-	$saved_db = DbUtil::switchToGlobal();
-	$record = query_associative_one($query_string);
-	DbUtil::switchRestore($saved_db);
-	
-	
-	//Get patient from lsanitas lab request and save to Blis patient table
-	$sanitas_patient = Patient::getLabRequest($record);
-	$dob = $sanitas_patient->dob;
-	if($age == "")
-		$age = 0;
-	$sex = $sanitas_patient->sex;
-	$date_receipt = date("Y-m-d H:i:s");
-	$patient = new Patient();
-	$patient->patientId = $patient_id;
-	$patient->addlId = null;
-	$patient->name = $sanitas_patient->name;
-	$patient->dob = $dob;
-	$patient->age = $age;
-	$patient->sex = $sex;
-	$patient->regDate=$date_receipt;
-	$patient->surrogateId = $pid;
-	$patient->createdBy = $_SESSION['user_id'];
-	$patient_added = add_patient($patient, true);
-	//return 1;
-	
-	return Patient::getById($patient_id);
+		# Get Patient from Lab request table, save patient record and return patient record
+		global $con;
+		$patient_id = mysql_real_escape_string($patient_id, $con);
+		$query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id";
+		$saved_db = DbUtil::switchToGlobal();
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		
+		//Get patient from lsanitas lab request and save to Blis patient table
+		$sanitas_patient = Patient::getLabRequest($record);
+		$dob = $sanitas_patient->dob;
+		if($age == "")
+			$age = 0;
+		$sex = $sanitas_patient->sex;
+		$date_receipt = date("Y-m-d H:i:s");
+		$patient = new Patient();
+		$patient->patientId = $patient_id;
+		$patient->addlId = null;
+		$patient->name = $sanitas_patient->name;
+		$patient->dob = $dob;
+		$patient->age = $age;
+		$patient->sex = $sex;
+		$patient->regDate=$date_receipt;
+		$patient->surrogateId = $sanitas_patient->patientId;
+		$patient->createdBy = $_SESSION['user_id'];
+		$patient_added = add_patient($patient);
+		//return 1;
+		
+		return Patient::getBySurrId($sanitas_patient->patientId);
 	}
 	
 	public function getSurrogateId()

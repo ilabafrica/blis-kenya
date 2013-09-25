@@ -388,6 +388,9 @@ function load_specimen_acceptance(specimen_id)
 	$('#specimen_acceptance_body').load(url, {sid: specimen_id});		
 	$('#specimen_acceptance').show();
 }
+$(document).ready(function(){
+	right_load('lab_requests');
+});
 </script>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
 <?php include("includes/footer.php");?>

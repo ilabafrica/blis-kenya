@@ -113,7 +113,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 }
 # Build HTML table
 ?>
-<table class='table table-striped table-bordered dataTable' id='patientListTable' name='patientListTable'>
+<table class='table table-striped table-bordered dataTable table-condensed' id='patientListTable' name='patientListTable'>
 	<thead>
 		<tr valign='top'>
 			<?php
@@ -256,9 +256,9 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				{
 					# Called from find_patient.php. Show 'profile' and 'register specimen' link
 					?>
-					<a href='javascript:load_specimen_reg(<?php echo $patient->patientId; ?>)' title='Click to add lab request'>Lab request</a>
+					<a href='javascript:load_specimen_reg(<?php echo $patient->patientId; ?>)' class="btn mini red-stripe" title='Click to add lab request'><i class="icon-sign-up"></i> Lab request</a>
 					</td><td>
-					<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' title='Click to View Patient Profile'><?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a>
+					<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' class="btn mini blue-stripe" title='Click to View Patient Profile'><i class="icon-search"></i> <?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a>
 					<?php
 				}
 				else if(strpos($_SERVER["HTTP_REFERER"], "reports.php") !== false || strpos($_SERVER["HTTP_REFERER"], "reports2.php") !== false)
