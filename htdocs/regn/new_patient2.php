@@ -216,9 +216,7 @@ $(document).ready(function(){
 		<?php
 	}
 	?>
-	$('#name').keydown(function() {
-		prefetch_pname();
-	});
+	
 	
 	$('#custom_field_form').submit(function() { 
 		// submit the form 
