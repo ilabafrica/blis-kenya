@@ -2373,6 +2373,40 @@ class Patient
 		return Patient::getObject($record);
 	}
 	
+	public static function getBySanitasId($patient_id)
+	{
+	# Returns patient record by ID
+	global $con;
+	$patient_id = mysql_real_escape_string($patient_id, $con);
+	$query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id";
+	$saved_db = DbUtil::switchToGlobal();
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	
+	
+	//Get patient from lsanitas lab request and save to Blis patient table
+	$sanitas_patient = Patient::getLabRequest($record);
+	$dob = $sanitas_patient->dob;
+	if($age == "")
+		$age = 0;
+	$sex = $sanitas_patient->sex;
+	$date_receipt = date("Y-m-d H:i:s");
+	$patient = new Patient();
+	$patient->patientId = $patient_id;
+	$patient->addlId = null;
+	$patient->name = $sanitas_patient->name;
+	$patient->dob = $dob;
+	$patient->age = $age;
+	$patient->sex = $sex;
+	$patient->regDate=$date_receipt;
+	$patient->surrogateId = $pid;
+	$patient->createdBy = $_SESSION['user_id'];
+	$patient_added = add_patient($patient, true);
+	//return 1;
+	
+	return Patient::getById($patient_id);
+	}
+	
 	public function getSurrogateId()
 	{
 		if($this->surrogateId == null || trim($this->surrogateId) == "")
@@ -6077,7 +6111,7 @@ function add_patient($patient, $importOn = false)
 
 		$auditTrail->logPatientReg($auditTrail);		
 	}
-	print $query_string;
+	//print $query_string;
 	return true;
 }
 
@@ -6123,6 +6157,14 @@ function get_patient_by_id($pid)
 	$pid = mysql_real_escape_string($pid, $con);
 	# Fetches a patient record by patient id
 	return Patient::getById($pid);
+}
+
+function get_patient_by_sanitas_id($pid)
+{
+	global $con;
+	$pid = mysql_real_escape_string($pid, $con);
+	# Fetches a patient record from sanits_lab_request_table by patient_id
+	return Patient::getBySanitasId($pid);
 }
 
 function search_patients_by_id($q)

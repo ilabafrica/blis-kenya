@@ -822,6 +822,19 @@ function submit_forms(test_id)
 				$("#test_"+test_id).remove();
 				$("#"+target_div_id).html(msg);
 				$("tr#"+test_id).remove();
+
+				//push results to sanitas
+				var results ='{"labNo": 318750,"requestingClinician": 23,"result": "positive"}';
+		            
+				$.ajax({
+					type:"POST",
+					url:'ajax/push_results.php',
+					dataType: 'json',
+					data: results,
+					success: function (data) {
+			               //alert("sent results to sanitas successfully");
+			         }
+			     });
 			}
 		});
 	}

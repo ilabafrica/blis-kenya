@@ -236,7 +236,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 										</a>
 									</li>
 									<li>
-										<a href='javascript:right_load(".$quote."verify_results_new".$quote.");'  title='Quality Controls'
+										<a href=''  title='Quality Controls'
 										class='' id='new_patient_menu'>
 										<i class='icon-ok-sign'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
@@ -255,13 +255,13 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 								</a>
 							</li>
 							<li>
-								<a href='javascript:load_right_pane(".$quote."specimen_types_div".$quote.");' class='menu_option' id='specimen_types_div_menu'>
-								<i class='icon-tag'></i> ".LangUtil::$generalTerms['SPECIMEN_TYPES']."
+								<a href='javascript:load_right_pane(".$quote."test_types_div".$quote.");' class='menu_option' id='test_types_div_menu'>
+								<i class='icon-tag'></i> ".LangUtil::$generalTerms['TEST_TYPES']."
 								</a>
 							</li>
 							<li>
-								<a href='javascript:load_right_pane(".$quote."test_types_div".$quote.");' class='menu_option' id='test_types_div_menu'>
-								<i class='icon-tag'></i> ".LangUtil::$generalTerms['TEST_TYPES']."
+								<a href='javascript:load_right_pane(".$quote."specimen_types_div".$quote.");' class='menu_option' id='specimen_types_div_menu'>
+								<i class='icon-tag'></i> ".LangUtil::$generalTerms['SPECIMEN_TYPES']."
 								</a>
 							</li>
 						</ul>";

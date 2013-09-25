@@ -5,7 +5,6 @@
 include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("catalog");
-$script_elems->enableLatencyRecord();
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
 						<h3>
@@ -49,7 +48,9 @@ Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you
 </div>
 </div>
 
-<?php include("includes/scripts.php");?>
+<?php include("includes/scripts.php");
+$script_elems->enableLatencyRecord();
+?>
 <script type='text/javascript'>
 function check_input()
 {

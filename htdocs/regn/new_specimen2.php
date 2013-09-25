@@ -2,7 +2,6 @@
 #
 # Main page for registering new specimen(s) in a single session/accession
 #
-
 include("redirect.php");
 require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
@@ -322,13 +321,18 @@ function checkandtoggle_ref(ref_check_id, ref_row_id)
 </script>
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
 <span class='page_title'><?php echo LangUtil::getTitle(); ?></span>
- | <?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
+ | Lab No:<?php //echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
  | <a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br>
 <br>
 <?php
 # Check if Patient ID is valid
 $patient = get_patient_by_id($pid);
+//searc from sanitas lab reqeust table
+if ($patient==null){	
+	$patient = get_patient_by_sanitas_id($pid);
+}
+
 if($patient == null)
 {
 	?>

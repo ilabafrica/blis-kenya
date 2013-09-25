@@ -155,7 +155,7 @@ else
             $query_string = 
                     "SELECT s.specimen_id FROM specimen s, test t, patient p ".
                     "WHERE p.patient_id=s.patient_id ".
-                    "AND (status_code_id=".Specimen::$STATUS_PENDING.") ".
+                    "AND (s.status_code_id=".Specimen::$STATUS_PENDING.") ".
                     "AND s.specimen_id=t.specimen_id ".
                     "AND t.result = '' LIMIT 0,$rcap ";
     }
@@ -165,7 +165,7 @@ else
 		    	$query_string =
 		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
 		        "WHERE p.patient_id=s.patient_id ".
-		        "AND (status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
+		        "AND (s.status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
 		        "AND s.specimen_id=t.specimen_id ".
 		        "AND t.result = '' LIMIT 0,$rcap ";
 	}else if($attrib_type == 12)
