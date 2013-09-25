@@ -103,7 +103,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						<i class="icon-angle-down"></i>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href='edit_profile'><i class="icon-pencil"></i> <?php echo LangUtil::getPageTerm("EDITPROFILE"); ?></a></li>
+							<li><a href='edit_profile.php'><i class="icon-pencil"></i> <?php echo LangUtil::getPageTerm("EDITPROFILE"); ?></a></li>
 							<?php
 							if(isset($_SESSION['admin_as_tech']) && $_SESSION['admin_as_tech'] === true)
 							{

@@ -8,6 +8,8 @@ LangUtil::setPageId("specimen_info");
 
 $sid = $_REQUEST['sid'];
 $pid = $_REQUEST['pid'];
+//$query_string = "UPDATE specimen SET status_code_id=".Specimen::$STATUS_ACCEPTED." WHERE specimen_id=".$sid." AND patient_id=".$pid.";
+//query_update($query_string);
 ?>
 
 <br>

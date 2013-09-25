@@ -3,13 +3,17 @@
 # Returns list of patients matched with list of samples awaiting acceptance/rejection
 # Called via Ajax form result_entry.php
 #
-include("../includes/db_lib.php");
-include("../includes/user_lib.php");
+include("redirect.php");
+include("includes/header.php");
+include("includes/db_lib.php");
+include("includes/user_lib.php");
 //include("../barcode/barcode_lib.php");
 LangUtil::setPageId("patient_sample_accept_reject");
 
 $attrib_value = $_REQUEST['a'];
 $attrib_type = $_REQUEST['t'];
+
+echo $attrib_type." ".$attrib_value;
 $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
@@ -157,7 +161,7 @@ else
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_PENDING.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = ''";
+                    "AND t.result = '' LIMIT 0,500 ";
     }
     elseif($attrib_type == 11)
     {
@@ -167,7 +171,7 @@ else
 		        "WHERE p.patient_id=s.patient_id ".
 		        "AND (s.status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
 		        "AND s.specimen_id=t.specimen_id ".
-		        "AND t.result = ''";
+		        "AND t.result = '' LIMIT 0,500 ";
 	}else if($attrib_type == 12)
 	{	
 		# Update speciment to started status code
@@ -372,3 +376,4 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 <br><br>
 <div id="specimenBarcodeDiv"></div>
 </div>
+<?php include("includes/footer.php"); ?>

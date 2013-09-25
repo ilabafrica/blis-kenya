@@ -128,6 +128,7 @@ RewriteRule ^specimen_added\.php$ regn/specimen_added.php
 RewriteRule ^session_print\.php$ regn/session_print.php
 RewriteRule ^accept_reject_specimen\.php$ regn/accept_reject_specimen.php
 RewriteRule ^specimen_acceptance\.php$ regn/specimen_acceptance.php
+RewriteRule ^patient_sample_accept_reject\.php$ regn/patient_sample_accept_reject.php
 
 
 ## /results folder
