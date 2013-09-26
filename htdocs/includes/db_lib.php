@@ -2039,6 +2039,7 @@ class Patient
 	public $hashValue; # hash value for this patient (based on name, dob, sex)
 	public $regDate;
 	public $patient_name;
+	public $from_external_system = false;
 	public static function getObject($record)
 	{
 		# Converts a patient record in DB into a Patient object
@@ -2389,7 +2390,7 @@ class Patient
 		# Get Patient from Lab request table, save patient record and return patient record
 		global $con;
 		$patient_id = mysql_real_escape_string($patient_id, $con);
-		$query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id";
+		$query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id AND test_completed=0";
 		$saved_db = DbUtil::switchToGlobal();
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
@@ -2411,6 +2412,7 @@ class Patient
 		$patient->regDate=$date_receipt;
 		$patient->surrogateId = $sanitas_patient->patientId;
 		$patient->createdBy = $_SESSION['user_id'];
+		$patient->from_external_system = true;
 		$patient_added = add_patient($patient);
 		//return 1;
 		
@@ -6142,7 +6144,8 @@ function add_patient($patient, $importOn = false)
 
 		$auditTrail->logPatientReg($auditTrail);		
 	}
-	print $query_string;
+	if(!$patient->from_external_system)
+		print $query_string;
 	return true;
 }
 
@@ -6219,10 +6222,11 @@ function search_patients_by_id($q)
 		$query_string = "SELECT * FROM sanitas_lab_request ".
 		"WHERE patient_id='$q'".
 		"ORDER BY requestDate DESC";
+		
 		$saved_db = DbUtil::switchToGlobal();
 		$resultset = query_associative_all($query_string, $row_count);
 		DbUtil::switchRestore($saved_db);
-		
+
 		if(count($resultset) > 0)
 		{
 			foreach($resultset as $record)
@@ -14917,6 +14921,18 @@ class API
 	"."VALUES ".$LabRequest;
     	query_insert_one($query_string);
     	DbUtil::switchRestore($saved_db);
+    }
+    
+    public static function getSanitasRequest($patient_id)
+    {
+	    # Returns patient record by ID
+	    global $con;
+	    $patient_id = mysql_real_escape_string($patient_id, $con);
+	    $query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id AND test_completed = 0 AND parentLabNo=0;";
+	    $saved_db = DbUtil::switchToGlobal();
+	    $tests_ordered = query_associative_all($query_string);
+	    DbUtil::switchRestore($saved_db);
+	    return $tests_ordered;
     }
 }
 	
