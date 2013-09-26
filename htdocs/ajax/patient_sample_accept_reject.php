@@ -157,7 +157,7 @@ else
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_PENDING.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = ''";
+                    "AND t.result = '' order by s.ts desc limit 200";
     }
     elseif($attrib_type == 11)
     {
@@ -291,7 +291,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
+				<td style='width:75px;'><?php echo $patient->getPatientID(); ?></td>
 			<?php
 			}
 			if($_SESSION['dnum'] != 0)

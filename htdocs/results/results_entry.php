@@ -17,24 +17,6 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 								<i class="icon-beaker"></i>
 								<a href="index.html">Tests</a>
 							</li>
-							<!--
-							<li class="pull-right no-text-shadow">
-							<div class="sections-select">
-                                 <select class="chosen" data-placeholder="Select a section" tabindex="1">
-                                    <option value=""><option/>
-                                    <?php foreach($test_categories as $test_category)
-                                    {?>
-                                    <option value="<?php echo $test_category['test_category_id']?>" >
-                                    <?php echo $test_category['name']?>
-                                    </option>
-                                  	<?php 
-                                    }?>
-                                 </select>
-                         
-                           </div>
-							</li>
-							<li class="pull-right no-text-shadow sections"> Select Section: </li>
-							-->
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
 					</div>

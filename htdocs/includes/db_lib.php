@@ -2133,6 +2133,14 @@ class Patient
 		else
 			return $this->name;
 	}
+    
+    public function getPatientID()
+    {
+        if(trim($this->patientId) == "")
+            return " - ";
+        else
+            return $this->patientId;
+    }
 	
 	public function getPatientName()
 	{

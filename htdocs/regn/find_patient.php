@@ -46,10 +46,11 @@ if(isset($_REQUEST['show_sc']))
 			<a href="javascript:;" class="collapse"></a>
 			<a href="javascript:;" class="reload"></a>
 			</div>
-			</div>
+		</div>
 		<div class="portlet-body form">
-		<p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
-			<div id='sample_collection_body' style='position:relative;left:10px;'> </div>					
+		  <p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
+			<div id='sample_collection_body' class="portlet" style='position:relative;left:10px; height: 500px'> 
+			</div>	 				
 		</div>
 	</div>
 </div>
@@ -346,10 +347,11 @@ function fetch_patient_specimens_accept_reject()
 		{a: '', t: 10}, 
 		function() 
 		{
+		    App.unblockUI(el);
 			handleDataTable(10);
-			App.unblockUI(el);
+			$("#sample_collection_body").css({'height':''});
 		}
-	);
+	);	
 }
 
 function load_patient_reg()
