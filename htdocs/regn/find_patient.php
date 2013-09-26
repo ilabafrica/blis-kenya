@@ -60,7 +60,7 @@ if(isset($_REQUEST['show_sc']))
 <div id="lab_requests" class='reg_subdiv' style='display:none;'>
 <div class="portlet box blue">
 <div class="portlet-title">
-<h4><i class="icon-reorder"></i>Lab Requests</h4>
+<h4><i class="icon-reorder"></i>Search Lab Requests</h4>
 <div class="tools">
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
@@ -163,7 +163,7 @@ if(isset($_REQUEST['show_sc']))
 <div id="specimen_reg" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Lab request form</h4>
+			<h4><i class="icon-reorder"></i>Registration of Lab Requests</h4>
 
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>
