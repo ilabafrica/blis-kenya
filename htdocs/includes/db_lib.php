@@ -14930,7 +14930,7 @@ class API
 	    $patient_id = mysql_real_escape_string($patient_id, $con);
 	    $query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id AND test_completed = 0 AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
-	    $tests_ordered = query_associative_all($query_string);
+	    $tests_ordered = query_associative_all($query_string, $row_count);
 	    DbUtil::switchRestore($saved_db);
 	    return $tests_ordered;
     }
