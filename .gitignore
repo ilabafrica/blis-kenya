@@ -23,7 +23,6 @@
 # Logs and databases #
 ######################
 *.log
-*.sql
 *.sqlite
 
 # OS generated files #
@@ -49,3 +48,4 @@ dbdir/
 local/
 pms_config.ini
 server/
+export/

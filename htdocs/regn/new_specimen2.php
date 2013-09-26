@@ -45,7 +45,14 @@ $uiinfo = "pid=".$_REQUEST['pid']."&dnum=".$_REQUEST['dnum'];
 $patient = get_patient_by_id($pid);
 //search from sanitas lab reqeust table
 $tests_requested = null;
-$tests_requested = API::getSanitasRequest($pid);
+if($patient==null){
+	$patient = Patient::getBySurrId($pid);
+}
+
+if ($patient!=null){
+	$tests_requested = API::getSanitasRequest($patient->surrogateId);
+} else 
+	$tests_requested = API::getSanitasRequest($pid);
 
 if ($patient==null && $tests_requested!=null){	
 	$patient = get_patient_by_sanitas_id($pid);
@@ -67,6 +74,7 @@ if($patient == null)
 	return;
 }
 ?>
+
 <?php 
 if ($tests_requested!=null){
 ?>

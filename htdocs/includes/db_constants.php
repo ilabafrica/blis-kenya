@@ -14,7 +14,7 @@ $ON_PORTABLE = 3;
 
 $SERVER = $ON_DEV;
 
-$LOCAL_PATH = "../../local/";
+$LOCAL_PATH = "../locale/";
 if($SERVER == $ON_ARC)
 {
 	$LOCAL_PATH = "../local/";
@@ -48,7 +48,7 @@ $DB_PASS = "";
 
 if($SERVER == $ON_DEV)
 {
-	$DB_PASS = "";
+	$DB_PASS = "admin123";
 }
 else if($SERVER == $ON_ARC)
 {
