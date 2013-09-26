@@ -171,7 +171,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			{
 				?>
 				<td>
-					<?php echo $patient->getSurrogateId(); ?>
+					<?php echo $patient->patientId; ?>
 				</td>
 				<?php
 			}

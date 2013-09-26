@@ -2522,6 +2522,7 @@ class Specimen
 	public $dateReported;
 	public $referredToName;
 	public $dailyNum;
+	public $labSection;
 	
 	public static $STATUS_PENDING = 0;
 	public static $STATUS_DONE = 1;
@@ -2748,6 +2749,25 @@ class Specimen
 			$test_type_id = $record['test_type_id'];
 			$test_name = get_test_name_by_id($test_type_id);
 			$retval .= $test_name;
+			if($count < count($resultset))
+			{
+				$retval .= "<br>";
+			}
+		}
+		return $retval;
+	}
+
+	public function getLabSection()
+	{
+		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM blis_127.test_category tc, blis_127.test_type tt, blis_127.test t, blis_127.specimen s WHERE tc.test_category_id = tt.test_category_id AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
+		$resultset = query_associative_all($query_string, $row_count);
+		$retval = "";
+		$count = 0;
+		foreach($resultset as $record)
+		{
+			$count++;
+			$bench = $record['bench'];
+			$retval .= $bench."-".$this->specimenId;
 			if($count < count($resultset))
 			{
 				$retval .= "<br>";

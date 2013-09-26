@@ -10,13 +10,24 @@ LangUtil::setPageId("specimen_added");
 $session_num = $_REQUEST['snum'];
 $script_elems->enableTableSorter();
 
+$script_elems->enablePulsate();
+
 
 //$session_num = get_session_current_number();
+
 $specimen_list = get_specimens_by_session($session_num);
 ?>
 <br>
-<b><?php echo LangUtil::getTitle(); ?></b>
- | <?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
+<div class="portlet box green">
+							<div class="portlet-title">
+								<h4><i class="icon-cogs"></i><?php echo LangUtil::getTitle(); ?></h4>
+								<div class="tools">
+									<a href="javascript:;" class="collapse"></a>
+									<a href="javascript:;" class="reload"></a>
+								</div>
+							</div>
+							<div class="portlet-body">
+<?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
 <?php
 if(count($specimen_list) > 1)
 {
@@ -82,4 +93,5 @@ $patient_id = $specimen_list[0]->patientId;
 		</tr>
 	</tbody>
 </table>
+</div>
 <?php include("includes/footer.php");

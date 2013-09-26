@@ -29,6 +29,7 @@ class ScriptElems
     public $enabledJQueryMask = false;
     public $enabledBootstrap = false;
     public $enabledBootstrapFormBuilder = false;
+    public $enabledPulsate = false;
 	
 	public function enableJQuery()
 	{
@@ -186,6 +187,27 @@ class ScriptElems
     	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<?php
 			$this->enabledBootstrap = true;
+		}
+	}
+
+	public function enablePulsate()
+	{
+		# Enable the jquery
+
+		if($this->enabledPulsate === false)
+		{
+		?>
+			<<!-- Load javascripts at bottom, this will reduce page load time -->
+		<script type="text/javascript" src="assets/js/jquery.pulsate.min.js"></script>
+		<script type="text/javascript" src="assets/js/app.js"></script>
+		<script>
+		jQuery(document).ready(function() {			
+			// initiate layout and plugins
+			App.init();
+		});
+	</script>
+		<?php
+			$this->enabledPulsate = true;
 		}
 	}
 	
