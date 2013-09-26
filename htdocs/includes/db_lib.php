@@ -12,8 +12,7 @@ if(session_id() == "")
 include("defaults.php");
 require_once("db_mysql_lib.php");
 
-
-	$_SESSION['langdata_path'] =  $LOCAL_PATH."langdata_revamp/";
+$_SESSION['langdata_path'] =  $LOCAL_PATH."langdata_revamp/";
 	
 
 # Select appropriate locale file
