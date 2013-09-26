@@ -328,9 +328,14 @@ function checkandtoggle_ref(ref_check_id, ref_row_id)
 <?php
 # Check if Patient ID is valid
 $patient = get_patient_by_id($pid);
-//searc from sanitas lab reqeust table
-if ($patient==null){	
+//search from sanitas lab reqeust table
+$tests_requested = null;
+$tests_requested = API::getSanitasRequest($pid);
+
+if ($patient==null && $tests_requested!=null){	
 	$patient = get_patient_by_sanitas_id($pid);
+	$is_sanitas_patient=true;
+	$pid = $patient->surrogateId;
 }
 
 if($patient == null)
@@ -345,6 +350,33 @@ if($patient == null)
 	<?php
 	include("includes/footer.php");
 	return;
+}
+?>
+<?php 
+if ($tests_requested!=null){
+?>
+<table class ="table table-striped table-bordered table-advance" style="width:400px">
+<thead>
+<th>
+Tests Requested
+</th>
+<th>
+Requesting Clinician
+</th>
+</thead>
+<tbody>
+<?php
+foreach ($tests_requested as $test)
+{
+?>
+<tr>
+	<td><?php echo $test['investigation'];?></td>
+	<td><?php echo $test['requestingClinician'] ;?></td>
+<tr>
+<?php }?>
+</tbody>
+</table>
+<?php 
 }
 ?>
 <table cellpadding='5px'>
@@ -364,7 +396,7 @@ if($patient == null)
 			<td>
 				<div>
 					<u><b>Patient details</b></u>
-					<?php echo $page_elems->getPatientInfo($pid, 400); ?>
+					<?php echo $page_elems->getPatientInfo($pid, 400, $is_sanitas_patient); ?>
 				</div>
 			</td>
 		</tr>

@@ -2183,10 +2183,14 @@ class PageElems
 		<?php
 	}
 	
-	public function getPatientInfo($pid, $width="")
+	public function getPatientInfo($pid, $width="", $is_sanitas_patient =false)
 	{
 		# Returns HTML table displaying patient info
+		if($is_sanitas_patient){
+			$patient=Patient::getBySurrId($pid);
+		}else
 		$patient = get_patient_by_id($pid);
+		
 		if($patient == null)
 		{
 		?>
@@ -7558,11 +7562,14 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 
 			# Show all options
 			?>
+			<option value='0'>Patient Number</option>
 			<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
+			<!--
 			<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
 			<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
 			<option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option>
-                         <?php 
+            -->        
+            <?php 
                          if($patientBarcodeSearch != 0 && is_country_dir($userrr) != 1 && is_super_admin($userrr) != 1 ){ ?>
                         				<option value='9'><?php echo 'Barcode Search'; ?></option>
                                                         <?php } ?>
