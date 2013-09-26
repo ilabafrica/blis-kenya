@@ -236,7 +236,7 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
-	javascript:right_load("lab_requests");
+	right_load("lab_requests");
 });
 
 function restrictCharacters(e) {
@@ -387,10 +387,7 @@ function load_specimen_acceptance(specimen_id)
 	var url = 'regn/specimen_acceptance.php';
 	$('#specimen_acceptance_body').load(url, {sid: specimen_id});		
 	$('#specimen_acceptance').show();
-}
-$(document).ready(function(){
-	right_load('lab_requests');
-});
+};
 </script>
 <?php $script_elems->bindEnterToClick('#pq', '#psearch_button'); ?>
 <?php include("includes/footer.php");?>
