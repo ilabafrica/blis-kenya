@@ -5,7 +5,6 @@
 #
 
 require_once( "db_constants.php" );
-//include( "db_constants.php" );
 
 include("../includes/debug_lib.php");
 

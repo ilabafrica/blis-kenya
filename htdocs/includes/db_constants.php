@@ -14,7 +14,7 @@ $ON_PORTABLE = 3;
 
 $SERVER = $ON_DEV;
 
-$LOCAL_PATH = "../../local/";
+$LOCAL_PATH = "../locale/";
 if($SERVER == $ON_ARC)
 {
 	$LOCAL_PATH = "../local/";
