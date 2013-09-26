@@ -6122,7 +6122,7 @@ function add_patient($patient, $importOn = false)
 
 		$auditTrail->logPatientReg($auditTrail);		
 	}
-	//print $query_string;
+	print $query_string;
 	return true;
 }
 
