@@ -3026,7 +3026,8 @@ class PageElems
 					<?php
 				}
 				}
-				?>
+				?>				
+				<!-- Commenting as result entry happens in test section
 				<tr>
 					<td><u><?php echo LangUtil::$generalTerms['SP_STATUS']; ?></u></td>
 					<td>
@@ -3041,7 +3042,7 @@ class PageElems
 					title='Click to Enter result values for this Specimen'><?php echo LangUtil::$generalTerms['ENTER_RESULTS']; ?></a>
 					
 					</td>
-				</tr>				
+				</tr>-->	
 			</tbody>
 		</table>
 		<?php

@@ -237,7 +237,20 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
-	right_load("lab_requests");
+	<?php
+    if(isset($_REQUEST['show_sc']))
+    {
+        # Preload user accounts pane
+        ?>
+        right_load("sample_collection");
+        <?php       
+    }
+    else {
+        ?>
+        right_load("lab_requests");
+        <?php 
+    }
+    ?>
 });
 
 function restrictCharacters(e) {
@@ -345,7 +358,7 @@ function fetch_patient_specimens_accept_reject()
 	var url = 'ajax/patient_sample_accept_reject.php';
 	$("#sample_collection_body").load(url, 
 		{a: '', t: 10}, 
-		function() 
+		function(response, status) 
 		{
 		    App.unblockUI(el);
 			handleDataTable(10);

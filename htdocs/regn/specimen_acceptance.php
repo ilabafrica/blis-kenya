@@ -24,7 +24,7 @@ $pid = $_REQUEST['pid'];
 			</div>
 		</div>
 		<div class="portlet-body form">
- | <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+ <a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
 <br><br>
 <?php
 if(isset($_REQUEST['vd']))
@@ -94,9 +94,15 @@ $font_size = $barcodeSettings['textsize']; //11;
 <script type='text/javascript'>
 $(document).ready(function(){
     var code = $('#patientID').val();
-    $("#patientBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'bmp'});         
-    
+    mark_as_pending();
+    $("#patientBarcodeDiv").barcode(code, 
+        '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>,
+             barHeight:<?php echo $bar_height; ?>, 
+             fontSize:<?php echo $font_size; ?>, output:'bmp'});            
 });
+function mark_as_pending()
+{
+}
 function toggle_profile_divs()
 {
     $('#profile_div').toggle();
@@ -117,7 +123,9 @@ function print_specimen_barcode(pid, sid)
 
         }
     });
-    $("#specimenBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'bmp'});         
+    $("#specimenBarcodeDiv").barcode(code, '<?php echo $code_type; ?>',
+    {barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>,
+         fontSize:<?php echo $font_size; ?>, output:'bmp'});         
     Popup($('#specimenBarcodeDiv').html());
 }
 

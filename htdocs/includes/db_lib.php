@@ -2541,7 +2541,7 @@ class Specimen
 	public static $STATUS_RETURNED = 5;
 	public static $STATUS_REJECTED = 6;
 	public static $STATUS_PENDING_RESULTS = 7;
-	public static $STATUS_ACCEPTED = 8;
+	public static $STATUS_NOT_COLLECTED = 8;
 
 	public static function getObject($record)
 	{
@@ -2653,6 +2653,16 @@ class Specimen
 				return LangUtil::$generalTerms['REF_RETURNED'];
 				break;
 		}
+	}
+	
+	public function setStatus($status)
+	{
+	    # Sets new status on specimen
+        if($status == null)
+            return;
+        $query_string = 
+            "UPDATE specimen SET status_code_id='$status' WHERE specimen_id=".$this->specimenId;
+        query_blind($query_string);
 	}
 	
 	public function getReportTo()
