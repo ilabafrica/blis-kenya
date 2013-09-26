@@ -24,10 +24,8 @@ function get_custom_value($custom_field)
 	}
 	else if($custom_field->fieldTypeId == CustomField::$FIELD_DATE)
 	{
-		$value_yyyy = $name_prefix."_yyyy";
-		$value_mm = $name_prefix."_mm";
-		$value_dd = $name_prefix."_dd";
-		$date_value = $_REQUEST[$value_yyyy]."-".$_REQUEST[$value_mm]."-".$_REQUEST[$value_dd];
+	    $value_date = $name_prefix."_datename";
+		$date_value =  $_REQUEST[$value_date];
 		return $date_value;
 	}
 }

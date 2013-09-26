@@ -3726,13 +3726,10 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		}
 		else if($custom_field->fieldTypeId == CustomField::$FIELD_DATE)
 		{
-			$name_list = array($name_prefix."_yyyy", $name_prefix."_mm", $name_prefix."_dd");
-			$id_list = $name_list;
-			$today = date("Y-m-d");
-			if($field_value == "")
-				$field_value = $today;
-			$value_list = explode("-", $field_value);
-			$this->getDatePicker($name_list, $id_list, $value_list, true);
+			echo "<div class='input-append date date-picker' data-date='' data-date-format='yyyy-mm-dd'> 
+                  <input class='m-wrap m-ctrl-medium' size='16' name='".$name_prefix."_datename' id='".$name_prefix."_dateid'
+                  type='text' value=''><span class='add-on'><i class='icon-calendar'></i></span>";
+           
 		}
 		else if($custom_field->fieldTypeId == CustomField::$FIELD_OPTIONS)
 		{
@@ -3838,14 +3835,14 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	function getStockForm($count)
 	{
 	$name_request="txtRow".$count."1";
-$lot_number_request="txtRow".$count."2";
-$expiry_date_request="txtRow".$count."3";
-$manufacture_request="txtRow".$count."4";
-$quantity_supplied_request="txtRow".$count."6";
-$supplier_request="txtRow".$count."5";
-$unit_request="txtRow".$count."7";
-$cost_request="txtRow".$count."8";
-$name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
+    $lot_number_request="txtRow".$count."2";
+    $expiry_date_request="txtRow".$count."3";
+    $manufacture_request="txtRow".$count."4";
+    $quantity_supplied_request="txtRow".$count."6";
+    $supplier_request="txtRow".$count."5";
+    $unit_request="txtRow".$count."7";
+    $cost_request="txtRow".$count."8";
+    $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 		$id_list = $name_list;
 		 $today = date("Y-m-d");
 		$today_array = explode("-", $today);
@@ -4119,7 +4116,7 @@ $name_list = array("yyyy_to".$count, "mm_to".$count, "dd_to".$count);
 			{	if(($custom_field->flag)==NULL)
 				{
 				?>
-				<tr valign='top'>
+				<tr valign='top' class="custom">
 					<td><?php echo $custom_field->fieldName; ?></td>
 					
 					<td><?php $this->getCustomFormField($custom_field); ?></td>
