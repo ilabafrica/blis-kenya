@@ -1619,7 +1619,7 @@ class Measure
 		$measure->name = $record['name'];
 		$measure->unit = $record['unit'];
 		$measure->description = $record['description'];
-		$measure->range = $record['range'];
+		$measure->range = $record['measure_range'];
 		return $measure;
 	}
 	

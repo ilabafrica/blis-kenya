@@ -59,6 +59,9 @@ ul.subb li a {
     color:white;
     padding-left:20px;
 }
+#form-date-range{
+	padding: 7px 10px;
+}
 </style>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
