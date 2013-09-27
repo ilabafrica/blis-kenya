@@ -9,17 +9,6 @@ include("includes/header.php");
 LangUtil::setPageId("find_patient");
 putUILog('find_patient', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
-
-if(isset($_REQUEST['show_sc']))
-	{
-		echo '<div class="alert alert-info">
-									<button class="close" data-dismiss="alert"></button>
-									<strong>You have successfully rejected the specimen.</strong>
-								</div>';
-		?>
-		<script type="text/javascript">right_load('sample_collection'); </script>
-		<?php
-	}
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
 						<h3>
@@ -49,8 +38,12 @@ if(isset($_REQUEST['show_sc']))
 		</div>
 		<div class="portlet-body form">
 		  <p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
-			<div id='sample_collection_body' class="portlet" style='position:relative;left:10px; height: 500px'> 
-			</div>	 				
+		   <div class="alert alert-info" style="display: none">
+                            <button class="close" data-dismiss="alert"></button>
+                            <strong>You have successfully rejected the specimen.</strong>
+                     </div>
+			<div id='sample_collection_body' class="portlet" style='position:relative;left:10px; height: 500px'> 			       
+		</div>	 				
 		</div>
 	</div>
 </div>
@@ -188,8 +181,8 @@ if(isset($_REQUEST['show_sc']))
 <div id="specimen_rejection" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box yellow">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Specimen Rejection</h4>
 
+			<h4><i class="icon-reorder"></i>Specimen Rejection</h4>
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>
 				<a href="javascript:;" class="reload"></a>
@@ -240,10 +233,22 @@ $(document).ready(function() {
 	<?php
     if(isset($_REQUEST['show_sc']))
     {
-        # Preload user accounts pane
-        ?>
-        right_load("sample_collection");
-        <?php       
+        //Load sample collection table
+        if($_REQUEST['show_sc'] == 1)   
+        {
+            ?>
+            right_load("sample_collection");
+            $(".alert.alert-info").show();
+                setTimeout(function() { $(".alert.alert-info").hide(); }, 4000);
+            <?php
+        }
+        else
+        {
+            ?>
+            right_load("sample_collection");
+            <?php    
+        }
+               
     }
     else {
         ?>

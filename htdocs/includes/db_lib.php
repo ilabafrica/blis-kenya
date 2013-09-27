@@ -2655,16 +2655,6 @@ class Specimen
 		}
 	}
 	
-	public function setStatus($status)
-	{
-	    # Sets new status on specimen
-        if($status == null)
-            return;
-        $query_string = 
-            "UPDATE specimen SET status_code_id='$status' WHERE specimen_id=".$this->specimenId;
-        query_blind($query_string);
-	}
-	
 	public function getReportTo()
 	{
 		if($this->reportTo == null)
@@ -6989,7 +6979,7 @@ function update_specimen_status($specimen_id)
 }
 
 // Reject specimen status, updates a specimen status to 6 (rejected)
-// as specified in line 2263
+// as specified in specimen class
 function update_specimen_status_rejected($specimen_id, $rejectionreason){
 	
 	//No need to check if all tests results are entered
