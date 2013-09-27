@@ -156,36 +156,6 @@ header('Content-Type: text/html; charset=UTF-8');
 		C4G BLIS v<?php echo $VERSION; ?> - <?php echo LangUtil::$allTerms["FOOTER_MSG"]; ?>
 		</div>
 		<?php
-		if($_SESSION['locale'] !== "en")
-		{
-			?>
-			 | <a href='lang_switch?to=en'><?php echo "English"; ?></a>
-			<?php
-		}
-		else
-		{
-			echo " | English";
-		}
-		if($_SESSION['locale'] !== "fr")
-		{
-			?>
-			 | <a href='lang_switch?to=fr'><?php echo "Francais"; ?></a>
-			<?php
-		}
-		else
-		{
-			echo " | Francais";
-		}
-		if($_SESSION['locale'] !== "default")
-		{
-			?>
-			 | <a href='lang_switch?to=default'><?php echo "Default"; ?></a>
-			<?php
-		}
-		else
-		{
-			echo " | Default";
-		}
 		/*Change Theme: <a href=javascript:changeTheme('Blue');>Blue</a> | <a href=javascript:changeTheme('Grey');>Grey*/
 		if($TRACK_LOADTIME)
 		{

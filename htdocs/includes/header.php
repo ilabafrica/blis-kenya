@@ -128,7 +128,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 							}
 							?>
 							<li class="divider"></li>
-							<li><a rel='facebox' href='user_rating.php'><i class="icon-key"></i> <?php echo LangUtil::getPageTerm("LOGOUT"); ?></a></li>
+							<li><a href='logout.php'><i class="icon-key"></i> <?php echo LangUtil::getPageTerm("LOGOUT"); ?></a></li>
 						</ul>
 					</li>
 					<?php } ?>
