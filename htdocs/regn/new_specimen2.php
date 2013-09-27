@@ -89,6 +89,9 @@ Requesting Clinician
 </thead>
 <tbody>
 <?php
+
+$clinician = array();
+$clinician['clinician']=$tests_requested['requestingClinician'];
 foreach ($tests_requested as $test)
 {
 ?>

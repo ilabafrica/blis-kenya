@@ -1339,6 +1339,21 @@ class TestType
 		
 		return $retVal['name'];
 	}
+
+	public static function getIdByName($name)
+	{
+		$query_string = "SELECT test_type_id as id FROM `test_type` WHERE `name` = '$name'";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_one($query_string);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['id'];
+	}
+
+
 }
 
 class SpecimenType
@@ -2088,6 +2103,7 @@ class Patient
 	$patient->name = $record['full_name'];
 	$patient->dob = $record['dateOfBirth'];
 	$patient->sex = $record['gender'];
+	$patient->clinician = $record['requestingClinician'];
 		
 	if(isset($record['partial_dob']))
 			$patient->partialDob = $record['partial_dob'];
@@ -2133,6 +2149,14 @@ class Patient
 		else
 			return $this->name;
 	}
+    
+    public function getPatientID()
+    {
+        if(trim($this->patientId) == "")
+            return " - ";
+        else
+            return $this->patientId;
+    }
 	
 	public function getPatientName()
 	{
@@ -2397,6 +2421,7 @@ class Patient
 		//Get patient from lsanitas lab request and save to Blis patient table
 		$sanitas_patient = Patient::getLabRequest($record);
 		$dob = $sanitas_patient->dob;
+		$clinician = $sanitas_patient->clinician;
 		if($age == "")
 			$age = 0;
 		$sex = $sanitas_patient->sex;
@@ -2405,6 +2430,7 @@ class Patient
 		$patient->patientId = $patient_id;
 		$patient->addlId = null;
 		$patient->name = $sanitas_patient->name;
+		$patient->clinician = $clinician;
 		$patient->dob = $dob;
 		$patient->age = $age;
 		$patient->sex = $sex;
@@ -2424,6 +2450,19 @@ class Patient
 			return "-";
 		else
 			return $this->surrogateId;
+	}
+
+	public function getBlisTests()
+	{
+		# Get tests from sanitas table and match with blis tests
+		$query_string = "SELECT DISTINCT(name) AS test_name FROM test_type;";
+		$record = query_associative_one($query_string);		
+		$retval = "";
+		if($record == null || trim($record['test_name']) == "")
+			$retval = "-";
+		else
+			$retval = $record['test_name'];
+		return $retval;
 	}
 	
 	public function getDailyNum()
@@ -2533,7 +2572,7 @@ class Specimen
 	public static $STATUS_RETURNED = 5;
 	public static $STATUS_REJECTED = 6;
 	public static $STATUS_PENDING_RESULTS = 7;
-	public static $STATUS_ACCEPTED = 8;
+	public static $STATUS_NOT_COLLECTED = 8;
 
 	public static function getObject($record)
 	{
@@ -6971,7 +7010,7 @@ function update_specimen_status($specimen_id)
 }
 
 // Reject specimen status, updates a specimen status to 6 (rejected)
-// as specified in line 2263
+// as specified in specimen class
 function update_specimen_status_rejected($specimen_id, $rejectionreason){
 	
 	//No need to check if all tests results are entered

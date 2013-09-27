@@ -9,17 +9,6 @@ include("includes/header.php");
 LangUtil::setPageId("find_patient");
 putUILog('find_patient', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
-
-if(isset($_REQUEST['show_sc']))
-	{
-		echo '<div class="alert alert-info">
-									<button class="close" data-dismiss="alert"></button>
-									<strong>You have successfully rejected the specimen.</strong>
-								</div>';
-		?>
-		<script type="text/javascript">right_load('sample_collection'); </script>
-		<?php
-	}
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
 						<h3>
@@ -46,10 +35,15 @@ if(isset($_REQUEST['show_sc']))
 			<a href="javascript:;" class="collapse"></a>
 			<a href="javascript:;" class="reload"></a>
 			</div>
-			</div>
+		</div>
 		<div class="portlet-body form">
-		<p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
-			<div id='sample_collection_body' style='position:relative;left:10px;'> </div>					
+		  <p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
+		   <div class="alert alert-info" style="display: none">
+                            <button class="close" data-dismiss="alert"></button>
+                            <strong>You have successfully rejected the specimen.</strong>
+                     </div>
+			<div id='sample_collection_body' class="portlet" style='position:relative;left:10px; height: 500px'> 			       
+		</div>	 				
 		</div>
 	</div>
 </div>
@@ -60,12 +54,12 @@ if(isset($_REQUEST['show_sc']))
 <div id="lab_requests" class='reg_subdiv' style='display:none;'>
 <div class="portlet box blue">
 <div class="portlet-title">
-<h4><i class="icon-reorder"></i>Lab Requests</h4>
+<h4><i class="icon-reorder"></i>Search Lab Requests</h4>
 <div class="tools">
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
 <a href="javascript:;" class="reload"></a>
-<a href="javascript:;" class="remove"></a>
+
 </div>
 </div>
 		<div class="portlet-body form">
@@ -85,7 +79,25 @@ if(isset($_REQUEST['show_sc']))
 				<span id='psearch_progress_spinner'>
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 				</span>
-				</form>
+				</form><div class="span4" style="position: absolute;top: 0px;right: 0px;">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="">
+											<div class="well text-info">
+											<?php
+											echo "<li>";
+											echo "Search Patients using the Sanitas Number.";
+											echo "</li>";
+										
+											echo "<li>"; 
+											echo "If the patient details are not found, then proceed to register the patient using the <a href='javascript:load_patient_reg();'><abbr title='Add New Patient'>Add New Patient </abbr></a> Link as shown.";
+											echo "</li>";
+										
+											?>
+												
+												
+											</div>
+										</div>
+					</div>
 				<br />
 				<div id='add_anyway_div' >
 					<a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
@@ -153,7 +165,30 @@ if(isset($_REQUEST['show_sc']))
 			</div>
 		</div>
 		<div class="portlet-body form">
-			<div id='patients_registration_body' style='position:relative;left:10px;'> </div>					
+		<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
+		<div class="span4" style="position: absolute;top: 180px;right: 30px;">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="">
+											<div class="well text-info">
+											<?php
+											echo "<li>";
+											echo "This page allows us to register new patients. Enter the details of the patient carefully and appropriately.";
+											echo "</li>";
+										
+											echo "<li>"; 
+											echo "Remember to select the correct gender and type of patient you are registering.";
+											echo "</li>";
+										
+											echo "<li>"; 
+											echo "Enter the correct date of birth, otherwise, enter the age if the patient does not know the date of birth.";
+											echo "</li>";
+											?>
+												
+											</div>
+										</div>
+					</div>
+			<div id='patients_registration_body' style='position:relative;left:10px; '> </div>
+					
 		</div>
 	</div>
 </div>
@@ -163,12 +198,11 @@ if(isset($_REQUEST['show_sc']))
 <div id="specimen_reg" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Lab request form</h4>
+			<h4><i class="icon-reorder"></i>Registration of Lab Requests</h4>
 
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>
 				<a href="javascript:;" class="reload"></a>
-				<a href="javascript:;" class="remove"></a>
 			</div>
 		</div>
 		<div class="portlet-body form">
@@ -187,8 +221,8 @@ if(isset($_REQUEST['show_sc']))
 <div id="specimen_rejection" class='reg_subdiv' style='display:none;'>
 	<div class="portlet box yellow">
 		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Specimen Rejection</h4>
 
+			<h4><i class="icon-reorder"></i>Specimen Rejection</h4>
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>
 				<a href="javascript:;" class="reload"></a>
@@ -236,7 +270,32 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
-	right_load("lab_requests");
+	<?php
+    if(isset($_REQUEST['show_sc']))
+    {
+        //Load sample collection table
+        if($_REQUEST['show_sc'] == 1)   
+        {
+            ?>
+            right_load("sample_collection");
+            $(".alert.alert-info").show();
+                setTimeout(function() { $(".alert.alert-info").hide(); }, 4000);
+            <?php
+        }
+        else
+        {
+            ?>
+            right_load("sample_collection");
+            <?php    
+        }
+               
+    }
+    else {
+        ?>
+        right_load("lab_requests");
+        <?php 
+    }
+    ?>
 });
 
 function restrictCharacters(e) {
@@ -344,12 +403,13 @@ function fetch_patient_specimens_accept_reject()
 	var url = 'ajax/patient_sample_accept_reject.php';
 	$("#sample_collection_body").load(url, 
 		{a: '', t: 10}, 
-		function() 
+		function(response, status) 
 		{
+		    App.unblockUI(el);
 			handleDataTable(10);
-			App.unblockUI(el);
+			$("#sample_collection_body").css({'height':''});
 		}
-	);
+	);	
 }
 
 function load_patient_reg()

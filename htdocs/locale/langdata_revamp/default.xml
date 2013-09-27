@@ -239,7 +239,7 @@
 		</term>
 		<term>
 			<key>PATIENT_ID</key>
-			<value>Patient ID</value>
+			<value>Registration Number</value>
 		</term>
 		<term>
 			<key>ADDL_ID</key>
@@ -259,7 +259,7 @@
 		</term>
 		<term>
 			<key>PATIENT_DAILYNUM</key>
-			<value>Lab Number</value>
+			<value>Patient Number</value>
 		</term>		
 		<term>
 			<key>AGE</key>

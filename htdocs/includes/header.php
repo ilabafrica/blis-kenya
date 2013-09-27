@@ -25,7 +25,6 @@ require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
 require_once("includes/script_elems.php");
 LangUtil::setPageId("header");
-//LangUtil::setPageId("find_patient");
 require_once("includes/perms_check.php");
 
 $script_elems = new ScriptElems();

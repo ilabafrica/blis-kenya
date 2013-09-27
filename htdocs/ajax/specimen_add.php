@@ -75,7 +75,7 @@ $specimen->patientId = $patient_id;
 $specimen->specimenTypeId = $specimen_type_id;
 $specimen->comments = $comments;
 $specimen->userId = $_SESSION['user_id'];
-$specimen->statusCodeId = Specimen::$STATUS_PENDING;
+$specimen->statusCodeId = Specimen::$STATUS_NOT_COLLECTED;
 $specimen->dailyNum = $prefixed_dnum;
 # If marked for referral, set appropriate status and store hospital/lab name
 if(isset($_REQUEST['ref_out']) && $_REQUEST['ref_out'] == "Y")
