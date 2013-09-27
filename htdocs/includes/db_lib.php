@@ -2149,6 +2149,14 @@ class Patient
 		else
 			return $this->name;
 	}
+    
+    public function getPatientID()
+    {
+        if(trim($this->patientId) == "")
+            return " - ";
+        else
+            return $this->patientId;
+    }
 	
 	public function getPatientName()
 	{
@@ -2564,7 +2572,7 @@ class Specimen
 	public static $STATUS_RETURNED = 5;
 	public static $STATUS_REJECTED = 6;
 	public static $STATUS_PENDING_RESULTS = 7;
-	public static $STATUS_ACCEPTED = 8;
+	public static $STATUS_NOT_COLLECTED = 8;
 
 	public static function getObject($record)
 	{
@@ -7002,7 +7010,7 @@ function update_specimen_status($specimen_id)
 }
 
 // Reject specimen status, updates a specimen status to 6 (rejected)
-// as specified in line 2263
+// as specified in specimen class
 function update_specimen_status_rejected($specimen_id, $rejectionreason){
 	
 	//No need to check if all tests results are entered

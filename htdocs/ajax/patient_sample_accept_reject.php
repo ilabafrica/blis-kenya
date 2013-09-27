@@ -5,8 +5,7 @@
 #
 include("../includes/db_lib.php");
 include("../includes/user_lib.php");
-//include("../barcode/barcode_lib.php");
-LangUtil::setPageId("patient_sample_accept_reject");
+LangUtil::setPageId("results_entry");
 
 $attrib_value = $_REQUEST['a'];
 $attrib_type = $_REQUEST['t'];
@@ -29,152 +28,15 @@ else
     $result_counter = $_REQUEST['result_counter'];
 
 $query_string = "";
-if($dynamic == 0)
-{
-    if($attrib_type == 5)
-    {
-            # Search by specimen aux ID
-           $query_string = 
-                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
-                    "WHERE p.patient_id=s.patient_id ".
-                    "AND s.aux_id='$attrib_value'".
-                    "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' LIMIT 0,$rcap ";
-    }
-    if($attrib_type == 0)
-    {
-            # Search by patient ID
-            $query_string = 
-                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
-                    "WHERE p.patient_id=s.patient_id ".
-                    "AND p.surr_id='$attrib_value'".
-                    "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' LIMIT 0,$rcap ";
-    }
-    else if($attrib_type == 1)
-    {
-            # Search by patient name
-            $query_string = 
-                    "SELECT COUNT(*) AS val FROM patient WHERE name LIKE '%$attrib_value%'";
-            $record = query_associative_one($query_string);
-            if($record['val'] == 0)
-            {
-                    # No patients found with matching name
-                    ?>
-                    <div class='sidetip_nopos'>
-                    <b>'<?php echo $attrib_value; ?>'</b> - <?php echo LangUtil::$generalTerms['MSG_SIMILARNOTFOUND']; ?>
-                    <?php
-                    return;
-            }
-            $query_string = 
-                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
-                    "WHERE s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' ".
-                    "AND s.patient_id=p.patient_id ".
-                    "AND p.name LIKE '%$attrib_value%'";
-    }
-    else if($attrib_type == 3)
-    {
-            # Search by patient daily number
-            $query_string = 
-                    "SELECT specimen_id FROM specimen ".
-                    "WHERE daily_num LIKE '%-$attrib_value' ".
-                    "AND ( status_code_id=".Specimen::$STATUS_PENDING." ".
-                    "OR status_code_id=".Specimen::$STATUS_REFERRED." ) ".
-                    "ORDER BY date_collected DESC LIMIT 0,$rcap ";
-    }
-}
-else
-{
-    if($attrib_type == 5)
-    {
-           # Search by specimen aux ID
-            $query_string = 
-                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
-                   "WHERE p.patient_id=s.patient_id ".
-                    "AND s.aux_id='$attrib_value'".
-                    "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' LIMIT 0,$rcap ";
-    }
-    if($attrib_type == 0)
-    {
-            # Search by patient ID
-           $query_string = 
-                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
-                    "WHERE p.patient_id=s.patient_id ".
-                    "AND p.surr_id='$attrib_value'".
-                    "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' LIMIT 0,$rcap ";
-    }
-    else if($attrib_type == 1)
-    {
-            # Search by patient name
-            $query_string = 
-                    "SELECT COUNT(*) AS val FROM patient WHERE name LIKE '%$attrib_value%'";
-            $record = query_associative_one($query_string);
-            if($record['val'] == 0)
-            {
-                    # No patients found with matching name
-                    ?>
-                    <div class='sidetip_nopos'>
-                    <b>'<?php echo $attrib_value; ?>'</b> - <?php echo LangUtil::$generalTerms['MSG_SIMILARNOTFOUND']; ?>
-                    <?php
-                    return;
-            }
-            $query_string = 
-                    "SELECT s.specimen_id FROM specimen s, test t, patient p ".
-                    "WHERE s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' ".
-                    "AND s.patient_id=p.patient_id ".
-                    "AND p.name LIKE '%$attrib_value%' LIMIT 0,$rcap";
-    }
-    else if($attrib_type == 3)
-    {
-            # Search by patient daily number
-            $query_string = 
-                    "SELECT specimen_id FROM specimen ".
-                    "WHERE daily_num LIKE '%-$attrib_value' ".
-                    "AND ( status_code_id=".Specimen::$STATUS_PENDING." ".
-                    "OR status_code_id=".Specimen::$STATUS_REFERRED." ) ".
-                    "ORDER BY date_collected DESC LIMIT 0,$rcap";
-    } 
-    else if($attrib_type == 9)
-    {
-            # Search by patient specimen id
-                $decoded = decodeSpecimenBarcode($attrib_value);
-            $query_string = 
-                    "SELECT specimen_id FROM specimen ".
-                    "WHERE specimen_id = $decoded[1] ".
-                    "AND ( status_code_id=".Specimen::$STATUS_PENDING." ".
-                    "OR status_code_id=".Specimen::$STATUS_REFERRED." ) ".
-                    "ORDER BY date_collected DESC LIMIT 0,$rcap";
-           
-    } elseif($attrib_type == 10)
-    {
+
             # Get all specimens with pending status
             $query_string = 
                     "SELECT s.specimen_id FROM specimen s, test t, patient p ".
                     "WHERE p.patient_id=s.patient_id ".
-                    "AND (s.status_code_id=".Specimen::$STATUS_PENDING.") ".
+                    "AND (s.status_code_id=".Specimen::$STATUS_NOT_COLLECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = ''";
-    }
-    elseif($attrib_type == 11)
-    {
-		    # Get all specimens that have been started with pending results
-		    	$query_string =
-		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
-		        "WHERE p.patient_id=s.patient_id ".
-		        "AND (s.status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
-		        "AND s.specimen_id=t.specimen_id ".
-		        "AND t.result = ''";
-	}else if($attrib_type == 12)
-	{	
-		# Update speciment to started status code
-			$query_string = "UPDATE specimen SET status_code_id = 7 where specimen_id ='$attrib_value'";
+                    "AND t.result = '' order by s.ts desc limit 200";
 
-	}
-}
 if($attrib_type == 12)
 {
 	$resultset = query_update($query_string);
@@ -291,7 +153,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
+				<td style='width:75px;'><?php echo $patient->getPatientID(); ?></td>
 			<?php
 			}
 			if($_SESSION['dnum'] != 0)
