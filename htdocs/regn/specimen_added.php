@@ -9,6 +9,7 @@ LangUtil::setPageId("specimen_added");
 
 $session_num = $_REQUEST['snum'];
 $script_elems->enableTableSorter();
+$script_elems->enableFaceBox();
 
 //$script_elems->enablePulsate();
 
@@ -44,7 +45,24 @@ $specimen_list = get_specimens_by_session($session_num);
         </div>
         
         <div class="portlet-body form">
-        <p style="text-align: right;"><a rel='facebox' href='#Rejection'>Page Help</a></p>
+        <!--<p style="text-align: right;"><a rel='facebox' href='#SpecimenAdded'>Page Help</a></p>-->
+        <div class="span4" style="position: absolute;top: 180px;right: 30px;">
+						<div class="well text-info">
+						<?php
+							echo "<li>";
+							echo "This page allows us to view a summary of both patient and the specimens we registered.";
+							echo "</li>";
+						
+							echo "<li>"; 
+							echo "Once a specimen has been registered, we can use this page to get the specimen number for labelling of the specimen.";
+							echo "</li>";
+						
+							echo "<li>"; 
+							echo "The specimen number is indicated in in bigger fonts than the other details (e.g. MIC-5210).";
+							echo "</li>";
+							?>
+						</div>				
+					</div>
             <div id='specimen_added_body'> </div>           
             
             Lab_No. <?php echo $session_num; ?>
@@ -116,6 +134,25 @@ $specimen_list = get_specimens_by_session($session_num);
         </div>
     </div>
 </div>
+<div id='SpecimenAdded' class='right_pane' style='display:none;margin-left:10px;'>
+					<ul>
+						<?php
+						
+							echo "<li>";
+							echo "This page allows us to view a summary of both patient and the specimens we registered.";
+							echo "</li>";
+						
+							echo "<li>"; 
+							echo "Once a specimen has been registered, we can use this page to get the specimen number for labelling of the specimen.";
+							echo "</li>";
+						
+							echo "<li>"; 
+							echo "The specimen number is indicated in in bigger fonts than the other details (e.g. MIC-5210).";
+							echo "</li>"; 
+						
+						?>
+					</ul>
+				</div>
 </div>
 
 <?php include("includes/footer.php");

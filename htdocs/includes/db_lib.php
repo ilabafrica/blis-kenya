@@ -1339,6 +1339,21 @@ class TestType
 		
 		return $retVal['name'];
 	}
+
+	public static function getIdByName($name)
+	{
+		$query_string = "SELECT test_type_id as id FROM `test_type` WHERE `name` = '$name'";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_one($query_string);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['id'];
+	}
+
+
 }
 
 class SpecimenType
@@ -2088,6 +2103,7 @@ class Patient
 	$patient->name = $record['full_name'];
 	$patient->dob = $record['dateOfBirth'];
 	$patient->sex = $record['gender'];
+	$patient->clinician = $record['requestingClinician'];
 		
 	if(isset($record['partial_dob']))
 			$patient->partialDob = $record['partial_dob'];
@@ -2397,6 +2413,7 @@ class Patient
 		//Get patient from lsanitas lab request and save to Blis patient table
 		$sanitas_patient = Patient::getLabRequest($record);
 		$dob = $sanitas_patient->dob;
+		$clinician = $sanitas_patient->clinician;
 		if($age == "")
 			$age = 0;
 		$sex = $sanitas_patient->sex;
@@ -2405,6 +2422,7 @@ class Patient
 		$patient->patientId = $patient_id;
 		$patient->addlId = null;
 		$patient->name = $sanitas_patient->name;
+		$patient->clinician = $clinician;
 		$patient->dob = $dob;
 		$patient->age = $age;
 		$patient->sex = $sex;
@@ -2424,6 +2442,19 @@ class Patient
 			return "-";
 		else
 			return $this->surrogateId;
+	}
+
+	public function getBlisTests()
+	{
+		# Get tests from sanitas table and match with blis tests
+		$query_string = "SELECT DISTINCT(name) AS test_name FROM test_type;";
+		$record = query_associative_one($query_string);		
+		$retval = "";
+		if($record == null || trim($record['test_name']) == "")
+			$retval = "-";
+		else
+			$retval = $record['test_name'];
+		return $retval;
 	}
 	
 	public function getDailyNum()

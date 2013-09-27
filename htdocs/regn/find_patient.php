@@ -65,7 +65,7 @@ if(isset($_REQUEST['show_sc']))
 <a href="javascript:;" class="collapse"></a>
 <a href="#portlet-config" data-toggle="modal" class="config"></a>
 <a href="javascript:;" class="reload"></a>
-<a href="javascript:;" class="remove"></a>
+
 </div>
 </div>
 		<div class="portlet-body form">
@@ -85,7 +85,25 @@ if(isset($_REQUEST['show_sc']))
 				<span id='psearch_progress_spinner'>
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 				</span>
-				</form>
+				</form><div class="span4" style="position: absolute;top: 0px;right: 0px;">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="">
+											<div class="well text-info">
+											<?php
+											echo "<li>";
+											echo "Search Patients using the Sanitas Number.";
+											echo "</li>";
+										
+											echo "<li>"; 
+											echo "If the patient details are not found, then proceed to register the patient using the <a href='javascript:load_patient_reg();'><abbr title='Add New Patient'>Add New Patient </abbr></a> Link as shown.";
+											echo "</li>";
+										
+											?>
+												
+												
+											</div>
+										</div>
+					</div>
 				<br />
 				<div id='add_anyway_div' >
 					<a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
@@ -153,7 +171,30 @@ if(isset($_REQUEST['show_sc']))
 			</div>
 		</div>
 		<div class="portlet-body form">
-			<div id='patients_registration_body' style='position:relative;left:10px;'> </div>					
+		<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
+		<div class="span4" style="position: absolute;top: 180px;right: 30px;">
+						<!-- BEGIN Portlet PORTLET-->
+						<div class="">
+											<div class="well text-info">
+											<?php
+											echo "<li>";
+											echo "This page allows us to register new patients. Enter the details of the patient carefully and appropriately.";
+											echo "</li>";
+										
+											echo "<li>"; 
+											echo "Remember to select the correct gender and type of patient you are registering.";
+											echo "</li>";
+										
+											echo "<li>"; 
+											echo "Enter the correct date of birth, otherwise, enter the age if the patient does not know the date of birth.";
+											echo "</li>";
+											?>
+												
+											</div>
+										</div>
+					</div>
+			<div id='patients_registration_body' style='position:relative;left:10px; '> </div>
+					
 		</div>
 	</div>
 </div>
@@ -168,7 +209,6 @@ if(isset($_REQUEST['show_sc']))
 			<div class="tools">
 				<a href="javascript:;" class="collapse"></a>
 				<a href="javascript:;" class="reload"></a>
-				<a href="javascript:;" class="remove"></a>
 			</div>
 		</div>
 		<div class="portlet-body form">

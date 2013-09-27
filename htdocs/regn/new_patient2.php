@@ -37,7 +37,7 @@ $script_elems->enableAutocomplete();
 					?>
 				</td>
 				<td>
-					<input type="text" name="pid" id="pid" value="" size="20" class='uniform_width form-control' disabled>
+					<input type="text" name="pid" id="pid" value="" size="20" class='uniform_width form-control' style='background-color:#FFC' disabled>
 				</td>
 			 </div>
 			</tr>
@@ -74,7 +74,7 @@ $script_elems->enableAutocomplete();
 			if($_SESSION['pname'] == 0)
 				echo " style='display:none;' ";
 			?>>	
-				<td><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?> </td>
+				<td><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?><?php $page_elems->getAsterisk(); ?> </td>
 				<td><input type="text" name="name" id="name" value="" size="20" class='uniform_width m-wrap tooltips' data-trigger="hover" data-original-title="Please enter patient's full name." /></td>
 			</tr>
 			

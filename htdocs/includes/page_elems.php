@@ -3942,9 +3942,11 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$ref_out_row_id = 'ref_out_row_'.$form_num;
 		$ref_out_check_id = 'ref_out_'.$form_num;
 		$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
+		$is_sanitas_patient =false
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
+		<?php if($is_sanitas_patient){ echo "Sanitas"; ?>
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
@@ -3963,7 +3965,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
 				<td>
-					<input type="text" name="dnum" id="dnum" value=<?php echo $dnum; ?> size="20" class='uniform_width'> </input>
+					<input type="text" name="dnum" id="dnum" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
 				</td>
 			</tr>
 			<tr >				
@@ -4167,6 +4169,230 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			</tbody>
 			</table>
 		</form>
+		<?php }else{ ?>
+		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
+			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
+			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
+			<table class='regn_form_table'>
+			<tbody>
+
+			<tr valign='top' <?php
+				if(is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0)
+				{
+					# Hide if daily num not in use
+					echo " style='display:none;' ";
+				}
+				?>
+				>
+				<td width="250px" >
+					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
+				</td>
+				<td>
+					<input type="text" name="dnum" id="dnum" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
+				</td>
+			</tr>
+			<tr >				
+				<td>
+					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?><?php $this->getAsterisk(); ?>
+				</td>
+				<td>
+					<select
+						name='stype'
+						id='<?php echo $stype_id; ?>'
+						onchange="javascript:get_testbox('<?php echo $testbox_id; ?>', '<?php echo $stype_id; ?>');"
+						class='uniform_width'
+					>
+						option value="">-<?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>-</option>
+						<?php $this->getSpecimenTypesSelect($_SESSION['lab_config_id']); ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td>
+					<?php echo LangUtil::$generalTerms['TESTS']; ?> <?php $this->getAsterisk(); ?>
+				</td>
+				<td>
+					<span id='<?php echo $testbox_id; ?>' class='uniform_width'>
+						-<?php echo LangUtil::$pageTerms['MSG_SELECT_STYPE']; ?>-
+					</span>
+				</td>
+			</tr>
+			<tr valign='top'<?php
+			//if($_SESSION['sid'] == 0)
+			if(true)
+				echo " style='display:none;' ";
+			?>>
+				<td>
+					<label for='sid'>DB Key
+					<?php if($_SESSION['sid'] == 2) $this->getAsterisk(); ?></label>
+				</td>
+				
+				<td>
+					<!--
+					<input type="text" name="specimen_id" id="<?php echo $specimen_id_div_id; ?>" value="" onblur="javascript:check_specimen_id('<?php echo $specimen_id_div_id; ?>', '<?php echo $specimen_err_div_id; ?>');" size="20" class='uniform_width'>
+					</input>
+					-->
+					<input type='text' name='specimen_id' id='specimen_id' value="<?php echo $form_num; ?>" readonly="readonly" class='uniform_width'>
+					</input>
+					<br><span id='<?php echo $specimen_err_div_id; ?>'></span>
+				</td>
+			</tr>
+			<tr valign='top' <?php
+				if($lab_config->specimenAddl == 0)
+					echo " style='display:none;' ";
+			?>>
+				<td>
+					<?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?><?php if($_SESSION['s_addl'] == 2) $this->getAsterisk(); ?> 
+				</td>
+				
+				<td>
+					<input type="text" name="addl_id" id="addl_id" value="" size="20" class='uniform_width'> </input>
+				</td>
+			</tr>
+			<tr valign='top' <?php
+			if($_SESSION['rdate'] == 0)
+				echo " style='display:none;' ";
+			?>>
+				<td>
+
+					<br />
+					<?php echo LangUtil::$generalTerms['R_DATE']; ?> <?php if($_SESSION['rdate'] == 2) $this->getAsterisk(); ?>
+				</td>
+				
+				<td>
+					<div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
+					<input class="m-wrap m-ctrl-medium" size="16" name="spec_date" type="text" value="<?php echo date("Y-m-d"); ?>">
+					<span class="add-on"><i class="icon-calendar"></i></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Lab receipt time <?php $this->getAsterisk(); ?>
+				</td>
+				<td>
+					<div class="input-append bootstrap-timepicker-component">
+                    <input class="m-wrap m-ctrl-small timepicker-24" name="spec_time" type="text" value="<?php echo date("H-i"); ?>" >
+                    <span class="add-on"><i class="icon-time"></i></span>
+                     </div>
+				</td>
+			</tr>
+			<tr valign='top'<?php
+			if($_SESSION['comm'] == 0)
+				echo " style='display:none;' ";
+			?>>
+				<td>
+					<?php echo LangUtil::$generalTerms['COMMENTS']; ?><?php if($_SESSION['comm'] == 2) $this->getAsterisk(); ?>
+				</td>
+				
+				<td>
+					<textarea name="comments" id="comments" class='uniform_width'></textarea>
+				</td>
+			</tr>
+			<tr valign='top' style='display:none' <?php ## Disabled for now ?>>
+				<td>
+					<label for='report_to' valign='top'>Report To</label>
+				</td>
+				<td>
+					<select name='report_to' class='uniform_width'>
+					<?php
+					# Enable the following line if this field is to be used:
+					echo " onchange=\"javascript:checkandtoggle(this, '$doc_row_id');\" ";
+					?>
+						<option value='1'>Patient</option>
+						<option value='2'>Doctor/Hospital</option>
+					</select>
+				</td>
+			</tr>
+			<tr valign='top' id='<?php echo $doc_row_id; ?>' <?php
+			if($_SESSION['doctor'] == 0)
+				echo " style='display:none;' ";
+			?>>
+				<td>
+					<label for='doctor' valign='top'><?php echo LangUtil::$generalTerms['DOCTOR']; ?><?php if($_SESSION['doctor'] == 2) $this->getAsterisk(); ?></label></label>
+				</td>
+				<td>
+					<SELECT name='title' id='<?php echo $doc_row_id; ?>_title'>
+					<?php
+					$labtitlefieldoptions = get_custom_fields_labtitle(1);
+					$lab_titles = explode("/",$labtitlefieldoptions);
+					
+					foreach($lab_titles as $option)
+					{
+						if(trim($option) == "")
+							continue;
+						echo "<option value='$option'";
+						if($option == $field_value)
+						{
+							echo " selected ";
+						}
+						echo " >$option</option>";
+					}
+					?>
+					</SELECT>
+				</td>		
+				
+				<td>
+					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $doc; ?>' ></input>
+				</td>
+			</tr>
+			<?php
+			$custom_field_list = get_custom_fields_specimen();
+			foreach($custom_field_list as $custom_field)
+			{	if(($custom_field->flag)==NULL)
+				{
+				?>
+				<tr valign='top' class="custom">
+					<td><?php echo $custom_field->fieldName; ?></td>
+					
+					<td><?php $this->getCustomFormField($custom_field); ?></td>
+				</tr>
+				<?php
+				}
+			}
+			?>
+			<tr valign='top'<?php
+			if($_SESSION['refout'] == 0)
+				echo " style='display:none;' ";
+			?>>
+				<td>
+					<label for='ref_out' valign='top'><?php echo LangUtil::$generalTerms['REF_OUT']; ?>? <?php if($_SESSION['refout'] == 2) $this->getAsterisk(); ?></label>
+				</td>
+				
+				<td>
+					<INPUT TYPE=RADIO NAME="ref_out" id='<?php echo $ref_out_check_id; ?>' VALUE="Y" onchange="javascript:checkandtoggle_ref('<?php echo $ref_out_check_id; ?>', '<?php echo $ref_out_row_id; ?>');"><?php echo LangUtil::$generalTerms['YES']; ?>
+					<INPUT TYPE=RADIO NAME="ref_out" onchange="javascript:checkandtoggle_ref('<?php echo $ref_out_check_id; ?>', '<?php echo $ref_out_row_id; ?>');" VALUE="N" checked><?php echo LangUtil::$generalTerms['NO']; ?>
+				</td>
+			</tr>
+			<tr valign='top' id='<?php echo $ref_out_row_id; ?>' style='display:none'>
+				<td><?php echo LangUtil::$generalTerms['REF_TO']; ?></td>
+				<td>
+					<input name='ref_out_name' class='uniform_width'></input>
+				</td>
+			</tr>
+			<?php
+			if($form_num != 1)
+			{
+				?>
+				<tr valign='top'>
+					<td>
+						<a href="javascript:show_dialog_box('<?php echo $div_id; ?>');"><?php echo LangUtil::$generalTerms['CMD_REMOVE']; ?></a>
+					</td>
+					<td>
+					<?php
+					$message = LangUtil::$pageTerms['MSG_SURETO_REMOVE'];
+					$ok_function = "remove_specimenbox('$div_id')";
+					$cancel_function = "hide_dialog_box('$div_id')";
+					$this->getConfirmDialog($dialog_id, $message, $ok_function, $cancel_function, $width=200);
+					?>
+					</td>
+				</tr>
+				<?php
+			}
+			?>
+			</tbody>
+			</table>
+		</form>
+		<?php } ?>
 		</div>
 		<small>
 		<span style='float:right'>
