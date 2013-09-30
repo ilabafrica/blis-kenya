@@ -2408,40 +2408,40 @@ class Patient
 		return Patient::getObject($record);
 	}
 	
-	public static function getBySanitasId($patient_id)
+	public static function getByExternalId($patient_id)
 	{
 		# Get Patient from Lab request table, save patient record and return patient record
 		global $con;
 		$patient_id = mysql_real_escape_string($patient_id, $con);
-		$query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id AND test_completed=0";
+		$query_string = "SELECT * FROM external_lab_request WHERE patient_id=$patient_id AND test_completed=0";
 		$saved_db = DbUtil::switchToGlobal();
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
 		
-		//Get patient from lsanitas lab request and save to Blis patient table
-		$sanitas_patient = Patient::getLabRequest($record);
-		$dob = $sanitas_patient->dob;
-		$clinician = $sanitas_patient->clinician;
+		//Get patient from external lab request and save to BLIS patient table
+		$external_patient = Patient::getLabRequest($record);
+		$dob = $external_patient->dob;
+		$clinician = $external_patient->clinician;
 		if($age == "")
 			$age = 0;
-		$sex = $sanitas_patient->sex;
+		$sex = $external_patient->sex;
 		$date_receipt = date("Y-m-d H:i:s");
 		$patient = new Patient();
 		$patient->patientId = $patient_id;
 		$patient->addlId = null;
-		$patient->name = $sanitas_patient->name;
+		$patient->name = $external_patient->name;
 		$patient->clinician = $clinician;
 		$patient->dob = $dob;
 		$patient->age = $age;
 		$patient->sex = $sex;
 		$patient->regDate=$date_receipt;
-		$patient->surrogateId = $sanitas_patient->patientId;
+		$patient->surrogateId = $external_patient->patientId;
 		$patient->createdBy = $_SESSION['user_id'];
 		$patient->from_external_system = true;
 		$patient_added = add_patient($patient);
 		//return 1;
 		
-		return Patient::getBySurrId($sanitas_patient->patientId);
+		return Patient::getBySurrId($external_patient->patientId);
 	}
 	
 	public function getSurrogateId()
@@ -6231,12 +6231,12 @@ function get_patient_by_id($pid)
 	return Patient::getById($pid);
 }
 
-function get_patient_by_sanitas_id($pid)
+function get_patient_by_external_id($pid)
 {
 	global $con;
 	$pid = mysql_real_escape_string($pid, $con);
 	# Fetches a patient record from sanits_lab_request_table by patient_id
-	return Patient::getBySanitasId($pid);
+	return Patient::getByExternalId($pid);
 }
 
 function search_patients_by_id($q)
@@ -6257,7 +6257,7 @@ function search_patients_by_id($q)
 			$patient_list[] = Patient::getObject($record);
 		}
 	}else{
-		$query_string = "SELECT * FROM sanitas_lab_request ".
+		$query_string = "SELECT * FROM external_lab_request ".
 		"WHERE patient_id='$q'".
 		"ORDER BY requestDate DESC";
 		
@@ -14950,23 +14950,23 @@ class API
         return $ret;
     }
     
-    public static function save_sanitas_lab_request($LabRequest)
+    public static function save_external_lab_request($LabRequest)
     {
     	# Adds a new user account
     	$saved_db = DbUtil::switchToGlobal();
-    	$query_string="INSERT INTO `sanitas_lab_request`
+    	$query_string="INSERT INTO `external_lab_request`
 	(`labNo`, `parentLabNo`, `requestingClinician`, `investigation`, `requestDate`, `patient_id`, `full_name`, `dateOfBirth`, `gender`, `address`, `postalCode`, `phoneNumber`, `city`)
 	"."VALUES ".$LabRequest;
     	query_insert_one($query_string);
     	DbUtil::switchRestore($saved_db);
     }
     
-    public static function getSanitasRequest($patient_id)
+    public static function getExternalLabRequest($patient_id)
     {
 	    # Returns patient record by ID
 	    global $con;
 	    $patient_id = mysql_real_escape_string($patient_id, $con);
-	    $query_string = "SELECT * FROM sanitas_lab_request WHERE patient_id=$patient_id AND test_completed = 0 AND parentLabNo=0;";
+	    $query_string = "SELECT * FROM external_lab_request WHERE patient_id=$patient_id AND test_completed = 0 AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
 	    $tests_ordered = query_associative_all($query_string, $row_count);
 	    DbUtil::switchRestore($saved_db);
