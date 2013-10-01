@@ -41,13 +41,21 @@ db_get_current();
         </div>
     <div class="portlet-body" >
                     <div id='user_stats'>
-                        <div class='reports_subdiv_help' id='user_stats_div_help' style='display:none'>
-                            <?php
-                                //Turnaround time
-                                $tips_string = "Display user specific statistics and user activity logs.";
-                                $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-                            ?>
-                        </div>
+
+                    <div class="span3" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            //User Statistics
+                                            $tips_string = "Display user specific statistics and user activity logs.";
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
+                    </div>
                         <?php $userStats = new UserStats(); ?>
                         <form name="user_stats_form" id="user_stats_form" action="reports_user_stats_all.php" method='post' target='_blank'>
                                     <table cellpadding="4px">
@@ -123,9 +131,10 @@ db_get_current();
                                     <td></td>
                                     <td>
                                         <br>
-                                        <input type='submit' id='user_stats_all_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
+                                        <!--<div class="form-actions">-->
+                                        <input type='submit' id='user_stats_all_submit_button' class='btn red-stripe' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
                                         </input>
-                                       
+                                        <!--</div>-->
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         <span id='specimen_count_progress_spinner' style='display:none'>
                                             <?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -250,14 +259,21 @@ db_get_current();
         </div>
     <div class="portlet-body" >
             <div id='disease_report'>
-                <div class='reports_subdiv_help' id='disease_report_div_help' style='display:none'>
-                <?php
-                    //Infection report
-                    $tips_string = "Select Date range and lab section to view the Infection report";
-                    $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-                ?>
-            </div>
-            <br><br>
+            <div class="span4" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            //Infection report
+                                            $tips_string = "Select Date range and lab section to view the Infection report";
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
+                    </div>
+                <br><br>
             <form id='disease_report_form' action='report_disease.php' method='post' target='_blank'>
             <table>
                 <tbody>
@@ -364,15 +380,24 @@ db_get_current();
                                 </div>
         </div>
     <div class="portlet-body" >
-            <div id='tat'  >        
-                <div class='reports_subdiv_help' id='tat_div_help' style='display:none'>
-                    <?php
-                        //Turnaround time
-                        $tips_string = "Select the date interval to view the average test-wise turn-around times for the lab test reports.";
-                        $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-                    ?>
-                </div>
-            <br>
+            <div id='tat'  >  
+
+                <div class="span5" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            //Turnaround time
+                                            $tips_string = "Select the date interval to view the average test-wise turn-around times for the lab test reports.";
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
+                    </div>
+
+                <br>
             <form name="tat_form" id="tat_form" action="reports_tat.php" method='post'>
                 <table cellpadding="4px">
                 <?php
@@ -464,14 +489,20 @@ db_get_current();
         </div>
     <div class="portlet-body" >
                 <div id='specimen_count'>
-                    <div class='reports_subdiv_help' id='specimen_count_div_help' style='display:none'>
-                        <?php
-                            //Counts
-                            $tips_string = "Select date range and type of count required";
-                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-                        ?>
+                <div class="span3" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            $tips_string = "Select date range and type of count required";
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
                     </div>
-        
+                    
         <br>
         <form name="specimen_count_form" id="specimen_count_form" action="reports_specimencount.php" method='post'>
             <table cellpadding="4px">
@@ -591,11 +622,22 @@ db_get_current();
     <div class="portlet-body" >           
         <div id='test_history'>
             <div class='reports_subdiv_help' id='test_history_div_help' style='display:none'>
-                <?php
-                    //Patient Report
-                    $tips_string = "Select Patient Name, Number or ID to retrieve patient's lab reports";
-                    $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-                ?>
+                
+                <div class="span4" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            $tips_string = "Select Patient Name, Number or ID to retrieve patient's lab reports";
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
+                    </div>
+                    
+                    
             </div>
             <form name='test_history_form' id='test_history_form'>
                 <table cellpadding='4px'>
@@ -662,13 +704,20 @@ db_get_current();
         </div>
     <div class="portlet-body" >   
     <div id='daily_report'>
-        <div class='reports_subdiv_help' id='daily_report_div_help' style='display:none'>
-        <?php
-            //Daily Log
-            $tips_string = LangUtil::$pageTerms['TIPS_DAILYLOGS'];
-            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-        ?>
-        </div>
+    <div class="span3" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            //Daily Log
+                                            $tips_string = LangUtil::$pageTerms['TIPS_DAILYLOGS'];
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
+                    </div>
         <table cellpadding='4px'>
             <tbody>
             <?php
@@ -777,14 +826,23 @@ db_get_current();
         <div class="portlet-body" > 
         <div id='prevalence_rate' >
             <?php echo getStartDate();?>
-            <div class='reports_subdiv_help' id='summary_div_help' style='display:none'>
-                <?php
-                    //Prevelance Rate
-                    $tips_string = "Select the date range to view the infection graph and prevalence rates.";
-                    $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
-                ?>
-            </div>
-        <form name="get_summary" id="get_summary" action="reports_infection.php" method='post'>
+
+            <div class="span4" style="position: absolute;top: 150px;right: 30px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-success">
+                                            <?php
+                                            //Prevelance Rate
+                                            $tips_string = "Select the date range to view the infection graph and prevalence rates.";
+                                            $page_elems->getSideTip(LangUtil::$generalTerms['TIPS'], $tips_string);
+                                            echo "<br><br><br>";
+                                            ?>
+                                                
+                                            </div>
+                                        </div>
+                    </div>
+
+            <form name="get_summary" id="get_summary" action="reports_infection.php" method='post'>
             <table cellpadding="4px">
             <?php
             $site_list = get_site_list($_SESSION['user_id']);

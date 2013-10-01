@@ -122,7 +122,7 @@ if ($tests_requested!=null){
 		<tr valign='top'>
 			<td>
 				<span id='specimenboxes'>
-				<?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num); ?>
+				<?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num, $tests_requested); ?>
 				</span>
 				<br>
 				<a href='javascript:add_specimenbox();'><?php echo LangUtil::$pageTerms['ADD_ANOTHER_SPECIMEN']; ?> &raquo;</a>

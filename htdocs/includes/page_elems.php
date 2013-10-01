@@ -3924,7 +3924,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	
 	}
 	
-	function getNewSpecimenForm($form_num, $pid, $dnum, $session_num, $doc="" ,$title ="Dr.")
+	function getNewSpecimenForm($form_num, $pid, $dnum, $session_num, $sanitas_requests)
 	{
 		# Returns HTML for new specimen form
 		LangUtil::setPageId("new_specimen");
@@ -3943,11 +3943,19 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$ref_out_row_id = 'ref_out_row_'.$form_num;
 		$ref_out_check_id = 'ref_out_'.$form_num;
 		$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
-		$is_sanitas_patient =false
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
-		<?php if($is_sanitas_patient){ echo "Sanitas"; ?>
+		<?php if($sanitas_requests!=null)
+		{
+			foreach ($sanitas_requests as $investigations) {
+				$clinician = $investigations['requestingClinician'];
+				$test = $investigations['investigation'];
+				$test_id=getIdByName($test);
+				
+				# code...
+			?>
+
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
@@ -4110,7 +4118,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				</td>		
 				
 				<td>
-					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $doc; ?>' ></input>
+					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $clinician; ?>' ></input>
 				</td>
 			</tr>
 			<?php
@@ -4170,7 +4178,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			</tbody>
 			</table>
 		</form>
-		<?php }else{ ?>
+		<?php }
+		}	else{ echo "Not From Sanitas";?>
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>

@@ -236,14 +236,14 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 										<i class='icon-tasks'></i>&nbsp;&nbsp;
 										Test Queue
 										</a>
-									</li>
-									<li>
+									</li>".
+									/*"<li>
 										<a href=''  title='Quality Controls'
 										class='' id='new_patient_menu'>
 										<i class='icon-ok-sign'></i>&nbsp;&nbsp;"
 										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
 										"</a>
-									</li>".
+									</li>".*/
 								"</ul>";
 					break;
 					case "catalog":
