@@ -68,11 +68,11 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 			<div class="scroller" data-height="400px" data-always-visible="1">
 				<p>Search existing patients</p>
 				<form>
-				<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
+				<select name='p_attrib' id='p_attrib' style='font-family:Tahoma;' class='uniform_width m-wrap tooltips'>
 				<?php $page_elems->getPatientSearchAttribSelect(); ?>
 				</select>
 				&nbsp;&nbsp;
-				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)"  />
+				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" class='uniform_width m-wrap tooltips' />
 				&nbsp;&nbsp;
 				<button id='psearch_button' class="btn green button-submit" type="button" onclick="javascript:fetch_patients();">
 				<i class='icon-search'></i> <?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?></button>

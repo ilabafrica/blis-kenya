@@ -1353,6 +1353,21 @@ class TestType
 		return $retVal['id'];
 	}
 
+	public static function getSpecimenIdByTestName($name)
+	{
+		$test_id = getIdByName($name);
+
+		$query_string = "SELECT specimen_type_id as id FROM `specimen_test` WHERE `test_type_id`=$test_id";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_one($query_string);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['id'];
+	}
+
 
 }
 
@@ -1473,6 +1488,19 @@ class SpecimenType
 			"UPDATE specimen_type SET disabled=1 WHERE specimen_type_id=$specimen_type_id";
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
+	}
+
+	public static function getNameById($id)
+	{
+		$query_string = "SELECT name FROM `specimen_type` WHERE `specimen_type_id` = $id";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_one($query_string);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['name'];
 	}
 }
 
@@ -15024,7 +15052,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->ADD, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->ADD_PATIENT ) ";
 		
-		error_log("REGISTER PATIENT : ".$query_string."\n", 3, "../../local/logs/log" );
+		
 		query_insert_one($query_string);
 		
 			
@@ -15038,7 +15066,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->ADD, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->ADD_SPECIMEN ) ";
 		
-		error_log("ADD SPECIMEN : ".$query_string."\n", 3, "../../local/logs/log" );
+		
 		query_insert_one($query_string);
 		
 		DbUtil::switchRestore($saved_db);	
@@ -15052,7 +15080,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->ADD, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->ADD_TEST_RESULT ) ";
 		
-		error_log("ADD TEST RESULT : ".$query_string."\n", 3, "../../local/logs/log" );
+		
 		query_insert_one($query_string);
 		
 		DbUtil::switchRestore($saved_db);	
@@ -15066,7 +15094,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->ADD, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->ADD_TEST ) ";
 		
-		error_log("ADD TEST : ".$query_string."\n", 3, "../../local/logs/log" );
+		
 		query_insert_one($query_string);
 		
 		DbUtil::switchRestore($saved_db);	
@@ -15079,7 +15107,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->UPDATE, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->VERIFY_TEST_RESULT ) ";
 		
-		error_log("VERIFY RESULT : ".$query_string."\n", 3, "../../local/logs/log" );
+		
 		query_insert_one($query_string);
 		
 		DbUtil::switchRestore($saved_db);	

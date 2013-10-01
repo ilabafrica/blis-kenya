@@ -68,7 +68,7 @@ $script_elems->enableAutocomplete();
 						$page_elems->getAsterisk();
 					?>
 				</td>
-				<td><input type="text" name="dnum" id="dnum" value="<?php echo $daily_num; ?>" size="20" class='uniform_width' /></td>
+				<td><input type="text" name="dnum" id="dnum" value="<?php echo $daily_num; ?>" size="20" class='uniform_width m-wrap tooltips' /></td>
 			</tr>
 			<tr<?php
 			if($_SESSION['pname'] == 0)
@@ -100,30 +100,7 @@ $script_elems->enableAutocomplete();
 					
 				</td>
 			</tr>
-			
-			<tr><?php
-			if($_SESSION['age'] == 0)
-				echo " style='display:none;' ";
-			?>
-				<td><?php echo LangUtil::$generalTerms['AGE']; ?> <?php
-					if($_SESSION['age'] == 2)
-						$page_elems->getAsterisk();
-					?>
-					<!-- <font style='color:red'><?php echo LangUtil::$pageTerms['TIPS_DOB_AGE'];?></font> -->
-				</td>
-				<td>
-					<input type="text" name="age" id="age" value="" size="4" maxlength="10" class='uniform_width' />
-					
-					<select name='age_param' id='age_param'>
-						<option value='1'><?php echo LangUtil::$generalTerms['YEARS']; ?></option>
-						<option value='2'><?php echo LangUtil::$generalTerms['MONTHS']; ?></option>
-						<option value='3'><?php echo LangUtil::$generalTerms['DAYS']; ?></option>
-						<option value='4'>Weeks</option>
-						<option value='5'>Range(Years)</option>
-					</select>
-					
-				</td>
-			</tr>
+
 			<tr valign='top'<?php
 			if($_SESSION['dob'] == 0)
 				echo " style='display:none;' ";
@@ -140,6 +117,30 @@ $script_elems->enableAutocomplete();
 					<input class="m-wrap m-ctrl-medium" size="16" name="patient_birth_date" id="patient_b_day" type="text" value=""><span class="add-on"><i class="icon-calendar"></i></span>
 					</div>
                 </td>
+			</tr>
+			
+			<tr><?php
+			if($_SESSION['age'] == 0)
+				echo " style='display:none;' ";
+			?>
+				<td><?php echo LangUtil::$generalTerms['AGE']; ?> <?php
+					if($_SESSION['age'] == 2)
+						$page_elems->getAsterisk();
+					?>
+					<!-- <font style='color:red'><?php echo LangUtil::$pageTerms['TIPS_DOB_AGE'];?></font> -->
+				</td>
+				<td>
+					<input type="text" name="age" id="age" value="" size="4" maxlength="10" class='uniform_width m-wrap tooltips' />
+					
+					<select name='age_param' id='age_param' class='uniform_width m-wrap tooltips'>
+						<option value='1'><?php echo LangUtil::$generalTerms['YEARS']; ?></option>
+						<option value='2'><?php echo LangUtil::$generalTerms['MONTHS']; ?></option>
+						<option value='3'><?php echo LangUtil::$generalTerms['DAYS']; ?></option>
+						<option value='4'>Weeks</option>
+						<option value='5'>Range(Years)</option>
+					</select>
+					
+				</td>
 			</tr>
 				
 		</form>
