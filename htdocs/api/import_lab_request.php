@@ -1,9 +1,15 @@
 <?php
 /**
- * Handles JSON POST data from sanitas labrequest Outbound URL 
- * and passes it to the API method save_sanitas_lab_request to save it to database
- * table (sanitas_lab_request)
- * (Sanitas->Administration-> Integration->BLISS)
+ * Handles External Lab Requests from External Systems i.e. HMIS/EMR systems
+ * 
+ * Perfoms the following imports:
+ * 	1. 	Handles JSON POST data from sanitas labrequest Outbound URL and passes 
+ * 		it to the API method save_external_lab_request and INSERTS it to the database
+ * 		table => external_lab_request
+ * 		(Sanitas->Administration-> Integration->BLISS)
+ * 
+ * 	2. 	Queries the view LabRequestQueryForBliss from Microsoft SQL Server and INSERTS it to the database
+ * 		table => external_lab_request
  */
 include("../includes/db_lib.php");
 
@@ -34,7 +40,7 @@ if (!$length >1 || !$_POST==null){
 		 	$value_string.= ')';
 		 	$LabRequest = $value_string;
 		 	
-		 	API::save_sanitas_lab_request($LabRequest);
+		 	API::save_external_lab_request($LabRequest);
 		 } 
 		}
 }

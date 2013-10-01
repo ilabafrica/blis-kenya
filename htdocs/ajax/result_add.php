@@ -121,8 +121,13 @@ update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
 # Show confirmation with details.
 ?>
+<div class="modal-header">
+	<a href="javascript:remove('<?php echo $test_id; ?>');" class="close"></a>
+	<h4><i class="icon-pencil"></i> <?php echo LangUtil::$pageTerms['MSG_RESULTSUBMITTED']; ?></h4>
+</div>
+<div class="modal-body">
 <div class='sidetip_nopos' style='width:400px;'>
-<?php echo LangUtil::$pageTerms['MSG_RESULTSUBMITTED']; ?>. <br><br>
+. <br><br>
 <?php
 if($_SESSION['sid'] != 0)
 {
@@ -182,6 +187,13 @@ else
 	}
 	if($all_done)
 	{
+		?>
+		<div class="portlet box grey">
+		<div class="portlet-title">
+		<h4>Results</h4>
+		</div>
+		<div class="portlet-body">
+		<?php
 		echo "<br><br>";
 		echo LangUtil::$pageTerms['MSG_RESULTSUBMITTEDALL'];
 		echo "<br>";
@@ -190,14 +202,22 @@ else
 		$today_parts = explode("-", $today);
 		$url_string = "reports_testhistory.php?patient_id=".$patient->patientId."&location=".$_SESSION['lab_config_id']."&yf=".$today_parts[0]."&mf=".$today_parts[1]."&df=".$today_parts[2]."&yt=".$today_parts[0]."&mt=".$today_parts[1]."&dt=".$today_parts[2]."&ip=0";
 		?>
+		</div>
+		</div>
 		<a href='<?php echo $url_string; ?>' target='_blank'><?php echo $LANG_ARRAY['reports']['MENU_PATIENT']; ?> &raquo;</a>
 		<?php
 	}
 	echo "<br><br>";
 	?>
+	<!--  
 	<a href='javascript:hide_result_confirmation(<?php echo $specimen_id; ?>);'><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>	
+	-->
 	<?php
 }
 ?>
 </div>
-<hr>
+</div
+<div class="modal-footer">
+<a href='javascript:hide_test_result_form(<?php echo $test_id ?>);' class='btn danger'>Edit</a>
+<a href='' class='btn success'>Ok</a>
+</div>

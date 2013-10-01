@@ -777,10 +777,6 @@ function toggle_form(form_id, checkbox_obj)
 
 function submit_forms(test_id)
 {
-
-	//alert(test_id+":"+$("#tester").val());
-
-	
 	var form_id_csv = $('#form_id_list').val();
 	var form_id_list = form_id_csv.split(",");
 	$('.result_cancel_link').hide();
@@ -806,17 +802,15 @@ function submit_forms(test_id)
 				$("tr#"+test_id).remove();
 
 				//push results to sanitas
-				var results ='{"labNo": 318750,"requestingClinician": 23,"result": "positive"}';
-		            
-				$.ajax({
-					type:"POST",
-					url:'ajax/push_results.php',
-					dataType: 'json',
-					data: results,
-					success: function (data) {
-			               //alert("sent results to sanitas successfully");
-			         }
-			     });
+				var results ='{"labNo": 318752,"requestingClinician": 37,"result": "positive"}';
+				var pushURL ='ajax/push_results.php';
+				$.post(
+					pushURL,
+					{labRequest: results},  
+			        function(responseText){
+						//alert("sent results to sanitas successfully"); 
+			        }
+				);
 			}
 		});
 	}

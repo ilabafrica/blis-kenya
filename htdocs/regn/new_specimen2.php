@@ -43,20 +43,20 @@ $uiinfo = "pid=".$_REQUEST['pid']."&dnum=".$_REQUEST['dnum'];
 <?php
 # Check if Patient ID is valid
 $patient = get_patient_by_id($pid);
-//search from sanitas lab reqeust table
+//search from external lab reqeust table
 $tests_requested = null;
 if($patient==null){
 	$patient = Patient::getBySurrId($pid);
 }
 
 if ($patient!=null){
-	$tests_requested = API::getSanitasRequest($patient->surrogateId);
+	$tests_requested = API::getExternalLabRequest($patient->surrogateId);
 } else 
-	$tests_requested = API::getSanitasRequest($pid);
+	$tests_requested = API::getExternalLabRequest($pid);
 
 if ($patient==null && $tests_requested!=null){	
-	$patient = get_patient_by_sanitas_id($pid);
-	$is_sanitas_patient=true;
+	$patient = get_patient_by_external_id($pid);
+	$is_external_patient=true;
 	$pid = $patient->surrogateId;
 }
 
@@ -119,7 +119,7 @@ foreach ($tests_requested as $test)
 			<td>
 				<div>
 					<u><b>Patient details</b></u>
-					<?php echo $page_elems->getPatientInfo($pid, 400, $is_sanitas_patient); ?>
+					<?php echo $page_elems->getPatientInfo($pid, 400, $is_external_patient); ?>
 				</div>
 			</td>
 		</tr>

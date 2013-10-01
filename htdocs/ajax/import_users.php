@@ -21,9 +21,6 @@ if(isset($_REQUEST['users_data'])){
  		if (!($i==$length-1)) $values.=',';
  	}
 	import_users($values);
- 	//echo $values;
-	
-	
 }
 ?>
 
