@@ -70,7 +70,7 @@ header('Content-Type: text/html; charset=UTF-8');
    <h3> Bungoma District Hospital Laboratory </h3>
    </center>
     <!-- BEGIN LOGIN FORM -->
-    <form class="form-vertical login-form" action="validate.php" />
+    <form class="form-vertical login-form" method="POST" action="validate.php" />
       <h3 class="form-title">Login</h3>
       <?php
 					
