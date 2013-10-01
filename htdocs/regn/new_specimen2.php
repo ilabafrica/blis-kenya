@@ -12,6 +12,7 @@ $script_elems = new ScriptElems();
 
 LangUtil::setPageId("new_specimen");
 $pid = $_REQUEST['pid'];
+$ex = $_REQUEST['ex'];
 
 if(isset($_REQUEST['dnum']))
 	$dnum = (string)$_REQUEST['dnum'];
@@ -41,14 +42,19 @@ $uiinfo = "pid=".$_REQUEST['pid']."&dnum=".$_REQUEST['dnum'];
 <br>
 <br>
 <?php
+$patient==null;
+$tests_requested = null;
 # Check if Patient ID is valid
 $patient = get_patient_by_id($pid);
+#nullify patient if same id is founf in internal system
+if ($ex=="true")$patient=null;
 //search from external lab reqeust table
-$tests_requested = null;
+
+
 if($patient==null){
 	$patient = Patient::getBySurrId($pid);
 }
-
+//echo "pid second =>".$patient->surrogateId;
 if ($patient!=null){
 	$tests_requested = API::getExternalLabRequest($patient->surrogateId);
 } else 
@@ -74,37 +80,43 @@ if($patient == null)
 	return;
 }
 ?>
-
+<div class="row-fluid">
+<div class="span6">
 <?php 
 if ($tests_requested!=null){
 ?>
-<table class ="table table-striped table-bordered table-advance" style="width:400px">
-<thead>
-<th>
-Tests Requested
-</th>
-<th>
-Requesting Clinician
-</th>
-</thead>
-<tbody>
-<?php
-
-$clinician = array();
-$clinician['clinician']=$tests_requested['requestingClinician'];
-foreach ($tests_requested as $test)
-{
-?>
-<tr>
-	<td><?php echo $test['investigation'];?></td>
-	<td><?php echo $test['requestingClinician'] ;?></td>
-<tr>
-<?php }?>
-</tbody>
-</table>
+	<table class ="table table-striped table-bordered table-advance" style="width:400px">
+		<thead>
+			<th>
+			Tests Requested
+			</th>
+			<th>
+			Requesting Clinician
+			</th>
+		</thead>
+		<tbody>
+			<?php
+			
+			$clinician = array();
+			$clinician['clinician']=$tests_requested['requestingClinician'];
+			foreach ($tests_requested as $test)
+			{
+			?>
+			<tr>
+				<td><?php echo $test['investigation'];?></td>
+				<td><?php echo $test['requestingClinician'] ;?></td>
+			<tr>
+			<?php }?>
+		</tbody>
+	</table>
 <?php 
 }
 ?>
+</div>
+<div class="span4">
+<u><b>Patient details</b></u>
+<?php echo $page_elems->getPatientInfo($pid, 400, $is_external_patient); ?>
+</div>
 <table cellpadding='5px'>
 	<tbody>
 		<tr valign='top'>
@@ -119,12 +131,6 @@ foreach ($tests_requested as $test)
 					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
 				</span>
 			</td>
-			<td>
-				<div>
-					<u><b>Patient details</b></u>
-					<?php echo $page_elems->getPatientInfo($pid, 400, $is_external_patient); ?>
-				</div>
-			</td>
 		</tr>
 	</tbody>
 </table>
@@ -134,6 +140,8 @@ foreach ($tests_requested as $test)
 &nbsp;&nbsp;&nbsp;&nbsp;
 <small><a href='javascript:askandback();' class="btn red icn-only"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 <hr />
+</div>
+
 <u><b><?php echo LangUtil::$generalTerms['CMD_THISTORY']; ?></b></u>
 <?php $page_elems->getPatientHistory($pid); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;

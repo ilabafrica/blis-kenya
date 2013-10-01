@@ -192,7 +192,7 @@ $LANG_ARRAY = array (
 	) , 
 	"footer" => array ( 
 		"TITLE" => "", 
-		"FOOTER_MSG" => "A joint initiative of C4G @ Georgia Tech, the CDC and participating countries", 
+		"FOOTER_MSG" => "A joint initiative of C4G @ Georgia Tech, the CDC, @iLabAfrica, APHL and participating countries", 
 		"SWITCHLANG" => "Commutez au Francais"
 	) , 
 	"login" => array ( 

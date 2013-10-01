@@ -2189,7 +2189,7 @@ class PageElems
 		if($is_external_patient){
 			$patient=Patient::getBySurrId($pid);
 		}else
-		$patient = $is_external_patient($pid);
+		$patient = get_patient_by_id($pid);
 		
 		if($patient == null)
 		{

@@ -2053,7 +2053,7 @@ class Patient
 	public $hashValue; # hash value for this patient (based on name, dob, sex)
 	public $regDate;
 	public $patient_name;
-	public $from_external_system = false;
+	public $from_external_system = "false";
 	public static function getObject($record)
 	{
 		# Converts a patient record in DB into a Patient object
@@ -2103,6 +2103,7 @@ class Patient
 	$patient->name = $record['full_name'];
 	$patient->dob = $record['dateOfBirth'];
 	$patient->sex = $record['gender'];
+	$patient->from_external_system = "true";
 	$patient->clinician = $record['requestingClinician'];
 		
 	if(isset($record['partial_dob']))
@@ -2413,7 +2414,7 @@ class Patient
 		# Get Patient from Lab request table, save patient record and return patient record
 		global $con;
 		$patient_id = mysql_real_escape_string($patient_id, $con);
-		$query_string = "SELECT * FROM external_lab_request WHERE patient_id=$patient_id AND test_completed=0";
+		$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_completed=0";
 		$saved_db = DbUtil::switchToGlobal();
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
@@ -6257,6 +6258,9 @@ function search_patients_by_id($q)
 			$patient_list[] = Patient::getObject($record);
 		}
 	}else{
+		/*
+		 * Search from external_lab_request table if patient is not found
+		 */
 		$query_string = "SELECT * FROM external_lab_request ".
 		"WHERE patient_id='$q'".
 		"ORDER BY requestDate DESC";
@@ -6271,6 +6275,76 @@ function search_patients_by_id($q)
 			{
 				$patient_list[] = Patient::getLabRequest($record);
 			}
+		}else{
+			/*
+			 * Search from view and import to local table => external_lab_request
+			 */
+			$external_lab_reqeusts = API::getLabRequestFromView($q);
+			
+			if($external_lab_reqeusts!=null){
+				foreach ($external_lab_reqeusts as $request_data){
+					$value_string="";
+					$value_string.= '(';
+					$value_string.=
+					#labNo
+					'"'.$request_data['RequestID'].'",'.
+					#parentLabNo
+					'"'."0".'",'.
+					#requestingClinician
+					'"'.$request_data['DoctorRequesting'].'",'.
+					#investigation
+					'"'.$request_data['Name'].'",'.
+					#requestDate
+					#TODO convert date to mysql format
+					'"'./*$request_data['DateOfRequest']*/"NULL".'",'.
+					#patient_id
+					'"'.$request_data['PatientNumber'].'",'.
+					#full_name
+					'"'.$request_data['FullNames'].'",'.
+					#dateOfBirth
+					'"'."NULL".'",'.
+					#age
+					'"'.$request_data['Age'].'",'.
+					#gender
+					'"'.$request_data['Sex'].'",'.
+ 					#address
+ 					'"'.$request_data['PoBox'].'",'.
+					#postalCode
+ 					'"'."NULL".'",'.
+					#phoneNumber
+ 					'"'.$request_data['Telephone'].'",'.
+					#city
+					'"'."NULL".'",'.
+					#revisitNumber
+					'"'.$request_data['RevisitNumber'].'",'.
+					#cost
+					'"'.$request_data['Cost'].'",'.
+					#patientContact
+					'"'.$request_data['PatientsContact'].'",'.
+					#receiptNumber
+					'"'.$request_data['ReceiptNumber'].'",'.
+					#waiverNo
+					'"'.$request_data['WaiverNo'].'",'.
+					#comments
+					'"'.$request_data['Comments'].'",'.
+					#provisionalDiagnosis
+					'"'.$request_data['ProvisionalDiagnosis'].'",'.
+					#system_id
+					'"'."medboss".'"';
+					$value_string.= ')';
+					
+					$LabRequest = $value_string;
+					
+					API::save_external_lab_request($LabRequest);
+					$saved_lab_requests = API::getExternalLabRequest($q);
+					
+ 					foreach($saved_lab_requests as $record)
+ 					{
+						$patient_list[0] = Patient::getLabRequest($record);
+ 					}
+						
+				}	
+			}else return null;
 		}
 	}
 	return $patient_list;
@@ -14952,25 +15026,87 @@ class API
     
     public static function save_external_lab_request($LabRequest)
     {
-    	# Adds a new user account
+    	# adds a new lab reqeust from external system
     	$saved_db = DbUtil::switchToGlobal();
-    	$query_string="INSERT INTO `external_lab_request`
-	(`labNo`, `parentLabNo`, `requestingClinician`, `investigation`, `requestDate`, `patient_id`, `full_name`, `dateOfBirth`, `gender`, `address`, `postalCode`, `phoneNumber`, `city`)
-	"."VALUES ".$LabRequest;
+    	$query_string=
+    	"INSERT INTO `external_lab_request` (
+			`labNo`,
+			`parentLabNo`,
+			`requestingClinician`,
+			`investigation`,
+			`requestDate`,
+			`patient_id`,
+			`full_name`,
+			`dateOfBirth`,
+			`age`,
+			`gender`,
+			`address`,
+			`postalCode`,
+			`phoneNumber`,
+			`city`,
+			`revisitNumber`,
+			`cost`,
+			`patientContact`,
+			`receiptNumber`,
+			`waiverNo`,
+			`comments`,
+			`provisionalDiagnosis`,
+			`system_id`)
+    	VALUES $LabRequest";
+    	#insert_external_lab_request
     	query_insert_one($query_string);
+  
     	DbUtil::switchRestore($saved_db);
     }
     
     public static function getExternalLabRequest($patient_id)
     {
-	    # Returns patient record by ID
+	    # gets pending lab requests from external_lab_reqeuest_table
 	    global $con;
 	    $patient_id = mysql_real_escape_string($patient_id, $con);
-	    $query_string = "SELECT * FROM external_lab_request WHERE patient_id=$patient_id AND test_completed = 0 AND parentLabNo=0;";
+	    $query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_completed = 0 AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
 	    $tests_ordered = query_associative_all($query_string, $row_count);
 	    DbUtil::switchRestore($saved_db);
 	    return $tests_ordered;
+    }
+    
+    public static function getLabRequestFromView($patient_id){
+    	#gets lab request from external system view/table
+    	$retval = array();
+    	$server = '192.168.6.4:1433';
+    	$dbuser = 'kapsabetadmin';
+    	$dbpass = 'kapsabet';
+    	$database = '[Kapsabet]';
+    	$LabRequestView  = 'LabRequestQueryForBliss';
+    	
+    	
+    	#Connect to MSSQL
+    	$connection = mssql_connect($server,$dbuser,$dbpass);
+    	
+    	#Check connection
+    	if (!$connection)
+    	{
+    		die("\nCould not connect to mssql server: ".mssql_get_last_message());
+    		return null;
+    	}
+    	
+    	#Select database
+    	if (!mssql_select_db($database, $connection)){
+    		die("\nCould not select database: ".mssql_get_last_message());
+    		return null;
+    	}
+    	
+    	$result = mssql_query("SELECT * FROM $LabRequestView WHERE (PatientNumber='$patient_id')");
+    	
+    	while($row = mssql_fetch_assoc($result))	
+    	{
+    		$retval[] = $row;
+    	}
+    	#Close connection
+    	mssql_close($connection);
+   
+    	return $retval;
     }
 }
 	
