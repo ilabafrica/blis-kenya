@@ -26,4 +26,4 @@ CREATE TABLE `external_lab_request` (
   `provisionalDiagnosis` varchar(45) DEFAULT NULL,
   `system_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1$$
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1
