@@ -3951,7 +3951,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			foreach ($external_requests as $investigations) {
 				$clinician = $investigations['requestingClinician'];
 				$test = $investigations['investigation'];
-				$test_id=getIdByName($test);
+				//$test_id=getIdByName($test);
 				
 				# code...
 			?>
@@ -4096,27 +4096,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				<td>
 					<label for='doctor' valign='top'><?php echo LangUtil::$generalTerms['DOCTOR']; ?><?php if($_SESSION['doctor'] == 2) $this->getAsterisk(); ?></label></label>
 				</td>
-				<td>
-					<SELECT name='title' id='<?php echo $doc_row_id; ?>_title'>
-					<?php
-					$labtitlefieldoptions = get_custom_fields_labtitle(1);
-					$lab_titles = explode("/",$labtitlefieldoptions);
-					
-					foreach($lab_titles as $option)
-					{
-						if(trim($option) == "")
-							continue;
-						echo "<option value='$option'";
-						if($option == $field_value)
-						{
-							echo " selected ";
-						}
-						echo " >$option</option>";
-					}
-					?>
-					</SELECT>
-				</td>		
-				
 				<td>
 					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $clinician; ?>' ></input>
 				</td>
