@@ -3924,7 +3924,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	
 	}
 	
-	function getNewSpecimenForm($form_num, $pid, $dnum, $session_num, $sanitas_requests)
+	function getNewSpecimenForm($form_num, $pid, $dnum, $session_num, $external_requests)
 	{
 		# Returns HTML for new specimen form
 		LangUtil::setPageId("new_specimen");
@@ -3946,9 +3946,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
-		<?php if($sanitas_requests!=null)
+		<?php if($external_requests!=null)
 		{
-			foreach ($sanitas_requests as $investigations) {
+			foreach ($external_requests as $investigations) {
 				$clinician = $investigations['requestingClinician'];
 				$test = $investigations['investigation'];
 				$test_id=getIdByName($test);

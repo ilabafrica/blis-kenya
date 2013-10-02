@@ -112,11 +112,6 @@ if ($tests_requested!=null){
 <?php 
 }
 ?>
-</div>
-<div class="span4">
-<u><b>Patient details</b></u>
-<?php echo $page_elems->getPatientInfo($pid, 400, $is_external_patient); ?>
-</div>
 <table cellpadding='5px'>
 	<tbody>
 		<tr valign='top'>
@@ -140,6 +135,10 @@ if ($tests_requested!=null){
 &nbsp;&nbsp;&nbsp;&nbsp;
 <small><a href='javascript:askandback();' class="btn red icn-only"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 <hr />
+</div>
+<div class="span4">
+<u><b>Patient details</b></u>
+<?php echo $page_elems->getPatientInfo($pid, 400, $is_external_patient); ?>
 </div>
 
 <u><b><?php echo LangUtil::$generalTerms['CMD_THISTORY']; ?></b></u>
