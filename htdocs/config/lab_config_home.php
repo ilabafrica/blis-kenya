@@ -236,7 +236,179 @@ if($lab_config == null)
                     </div>
                 </div>
                 <!-- END PAGE HEADER-->
-<!-- BEGIN ROW-FLUID-->   
+<!-- BEGIN ROW-FLUID-->  
+
+<div class="portlet box green right_pane" id="worksheet_config_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        <div class="portlet-body">
+            <div id='worksheet_config' style='margin-left:10px;'>
+                <p style="text-align: right;"><a rel='facebox' href='#WS_rc'>Page Help</a></p>
+                    <br><br>
+                    <div id='worksheet_config_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <br>
+                    <form id='worksheet_config_form' name='worksheet_config_form' action='ajax/report_config_update.php' method='post'>
+                        <table>
+                            <tbody>
+                                <tr valign='top'>
+                                    <td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></td>
+                                    <td>
+                                        <select name='cat_code' id='cat_code12' class='uniform_width'>
+                                            <option value="0"><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+                                            <?php $page_elems->getTestCategorySelect(); ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr valign='top'>
+                                    <td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
+                                    <td>
+                                        <select id='test_type12' name='t_type' class='uniform_width'>
+                                            <?php $page_elems->getTestTypesSelect($lab_config->id); ?>
+                                        </select>
+                                    </td>
+                            </tr>
+                            <tr valign='top'>
+                                <td></td>
+                                <td>
+                                    <input type='button' onclick='javascript:fetch_worksheet_config();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <span id='worksheet_fetch_progress' style='display:none'>
+                                        <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    <br>
+                    <div id='worksheet_config_content'>
+                    </div>
+                    <br>
+                    <?php echo LangUtil::$pageTerms['CUSTOM_WORKSHEETS']; ?>
+                    <?php $page_elems->getCustomWorksheetTable($lab_config); ?>
+                    <br>
+                    <small><a href='worksheet_custom_new.php?id=<?php echo $lab_config->id; ?>'><?php echo LangUtil::$pageTerms['NEW_CUSTOMWORKSHEET']; ?> &raquo;</a></small>
+                </div>
+        </div>
+    </div>
+
+<div class="portlet box green right_pane" id="report_config_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        <div class="portlet-body">
+            <div  id='report_config' style='margin-left:10px;'>
+                <p style="text-align: right;"><a rel='facebox' href='#DRS_rc'>Page Help</a></p>
+                    <br>
+                    <div id='report_config_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <br>
+                    <form id='report_config_form' name='report_config_form' action='' method='post'>
+                        <?php echo LangUtil::$generalTerms['REPORT_TYPE']; ?>
+                        &nbsp;&nbsp;
+                        <select name='report_type' id='report_type11'>
+                            <option value='1'><?php echo $LANG_ARRAY['reports']['MENU_PATIENT']; ?></option>
+                            <?php
+                            if($SHOW_SPECIMEN_REPORT === true)
+                            {
+                                ?>
+                                <option value='2'><?php echo $LANG_ARRAY['reports']['MENU_SPECIMEN']; ?></option>
+                                <?php
+                            }
+                            if($SHOW_TESTRECORD_REPORT === true)
+                            {
+                                ?>
+                                <option value='3'><?php echo $LANG_ARRAY['reports']['MENU_TESTRECORDS']; ?></option>
+                                <?php
+                            }
+                            ?>
+                            <option value='4'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['SPECIMENS']; ?></option>
+                            <option value='6'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['PATIENTS']; ?></option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <input type='button' id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>
+                        &nbsp;&nbsp;
+                        <span id='report_config_fetch_progress' style='display:none;'>
+                            <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+                        </span>
+                        <br><br>
+                        <div id='report_config_content'>
+                        </div>
+                    </form> 
+                </div>
+        </div>
+    </div>
+
+<div class="portlet box green right_pane" id="grouped_count_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Test/Specimen Count/Grouped Reports</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        <div class="portlet-body">
+            <div id='grouped_count' style='margin-left:10px;'>
+                <p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
+                     | <a href='javascript:toggle_grouped_count_report();' id='grouped_count_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+                    <br>
+                    <div id='grouped_count_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <br>
+                    <div id='grouped_count_report_summary'>
+                        <?php echo $page_elems->getGroupedCountReportSummary($lab_config); ?>
+                    </div>
+                    <div id='grouped_count_report_form_div' style='display:none;'>
+                        <form id='grouped_count_report_form' name='grouped_count_report_form' action='ajax/grouped_count_reports_update.php' method='post'>
+                            <?php $page_elems->getGroupedCountReportConfigureForm($lab_config); ?>
+                        </form> 
+                        
+                    </div>
+            </div>
+        </div>
+</div>
+
+<div class="portlet box green right_pane" id="agg_report_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        <div class="portlet-body">
+            <div id='agg_report' style='margin-left:10px;'>
+                <p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
+                    <a href='javascript:toggle_disease_report();' id='agg_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+                    <br />
+                    <div id='agg_msg' class='clean-orange' style='display:none;width:350px;'>
+                    </div>
+                    <br>
+                    <div id='agg_report_summary'>
+                        <?php echo $page_elems->getAggregateReportSummary($lab_config); ?>
+                    </div>
+                    <div id='agg_report_form_div' style='display:none;'>
+                        <form id='agg_report_form' name='agg_report_form' action='ajax/report_agg_update.php' method='post'>
+                            <?php $page_elems->getAggregateReportConfigureForm($lab_config); ?>
+                        </form> 
+                        <form id='agg_preview_form' style='display:none;' name='agg_preview_form' action='report_disease_preview.php' method='post' target='_blank'>                    
+                            <?php # This form is cloned from agg_report_form in javascript:agg_preview() function ?>
+                        </form>
+                    </div>
+                </div>
+        </div>
+</div>
+
+
 <div class="portlet box green right_pane" id="barcode_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Configure Barcode Format Settings</h4>
@@ -1232,46 +1404,6 @@ if($lab_config == null)
 					&nbsp;&nbsp;&nbsp;
 					<small><a href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 				</div>
-				
-				<div class='right_pane' id='agg_report_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_INFECTION']; ?></b>
-					 | <a href='javascript:toggle_disease_report();' id='agg_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='agg_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<div id='agg_report_summary'>
-						<?php echo $page_elems->getAggregateReportSummary($lab_config); ?>
-					</div>
-					<div id='agg_report_form_div' style='display:none;'>
-						<form id='agg_report_form' name='agg_report_form' action='ajax/report_agg_update.php' method='post'>
-							<?php $page_elems->getAggregateReportConfigureForm($lab_config); ?>
-						</form>	
-						<form id='agg_preview_form' style='display:none;' name='agg_preview_form' action='report_disease_preview.php' method='post' target='_blank'>					
-							<?php # This form is cloned from agg_report_form in javascript:agg_preview() function ?>
-						</form>
-					</div>
-				</div>
-				
-                                <div class='right_pane' id='grouped_count_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#IR_rc'>Page Help</a></p>
-					<b><?php echo "Test/Specimen Count Grouped Reports"; ?></b>
-					 | <a href='javascript:toggle_grouped_count_report();' id='grouped_count_edit_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
-					<br><br>
-					<div id='grouped_count_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<div id='grouped_count_report_summary'>
-						<?php echo $page_elems->getGroupedCountReportSummary($lab_config); ?>
-					</div>
-					<div id='grouped_count_report_form_div' style='display:none;'>
-						<form id='grouped_count_report_form' name='grouped_count_report_form' action='ajax/grouped_count_reports_update.php' method='post'>
-							<?php $page_elems->getGroupedCountReportConfigureForm($lab_config); ?>
-						</form>	
-						
-					</div>
-				</div>
                                 
 				<div class='right_pane' id='misc_div' style='display:none;margin-left:10px;'>
 					<b><?php echo LangUtil::$pageTerms['MENU_GENERAL']; ?></b>
@@ -1354,46 +1486,7 @@ if($lab_config == null)
 					</form>			
 				</div>
 				
-				<div class='right_pane' id='report_config_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#DRS_rc'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_REPORTCONFIG']; ?></b>
-					<br><br>
-					<div id='report_config_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='report_config_form' name='report_config_form' action='' method='post'>
-						<?php echo LangUtil::$generalTerms['REPORT_TYPE']; ?>
-						&nbsp;&nbsp;
-						<select name='report_type' id='report_type11'>
-							<option value='1'><?php echo $LANG_ARRAY['reports']['MENU_PATIENT']; ?></option>
-							<?php
-							if($SHOW_SPECIMEN_REPORT === true)
-							{
-								?>
-								<option value='2'><?php echo $LANG_ARRAY['reports']['MENU_SPECIMEN']; ?></option>
-								<?php
-							}
-							if($SHOW_TESTRECORD_REPORT === true)
-							{
-								?>
-								<option value='3'><?php echo $LANG_ARRAY['reports']['MENU_TESTRECORDS']; ?></option>
-								<?php
-							}
-							?>
-							<option value='4'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['SPECIMENS']; ?></option>
-							<option value='6'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['PATIENTS']; ?></option>
-						</select>
-						&nbsp;&nbsp;
-						<input type='button' id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>
-						&nbsp;&nbsp;
-						<span id='report_config_fetch_progress' style='display:none;'>
-							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-						</span>
-						<br><br>
-						<div id='report_config_content'>
-						</div>
-					</form>	
-				</div>
+				
 				
 				<div class='right_pane' id='backup_revert_div' style='display:none;margin-left:10px;'>
 					<p style="text-align: right;"><a rel='facebox' href='#Revert'>Page Help</a></p>
@@ -1589,54 +1682,7 @@ if($lab_config == null)
 					</div>
 				</div>
 				
-				<div class='right_pane' id='worksheet_config_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#WS_rc'>Page Help</a></p>
-					<b><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></b>
-					<br><br>
-					<div id='worksheet_config_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<br>
-					<form id='worksheet_config_form' name='worksheet_config_form' action='ajax/report_config_update.php' method='post'>
-						<table>
-							<tbody>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></td>
-									<td>
-										<select name='cat_code' id='cat_code12' class='uniform_width'>
-											<option value="0"><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-											<?php $page_elems->getTestCategorySelect(); ?>
-										</select>
-									</td>
-								</tr>
-								<tr valign='top'>
-									<td><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></td>
-									<td>
-										<select id='test_type12' name='t_type' class='uniform_width'>
-											<?php $page_elems->getTestTypesSelect($lab_config->id); ?>
-										</select>
-									</td>
-							</tr>
-							<tr valign='top'>
-								<td></td>
-								<td>
-									<input type='button' onclick='javascript:fetch_worksheet_config();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
-									&nbsp;&nbsp;&nbsp;
-									<span id='worksheet_fetch_progress' style='display:none'>
-										<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-									</span>
-								</td>
-							</tr>
-						</table>
-					</form>
-					<br>
-					<div id='worksheet_config_content'>
-					</div>
-					<br>
-					<?php echo LangUtil::$pageTerms['CUSTOM_WORKSHEETS']; ?>
-					<?php $page_elems->getCustomWorksheetTable($lab_config); ?>
-					<br>
-					<small><a href='worksheet_custom_new.php?id=<?php echo $lab_config->id; ?>'><?php echo LangUtil::$pageTerms['NEW_CUSTOMWORKSHEET']; ?> &raquo;</a></small>
-				</div>
+				
 				
 				<div class='right_pane' id='language_div' style='display:none;margin-left:10px;'>
 					<div id='language_contents'></div>
