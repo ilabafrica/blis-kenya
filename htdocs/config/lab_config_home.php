@@ -2103,25 +2103,6 @@ function language_div_load() {
 	$('#option19').addClass('current_menu_option');
 }
 
-function export_html()
-{
-<?php
-$myFile = "../../BlisSetup.html";
-$fh = fopen($myFile, 'w') or die("can't open file");
-$content =('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
-<html xmlns="http://www.w3.org/1999/xhtml">  
-<head>
-<META HTTP-EQUIV="Refresh"
-CONTENT="1; URL=');
-$content1=('">
-</head> 
-</html>');
-$content=$content.StatsLib::get_ip().$content1;
-fwrite($fh, $content);
-fclose($fh);
-?>
-right_load(14, 'network_setup_div');
-}
 function ask_to_delete_user(user_id)
 {
 	var div_id = 'delete_confirm_'+user_id;
