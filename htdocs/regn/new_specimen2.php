@@ -105,7 +105,7 @@ if ($tests_requested!=null){
 			<tr>
 				<td><?php echo $test['investigation'];?></td>
 				<td><?php echo $test['requestingClinician'] ;?></td>
-			<tr>
+			</tr>
 			<?php }?>
 		</tbody>
 	</table>
@@ -140,10 +140,14 @@ if ($tests_requested!=null){
 <u><b>Patient details</b></u>
 <?php echo $page_elems->getPatientInfo($pid, 400, $is_external_patient); ?>
 </div>
+</div>
 
+<div>
+<br>
 <u><b><?php echo LangUtil::$generalTerms['CMD_THISTORY']; ?></b></u>
 <?php $page_elems->getPatientHistory($pid); ?>
-&nbsp;&nbsp;&nbsp;&nbsp;
+<div/>
+
 <div id='NEW_SPECIMEN' class='right_pane' style='display:none;margin-left:10px;'>
 	<ul>
 		<?php
