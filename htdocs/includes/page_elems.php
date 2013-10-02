@@ -3951,7 +3951,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			foreach ($external_requests as $investigations) {
 				$clinician = $investigations['requestingClinician'];
 				$test = $investigations['investigation'];
-				$test_id=getIdByName($test);
+				//$test_id=getIdByName($test);
 				
 				# code...
 			?>
