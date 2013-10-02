@@ -163,7 +163,8 @@ else
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
                     	WHERE t.status_code_id=".$status."
-                    	ORDER BY s.ts DESC LIMIT 5000 ";
+                    	ORDER BY s.ts DESC";
+                    	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
     }
     elseif($attrib_type == 11)
@@ -191,9 +192,18 @@ if($attrib_type == 12)
           <a href="javascript:fetch_specimen2('.$quote.$attrib_value.$quote.');" title="View test details" class="btn mini"><i class="icon-search"></i> View Details</a>';
 	return;
 
-} else 
-	$resultset = query_associative_all($query_string, $row_count);
-
+} else{
+ 	
+ 	$num_records = count(query_associative_all($query_string, $row_count));
+ 	//Set Pagination
+ 	$page = $_REQUEST['p'];
+ 	$url="javascript:fetch_tests('$status'";
+ 	$limit=10;
+ 
+ 	$pagination_array = setPagination($query_string, $limit, $page, $url, $num_records);
+ 	
+	$resultset = query_associative_all($pagination_array['query_string'], $row_count);	
+}
 
 // $specimen_id_list = array();
 // foreach($resultset as $record)
@@ -212,11 +222,9 @@ if($attrib_type == 12)
 	</div>
 	<br>
 	<div class="span3 alert alert-info">
-		
 		<div class='sidetip_nopos'>
 		<?php 
-		$no_of_records = count($resultset);
-		if($no_of_records == 0 || $resultset == null)
+		if($num_records == 0 || $resultset == null)
 		{
 		
 		if($attrib_type == 0)
@@ -242,10 +250,10 @@ if($attrib_type == 12)
 	    }
 	    
 	    }
-	    else echo $no_of_records." records found.";
+	    else echo $num_records." records found.";
 		?> 
 		</div>
-		</div>
+	</div>
 </div>
 <div class="clearfix"></div>
 <div class="row-fluid">
@@ -490,7 +498,7 @@ if($attrib_type == 12)
 			?>
 		</tr>
 		
-		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true" data-backdrop="static">
+		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-hidden="true" data-backdrop="static">
 	
 		</div>
 		<?php
@@ -499,9 +507,8 @@ if($attrib_type == 12)
 	?>
 	</tbody>
 </table>
-<div class='modal hide fade' id='long' role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-	<img style="height: 800px" src="http://i.imgur.com/KwPYo.jpg">
-</div>
+<?php echo $pagination_array["pagination"];?>
+
 <?php
 if($attrib_type == 3 && $count > 2)
 {

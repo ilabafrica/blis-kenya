@@ -45,7 +45,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 			</div>
 		</div>
 		<div class="portlet-body">
-			<div class="scroller" data-height="400px" data-always-visible="1">
+			<div class="scroller" data-height="700px" data-always-visible="0">
 				<div id='fetched_specimens_entry'>
 				<!--PENDING SPECIMENTS LOADED IN THIS DIV-->
 				</div>
@@ -593,15 +593,19 @@ function fetch_specimen()
 /**
  * FETCH PENDING SPECIMENS
  */
-function fetch_tests(status)
+function fetch_tests(status,page)
 {	
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	var url = 'ajax/result_entry_tests.php';
 	var date_from = Date.today().add({days: -6}).toString('yyyy-MM-dd')+' '+'00:00:00';
 	var date_to = Date.today().toString('yyyy-MM-dd')+' '+'23:59:59';
+	
+	if(page==undefined){
+		var page = 0;
+	}
 	$("#fetched_specimens_entry").load(url, 
-		{a: '', t: 10, df:date_from, dt:date_to, s:status}, 
+		{a: '', t: 10, df:date_from, dt:date_to, s:status, p:page}, 
 		function() 
 		{
 			handleDataTable(10);

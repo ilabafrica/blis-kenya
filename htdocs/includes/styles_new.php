@@ -23,8 +23,7 @@
 <link href="assets/bootstrap/css/bootstrap-modal.css" rel="stylesheet" />
 <style>
 .page-sidebar{
-  /*background-color: rgb(61, 61, 61)!important;
-  height: inherit;*/
+  background-color: rgb(61, 61, 61)!important;
 }
 html{
  height:100%;

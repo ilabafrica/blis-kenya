@@ -132,14 +132,17 @@ function handleDataTable(table_id) {
     // begin first table
     var oTable = $('#'+table_id).dataTable({
         "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-        "sPaginationType": "bootstrap",
+        /*"sPaginationType": "bootstrap",
         "oLanguage": {
             "sLengthMenu": "_MENU_ records per page",
             "oPaginate": {
                 "sPrevious": "Prev",
                 "sNext": "Next"
             }
-        },
+        
+        },*/
+        "bPaginate":false,
+        "bInfo":false,
         "aoColumnDefs": [{
             'bSortable': false,
             'aTargets': [0]
