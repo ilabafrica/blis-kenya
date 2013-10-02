@@ -15115,7 +15115,7 @@ class API
     	#Check connection
     	if (!$connection)
     	{
-    		die("\nCould not connect to mssql server: ".mssql_get_last_message());
+    		die("\n Connection to HMIS server not available.");
     		return null;
     	}
     	
