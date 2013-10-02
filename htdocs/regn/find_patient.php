@@ -422,13 +422,13 @@ function load_patient_reg()
 	$('#patient_registration').show();
 }
 
-function load_specimen_reg(patient_id)
+function load_specimen_reg(patient_id, is_external_patient)
 {
 	$('.reg_subdiv').hide();
 	var patientid = patient_id;
 	//Load new_specimen2.php via ajax
 	var url = 'regn/new_specimen2.php';
-	$('#specimen_reg_body').load(url, {pid: patient_id});		
+	$('#specimen_reg_body').load(url, {pid: patient_id, ex: is_external_patient });		
 	$('#specimen_reg').show();
 }
 

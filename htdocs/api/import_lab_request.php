@@ -19,27 +19,62 @@ if (!$length >1 || !$_POST==null){
 	foreach($_POST as $key=>$value)
 	{
 		if ($key='labRequest'){
+			
 		 	$value_string = '';
+		 	
 		 	$json_request = (string)$value;
 		 	$request_data = json_decode($json_request, true);
+		 	
 		 	$value_string.= '(';
 		 	$value_string.= 
+		 	#labNo
 		 	'"'.$request_data['labNo'].'",'.
+		 	#parentLabNo
 		 	'"'.$request_data['parentLabNo'].'",'.
+		 	#requestingClinician
 		 	'"'.$request_data['requestingClinician'].'",'.
+		 	#investigation
 		 	'"'.$request_data['investigation'].'",'.
+		 	#requestDate
 		 	'"'.$request_data['requestDate'].'",'.
+		 	#patient_id
 		 	'"'.$request_data['patient']['id'].'",'.
+		 	#full_name
 		 	'"'.$request_data['patient']["fullName"].'",'.
+		 	#dateOfBirth
 		 	'"'.$request_data['patient']["dateOfBirth"].'",'.
+		 	#age
+		 	'"'."NULL".'",'.
+		 	#gender
 		 	'"'.$request_data['patient']['gender'].'",'.
+		 	#address
 		 	'"'.$request_data['address']["address"].'",'.
+		 	#postalCode
 		 	'"'.$request_data['address']["postalCode"].'",'.
+		 	#phoneNumber
 		 	'"'.$request_data['address']["phoneNumber"].'",'.
-		 	'"'.$request_data['address']["city"].'"';
+		 	#city
+		 	'"'.$request_data['address']["city"].'",'.
+		 	#revisitNumber
+		 	'"'."NULL".'",'.
+		 	#cost
+		 	'"'."NULL".'",'.
+		 	#patientContact
+		 	'"'."NULL".'",'.
+		 	#receiptNumber
+		 	'"'."NULL".'",'.
+		 	#waiverNo
+		 	'"'."NULL".'",'.
+		 	#comments
+		 	'"'."NULL".'",'.
+		 	#provisionalDiagnosis
+		 	'"'."NULL".'",'.
+		 	#system_id
+		 	'"'."sanitas".'"';
 		 	$value_string.= ')';
-		 	$LabRequest = $value_string;
 		 	
+		 	$LabRequest = $value_string;
+		 
 		 	API::save_external_lab_request($LabRequest);
 		 } 
 		}
