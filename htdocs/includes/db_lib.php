@@ -7081,7 +7081,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 		"comments='$comments', ".
 		"user_id=$user_id, ".
 		"ts='$current_ts', ".
-		"status_code_id='".Specimen::$STATUS_RETURNED."' ".
+		"status_code_id='".Specimen::$STATUS_TOVERIFY."' ".
 		"WHERE test_id=$test_id ";
 	
 	query_blind($query_string);

@@ -272,7 +272,7 @@ function handleDataTable(table_id) {
 			} else if (val=="Started"){
 				fetch_tests(<?php echo Specimen::$STATUS_PENDING_RESULTS?>);
 			}else if (val=="Completed"){
-				fetch_tests(<?php echo Specimen::$STATUS_DONE?>);
+				fetch_tests(<?php echo Specimen::$STATUS_TOVERIFY?>);
 			}
 		} );
 	} );

@@ -614,7 +614,7 @@ function fetch_tests(status,page)
 				$('select', '#status')[0].selectedIndex = 1;
 			}else if (status==<?php echo Specimen::$STATUS_PENDING_RESULTS;?>){
 				$('select', '#status')[0].selectedIndex = 2;
-			}else if (status==<?php echo Specimen::$STATUS_DONE;?>){
+			}else if (status==<?php echo Specimen::$STATUS_TOVERIFY;?>){
 				$('select', '#status')[0].selectedIndex = 3;
 			}
 			$(".chosen").chosen();
