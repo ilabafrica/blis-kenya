@@ -59,6 +59,7 @@ $doctor = $_REQUEST['doctor'];
 $doctor = preg_replace("/[^a-zA-Z\s]/", "", $doctor);
 $title=$_REQUEST['title'];
 $tests_list = $_REQUEST['t_type_list'];
+$external_lab_no = $_REQUEST['external_lab_no'];
 
 putUILog('specimen_add', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
@@ -77,6 +78,7 @@ $specimen->comments = $comments;
 $specimen->userId = $_SESSION['user_id'];
 $specimen->statusCodeId = Specimen::$STATUS_NOT_COLLECTED;
 $specimen->dailyNum = $prefixed_dnum;
+$specimen->external_lab_no=$external_lab_no;
 # If marked for referral, set appropriate status and store hospital/lab name
 if(isset($_REQUEST['ref_out']) && $_REQUEST['ref_out'] == "Y")
 {
@@ -103,7 +105,7 @@ else
 $specimen->doctor=$doctor;
 # Add entry to 'specimen' table
 add_specimen($specimen);
-
+API::updateExternalLabRequestStatus($external_lab_no, Specimen::$STATUS_NOT_COLLECTED);
 # Add entries to 'test' table
 foreach($tests_list as $test_type_id)
 {

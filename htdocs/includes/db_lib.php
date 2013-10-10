@@ -2592,6 +2592,7 @@ class Specimen
 	public $referredToName;
 	public $dailyNum;
 	public $labSection;
+	public $external_lab_no;
 	
 	public static $STATUS_PENDING = 0;
 	public static $STATUS_DONE = 1;
@@ -2665,6 +2666,10 @@ class Specimen
 			$specimen->dailyNum = $record['daily_num'];
 		else
 			$specimen->dailyNum = null;
+		if(isset($record['external_lab_no']))
+			$specimen->external_lab_no = $record['external_lab_no'];
+		else
+			$specimen->external_lab_no = null;
 		return $specimen;
 	}
 	
@@ -6971,9 +6976,9 @@ function add_specimen($specimen)
 	# Adds a new specimen record in DB
 	$query_string = 
 		"INSERT INTO `specimen` ( specimen_id, patient_id, specimen_type_id, date_collected, date_recvd, user_id, status_code_id, referred_to, comments, aux_id, ".
-		"session_num, time_collected, report_to, doctor, referred_to_name, daily_num ) VALUES ( $specimen->specimenId, $specimen->patientId, $specimen->specimenTypeId, ". 
+		"session_num, time_collected, report_to, doctor, referred_to_name, daily_num, external_lab_no ) VALUES ( $specimen->specimenId, $specimen->patientId, $specimen->specimenTypeId, ". 
 		"'$specimen->dateCollected', '$specimen->dateRecvd', $specimen->userId, $specimen->statusCodeId, $specimen->referredTo, '$specimen->comments', ".
-		"'$specimen->auxId', '$specimen->sessionNum', '$specimen->timeCollected', $specimen->reportTo, '$specimen->doctor', '$specimen->referredToName', '$specimen->dailyNum' )";
+		"'$specimen->auxId', '$specimen->sessionNum', '$specimen->timeCollected', $specimen->reportTo, '$specimen->doctor', '$specimen->referredToName', '$specimen->dailyNum' , '$specimen->external_lab_no')";
 	//echo $query_string;
 	$result = query_insert_one($query_string);
 	
@@ -15102,7 +15107,8 @@ class API
     public static function getLabRequestFromView($patient_id){
     	#gets lab request from external system view/table
     	$retval = array();
-    	$server = '192.168.6.4:1433';
+//     	$server = '192.168.6.4:1433';
+    	$server = '192.168.184.121:1432';
     	$dbuser = 'kapsabetadmin';
     	$dbpass = 'kapsabet';
     	$database = '[Kapsabet]';
@@ -15137,13 +15143,14 @@ class API
     	return $retval;
     }
     
-    public static function updateExternalLabRequestStatus(){
+    public static function updateExternalLabRequestStatus($labNo, $status){
     	$query_string =
-    	"UPDATE external_lab_reqeust ".
-    	"SET test_status=$new_admin_id ".
-    	"WHERE lab_config_id=$this->id ";
+    	"UPDATE external_lab_request ".
+    	"SET test_status= '$status'".
+    	"WHERE labNo IN ($labNo)";
     	$saved_db = DbUtil::switchToGlobal();
     	query_blind($query_string);
+ 
     	DbUtil::switchRestore($saved_db);
     }
 }

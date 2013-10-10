@@ -3962,6 +3962,19 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
+			<?php 
+			if(isset($external_requests)){
+				$length = count($external_requests);
+				$labNumbers="";
+				for($i=0; $i<$length; $i++){
+					$labNumbers.=$external_requests[$i]['labNo'];
+					if ($i!=$length-1)$labNumbers.=',';
+				}
+			?>
+			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>
+			<?php
+				
+			}?>
 			<table class='regn_form_table'>
 			<tbody>
 

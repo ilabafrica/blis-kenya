@@ -104,7 +104,7 @@ if ($tests_requested!=null){
 			?>
 			<tr>
 				<td><?php echo $test['investigation'];?></td>
-				<td><?php echo $test['requestingClinician'] ;?></td>
+				<td><?php echo $test['requestingClinician'];?></td>
 			</tr>
 			<?php }?>
 		</tbody>
