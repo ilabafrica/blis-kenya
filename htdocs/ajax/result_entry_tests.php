@@ -173,7 +173,7 @@ else
 		    	$query_string =
 		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
 		        "WHERE p.patient_id=s.patient_id ".
-		        "AND (status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
+		        "AND (status_code_id=".Specimen::$STATUS_STARTED.") ".
 		        "AND s.specimen_id=t.specimen_id ".
 		        "AND t.result = ''";
 	}else if($attrib_type == 12)
@@ -440,7 +440,7 @@ if($attrib_type == 12)
 				echo 'label-info">Not Verified';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href=";" title="Click to begin testing this Specimen" class="btn mini">
+			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn mini">
 				<i class="icon-search"></i>View Results</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Verify test" class="btn green mini">
@@ -480,7 +480,7 @@ if($attrib_type == 12)
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_PENDING_RESULTS){
+			if($status == Specimen::$STATUS_STARTED){
 				echo 'label-warning">Started';
 				echo '</span></td>';
 				echo '

@@ -40,7 +40,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
-				<a href="javascript:fetch_tests(<?php echo Specimen::$STATUS_PENDING_RESULTS?>);" class="reload"></a>
+				<a href="javascript:fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
 			</div>
 		</div>
@@ -612,10 +612,12 @@ function fetch_tests(status,page)
 			enableAdvancedDatePicker(date_from, date_to);
 			if (status==<?php echo Specimen::$STATUS_PENDING;?>){
 				$('select', '#status')[0].selectedIndex = 1;
-			}else if (status==<?php echo Specimen::$STATUS_PENDING_RESULTS;?>){
+			}else if (status==<?php echo Specimen::$STATUS_STARTED;?>){
 				$('select', '#status')[0].selectedIndex = 2;
 			}else if (status==<?php echo Specimen::$STATUS_TOVERIFY;?>){
 				$('select', '#status')[0].selectedIndex = 3;
+			}else if (status==<?php echo Specimen::$STATUS_VERIFIED;?>){
+				$('select', '#status')[0].selectedIndex = 4;
 			}
 			$(".chosen").chosen();
 			App.unblockUI(el);
@@ -708,6 +710,26 @@ function fetch_test_result_form(test_id)
 	var pg=2;
 	$('#fetch_progress_bar').show();
 	var url = 'ajax/result_form_fetch.php';
+	//var target_div = "fetch_specimen";
+	$('.result_form_pane').html("");
+	var target_div = "result_form_pane_"+test_id;
+	$("#"+target_div).load(url, 
+		{tid: test_id , page_id:pg}, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+}
+
+function view_test_result(test_id)
+{
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var pg=2;
+	$('#fetch_progress_bar').show();
+	var url = 'ajax/result_view.php';
 	//var target_div = "fetch_specimen";
 	$('.result_form_pane').html("");
 	var target_div = "result_form_pane_"+test_id;

@@ -169,7 +169,7 @@ else
 		    	$query_string =
 		    	"SELECT s.specimen_id FROM specimen s, test t, patient p ".
 		        "WHERE p.patient_id=s.patient_id ".
-		        "AND (s.status_code_id=".Specimen::$STATUS_PENDING_RESULTS.") ".
+		        "AND (s.status_code_id=".Specimen::$STATUS_STARTED.") ".
 		        "AND s.specimen_id=t.specimen_id ".
 		        "AND t.result = '' LIMIT 0,500 ";
 	}else if($attrib_type == 12)

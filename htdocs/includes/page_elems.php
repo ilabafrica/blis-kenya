@@ -3191,6 +3191,12 @@ class PageElems
 			<td>
 				<?php echo $test->getVerifiedBy(); ?>
 			</td>
+			<td>
+				<a href="javascript:verify_result('<?php echo $test->testId; ?>');" 
+					title="Click to Verify" class="btn green mini">
+					<i class="icon-ok"></i>Verify result
+				</a>
+			</td>
 			<?php
 			$specimen_object=Specimen::getById($test->specimenId);
 			$pid=$specimen_object->patientId;

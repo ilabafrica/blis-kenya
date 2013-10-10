@@ -2601,8 +2601,9 @@ class Specimen
 	public static $STATUS_REPORTED = 4;
 	public static $STATUS_RETURNED = 5;
 	public static $STATUS_REJECTED = 6;
-	public static $STATUS_PENDING_RESULTS = 7;
+	public static $STATUS_STARTED = 7;
 	public static $STATUS_NOT_COLLECTED = 8;
+	public static $STATUS_VERIFIED = 9;
 
 	public static function getObject($record)
 	{
