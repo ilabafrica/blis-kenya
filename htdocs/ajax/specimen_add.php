@@ -82,6 +82,17 @@ if(isset($_REQUEST['ref_out']) && $_REQUEST['ref_out'] == "Y")
 {
 	$specimen->statusCodeId = Specimen::$STATUS_REFERRED;
 	$specimen->referredToName = $_REQUEST['ref_out_name'];
+	# Add entries to 'specimen_custom_data'
+    $custom_field_list = get_custom_fields_specimen();
+    foreach($custom_field_list as $custom_field)
+    {
+        $custom_value = get_custom_value($custom_field);
+        $custom_data = new SpecimenCustomData();
+        $custom_data->fieldId = $custom_field->id;
+        $custom_data->fieldValue = $custom_value;
+        $custom_data->specimenId = $specimen_id;
+        add_custom_data_specimen($custom_data);
+    }
 }
 $specimen->referredTo = 0;
 $specimen->reportTo = $report_to;
@@ -92,17 +103,7 @@ else
 $specimen->doctor=$doctor;
 # Add entry to 'specimen' table
 add_specimen($specimen);
-# Add entries to 'specimen_custom_data'
-$custom_field_list = get_custom_fields_specimen();
-foreach($custom_field_list as $custom_field)
-{
-	$custom_value = get_custom_value($custom_field);
-	$custom_data = new SpecimenCustomData();
-	$custom_data->fieldId = $custom_field->id;
-	$custom_data->fieldValue = $custom_value;
-	$custom_data->specimenId = $specimen_id;
-	add_custom_data_specimen($custom_data);
-}
+
 # Add entries to 'test' table
 foreach($tests_list as $test_type_id)
 {

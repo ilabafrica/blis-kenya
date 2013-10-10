@@ -436,15 +436,8 @@ function checkandtoggle(select_elem, div_id)
 }
 
 function checkandtoggle_ref(ref_check_id, ref_row_id)
-{
-    if($('#'+ref_check_id).attr("checked") == true)
-    {
-        $('#'+ref_row_id).show();
-    }
-    else
-    {
-        $('#'+ref_row_id).hide();
-    }
+{    
+        $('.'+ref_row_id).toggle();   
 }
 // And here is the end.
 
