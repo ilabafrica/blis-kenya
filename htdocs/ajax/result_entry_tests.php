@@ -163,7 +163,7 @@ else
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
                     	WHERE t.status_code_id=".$status."
-                    	ORDER BY s.ts DESC";
+                    	ORDER BY s.date_recvd DESC, s.ts DESC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
     }
@@ -201,8 +201,7 @@ if($attrib_type == 12)
  	$limit=10;
  
  	$pagination_array = setPagination($query_string, $limit, $page, $url, $num_records);
- 	
-	$resultset = query_associative_all($pagination_array['query_string'], $row_count);	
+	$resultset = query_associative_all($pagination_array['query_string'], $row_count);
 }
 
 // $specimen_id_list = array();
@@ -271,7 +270,7 @@ if($attrib_type == 12)
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+				<th style='width:75px;'><?php echo "Patient No." ?></th>
 			<?php
 			}
 			if($_SESSION['dnum'] != 0)

@@ -143,6 +143,7 @@ function handleDataTable(table_id) {
         },*/
         "bPaginate":false,
         "bInfo":false,
+        "aaSorting": [],
         "aoColumnDefs": [{
             'bSortable': false,
             'aTargets': [0]
