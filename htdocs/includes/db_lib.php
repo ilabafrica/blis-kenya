@@ -2442,7 +2442,7 @@ class Patient
 		# Get Patient from Lab request table, save patient record and return patient record
 		global $con;
 		$patient_id = mysql_real_escape_string($patient_id, $con);
-		$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_completed=0";
+		$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING;
 		$saved_db = DbUtil::switchToGlobal();
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
@@ -15092,7 +15092,7 @@ class API
 	    # gets pending lab requests from external_lab_reqeuest_table
 	    global $con;
 	    $patient_id = mysql_real_escape_string($patient_id, $con);
-	    $query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_completed = 0 AND parentLabNo=0;";
+	   $query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
 	    $tests_ordered = query_associative_all($query_string, $row_count);
 	    DbUtil::switchRestore($saved_db);
@@ -15135,6 +15135,16 @@ class API
     	mssql_close($connection);
    
     	return $retval;
+    }
+    
+    public static function updateExternalLabRequestStatus(){
+    	$query_string =
+    	"UPDATE external_lab_reqeust ".
+    	"SET test_status=$new_admin_id ".
+    	"WHERE lab_config_id=$this->id ";
+    	$saved_db = DbUtil::switchToGlobal();
+    	query_blind($query_string);
+    	DbUtil::switchRestore($saved_db);
     }
 }
 	

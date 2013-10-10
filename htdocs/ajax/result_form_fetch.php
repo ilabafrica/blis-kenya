@@ -206,14 +206,6 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 			</span>
 		</td>
 	</tr>
-	<tr>
-		<td>
-		<label for='<?php echo $curr_form_id; ?>_date_1'>
-			Date of Entry
-		</label>
-		
-		</td>
-	</tr>
 	</table>
 	</form>
 	
