@@ -8,15 +8,14 @@ include("includes/header.php");
 LangUtil::setPageId("specimen_added");
 
 $session_num = $_REQUEST['snum'];
-$script_elems->enableTableSorter();
-$script_elems->enableFaceBox();
+
 
 //$script_elems->enablePulsate();
 
 
 //$session_num = get_session_current_number();
-
 $specimen_list = get_specimens_by_session($session_num);
+
 ?>
 <br />
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
@@ -100,9 +99,6 @@ $specimen_list = get_specimens_by_session($session_num);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
-                        <td>
-                            <?php $page_elems->getPostSpecimenEntryTaskList($patient_id); ?>
-                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -154,5 +150,9 @@ $specimen_list = get_specimens_by_session($session_num);
 					</ul>
 				</div>
 </div>
-
-<?php include("includes/footer.php");
+<?php
+include("includes/scripts.php");
+$script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
+$script_elems->enableFaceBox();
+include("includes/footer.php");?>
