@@ -76,7 +76,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
 		?>
-			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php //echo $patient->getAgeNumber(); ?>, '<?php //echo $patient->sex;?>');">
+			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
 			<option></option>
 			<?php
 			foreach($range_values as $option)
@@ -93,7 +93,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 		else if($range_type == Measure::$RANGE_NUMERIC)
 		{
 			# Continuous value range
-			//$age=$patient->getAgeNumber();
+			$age=$patient->getAgeNumber();
 			?>
 			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();"></input>
 			<span id='<?php echo $input_id; ?>_range'>
@@ -191,7 +191,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php // echo $patient->getAgeNumber(); ?>, '<?php // echo $patient->sex;?>');" ></textarea>
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" ></textarea>
 			</span>
 		</td>
 	</tr>
@@ -300,3 +300,18 @@ $test_type = get_test_type_by_id($test_type_id);
 	<a href='javascript:hide_test_result_form(<?php echo $test_id ?>);' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
+<script type='text/javascript'>
+	$(document).ready(function() {
+	
+	})
+	function update_remarks1()
+	{
+		var result_elems = $("input[name='result[]']").attr("value");
+				if(isNaN(result_elems))
+		{	
+			alert("Value expected for result is numeric.");
+			return;
+		}
+		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
+	}
+	</script>

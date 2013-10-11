@@ -1144,7 +1144,7 @@ class PageElems
 		}
 		?>
 
-		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 500px;">
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 600px;">
 			<thead>
 					<th>#</th>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>

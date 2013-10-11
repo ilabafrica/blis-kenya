@@ -820,7 +820,6 @@ function submit_forms(test_id)
 			continue;
 		}
 		var params = $('#'+form_id_list[i]).formSerialize();
-		console.log(params)
 			$.ajax({
 			type: "POST",
 			url: "ajax/result_add.php",
@@ -1016,7 +1015,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		 url: url_string,
 		 data: data_string,
 		 success: function(msg) {
-		$("#"+remarks_input_id).attr("value", msg)
+		$("#"+remarks_input_id).val(msg);
 		 }
 	 });
 }
