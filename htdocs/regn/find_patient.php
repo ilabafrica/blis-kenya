@@ -79,7 +79,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 				<span id='psearch_progress_spinner'>
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
 				</span>
-				</form><div class="span4" style="position: absolute;top: 0px;right: 0px;">
+				</form><div class="span4" id="help_text" style="position: absolute;top: 0px;right: 0px;">
 						<!-- BEGIN Portlet PORTLET-->
 						<div class="">
 											<div class="well text-info">
@@ -342,7 +342,7 @@ function fetch_patients()
 }
 
 function continue_fetch_patients()
-{
+{   
 	var patient_id = $.trim($('#pq').val());
 	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
 	var search_attrib = $('#p_attrib').val();
@@ -369,9 +369,10 @@ function continue_fetch_patients()
 				$('#add_anyway_link').attr("href", "javascript:load_patient_reg()");
 			}
 			$('#add_anyway_div').show();
+			$('#psearch_progress_spinner').hide();
 		}
+		
 	);
-	$('#psearch_progress_spinner').hide();
 }
 
 function right_load(destn_div)
