@@ -2529,7 +2529,7 @@ class PageElems
 		</form>
 		<?php
 	}
-	public function getSpecimenInfoRow($specimen, $rem_specs, $admin)
+	public function getSpecimenInfoRow($specimen, $rem_specs, $admin, $is_result_form=false)
 	{
 		# Returns HTML table row containing specimen info
 		# Called by getPatientHistory() function
@@ -2572,23 +2572,26 @@ class PageElems
                                 ?>
 			</td>
 			<td>
+			 <?php if ($is_result_form){?>
+				<a href='javascript:specimen_info(<?php echo $specimen->specimenId; ?>);' title='Click to View Details of this Specimen'><?php echo LangUtil::$generalTerms['DETAILS']; ?></a>
+			<?php } else{?>
 				<a href='specimen_info.php?sid=<?php echo $specimen->specimenId; ?>' title='Click to View Details of this Specimen'><?php echo LangUtil::$generalTerms['DETAILS']; ?></a>
+			<?php }?>
 			</td>
 			<?php
 			$sid=$specimen->specimenId;
 			$pid=$specimen->patientId;
 			
 			?>
+			<?php if(!$is_result_form){?>
 			<td><a href="javascript:get_report(<?php echo $pid;?>,<?php echo $sid;?> )">Report</a> </td>
-                        <?php
-                            if($specimenBarcode)
-                            {
-                            ?>
-                                <td><a href="javascript:print_specimen_barcode(<?php echo $pid;?>,<?php echo $sid;?> )">Print Barcode</a> </td>
-                            <? 
-                            }
-                                
-                        ?>
+            <?php
+            	if($specimenBarcode)
+					{?>
+           <td><a href="javascript:print_specimen_barcode(<?php echo $pid;?>,<?php echo $sid;?> )">Print Barcode</a> </td>
+             <?}
+			}
+             ?>
 		</tr>
 		<?php
 	}
@@ -2621,7 +2624,7 @@ class PageElems
 		<?php
 	}
 	
-	public function getPatientHistory($pid)
+	public function getPatientHistory($pid, $is_result_form=false)
 	{
 		# Returns HTML table displaying patient test history
                 $admin = 0;
@@ -2670,6 +2673,7 @@ class PageElems
 					<th><?php echo LangUtil::$generalTerms['R_DATE']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['SP_STATUS']; ?></th>
 					<th></th>
+					<?php if(!$is_result_form){?>
 					<th></th>
                                         <?php
                             if($specimenBarcode)
@@ -2678,7 +2682,7 @@ class PageElems
                                  <th></th>
                             <? 
                             }
-                                
+					}     
                         ?>
 				</tr>
 			</thead>
@@ -2691,7 +2695,7 @@ class PageElems
                                 if(in_array($specimen->specimenId, $rem_specs))
                                     continue;
                             }
-				$this->getSpecimenInfoRow($specimen, $rem_specs, $admin);
+				$this->getSpecimenInfoRow($specimen, $rem_specs, $admin, $is_result_form);
 			}
 			?>
 			</tbody>
@@ -3122,7 +3126,7 @@ class PageElems
 		<?php
 	}
 	
-	public function getSpecimenTestsTable($sid)
+	public function getSpecimenTestsTable($sid, $is_modal=false)
 	{
 		# Displays list of all tests registered for a specimen w/ status/results
 		$test_list = get_tests_by_specimen_id($sid);
@@ -3156,7 +3160,7 @@ class PageElems
 			<?php
 			foreach($test_list as $test)
 			{
-				$this->getTestInfoRow($test);
+				$this->getTestInfoRow($test, $is_modal);
 			}
 			# TODO: Add paging to this table
 			?>
@@ -3165,7 +3169,7 @@ class PageElems
 		<?php
 	}
 	
-	public function getTestInfoRow($test)
+	public function getTestInfoRow($test, $is_modal=false)
 	{
 		# Returns HTML table row containing specimen info
 		# Called by getSpecimenTestsTable() function
@@ -3194,10 +3198,12 @@ class PageElems
 				</span>
 			</td>
 			<td>
+				<?php if($is_modal){?>
 				<a href="javascript:verify_result('<?php echo $test->testId; ?>');" 
 					title="Click to Verify" class="btn green mini" id='verifybtn<?php echo $test->testId;?>'>
 					<i class="icon-ok"></i>Verify result
 				</a>
+				<?php }?>
 			</td>
 			<?php
 			$specimen_object=Specimen::getById($test->specimenId);

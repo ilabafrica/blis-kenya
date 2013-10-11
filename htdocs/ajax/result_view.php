@@ -47,7 +47,7 @@ Verified by
 </th>
 </thead>
 <tbody>
- <?php $page_elems->getTestInfoRow($test);?>
+ <?php $page_elems->getTestInfoRow($test, true);?>
  </tbody>
  </table>
 

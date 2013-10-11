@@ -2,8 +2,19 @@
 #
 # Main page for showing specimen info
 #
-include("redirect.php");
-include("includes/header.php");
+$is_modal=false;
+if(isset($_REQUEST['modal']))$is_modal=true;
+
+if(!$is_modal){
+	include("redirect.php");
+	include("includes/header.php");
+}else if ($is_modal){
+	require_once("../includes/db_lib.php");
+	require_once("../includes/page_elems.php");
+	require_once("../includes/script_elems.php");
+	$script_elems = new ScriptElems();
+	$page_elems = new PageElems();
+}
 LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
 
@@ -13,6 +24,7 @@ $script_elems->enableTokenInput();
 $script_elems->enableDatePicker();
 
 ?>
+<?php if(!$is_modal){?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
                         <h3>
                         </h3>
@@ -26,18 +38,32 @@ $script_elems->enableDatePicker();
                     </div>
                 </div>
                 <!-- END PAGE HEADER-->
+<?php }
+if($is_modal){?>
+<div class="modal-header">
+	<a href="javascript:remove_modal('specimen_info');" class="close"></a>
+	<h4><i class="icon-info-sign"></i> Specimen Details</h4>
+</div>
+<?php }?>
              <div class="row-fluid">
                 <div class="span12 sortable">
 
                     <div class="portlet box green" id="specimenresult_div">
+                   <?php 
+                    if(!$is_modal){?>
                         <div class="portlet-title" >
                             <h4><i class="icon-reorder"></i> <?php echo LangUtil::getTitle(); ?> </h4>           
                         </div>
-                        
+                   <?php }?>
                           <div class="portlet-body" >
-                                <br>
-                                 <a href='javascript:history.go(-1);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
-                                <br><br>
+                                <?php 
+                                if(!$is_modal){
+									?>
+									<br>
+                                 <a href='javascript:history.go(-1);' class="btn">&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+                                 <br><br>
+                                 <?php }?>
+                                
                                 <?php
                                 if(isset($_REQUEST['vd']))
                                 {
@@ -139,4 +165,14 @@ function fetch_specimen2(specimen_id)
     );
 }
 </script>
-<?php include("includes/footer.php"); ?>
+
+<?php if(!$is_modal){
+	include("includes/footer.php"); 
+}else if($is_modal){
+?>
+<div class="modal-footer">
+<button type="button" data-dismiss="modal" class="btn" onclick='javascript:remove_modal("specimen_info");'>Close</button>
+</div>
+<?php 
+}
+?>

@@ -287,9 +287,11 @@ $test_type = get_test_type_by_id($test_type_id);
 			<h4>Patient Test history</h4>
 		</div>		
 	<div class="portlet-body">
+	<div class="scroller" data-height="300px" data-always-visible="1">
 	<?php 		
-	$page_elems->getPatientHistory($patient->patientId);
+	$page_elems->getPatientHistory($patient->patientId, true);
 	?>
+	</div>
 	</div>
 	</div>
 	</div>

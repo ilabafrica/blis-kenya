@@ -2718,6 +2718,15 @@ class Specimen
 			case Specimen::$STATUS_RETURNED:
 				return LangUtil::$generalTerms['REF_RETURNED'];
 				break;
+			case Specimen::$STATUS_NOT_COLLECTED:
+				return LangUtil::$generalTerms['NOT_COLLECTED'];
+				break;
+			case Specimen::$STATUS_STARTED:
+				return LangUtil::$generalTerms['STARTED'];
+				break;
+			case Specimen::$STATUS_TOVERIFY:
+				return LangUtil::$generalTerms['TO_VERIFY'];
+				break;
 		}
 	}
 	

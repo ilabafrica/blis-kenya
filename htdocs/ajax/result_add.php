@@ -104,7 +104,7 @@ foreach($result_values as $result_val)
 		?>
 		<div class='sidetip_nopos'>
 			<?php echo LangUtil::$pageTerms['MSG_RESULTSUBMITTED']; ?>
-			&nbsp;<a href='specimen_info.php?sid=<?php echo $specimen_id; ?>'><?php echo LangUtil::$generalTerms['CMD_VIEW']; ?> &raquo;</a>
+			&nbsp;<a href='javascript:specimen_info(<?php echo $specimen_id; ?>);'><?php echo LangUtil::$generalTerms['CMD_VIEW']; ?> &raquo;</a>
 		</div>
 		<?php
 		return;
@@ -163,7 +163,7 @@ foreach($test_list as $test)
 }
 ?>
 <br>
-<a href='specimen_info.php?sid=<?php echo $specimen_id; ?>'><?php echo LangUtil::$generalTerms['DETAILS']; ?> &raquo;</a>
+<a href='javascript:specimen_info(<?php echo $specimen_id; ?>);' class="btn"><i class="icon-info-sign"></i> <?php echo LangUtil::$generalTerms['DETAILS']; ?> &raquo;</a>
 <?php
 # Check if all other tests on the same accession are complete.
 # If yes, show link to patient report

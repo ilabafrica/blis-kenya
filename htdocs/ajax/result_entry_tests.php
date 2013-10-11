@@ -163,6 +163,7 @@ else
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
                     	WHERE t.status_code_id=".$status."
+            			AND s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
                     	ORDER BY s.date_recvd DESC, s.ts DESC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
@@ -498,7 +499,7 @@ else{
 			<td id=action'.$test->testId.' style="width:100px;"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
 				<i class="icon-ok"></i>Enter Results</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View test details" class="btn mini">
+			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View test details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else
@@ -509,7 +510,7 @@ else{
 			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.','.Specimen::$STATUS_VERIFIED.');" title="Click to view results" class="btn mini">
 				<i class="icon-search"></i>View Results</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Specimen Information" class="btn green mini">
+			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="Specimen Information" class="btn green mini">
 				<i class="icon-info-sign"></i>Specimen Info</a>
 			</td>';
 			}else{

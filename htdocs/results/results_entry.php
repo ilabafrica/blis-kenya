@@ -403,6 +403,16 @@ if($SHOW_REPORT_RESULTS === true)
 	<input type='hidden' name='ajax_response' id='ajax_response' value=''></input>
 </form>
 
+<div id="specimen_info" class="modal hide fade" tabindex="-1" data-backdrop="static" data-keyboard="true" style="width:900px;">
+	  <div class="modal-body">
+	   
+	  </div>
+	  <div class="modal-footer">
+	    <button type="button" data-dismiss="modal" class="btn" onclick='javascript:cancel_hide()'>No</button>
+	  
+	  </div>
+</div>
+
 </div>
 </div>
 <!-- END ROW-FLUID--> 
@@ -746,10 +756,35 @@ function view_test_result(test_id, status)
 		}
 	);
 }
+function specimen_info(specimen_id)
+{
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'search/specimen_info.php';
+	var target_div = "specimen_info";
+	$("#"+target_div).load(url, 
+		{sid: specimen_id, modal:1}, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			if(status==<?php echo Specimen::$STATUS_VERIFIED;?>){
+				$('#verifybtn'+test_id).remove();
+				$('#verifydby'+test_id).removeClass('label-warning');
+				$('#verifydby'+test_id).addClass('label-success');
+			}
+			App.unblockUI(el);
+		}
+	);
+}
 
 function remove(test_id){
 	var target_div = "result_form_pane_"+test_id;
 	$("#test_"+test_id).remove();
+	$('#'+target_div).modal('hide'); 
+	
+}
+function remove_modal(id){
+	var target_div = id;
 	$('#'+target_div).modal('hide'); 
 	
 }
