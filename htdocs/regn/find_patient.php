@@ -16,7 +16,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-download-alt"></i>
-								<a href="index.php">Reception</a> 
+								<a href="index.php">Home</a> 
 							</li>
 						</ul>
 						<!-- END PAGE TITLE & BREADCRUMB-->
