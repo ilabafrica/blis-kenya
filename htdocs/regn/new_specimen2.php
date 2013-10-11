@@ -312,6 +312,25 @@ function add_specimens()
             alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['MSG_SID_INVALID']; ?>");
             return;
         }
+        //Validate custom fields
+        var custfields = $('#'+form_id+' input[name^="custom"]');
+        var empty_fields = false;
+        
+        if($('#'+form_id+' #ref_out_1').is(':checked')) {
+        
+        $.each(custfields, function(key, content){
+           if (content.value == null || content.value == ""){
+               empty_fields = true;
+               alert("<?php echo "Error: Some inputs are empty" ?>");
+               return false;
+           }
+        });
+        
+        }
+        
+        if(empty_fields) return;
+        
+        
             //All okay
     }
     $('#progress_spinner').show();

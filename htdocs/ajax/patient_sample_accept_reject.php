@@ -14,8 +14,6 @@ $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 
-putUILog('patient_sample_accept_reject', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
 //echo "Bungoma District Hospital";
 if(!isset($_REQUEST['result_cap']))
     $result_cap = $rcap;
@@ -35,7 +33,7 @@ $query_string = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_NOT_COLLECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by s.ts desc limit 200";
+                    "AND t.result = '' order by t.ts desc limit 200";
 
 if($attrib_type == 12)
 {
@@ -159,7 +157,7 @@ $specimen_id_list = array_values(array_unique($specimen_id_list));
 			if($_SESSION['dnum'] != 0)
 			{
 			?>
-				<td style='width:100px;'><?php echo $specimen->getDailyNumFull(); ?></td>
+				<td style='width:100px;'><?php echo $specimen->getSessionNum(); ?></td>
 			<?php
 
 			}

@@ -2918,7 +2918,7 @@ class PageElems
 				?>
 				<tr>
 					<td><u><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></u></td>
-					<td><div id="pulsate-regular" style="padding:5px; font-size:20px; font-weight:bold; color:#900;"><?php echo $specimen->getLabSection(); ?></div></td>
+					<td><div style="padding:5px; font-size:20px; font-weight:bold; color:#900;"><?php echo $specimen->getLabSection(); ?></div></td>
 				</tr>
 				<?php
 				}
