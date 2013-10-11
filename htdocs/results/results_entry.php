@@ -723,14 +723,13 @@ function fetch_test_result_form(test_id)
 	);
 }
 
-function view_test_result(test_id)
+function view_test_result(test_id, status)
 {
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	var pg=2;
 	$('#fetch_progress_bar').show();
 	var url = 'ajax/result_view.php';
-	//var target_div = "fetch_specimen";
 	$('.result_form_pane').html("");
 	var target_div = "result_form_pane_"+test_id;
 	$("#"+target_div).load(url, 
@@ -738,6 +737,11 @@ function view_test_result(test_id)
 		function() 
 		{
 			$('#'+target_div).modal('show');
+			if(status==<?php echo Specimen::$STATUS_VERIFIED;?>){
+				$('#verifybtn'+test_id).remove();
+				$('#verifydby'+test_id).removeClass('label-warning');
+				$('#verifydby'+test_id).addClass('label-success');
+			}
 			App.unblockUI(el);
 		}
 	);

@@ -506,7 +506,7 @@ else{
 				echo 'label-success">Verified';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view results" class="btn mini">
+			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.','.Specimen::$STATUS_VERIFIED.');" title="Click to view results" class="btn mini">
 				<i class="icon-search"></i>View Results</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Specimen Information" class="btn green mini">
