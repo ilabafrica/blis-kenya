@@ -3189,11 +3189,13 @@ class PageElems
 				<?php echo get_username_by_id($test->userId); ?>
 			</td>
 			<td>
+				<span id="verifydby<?php echo $test->testId;?>" class="label label-warning">
 				<?php echo $test->getVerifiedBy(); ?>
+				</span>
 			</td>
 			<td>
 				<a href="javascript:verify_result('<?php echo $test->testId; ?>');" 
-					title="Click to Verify" class="btn green mini">
+					title="Click to Verify" class="btn green mini" id='verifybtn<?php echo $test->testId;?>'>
 					<i class="icon-ok"></i>Verify result
 				</a>
 			</td>

@@ -57,3 +57,25 @@ Verified by
 <div class="modal-footer">
 <a href='javascript:hide_test_result_form_confirmed(<?php echo $test_id ?>);' class='btn success'>Close</a>
 </div>
+<script>
+function verify_result(test_id){
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	//Mark test as cancelled
+		var url = 'ajax/result_entry_tests.php';
+		$.post(url, 
+		{a: test_id, t: 13}, 
+		function(result) 
+		{
+			$('#verifydby'+test_id).removeClass('label-warning');
+			$('#verifydby'+test_id).addClass('label-success');
+			$('#verifybtn'+test_id).addClass('disabled');
+			$('#verifydby'+test_id).html(result);
+			$("tr#"+test_id).remove();
+			App.unblockUI(el);
+		}
+		);
+	
+}
+
+</script>

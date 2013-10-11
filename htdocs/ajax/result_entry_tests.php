@@ -178,21 +178,32 @@ else
 		        "AND t.result = ''";
 	}else if($attrib_type == 12)
 	{	
-		# Update speciment to started status code
-			$query_string = "UPDATE test SET status_code_id = 7 where test_id ='$attrib_value'";
-
+		# Update specimen to started status code
+		$query_string = "UPDATE test SET status_code_id = ".Specimen::$STATUS_STARTED." where test_id ='$attrib_value'";
+	}
+	else if($attrib_type == 13)
+	{
+		#Update specimen to started status code
+		$query_string = "UPDATE test SET status_code_id = ".Specimen::$STATUS_VERIFIED.", verified_by = ".$_SESSION['user_id']."  where test_id ='$attrib_value'";
 	}
 }
 //RUN QUERY DEPENDING ON PARAMENTERS
-if($attrib_type == 12)
+if($attrib_type == 12||$attrib_type == 13)
 {
 	$resultset = query_update($query_string);
-	
-	echo '<a href="javascript:fetch_test_result_form('.$quote.$attrib_value.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini"><i class="icon-ok"></i>Enter Results</a>%
-          <a href="javascript:fetch_specimen2('.$quote.$attrib_value.$quote.');" title="View test details" class="btn mini"><i class="icon-search"></i> View Details</a>';
-	return;
-
-} else{
+	switch ($attrib_type){
+	case 12:
+		echo '<a href="javascript:fetch_test_result_form('.$quote.$attrib_value.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini"><i class="icon-ok"></i>Enter Results</a>%
+	          <a href="javascript:fetch_specimen2('.$quote.$attrib_value.$quote.');" title="View test details" class="btn mini"><i class="icon-search"></i> View Details</a>';
+		return;
+	break;
+	case 13:
+		echo get_username_by_id($_SESSION['user_id']);
+		return;
+	break;
+	}
+}
+else{
  	
  	$num_records = count(query_associative_all($query_string, $row_count));
  	//Set Pagination
@@ -489,6 +500,17 @@ if($attrib_type == 12)
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View test details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>
+			</td>';
+			}else
+			if($status == Specimen::$STATUS_VERIFIED){
+				echo 'label-success">Verified';
+				echo '</span></td>';
+				echo '
+			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view results" class="btn mini">
+				<i class="icon-search"></i>View Results</a>
+			</td>
+			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Specimen Information" class="btn green mini">
+				<i class="icon-info-sign"></i>Specimen Info</a>
 			</td>';
 			}else{
 				echo '';
