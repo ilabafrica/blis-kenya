@@ -100,7 +100,15 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					?>
 					<li class="dropdown user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img alt="" src="assets/img/avatar.png" height=30 width=30/>
+						    <?php 
+						      if($_SESSION['img'] == "" || $_SESSION['img'] == null ) {
+						          echo '<img alt="" src="assets/img/avatar.png" height=30 width=30/>';
+						      }
+                              else {
+                                  echo '<img alt="" src="img/'.$_SESSION['img'].'" height=28 width=28/>';
+                              }
+                            ?>
+						
 						<span class="username"> <?php echo $_SESSION['username']; ?></span>
 						<i class="icon-angle-down"></i>
 						</a>

@@ -50,8 +50,9 @@ class User
 	public $labConfigId;
 	public $langId;
 	public $country;
+    public $img;
 	
-	public static function getObject($record)
+    public static function getObject($record)
 	{
 		global $DEFAULT_LANG;
 		# Converts a user record in DB into a User object
@@ -67,6 +68,7 @@ class User
 		$user->phone = $record['phone'];
 		$user->createdBy = $record['created_by'];
 		$user->labConfigId = $record['lab_config_id'];
+        $user->img = $record['img'];
 		if(isset($record['lang_id']))
 			$user->langId = $record['lang_id'];
 		else
@@ -5967,7 +5969,8 @@ function update_user_profile($updated_entry)
 		"SET email='$updated_entry->email', ".
 		"phone='$updated_entry->phone', ".
 		"actualname='$updated_entry->actualName', ".
-		"lang_id='$updated_entry->langId' ".
+		"lang_id='$updated_entry->langId', ".
+		"img='$updated_entry->img' ".
 		"WHERE user_id=$user_id";
 	query_blind($query_string);
 	DbUtil::switchRestore($saved_db);

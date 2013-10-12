@@ -9,6 +9,7 @@ LangUtil::setPageId("edit_profile");
 
 $user_profile = get_user_by_id($_SESSION['user_id']);
 ?>
+<link href="assets/bootstrap/css/bootstrap-fileupload.css" rel="stylesheet" />
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
                         <h3>
                         </h3>
@@ -88,10 +89,8 @@ $user_profile = get_user_by_id($_SESSION['user_id']);
                 ?>
                 </div>
                 <div id='edit_profile_div' >
-                <b><?php echo $LANG_ARRAY["header"]["EDITPROFILE"] ?></b>
-                <br><br>
                 <div id="err_message_profile"></div>
-                <form name="input" id="change_profile_form" action="change_profile.php" method="post">
+                <form name="input" id="change_profile_form" action="change_profile.php" enctype="multipart/form-data" method="post">
                 <input type='hidden' name='user_id' value='<?php echo $_SESSION['user_id']; ?>'></input>
                 
                 <table cellpadding="2">
@@ -117,21 +116,33 @@ $user_profile = get_user_by_id($_SESSION['user_id']);
                 <tr>
                     <td>Upload your image</td>
                     <td>
-                        <div class="controls">
-                                 <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="fileupload-new thumbnail" style="width: 100px; height: 80px;">
-                                       <img src="/img/avatar.png" alt="" />
-                                    </div>
-                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 100px; max-height: 80px; line-height: 20px;"></div>
-                                    <br>
+                              <div class="controls">
+                                        <?php
+                                        if ($user_profile->img == null){
+                                            echo '
+                                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                            <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                            <img src="/img/noimg.gif" alt="no image" />
+                                            </div>
+                                    <div class="fileupload-preview fileupload-exists" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>';
+                                            } 
+                                        else {
+                                            echo '
+                                            <div class="fileupload fileupload-exists" data-provides="fileupload">
+                                            <div class="fileupload-preview fileupload-exists thumbnail" style="width: 200px; height: 150px;">
+                                            <img src="img/'.$user_profile->img.'" alt="no image" />
+                                            </div>';
+                                        }
+                                       ?>
                                     <div>
                                        <span class="btn btn-file"><span class="fileupload-new">Select image</span>
                                        <span class="fileupload-exists">Change</span>
-                                       <input type="file" class="default" /></span>
+                                       <input type="file" class="default" name="imgupload" /></span>
                                        <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                                     </div>
                                  </div>
                               </div>
+                         
                      </td>
                 </tr>
                 <tr>
