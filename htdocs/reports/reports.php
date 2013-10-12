@@ -31,7 +31,7 @@ db_get_current();
 <div class="col-lg-7">
 <div class="panel panel-primary">
     
-    <div class="portlet box green reports_subdiv" id="user_stats_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="user_stats_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo "User Statistics"; ?></h4>
                                 <div class="tools">
@@ -249,7 +249,7 @@ db_get_current();
     </div>
     
     
-    <div class="portlet box green reports_subdiv" id="disease_report_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="disease_report_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></h4>
                                 <div class="tools">
@@ -371,7 +371,7 @@ db_get_current();
     </div>
     
     
-    <div class="portlet box green reports_subdiv" id="tat_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="tat_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></h4>
                                 <div class="tools">
@@ -479,7 +479,7 @@ db_get_current();
     
     
     
-    <div class="portlet box green reports_subdiv" id="specimen_count_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="specimen_count_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Specimen counts</h4>
                                 <div class="tools">
@@ -611,7 +611,7 @@ db_get_current();
         
     </div>
     
-	<div class="portlet box green reports_subdiv" id="test_history_div" style="display: none">
+	<div class="portlet box blue reports_subdiv" id="test_history_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Patient Report</h4>
                                 <div class="tools">
@@ -694,7 +694,7 @@ db_get_current();
     </div>
     </div>
     
-    <div class="portlet box green reports_subdiv" id="daily_report_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="daily_report_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Daily Log</h4>
                                 <div class="tools">
@@ -815,7 +815,7 @@ db_get_current();
     </div>
     </div>
     
-    <div class="portlet box green reports_subdiv" id="summary_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="summary_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Prevalence rate</h4>
                                 <div class="tools">
