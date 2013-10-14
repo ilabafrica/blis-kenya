@@ -1355,10 +1355,8 @@ class TestType
 		return $retVal['id'];
 	}
 
-	public static function getSpecimenIdByTestName($name)
+	public static function getSpecimenIdByTestName($test_id)
 	{
-		$test_id = getIdByName($name);
-
 		$query_string = "SELECT specimen_type_id as id FROM `specimen_test` WHERE `test_type_id`=$test_id";
 		
 		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);

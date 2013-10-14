@@ -3969,8 +3969,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				
 				# code...
 				}
-			
         }?>
+        
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
