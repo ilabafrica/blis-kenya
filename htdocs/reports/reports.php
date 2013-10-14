@@ -31,7 +31,7 @@ db_get_current();
 <div class="col-lg-7">
 <div class="panel panel-primary">
     
-    <div class="portlet box green reports_subdiv" id="user_stats_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="user_stats_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo "User Statistics"; ?></h4>
                                 <div class="tools">
@@ -39,7 +39,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-    <div class="portlet-body" >
+    <div class="portlet-body" style="height: 400px">
                     <div id='user_stats'>
 
                     <div class="span3" style="position: absolute;top: 150px;right: 30px;">
@@ -132,7 +132,7 @@ db_get_current();
                                     <td>
                                         <br>
                                         <!--<div class="form-actions">-->
-                                        <input type='submit' id='user_stats_all_submit_button' class='btn red-stripe' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
+                                        <input type='submit' id='user_stats_all_submit_button' class='btn blue' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
                                         </input>
                                         <!--</div>-->
                                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -232,7 +232,7 @@ db_get_current();
                                     <td></td>
                                     <td>
                                         <br>
-                                        <input type='submit' id='user_stats_individual_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
+                                        <input type='submit' class="btn blue" id='user_stats_individual_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>'>
                                         </input>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         <span id='specimen_count_progress_spinner' style='display:none'>
@@ -249,7 +249,7 @@ db_get_current();
     </div>
     
     
-    <div class="portlet box green reports_subdiv" id="disease_report_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="disease_report_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_INFECTIONREPORT']; ?></h4>
                                 <div class="tools">
@@ -257,7 +257,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-    <div class="portlet-body" >
+    <div class="portlet-body" style="height: 400px">
             <div id='disease_report'>
             <div class="span4" style="position: absolute;top: 150px;right: 30px;">
                         <!-- BEGIN Portlet PORTLET-->
@@ -355,7 +355,7 @@ db_get_current();
                         <td></td>
                         <td>
                             <br>
-                            <input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_disease_report()'></input>
+                            <input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_disease_report()'></input>
                             &nbsp;&nbsp;&nbsp;
                             <span id='disease_report_progress_spinner'  style='display:none;'>
                                 <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -371,7 +371,7 @@ db_get_current();
     </div>
     
     
-    <div class="portlet box green reports_subdiv" id="tat_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="tat_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></h4>
                                 <div class="tools">
@@ -379,7 +379,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-    <div class="portlet-body" >
+    <div class="portlet-body" style="height: 400px">
             <div id='tat'  >  
 
                 <div class="span5" style="position: absolute;top: 150px;right: 30px;">
@@ -463,7 +463,7 @@ db_get_current();
                         <td></td>
                         <td>
                             <br>
-                            <input type='button' id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tat_report();"></input>
+                            <input type='button' class="btn blue" id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tat_report();"></input>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <span id='tat_progress_spinner' style='display:none;'>
                                 <?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -479,7 +479,7 @@ db_get_current();
     
     
     
-    <div class="portlet box green reports_subdiv" id="specimen_count_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="specimen_count_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Specimen counts</h4>
                                 <div class="tools">
@@ -487,7 +487,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-    <div class="portlet-body" >
+    <div class="portlet-body" style="height: 400px">
                 <div id='specimen_count'>
                 <div class="span3" style="position: absolute;top: 150px;right: 30px;">
                         <!-- BEGIN Portlet PORTLET-->
@@ -590,7 +590,7 @@ db_get_current();
                     <td></td>
                     <td>
                         <br>
-                        <input type='button' id='specimen_count_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_count_report()'>
+                        <input type='button' class="btn blue" id='specimen_count_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_count_report()'>
                         </input>
                         <!--
                         --Merged into single submit button--
@@ -611,7 +611,7 @@ db_get_current();
         
     </div>
     
-	<div class="portlet box green reports_subdiv" id="test_history_div" style="display: none">
+	<div class="portlet box blue reports_subdiv" id="test_history_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Patient Report</h4>
                                 <div class="tools">
@@ -619,7 +619,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-    <div class="portlet-body" >           
+    <div class="portlet-body" style="height: 400px">           
         <div id='test_history'>
             <div class='reports_subdiv_help' id='test_history_div_help' style='display:none'>
                 
@@ -678,7 +678,7 @@ db_get_current();
                     <tr>
                         <td></td>
                         <td>
-                            <input type='button' id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
+                            <input type='button' class="btn blue" id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
                             &nbsp;&nbsp;&nbsp;
                             <span id='test_history_progress_spinner'  style='display:none;'>
                                 <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
@@ -694,7 +694,7 @@ db_get_current();
     </div>
     </div>
     
-    <div class="portlet box green reports_subdiv" id="daily_report_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="daily_report_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Daily Log</h4>
                                 <div class="tools">
@@ -702,7 +702,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-    <div class="portlet-body" >   
+    <div class="portlet-body" style="height: 400px">   
     <div id='daily_report'>
     <div class="span3" style="position: absolute;top: 150px;right: 30px;">
                         <!-- BEGIN Portlet PORTLET-->
@@ -806,7 +806,7 @@ db_get_current();
                 <tr>
                     <td></td>
                     <td>
-                        <input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
+                        <input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
                     </td>
                 </tr>
             </tbody>
@@ -815,7 +815,7 @@ db_get_current();
     </div>
     </div>
     
-    <div class="portlet box green reports_subdiv" id="summary_div" style="display: none">
+    <div class="portlet box blue reports_subdiv" id="summary_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i>Prevalence rate</h4>
                                 <div class="tools">
@@ -823,7 +823,7 @@ db_get_current();
                                     <a data-toggle="modal" class="config"></a>
                                 </div>
         </div>
-        <div class="portlet-body" > 
+        <div class="portlet-body" style="height: 400px"> 
         <div id='prevalence_rate' >
             <?php echo getStartDate();?>
 
@@ -922,7 +922,7 @@ db_get_current();
                     </td>
                     <td>
                         <br>
-                        <input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_summary_fn(0);"/>
+                        <input type="button" class="btn blue" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_summary_fn(0);"/>
                         &nbsp;&nbsp;
                         <!--<input type="button" value="View Monthly" onclick="get_summary_fn(1);"/>-->
                         <!--<br><br>-->
@@ -1016,7 +1016,7 @@ db_get_current();
 					</td>
 					<td>
 						<br>
-						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_patient_reports();"/>
+						<input type="button"  class="btn blue" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_patient_reports();"/>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='report_progress_bar' style='display:none;'>
 							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1079,7 +1079,7 @@ db_get_current();
 					<td></td>
 					<td>
 						<br>
-						<input type='button' id='pending_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_pending_report();"></input>
+						<input type='button'  class="btn blue" id='pending_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_pending_report();"></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='pending_progress_spinner' style='display:none;'>
 							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1140,7 +1140,7 @@ db_get_current();
 					<td></td>
 					<td>
 					<br>
-						<input type='button' id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_doctor_stats();"></input>
+						<input type='button' class="btn blue" id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_doctor_stats();"></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
 							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1200,7 +1200,7 @@ db_get_current();
 					<td></td>
 					<td>
 					<br>
-						<input type='button' id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();"></input>
+						<input type='button'  class="btn blue" id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();"></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
 							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1259,7 +1259,7 @@ db_get_current();
 					<td></td>
 					<td>
 					<br>
-						<input type='button' id='testcount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
+						<input type='button' class="btn blue" id='testcount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
 							<?php // $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1319,7 +1319,7 @@ db_get_current();
 					<td></td>
 					<td>
 					<br>
-						<input type='button' id='specimencount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
+						<input type='button' class="btn blue" id='specimencount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
 							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1401,7 +1401,7 @@ db_get_current();
 					<td></td>
 					<td>
 						<br>
-						<input type='button' id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:submit_tat_aggregate_form();"></input>
+						<input type='button' class="btn blue" id='tat_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:submit_tat_aggregate_form();"></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tat_progress_spinner' style='display:none;'>
 							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1479,7 +1479,7 @@ db_get_current();
 					</td>
 					<td>
 						<br>
-						<input type="button" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_print_page();" />
+						<input type="button" class="btn blue"  value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" onclick="get_print_page();" />
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='print_progress_bar' style='display:none;'>
 							<?php //$page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1541,7 +1541,7 @@ db_get_current();
 				<tr>
 					<td></td>
 					<td>
-						<input type='button' name='test_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_test_report();'></input>
+						<input type='button' class="btn blue"  name='test_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_test_report();'></input>
 						&nbsp;&nbsp;&nbsp;
 						<span id='test_report_progress_spinner'  style='display:none;'>
 							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1597,7 +1597,7 @@ db_get_current();
 				<tr>
 					<td></td>
 					<td>
-						<input type='button' id='submit_button11' name='session_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_session_report();'></input>
+						<input type='button'  class="btn blue" id='submit_button11' name='session_report_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_session_report();'></input>
 						&nbsp;&nbsp;&nbsp;
 						<span id='session_report_progress_spinner'  style='display:none;'>
 							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1704,7 +1704,7 @@ db_get_current();
 				<tr>
 					<td></td>
 					<td>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
+						<input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:print_daily_log()'></input>
 					</td>
 				</tr>
 			</tbody>
@@ -1732,7 +1732,7 @@ db_get_current();
 				<tr>
 					<td></td>
 					<td>
-						<input type='button' id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
+						<input type='button' class="btn blue" id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
 						&nbsp;&nbsp;&nbsp;
 						<span id='preport_progress_spinner'  style='display:none;'>
 							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
@@ -1807,7 +1807,7 @@ db_get_current();
 					<td></td>
 					<td>
 						<br>
-                                                <input type='button' id='prev_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_aggregate_report();" ></input>
+                                                <input type='button' class="btn blue"  id='prev_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_aggregate_report();" ></input>
 						
 						&nbsp;&nbsp;&nbsp;
 						<span id='aggregate_report_progress_spinner'  style='display:none;'>
@@ -1863,7 +1863,7 @@ db_get_current();
 				<td></td>
 				<td>
 				<br>
-				<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_control_report()'></input>
+				<input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_control_report()'></input>
 				&nbsp;&nbsp;&nbsp;
 				<span id='stock_report_progress_spinner'  style='display:none;'>
 					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1927,7 +1927,7 @@ db_get_current();
 					<td></td>
 					<td>
 						<br>
-						<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_infection_report_aggregate()'></input>
+						<input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:get_infection_report_aggregate()'></input>
 						&nbsp;&nbsp;&nbsp;
 						<span id='infection_aggregate_progress_spinner'  style='display:none;'>
 							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
@@ -1983,7 +1983,7 @@ db_get_current();
 				<tr>
 					<td></td>
 					<td>
-						<input type='button' id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
+						<input type='button' class="btn blue" id='submit_button15' name='preport_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_preport();'></input>
 						&nbsp;&nbsp;&nbsp;
 						<span id='preport_progress_spinner'  style='display:none;'>
 							<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>

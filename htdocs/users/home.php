@@ -23,63 +23,77 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 				</div>
 				<!-- END PAGE HEADER-->
 				
-<?php $page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip); ?>
-<!-- DASH BOARD -->
-<?php // include('dashboard.php');?>
-<?php
-include("includes/scripts.php");
-$script_elems->enableLatencyRecord();
-$script_elems->enableDatePicker();
-?>
-<script type='text/javascript'>
-
-$(document).ready(function(){
-    $.ajax({
-		type : 'POST',
-		url : 'update/check_version.php',
-		success : function(data) {
-			if ( data=='0' ) 
-                        {
-                            $('#update_div').show();
-			}
-			else 
-                        {
-                             $('#update_div').hide();
-			}
-		}
-	});
-    //$('#update_div').show();
-});
-
-function blis_update_t()
-{
-    $('#update_spinner').show();
-    setTimeout( "blis_update();", 5000); 
-}
-
-function blis_update()
-{
-    $.ajax({
-		url : '../update/blis_update.php',
-		success : function(data) {
-			if ( data=="true" ) {
-                            $('#update_failure').hide();
-                             $('#update_div').hide();
-                            $('#update_spinner').hide();
-                            $('#update_success').show();
-			}
-			else {
-                                $('#update_success').hide();
-                                 $('#update_div').hide();
-                                $('#update_spinner').hide();
-				$('#update_failure').show();
-			}
-		}
-	});
-        
-    //$('#update_button').show();
-}
-</script>
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <h4><i class="icon-reorder"></i>Home</h4>
+                        <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" style="height: 400px">
+				
+                    <?php $page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip); ?>
+                    <!-- DASH BOARD -->
+                    <?php // include('dashboard.php');?>
+                    
+                    </div>
+                </div>
+                    <?php
+                    include("includes/scripts.php");
+                    $script_elems->enableLatencyRecord();
+                    $script_elems->enableDatePicker();
+                    ?>
+                    <script type='text/javascript'>
+                    
+                    $(document).ready(function(){
+                        $.ajax({
+                    		type : 'POST',
+                    		url : 'update/check_version.php',
+                    		success : function(data) {
+                    			if ( data=='0' ) 
+                                            {
+                                                $('#update_div').show();
+                    			}
+                    			else 
+                                            {
+                                                 $('#update_div').hide();
+                    			}
+                    		}
+                    	});
+                        //$('#update_div').show();
+                    });
+                    
+                    function blis_update_t()
+                    {
+                        $('#update_spinner').show();
+                        setTimeout( "blis_update();", 5000); 
+                    }
+                    
+                    function blis_update()
+                    {
+                        $.ajax({
+                    		url : '../update/blis_update.php',
+                    		success : function(data) {
+                    			if ( data=="true" ) {
+                                                $('#update_failure').hide();
+                                                 $('#update_div').hide();
+                                                $('#update_spinner').hide();
+                                                $('#update_success').show();
+                    			}
+                    			else {
+                                                    $('#update_success').hide();
+                                                     $('#update_div').hide();
+                                                    $('#update_spinner').hide();
+                    				$('#update_failure').show();
+                    			}
+                    		}
+                    	});
+                            
+                        //$('#update_button').show();
+                    }
+                    </script>
+                    
 <?php
 include("includes/footer.php");
 ?>

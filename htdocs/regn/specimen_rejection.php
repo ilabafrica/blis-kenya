@@ -118,10 +118,9 @@ $patient = get_patient_by_id($main_rs['patient_number']);
 </table>
 <br>
 &nbsp;&nbsp;
-<input type="button" name="add_button" id="add_button" onclick="check_input();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
+<input type="button" class="btn yellow" name="add_button" id="add_button" onclick="check_input();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
 &nbsp;&nbsp;&nbsp;&nbsp;
-<small><a href='javascript:askandback();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href='find_patient.php'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a></form>
+	<a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a></form>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <div id='NEW_SPECIMEN' class='right_pane' style='display:none;margin-left:10px;'>
 	<ul>

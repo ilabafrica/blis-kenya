@@ -27,6 +27,7 @@ if($login_correct)
 	$_SESSION['user_actualname'] = $user->actualName;
 	$_SESSION['user_level'] = $user->level;
 	$_SESSION['locale'] = $user->langId;
+    $_SESSION['img'] = $user->img;
 	//if($user->isAdmin())
 	if(is_admin($user))
 	{

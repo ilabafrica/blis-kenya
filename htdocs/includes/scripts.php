@@ -53,6 +53,7 @@
 			<script type="text/javascript" src="assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
 			<script src="assets/bootstrap/js/bootstrap-modalmanager.js"></script>
 			<script src="assets/bootstrap/js/bootstrap-modal.js"></script>
+			<script src="assets/bootstrap/js/bootstrap-fileupload.js"></script>
 			<script src="assets/js/app.js"></script>				
 			<script>
 				jQuery(document).ready(function() {		

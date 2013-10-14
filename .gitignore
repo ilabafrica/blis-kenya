@@ -46,6 +46,7 @@ FirefoxPortable/
 autorun.inf
 dbdir/
 local/
+htdocs/img/
 pms_config.ini
 server/
 export/

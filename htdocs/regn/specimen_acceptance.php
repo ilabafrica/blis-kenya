@@ -9,65 +9,81 @@ LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
 $pid = $_REQUEST['pid'];
 ?>
-
-<br>
-<div class="portlet box green">
-		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i>Specimen Accepted</h4>
-
-			<div class="tools">
-				<a href="javascript:;" class="collapse"></a>
-				<a href="javascript:;" class="reload"></a>
-				<a href="javascript:;" class="remove"></a>
-			</div>
-		</div>
-		<div class="portlet-body form">
-             <a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
-            <br><br>
-            <?php
-            if(isset($_REQUEST['vd']))
-            {
-            	# Directed from specimen_verify_do.php
-            	?>
-            	<span class='clean-orange' id='msg_box'>
-            		<?php echo LangUtil::$pageTerms['TIPS_VERIFYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
-            	</span>
-            	<?php
-            }
-            else if(isset($_REQUEST['re']))
-            {
-            	# Directed form specimen_result_do.php
-            	?>
-            	<span class='clean-orange' id='msg_box'>
-            		<?php echo LangUtil::$pageTerms['TIPS_ENTRYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
-            	</span>
-            	<?php	
-            }
-            
-            ?>
-            <table>
-            	<tr valign='top'>
-            		<td>
-            		<?php $page_elems->getSpecimenInfo($sid); ?>
-            		</td>
-            		<td>
-            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            		</td>
-            		<td>
-            			<?php $page_elems->getSpecimenInfoTaskList($sid, $pid); ?>
-            		</td>
-            	</tr>
-            </table>
-            <div id="barcodeData" style="display:none;">
-                                        <input type="text" id="patientID" value='<?php echo encodePatientBarcode($_REQUEST['pid'],0); ?>' />
-                                        <br><br>
-                                        <div id="specimenBarcodeDiv"></div>
-                                        </div>
-                            </div>
-          </div>
-      </div>
- </div>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
+                        <h3>
+                        </h3>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="icon-download-alt"></i>
+                                <a href="index.php">Home</a> 
+                            </li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
+                <!-- BEGIN REGISTRATION PORTLETS-->   
+                <div class="row-fluid">
+                <div class="span12 sortable">
+        <div class="portlet box green">
+        		<div class="portlet-title">
+        			<h4><i class="icon-reorder"></i>Specimen Accepted</h4>
+        
+        			<div class="tools">
+        				<a href="javascript:;" class="collapse"></a>
+        				<a href="javascript:;" class="reload"></a>
+        				<a href="javascript:;" class="remove"></a>
+        			</div>
+        		</div>
+        		<div class="portlet-body form" style="height: 450px">
+                     <a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
+                    <br><br>
+                    <?php
+                    if(isset($_REQUEST['vd']))
+                    {
+                    	# Directed from specimen_verify_do.php
+                    	?>
+                    	<span class='clean-orange' id='msg_box'>
+                    		<?php echo LangUtil::$pageTerms['TIPS_VERIFYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
+                    	</span>
+                    	<?php
+                    }
+                    else if(isset($_REQUEST['re']))
+                    {
+                    	# Directed form specimen_result_do.php
+                    	?>
+                    	<span class='clean-orange' id='msg_box'>
+                    		<?php echo LangUtil::$pageTerms['TIPS_ENTRYDONE']; ?> &nbsp;&nbsp;<a href="javascript:toggle('msg_box');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>&nbsp;&nbsp;
+                    	</span>
+                    	<?php	
+                    }
+                    
+                    ?>
+                    <table>
+                    	<tr valign='top'>
+                    		<td>
+                    		<?php $page_elems->getSpecimenInfo($sid); ?>
+                    		</td>
+                    		<td>
+                    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		</td>
+                    		<td>
+                    			<?php $page_elems->getSpecimenInfoTaskList($sid, $pid); ?>
+                    		</td>
+                    	</tr>
+                    </table>
+                    <div id="barcodeData" style="display:none;">
+                                                <input type="text" id="patientID" value='<?php echo encodePatientBarcode($_REQUEST['pid'],0); ?>' />
+                                                <br><br>
+                                                <div id="specimenBarcodeDiv"></div>
+                                                </div>
+                                    </div>
+                  </div>
+              </div>
+         </div>
+         </div>
+         </div>
 <?php
 include("includes/scripts.php");
 include("barcode/barcode_lib.php");
