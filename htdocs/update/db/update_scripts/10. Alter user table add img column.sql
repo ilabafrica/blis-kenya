@@ -1,0 +1,1 @@
+ALTER TABLE `blis_revamp`.`user` ADD COLUMN `img` VARCHAR(200) NULL  AFTER `lang_id` ;
