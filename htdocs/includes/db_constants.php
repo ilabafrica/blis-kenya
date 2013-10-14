@@ -48,7 +48,7 @@ $DB_PASS = "";
 
 if($SERVER == $ON_DEV)
 {
-	$DB_PASS = "admin123";
+	$DB_PASS = "";
 }
 else if($SERVER == $ON_ARC)
 {
@@ -56,7 +56,7 @@ else if($SERVER == $ON_ARC)
 }
 else if($SERVER == $ON_PORTABLE)
 {
-	$DB_PASS = "admin123";
+	$DB_PASS = "";
 }
 
 if(isset($_SESSION['username']))
