@@ -15111,11 +15111,26 @@ class API
 	    # gets pending lab requests from external_lab_reqeuest_table
 	    global $con;
 	    $patient_id = mysql_real_escape_string($patient_id, $con);
-	   $query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
+	   	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
 	    $tests_ordered = query_associative_all($query_string, $row_count);
 	    DbUtil::switchRestore($saved_db);
 	    return $tests_ordered;
+    }
+    
+    public static function updateExternalLabrequest($patient_id, $lab_no, $result){
+    	
+    	global $con;
+    	$patient_id = mysql_real_escape_string($patient_id, $con);
+    	$query_string = 
+    	"UPDATE external_lab_request 
+    	SET 
+    	result = $result, 
+    	result_returned = 1
+    	WHERE patient_id='$patient_id' AND lab_no='$lab_no'";
+    	$saved_db = DbUtil::switchToGlobal();
+    	$tests_ordered = query_associative_all($query_string, $row_count);
+    	DbUtil::switchRestore($saved_db);
     }
     
     public static function getLabRequestFromView($patient_id){

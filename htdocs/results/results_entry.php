@@ -866,13 +866,12 @@ function submit_forms(test_id)
 				$("tr#"+test_id).remove();
 
 				//push results to sanitas
-				var results ='{"labNo": 318752,"requestingClinician": 37,"result": "positive"}';
 				var pushURL ='ajax/push_results.php';
 				$.post(
 					pushURL,
-					{labRequest: results},  
+					{test_id:test_id},  
 			        function(responseText){
-						//alert("sent results to sanitas successfully"); 
+						alert(responseText); 
 			        }
 				);
 			}
