@@ -41,5 +41,6 @@ if(isset($_REQUEST['doc']))
 	}
 	
 $_SESSION['doctor'] = $doc_session;
-$page_elems->getNewSpecimenForm($num, $pid, $dnum, $session_num, $doc , $title);
+$external_requests = null;
+$page_elems->getNewSpecimenForm($num, $pid, $dnum, $session_num, $doc , $title, $external_requests);
 ?>

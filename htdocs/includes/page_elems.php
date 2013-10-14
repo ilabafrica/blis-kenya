@@ -3959,9 +3959,10 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
-		<?php if($external_requests!=null)
+		<?php if(is_array($external_requests) && $external_requests != null)
 		{
 			foreach ($external_requests as $investigations) {
+			    
 				$clinician = $investigations['requestingClinician'];
 				$test = $investigations['investigation'];
 				//$test_id=getIdByName($test);
@@ -3974,7 +3975,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<?php 
-			if(isset($external_requests)){
+			if(is_array($external_requests) && $external_requests != null){
 				$length = count($external_requests);
 				$labNumbers="";
 				for($i=0; $i<$length; $i++){
@@ -4127,9 +4128,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $clinician; ?>' ></input>
 				</td>
 			</tr>
-			
 			<tr valign='top'<?php
-			if($_SESSION['refout'] == 0)
+			if($_SESSION['refout'] == 0 || (is_array($external_requests) && $external_requests != null))
 				echo " style='display:none;' ";
 			?>>
 				<td>
