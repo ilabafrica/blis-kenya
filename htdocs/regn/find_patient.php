@@ -84,9 +84,8 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 						<div class="">
 											<div class="well text-info">
 											<?php
-											echo "<b>Tips</b>";
 											echo "<li>";
-											echo "Search Patients using the Sanitas Number.";
+											echo "Search Patients using the HMIS Number.";
 											echo "</li>";
 										
 											echo "<li>"; 
