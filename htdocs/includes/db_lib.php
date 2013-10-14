@@ -6305,8 +6305,9 @@ function search_patients_by_id($q)
 		 * Search from external_lab_request table if patient is not found
 		 */
 		$query_string = "SELECT * FROM external_lab_request ".
-		"WHERE patient_id='$q'".
-		"ORDER BY requestDate DESC";
+		"WHERE patient_id='$q' AND test_status ='".Specimen::$STATUS_PENDING.
+		"' GROUP BY patient_id ORDER BY requestDate DESC";
+		
 		
 		$saved_db = DbUtil::switchToGlobal();
 		$resultset = query_associative_all($query_string, $row_count);

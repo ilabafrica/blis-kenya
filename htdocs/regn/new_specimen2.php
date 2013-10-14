@@ -63,7 +63,8 @@ if ($patient!=null){
 if ($patient==null && $tests_requested!=null){	
 	$patient = get_patient_by_external_id($pid);
 	$is_external_patient=true;
-	$pid = $patient->surrogateId;
+	$patient = Patient::getBySurrId($patient->surrogateId);
+	$pid = $patient->patientId;
 }
 
 if($patient == null)

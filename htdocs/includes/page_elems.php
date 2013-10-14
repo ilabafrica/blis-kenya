@@ -2186,9 +2186,6 @@ class PageElems
 	public function getPatientInfo($pid, $width="", $is_external_patient =false)
 	{
 		# Returns HTML table displaying patient info
-		if($is_external_patient){
-			$patient=Patient::getBySurrId($pid);
-		}else
 		$patient = get_patient_by_id($pid);
 		
 		if($patient == null)
