@@ -238,6 +238,37 @@ if($lab_config == null)
                 <!-- END PAGE HEADER-->
 <!-- BEGIN ROW-FLUID-->  
 
+    <div class="portlet box green right_pane" id="search_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Configure Fields for search results</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        <div class="portlet-body">
+
+            <div  id='search' style='margin-left:10px;'>
+                    <p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
+                        <div id='searchfield_msg' class='clean-orange' style='display:none;width:350px;'>
+                        </div>
+                        <form id='searchfields_form' name='searchfields_form' action='ajax/search_config_update.php' method='post'>
+                        <input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>                   
+                            <?php $page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
+                        <br><br>
+                        <input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_searchconfig()'>
+                        </input>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--span id='st_types_progress' style='display:none;'-->
+                                            <span id='searchfields_progress' style='display:none;'>
+    
+                            <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                        </span>
+                        </form>
+            </div>
+        </div>
+       </div>
+
 <div class="portlet box green right_pane" id="worksheet_config_div" style="display: none">
         <div class="portlet-title" >
                                 <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_WORKSHEETCONFIG']; ?></h4>
@@ -249,7 +280,6 @@ if($lab_config == null)
         <div class="portlet-body">
             <div id='worksheet_config' style='margin-left:10px;'>
                 <p style="text-align: right;"><a rel='facebox' href='#WS_rc'>Page Help</a></p>
-                    <br><br>
                     <div id='worksheet_config_msg' class='clean-orange' style='display:none;width:350px;'>
                     </div>
                     <br>
@@ -276,7 +306,7 @@ if($lab_config == null)
                             <tr valign='top'>
                                 <td></td>
                                 <td>
-                                    <input type='button' onclick='javascript:fetch_worksheet_config();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
+                                    <input type='button' class="btn green" onclick='javascript:fetch_worksheet_config();' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>'></input>
                                     &nbsp;&nbsp;&nbsp;
                                     <span id='worksheet_fetch_progress' style='display:none'>
                                         <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
@@ -335,7 +365,7 @@ if($lab_config == null)
                             <option value='6'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['PATIENTS']; ?></option>
                         </select>
                         &nbsp;&nbsp;
-                        <input type='button' id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>
+                        <input type='button' class="btn green" id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>
                         &nbsp;&nbsp;
                         <span id='report_config_fetch_progress' style='display:none;'>
                             <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
@@ -429,7 +459,7 @@ if($lab_config == null)
                         <?php $page_elems->getBarcodeFields($lab_config->id);
                                                 //$page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
                     <br><br>
-                    <input type='button' class="btn blue" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_barcodeconfig()'>
+                    <input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_barcodeconfig()'>
                     </input>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <!--span id='st_types_progress' style='display:none;'-->
@@ -1237,26 +1267,7 @@ if($lab_config == null)
 			
                                 <!--NC3065-->
                                 
-                                <div class='right_pane' id='search_div' style='display:none;margin-left:10px;'>
-				<p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
-					<b><?php echo "Configure Fields for search results"; ?></b>
-					<br><br>
-                                        <div id='searchfield_msg' class='clean-orange' style='display:none;width:350px;'>
-					</div>
-					<form id='searchfields_form' name='searchfields_form' action='ajax/search_config_update.php' method='post'>
-					<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>					
-						<?php $page_elems->getSearchFieldsCheckboxes($lab_config->id); ?>
-					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='submit_searchconfig()'>
-					</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<!--span id='st_types_progress' style='display:none;'-->
-                                        <span id='searchfields_progress' style='display:none;'>
-
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-					</form>
-				</div>
+                
                                 
                                 
                                 
@@ -1303,7 +1314,7 @@ if($lab_config == null)
 							<table class='table table-striped table-condensed table-hover' id="result">
 							</table>
 							<br>
-							<a href="javascript:import_users();" class="btn blue">Ok</a>
+							<a href="javascript:import_users();" class="btn green">Ok</a>
 							
 						</div>
 						</div>

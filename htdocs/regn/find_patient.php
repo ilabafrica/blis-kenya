@@ -74,7 +74,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 				&nbsp;&nbsp;
 				<input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" class='uniform_width m-wrap tooltips' />
 				&nbsp;&nbsp;
-				<button id='psearch_button' class="btn green button-submit" type="button" onclick="javascript:fetch_patients();">
+				<button id='psearch_button' class="btn blue button-submit" type="button" onclick="javascript:fetch_patients();">
 				<i class='icon-search'></i> <?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?></button>
 				<span id='psearch_progress_spinner'>
 				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>

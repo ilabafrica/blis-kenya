@@ -245,13 +245,6 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 										Test Queue
 										</a>
 									</li>".
-									/*"<li>
-										<a href=''  title='Quality Controls'
-										class='' id='new_patient_menu'>
-										<i class='icon-ok-sign'></i>&nbsp;&nbsp;"
-										.LangUtil::$allTerms['MENU_QUALITY_CONTROLS'].
-										"</a>
-									</li>".*/
 								"</ul>";
 					break;
 					case "catalog":
@@ -463,13 +456,13 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 							</li>
 						</ul>
 						</div>
-						<li>
+						<li style='display: none'>
 							<a id='option15' class='menu_option' href='javascript:right_load(15, ".$quote."inventory_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['Inventory']."</a>
 						</li>
 						<li>
 							<a id='option28' class='menu_option' href='javascript:right_load(28, ".$quote."barcode_div".$quote.");'><i class='icon-tag'></i> ".'Barcode Settings'."</a>
 							</li>
-						<li>
+						<li style='display: none'>
 							<a id='option22' class='menu_option' href='javascript:right_load(22, ".$quote."billing_div".$quote.");'><i class='icon-tag'></i> ".'Billing'."</a>
 						</li>
 						<li>
@@ -478,15 +471,15 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						<li>
 							<a id='option4' class='menu_option' href='javascript:right_load(4, ".$quote."fields_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_CUSTOM']."</a>
 						</li>
-						<li>			
+						<li style='display: none'>			
 							<a id='option19' class='menu_option' href='javascript:language_div_load();'><i class='icon-tag'></i> ".LangUtil::$allTerms['MODIFYLANG']."</a>
 						</li>
-						<li>
+						<li style='display: none'>
 							<a id='option14' class='menu_option' href='javascript:export_html();'><i class='icon-tag'></i> Setup Network</a>
 						</li>";
 						if($SERVER != $ON_ARC) {
 						echo"
-						<li><a id='option13' class='menu_option' href='javascript:right_load(13, ".$quote."backup_revert_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_BACKUP_REVERT']."</a></li>";
+						<li style='display: none' ><a id='option13' class='menu_option' href='javascript:right_load(13, ".$quote."backup_revert_div".$quote.");'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_BACKUP_REVERT']."</a></li>";
 						if(is_super_admin($user) || is_country_dir($user)) { 
 						echo"
 						<li>
