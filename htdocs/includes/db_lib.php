@@ -4911,11 +4911,11 @@ class UILog
         public $tag2;
         public $tag3;
         
-    function UILog($logfilename = '../../local/UILog.csv', $separator = ',') {
+    function UILog($logfilename = '../locale/UILog.csv', $separator = ',') {
                 global $VERSION;
                 $vers = $VERSION;
                 $verss = str_replace('.','-',$vers);
-                $logfilename = "../../local/UILog_".$verss.".csv";
+                $logfilename = "../locale/UILog_".$verss.".csv";
 		$this->LOGFILENAME = $logfilename;
 		$this->SEPARATOR = $separator;
 		$this->HEADERS =
@@ -4967,11 +4967,11 @@ class UILog
         if($mode == 0)
         {
             $verss = str_replace('.','-',$vers);
-            $logfilename = "../../local/UILog_".$verss.".csv";
+            $logfilename = "../locale/UILog_".$verss.".csv";
         }
         else
         {
-            $logfilename = "../../local/".$filename;
+            $logfilename = "../locale/".$filename;
         }
         if (($handle = fopen($logfilename, "r")) !== FALSE)
         {
@@ -6753,7 +6753,7 @@ function update_patient($modified_record)
 {
 	# Updates an existing patient record
 	# Called from ajax/patient_update.php
-	$myFile = "../../local/myFile.txt";
+	$myFile = "../locale/myFile.txt";
 $fh = fopen($myFile, 'a') or die("can't open file");
 $pid = $modified_record->patientId;
 	$current_record = get_patient_by_id($pid);
