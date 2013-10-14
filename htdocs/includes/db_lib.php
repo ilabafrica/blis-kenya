@@ -15125,11 +15125,11 @@ class API
     	$query_string = 
     	"UPDATE external_lab_request 
     	SET 
-    	result = $result, 
+    	result = '$result', 
     	result_returned = 1
-    	WHERE patient_id='$patient_id' AND lab_no='$lab_no'";
+    	WHERE patient_id='$patient_id' AND labNo='$lab_no'";
     	$saved_db = DbUtil::switchToGlobal();
-    	$tests_ordered = query_associative_all($query_string, $row_count);
+    	$update = query_update($query_string);
     	DbUtil::switchRestore($saved_db);
     }
     

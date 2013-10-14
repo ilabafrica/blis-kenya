@@ -10,8 +10,11 @@ $test = Test::getById($test_id);
 $specimen_id = $test->specimenId;
 $specimen = get_specimen_by_id($specimen_id);
 $patient = get_patient_by_id($specimen->patientId);
+
+$result = str_replace("<br>","",$test->decodeResult());
+$result = str_replace("&nbsp;","",$result);
  
-$json_string ='{"labNo": '.$specimen->external_lab_no.',"requestingClinician": '.$_SESSION['user_id'].',"result": '.$test->decodeResult().'}';
+$json_string ='{"labNo": '.$specimen->external_lab_no.',"requestingClinician": '.$_SESSION['user_id'].',"result": '.$result.'}';
 
 echo $json_string;
 $api_key = "6ZZXWUKE9";
@@ -38,7 +41,7 @@ if($specimen->external_lab_no!=NULL){
 
 if($response=="Test updated"){
 	
-	API::updateExternalLabrequest($patient->surrogateId, $specimen->external_lab_no, $test->result);
+	API::updateExternalLabrequest($patient->surrogateId, $specimen->external_lab_no, $result);
 	
 }
 
