@@ -1,0 +1,1 @@
+ALTER TABLE `specimen` ADD COLUMN `external_lab_no` VARCHAR(45) NULL  AFTER `daily_num` ;
