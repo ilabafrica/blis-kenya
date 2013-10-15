@@ -4742,10 +4742,10 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<td></td>
 					<td>
 					<br>
-					<input type='button' id='cfield_edit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
+					<input type='button' class="btn green" id='cfield_edit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
 					</input>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<small><a href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+					<small><a class="btn" href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<span id='cfield_progress_spinner' style='display:none;'>
 						<?php $this->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>

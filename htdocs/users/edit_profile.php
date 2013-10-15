@@ -122,7 +122,7 @@ $user_profile = get_user_by_id($_SESSION['user_id']);
                                             echo '
                                             <div class="fileupload fileupload-new" data-provides="fileupload">
                                             <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-                                            <img src="/img/noimg.gif" alt="no image" />
+                                            <img src="/assets/img/avatar.png" alt="no image" />
                                             </div>
                                     <div class="fileupload-preview fileupload-exists" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>';
                                             } 
