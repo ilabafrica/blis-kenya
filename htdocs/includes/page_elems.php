@@ -3969,8 +3969,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				
 				# code...
 				}
-			
         }?>
+        
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
@@ -5265,9 +5265,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 
             ?>
             <input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>
-		<div class='pretty_box' style='width:700px;'>
-		<table cellspacing='5px'>
-                    <th></th>
+		<div class='pretty_box' style='width:800px;'>
+		<table cellspacing='5px' class="table table-bordered table-hover">
+                    <th style="width: 200px"></th>
                     <th>Test Count (Grouped) Report Settings:</th>
                     </tr>
 			<tbody>
@@ -5427,7 +5427,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<td></td>
 					<td>
 						<br>
-						<input type='button' id='rsubmit' onclick='javascript:grouped_checkandsubmit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT'];?>'></input>
+						<input type='button' class="btn green" id='rsubmit' onclick='javascript:grouped_checkandsubmit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT'];?>'></input>
 						&nbsp;&nbsp;&nbsp;
 						<span id='grouped_count_progress_spinner' style='display:none'>
 							<?php $this->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
@@ -5460,7 +5460,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 
             ?>
 		<div class='pretty_box' style='width:700px;'>
-		<table class='hor-minimalist-b'>
+		<table class='table table-bordered table-hover'>
                     <tr>
                     <th></th>
                     <th><b>Test Count (Grouped) Report Settings:</b></th>
@@ -5603,8 +5603,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		}
 		?>
 		<input type='hidden' name='lab_config_id' value='<?php echo $lab_config->id; ?>'></input>
-		<div class='pretty_box' style='width:700px;'>
-		<table cellspacing='5px'>
+		<div class='pretty_box' style='width:800px;'>
+		<table cellspacing='5px' class="table table-bordered table-hover">
 			<tbody>
 				<tr valign='top'>
 					<td><?php echo LangUtil::$pageTerms['GROUP_BYGENDER']; ?></td>
@@ -5770,9 +5770,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<td></td>
 					<td>
 						<br>
-						<input type='button' id='rsubmit' onclick='javascript:agg_checkandsubmit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT'];?>'></input>
+						<input type='button' class="btn green" id='rsubmit' onclick='javascript:agg_checkandsubmit();' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT'];?>'></input>
 						&nbsp;&nbsp;&nbsp;
-						<input type='button' id='rpreview' onclick='javascript:agg_preview();' value='<?php echo LangUtil::$generalTerms['PREVIEW']; ?>'></input>
+						<input type='button' class="btn" id='rpreview' onclick='javascript:agg_preview();' value='<?php echo LangUtil::$generalTerms['PREVIEW']; ?>'></input>
 						&nbsp;&nbsp;&nbsp;
 						<small><a href="javascript:right_load(1, 'site_info_div');"><?php echo LangUtil::$generalTerms['CMD_CANCEL'];?></a></small>
 						&nbsp;&nbsp;&nbsp;
@@ -5986,7 +5986,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		}
 		?>
 		<div class='pretty_box' style='width:700px;'>
-		<table class='hor-minimalist-b'>
+		<table class='table table-bordered table-hover>
 			<tbody>
 				<tr valign='top'>
 					<td><?php echo LangUtil::$pageTerms['GROUP_BYGENDER']; ?></td>
@@ -6265,7 +6265,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		}
 		?>>
 		</input>
-		<table cellspacing='5px' class='smaller_font'>
+		<table cellspacing='5px' class='table table-bordered table-hover smaller_font'>
 			<tr valign='top'>
 			<td>Alignment</td>
 			<td>
@@ -6368,7 +6368,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	<br />
 	</td></tr> <?php }?>
 		</table>
-		<table cellspacing='5px' class='smaller_font'>
+		<table cellspacing='5px' class='table table-bordered table-hover smaller_font'>
 			<tr valign='top'>
 				<td><b><?php echo LangUtil::$generalTerms['PATIENTS']?></b></td>
 				<td></td>
@@ -6773,7 +6773,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			<tr valign='top'>
 				
 				<td>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="<?php
+					<input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="<?php
 					if($worksheet_config === false)
 						echo "javascript:update_report_config();";
 					else

@@ -1,0 +1,1 @@
+UPDATE `blis_revamp`.`lab_config` SET `refout`='1' WHERE `lab_config_id`='127';

@@ -48,7 +48,7 @@ $tests_requested = null;
 $patient = get_patient_by_id($pid);
 #nullify patient if same id is founf in internal system
 if ($ex=="true")$patient=null;
-//search from external lab reqeust table
+//search from external lab request table
 
 
 if($patient==null){
@@ -84,7 +84,7 @@ if($patient == null)
 <div class="row-fluid">
 <div class="span6">
 <?php 
-if ($tests_requested!=null){
+if ($tests_requested != null){
 ?>
 	<table class ="table table-striped table-bordered table-advance" style="width:400px">
 		<thead>
@@ -100,8 +100,15 @@ if ($tests_requested!=null){
 			
 			$clinician = array();
 			$clinician['clinician']=$tests_requested['requestingClinician'];
+            
+            $testSpec = array();
+            
 			foreach ($tests_requested as $test)
 			{
+			    $test_id=TestType::getIdByName($test['investigation']);
+                $specimen_id=TestType::getSpecimenIdByTestName($test_id);
+                echo "Test ID is ".$test_id." Specimen ID is ".$specimen_id."<br>";
+                $testSpec[$specimen_id]  = $test_id;             
 			?>
 			<tr>
 				<td><?php echo $test['investigation'];?></td>
@@ -110,26 +117,60 @@ if ($tests_requested!=null){
 			<?php }?>
 		</tbody>
 	</table>
+    
+    <table cellpadding='5px'>
+    <tbody>
+        <tr valign='top'>
+            <td>
+                <span id='specimenboxes'>
+                <?php 
+                $specimenFormCount = 1;
+                $unqSpecimen = array_unique($testSpec);
+                $uniqspecid = array_keys($unqSpecimen);
+                $SpecimenCount = count($unqSpecimen);
+
+                while ($SpecimenCount > 0)
+                {
+                echo $page_elems->getNewSpecimenForm($specimenFormCount, $pid, $dnum, $session_num, $tests_requested);
+                    $specimenFormCount++;
+                    $SpecimenCount--; 
+                }
+                ?>
+                </span>
+                <br>
+                <span id='sbox_progress_spinner' style='display:none;'>
+                    <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+                </span>
+            </td>
+        </tr>
+    </tbody>
+</table>    
+
 <?php 
 }
-?>
+else {
+    ?>
 <table cellpadding='5px'>
-	<tbody>
-		<tr valign='top'>
-			<td>
-				<span id='specimenboxes'>
-				<?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num, $tests_requested); ?>
-				</span>
-				<br>
-				<a href='javascript:add_specimenbox();'><?php echo LangUtil::$pageTerms['ADD_ANOTHER_SPECIMEN']; ?> &raquo;</a>
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				<span id='sbox_progress_spinner' style='display:none;'>
-					<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
-				</span>
-			</td>
-		</tr>
-	</tbody>
-</table>
+    <tbody>
+        <tr valign='top'>
+            <td>
+                <span id='specimenboxes'>
+                <?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num, $tests_requested); ?>
+                </span>
+                <br>
+                <a href='javascript:add_specimenbox();'><?php echo LangUtil::$pageTerms['ADD_ANOTHER_SPECIMEN']; ?> &raquo;</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span id='sbox_progress_spinner' style='display:none;'>
+                    <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+                </span>
+            </td>
+        </tr>
+    </tbody>
+</table>    
+<?php
+}
+?>
+
 <br>
 &nbsp;&nbsp;
 <input type="button" name="add_sched" class="btn green" id="add_button" onclick="add_specimens();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
@@ -177,7 +218,15 @@ $script_elems->enableAutocomplete();
 ?>
 <script>
 // <!-- <![CDATA[
-specimen_count = 1;
+<?php
+     $SpecimenCount = count($unqSpecimen);
+     if($tests_requested != null) {
+        echo "specimen_count = ".$SpecimenCount.";";
+   }
+     else {
+         echo "specimen_count = 1;";
+     }
+  ?>
 patient_exists = false;
 $(document).ready(function(){
     //var data = "Core Selectors Attributes Traversing Manipulation CSS Events Effects Ajax Utilities".split(" ");
@@ -192,6 +241,26 @@ $(document).ready(function(){
     {
         echo "; get_patient_info('".$pid."');";
         echo " patient_exists = true;";
+    }
+    if($tests_requested != null) {
+      $formcount = 1;
+      $specarraycount = 0;
+     
+      while ($SpecimenCount > 0){
+          $testBox = specimenform_.$formcount._testbox;
+          $specType = specimenform_.$formcount._stype;
+          ?>
+            $("#<?php echo $testBox; ?>").load(
+                "ajax/test_type_options.php", 
+                {
+                    stype: <?php echo $uniqspecid[$specarraycount] ?>
+                });
+           $("#<?php echo $specType; ?>").val(<?php echo $uniqspecid[$specarraycount] ?>);     
+        <?php 
+        $formcount++;
+        $SpecimenCount--;
+        $specarraycount++;
+        }
     }
     ?>
     App.init(); // init the rest of plugins and elements
