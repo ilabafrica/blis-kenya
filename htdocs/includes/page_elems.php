@@ -1173,8 +1173,6 @@ class PageElems
 				<?php echo $cat_name; ?>
 			</td>
 			<td>
-			</td>
-			<td>
 				<a href='test_type_edit.php?tid=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Test Info'><i class='icon-pencil'></i>  <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
 
 			</td>

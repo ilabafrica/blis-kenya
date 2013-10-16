@@ -735,7 +735,6 @@ It is used for test which are alphanumeric and autocomplete. The default value f
 <?php
 include("includes/scripts.php");
 $script_elems->enableJQueryForm();
-$script_elems->enableJQueryMask();
 $script_elems->enableTokenInput();
 $script_elems->enableDatePicker();
 ?>
