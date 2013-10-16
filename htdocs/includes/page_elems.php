@@ -858,7 +858,10 @@ class PageElems
 		# Returns HTML for displaying test type information
 		$test_type = get_test_type_by_name($test_name);
 		?>
-		<table class='hor-minimalist-b'>
+		<div class="portlet-title" style="width: 380px">
+        <h4></i>Test Type Information</h4>
+        </div>
+		<table class='table table-bordered table-hover' style="width: 400px">
 			<tbody>
 				<tr>
 					<td><?php echo LangUtil::$generalTerms['NAME']; ?></td>

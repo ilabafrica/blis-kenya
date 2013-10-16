@@ -27,7 +27,32 @@ function specimen_list_to_json($specimen_list)
 	return list_to_json($assoc_list, $json_params);
 }
 ?>
-
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
+                        <h3>
+                        </h3>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="icon-download-alt"></i>
+                                <a href="index.php">Home</a> 
+                            </li>
+                        </ul>
+                        <!-- END PAGE TITLE & BREADCRUMB-->
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
+                <!-- BEGIN REGISTRATION PORTLETS-->   
+                <div class="row-fluid">
+                <div class="span12 sortable">
+     
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['EDIT_TEST_TYPE']; ?></h4>
+            <div class="tools">
+            <a href="javascript:;" class="collapse"></a>
+            <a href="javascript:;" class="reload"></a>
+            </div>
+        </div>
+        <div class="portlet-body form">
 <br>
 <?php
 //$tips_string=LangUtil::$pageTerms['TIPS_MEASURES'];
@@ -35,8 +60,8 @@ function specimen_list_to_json($specimen_list)
 $tips_string="To know more about a particular field select on the [?] next to the field name.";
 $page_elems->getSideTip("Tips", $tips_string);
 ?>
-<b><?php echo LangUtil::$pageTerms['EDIT_TEST_TYPE']; ?></b>
-| <a href="catalog.php?show_t=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+<b></b>
+<a href="catalog.php?show_t=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br><br>
 
 <?php
@@ -110,644 +135,7 @@ $measure_list_objs = $test_type->getMeasures();
 # Display test type info table
 $page_elems->getTestTypeInfo($test_type->name, true);
 ?>
-<script type='text/javascript'>
 
-var num_submeasures = new Array(100);
-var len = 100;
- while (--len >= 0) {
-        num_submeasures[len] = 0;
-    }
-var num_measures = 0;
-
-var num_ranges = new Array();
-for(var k = 0; k < 100; k++)
-{
-	num_ranges[k] = 0;
-}
-
-$(document).ready(function(){
-	$('#new_category').hide();
-	$('#cat_code').attr("value", "<?php echo $test_type->testCategoryId; ?>");
-	<?php
-	$specimen_list = get_compatible_specimens($test_type->testTypeId);
-	foreach($specimen_list as $specimen_type_id)
-	{
-		# Mark existing compatible specimens as checked
-		?>
-		$('#s_type_<?php echo $specimen_type_id; ?>').attr("checked", "checked");
-		<?php
-	}
-	?>
-	$('.range_select').change( function() {
-		toggle_range_type(this);
-	});
-	$('.new_range_select').change( function() {
-		toggle_new_range_type(this);
-	});
-});
-
-function toggle_range_type(select_elem)
-{
-	var elem_id = select_elem.id;
-	$('.values_section_'+elem_id).hide();
-	if(select_elem.value == <?php echo Measure::$RANGE_OPTIONS; ?>)
-		$('#alpha_'+elem_id).show();	
-	else if(select_elem.value == <?php echo Measure::$RANGE_NUMERIC; ?>)
-		$('#val_'+elem_id).show();
-	else if(select_elem.value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
-		$('#autocomplete_'+elem_id).show();
-        else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
-		$('#freetext_'+elem_id).show();
-}
-
-
- function toggle_new_range_type(select_elem)
-{
-	var elem_id = select_elem.id;
-	$('.new_values_section_'+elem_id).hide();
-	if(select_elem.value == <?php echo Measure::$RANGE_OPTIONS; ?>)
-		$('#new_alpha_'+elem_id).show();	
-	else if(select_elem.value == <?php echo Measure::$RANGE_NUMERIC; ?>)
-		$('#new_val_'+elem_id).show();
-	else if(select_elem.value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
-		$('#new_autocomplete_'+elem_id).show();	
-        else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
-		$('#new_freetext_'+elem_id).show();	
-}
-
- function add_option_field(mrow_num)
-{
-	var html_code = " / <input type='text' class='range_field' name='alpharange_"+mrow_num+"[]' value='' />";
-	$('#alpha_list_'+mrow_num).append(html_code);
-}
-
-function add_autocomplete_field(mrow_num)
-{
-	var html_code = "<input type='text' class='uniform_width' name='autocomplete_"+mrow_num+"[]' value='' /><br>";
-	$('#autocomplete_list_'+mrow_num).append(html_code);
-}
-
-function update_ttype()
-{
-	if($('#name').attr("value").trim() == "")
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_TESTNAME']; ?>");
-		return;
-	}
-	if($('#cat_code').attr("value") == -1)
-	{
-		if($('#new_category_textbox').attr("value").trim() == "")
-		{
-			alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_CATNAME']; ?>");
-			return;
-		}
-	}
-	var is_panel = <?php if($test_type->isPanel == true) echo "true"; else echo "false"; ?>;
-	if(is_panel == false)
-	{
-		var measure_elems = $("input[name='measure[]']");
-		var new_measure_elems = $("input[name='new_measure[]']");
-		var range_type_elems = $("select[name='mtype[]']");
-		var new_range_type_elems = $("select[name='new_mtype[]']");
-		var measure_entered = false;
-		for(var j = 0; j < measure_elems.length; j++)
-		{		
-			if(measure_elems[j].value.trim() != "")
-			{  
-				measure_entered = true;
-				if(range_type_elems[j].value == <?php echo Measure::$RANGE_NUMERIC; ?>)
-				{
-					// Check numeric ranges
-					// Check all age ranges specified
-					var range_l_elems = $("input[name='range_l_"+(j+1)+"[]']");
-					
-					var range_u_elems = $("input[name='range_u_"+(j+1)+"[]']");
-
-					for(var k = 0; k < range_l_elems.length; k++)
-					{
-						var range_l = range_l_elems[k].value;
-						var range_u = range_u_elems[k].value;
-
-						if(isNaN(range_l))
-						{
-							
-							alert("Lower Range value should be numeric: Not '"+range_l+"'!");
-							return;
-						}
-						if(isNaN(range_u))
-						{
-							
-							alert("Upper Range value should be numeric: Not '"+range_u+"'!");
-							return;
-						}
-						if((range_l.trim()== "")&&(isNaN(range_u)==false))
-						{
-						
-							alert("Lower bound cannot be blank");
-							return;
-						}
-						if((range_u.trim()== "")&&(isNaN(range_l)==false))
-						{
-						
-							alert("Upper bound cannot be blank");
-							return;
-						}
-						if((range_u.trim()-range_l.trim())<=0)
-						{
-							alert("Upper bound cannot be less than or equal to lower bound");
-							return;
-						}
-
-						if($("#agerange_l_"+(j+1)+"_"+k).is(":disabled") == true)
-						{
-							continue;
-						}
-						var lower_value = $("#agerange_l_"+(j+1)+"_"+k).attr("value");
-						var upper_value = $("#agerange_u_"+(j+1)+"_"+k).attr("value");
-						if(lower_value == undefined || upper_value == undefined)
-						{
-							continue;
-						}
-						if(lower_value.trim() == "" && upper_value.trim() == "")
-						{
-							continue;
-						}
-						else if(lower_value.trim() == "" || upper_value.trim() == "")
-						{
-							alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"':'"+upper_value+"'");
-							return;
-						}
-						else if(isNaN(lower_value))
-						{
-							alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"'");
-							return;
-						}
-						else if(isNaN(upper_value))
-						{
-							alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+upper_value+"'");
-							return;
-						}
-						else if((upper_value.trim()-lower_value.trim())<=0)
-						{
-							alert("Age range cannot be negative");
-							return;
-						}
-					}
-				}
-				else if(range_type_elems[j].value == <?php echo Measure::$RANGE_OPTIONS; ?>)
-				{
-					//Check option values
-					var option_elems = $("input[name='alpharange_"+(j+1)+"[]']");
-					var option_exist = false;
-					var count =0;
-					for(var k = 0; k < option_elems.length; k++)
-					{
-						var option_val = option_elems[k].value;
-						
-						
-						if(option_val.trim() != "")
-						{
-							option_exist = true;
-							break
-				
-						}
-								
-					}
-					if(option_exist == false)
-					{
-						alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['DROPDOWN']; ?>");
-						return;
-					}
-				}
-				else if(range_type_elems[j].value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
-				{
-					//Check autocomplete values
-					var option_elems = $("input[name='autocomplete_"+(j+1)+"[]']");
-					var option_exist = false;
-					for(var k = 0; k < option_elems.length; k++)
-					{
-						var option_val = option_elems[k].value;
-						if(option_val.trim() != "")
-						{
-							option_exist = true;
-							break
-						}
-					}
-					if(option_exist == false)
-					{
-						alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?>");
-						return;
-					}
-				}
-			}
-		}
-		for(var j = 0; j < new_measure_elems.length; j++)
-		{		
-			if(new_measure_elems[j].value.trim() != "")
-			{  
-				
-				if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_NUMERIC; ?>)
-				{
-					// Check numeric ranges
-					// Check all age ranges specified
-					var range_l_elems = $("input[name='new_range_l_"+(j+1)+"[]']");
-					
-					var range_u_elems = $("input[name='new_range_u_"+(j+1)+"[]']");
-					for(var k = 0; k < range_l_elems.length; k++)
-					{
-						var range_l = range_l_elems[k].value;
-						var range_u = range_u_elems[k].value;
-						if(range_l.trim()=="" && range_u.trim()=="")
-						{
-							alert("If you do not want to add new measure then please delete the name");
-							return;
-						}
-						if(isNaN(range_l))
-						{
-							
-							alert("Lower Range value should be numeric: Not '"+range_l+"'!");
-							return;
-						}
-						if(isNaN(range_u))
-						{
-							
-							alert("Upper Range value should be numeric: Not '"+range_u+"'!");
-							return;
-						}
-						if((range_l.trim()== "")&&(isNaN(range_u)==false))
-						{
-						
-							alert("Lower bound cannot be blank");
-							return;
-						}
-						if((range_u.trim()== "")&&(isNaN(range_l)==false))
-						{
-						
-							alert("Upper bound cannot be blank");
-							return;
-						}
-						if((range_u.trim()-range_l.trim())<=0)
-						{
-							alert("Upper bound cannot be less than or equal to lower bound");
-							return;
-						}
-						
-						if($("#agerange_l_"+(j+1)+"_"+k).is(":disabled") == true)
-						{
-							continue;
-						}
-						var lower_value = $("#agerange_l_"+(j+1)+"_"+k).attr("value");
-						var upper_value = $("#agerange_u_"+(j+1)+"_"+k).attr("value");
-						if(lower_value == undefined || upper_value == undefined)
-						{
-							continue;
-						}
-						if(lower_value.trim() == "" && upper_value.trim() == "")
-						{
-							continue;
-						}
-						else if(lower_value.trim() == "" || upper_value.trim() == "")
-						{
-							alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"':'"+upper_value+"'");
-							return;
-						}
-						else if(isNaN(lower_value))
-						{
-							alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"'");
-							return;
-						}
-						else if(isNaN(upper_value))
-						{
-							alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+upper_value+"'");
-							return;
-						}
-						else if((upper_value.trim()-lower_value.trim())<=0)
-						{
-							alert("Age range cannot be negative");
-							return;
-						}
-					}
-					measure_entered = true;
-				}
-				else if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_OPTIONS; ?>)
-				{
-					//Check option values
-					var option_elems = $("input[name='new_alpharange_"+(j+1)+"[]']");
-					var option_exist = false;
-					
-					for(var k = 0; k < option_elems.length; k++)
-					{
-						var option_val = option_elems[k].value;
-						
-						
-						if(option_val.trim() != "")
-						{
-							option_exist = true;
-							break
-							
-						}
-					}
-					if(option_exist == false)
-					{
-						alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['DROPDOWN']; ?>");
-						return;
-					}
-					measure_entered = true;
-				}
-				else if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
-				{
-					//Check autocomplete values
-					var option_elems = $("input[name='new_autocomplete_"+(j+1)+"[]']");
-					var option_exist = false;
-					for(var k = 0; k < option_elems.length; k++)
-					{
-						var option_val = option_elems[k].value;
-						if(option_val.trim() != "")
-						{
-							option_exist = true;
-							break
-						}
-					}
-					if(option_exist == false)
-					{
-						alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?>");
-						return;
-					}
-					measure_entered = true;
-				}
-			}
-		}
-		if(measure_entered == false)
-		{
-			alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDMEASURES']; ?>");
-			return;
-		}
-	}
-	else
-	{
-		//TODO: Panel tests validation
-		/*
-		var mtype_entries = $('.m_entry');
-		var mtype_selected = false;
-		for(var i = 0; i < mtype_entries.length; i++)
-		{
-			if(mtype_entries[i].checked)
-			{
-				mtype_selected = true;
-				break;
-			}
-		}
-		if(mtype_selected == false)
-		{
-			alert("Error: No measures selected for panel test");
-			return;
-		}
-		*/
-	}
-	var stype_entries = $('.stype_entry');
-	var stype_selected = false;
-	for(var i = 0; i < stype_entries.length; i++)
-	{
-		if(stype_entries[i].checked)
-		{
-			stype_selected = true;
-			break;
-		}
-	}
-	if(stype_selected == false)
-	{
-		alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDSPECIMEN']; ?>");
-		return;
-	}
-	$('#prevalenceThresholdError').hide();
-	if( $('#prevalenceThreshold').val() > 100 ) {
-		$('#prevalenceThresholdError').show();
-		return;
-	}
-	$('#update_ttype_progress').show();
-	$('#edit_ttype_form').ajaxSubmit({
-		success: function(msg) {
-			$('#update_ttype_progress').hide();
-			window.location="test_type_updated.php?tid=<?php echo $_REQUEST['tid']; ?>";
-		}
-	});
-}
-
- function check_if_new_category(select_obj)
-{
-	var value = $('#cat_code').val();
-	if(value == -1)
-	{
-		$('#new_category').show();
-	}
-	else
-	{
-		$('#new_category_textbox').val("");
-		$('#new_category').hide();
-	}
-}
-
-
-
-function add_new_measure()
-{
-	num_measures++;
-	$('#new_mrow_'+num_measures).show();
-}
-
-function add_new_submeasure(mrow_num)
-{
-	num_submeasures[mrow_num]++;
-	$('#smrow_'+mrow_num+'_'+num_submeasures[mrow_num]).show();
-}
-
-
- function add_new_option_field(mrow_num)
-{
-	var html_code = " / <input type='text' class='range_field' name='new_alpharange_"+mrow_num+"[]' value='' />";
-	$('#new_alpha_list_'+mrow_num).append(html_code);
-}
-
- function add_new_autocomplete_field(mrow_num)
-{
-	var html_code = "<input type='text' class='uniform_width' name='new_autocomplete_"+mrow_num+"[]' value='' /><br>";
-	$('#new_autocomplete_list_new_'+mrow_num).append(html_code);
-}
-
-
-
-function add_range_field(mrow_num, map_offset)
-{
-
-if(num_ranges[mrow_num] == 0)
-	{
-		num_ranges[mrow_num] += map_offset;
-	}
-	else
-	{
-		num_ranges[mrow_num]++;
-	}
-	var num_row = num_ranges[mrow_num];
-	
-		var map=map_offset-1;									
-	var html_code = "<input type='text' class='range_field' name='range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field' name='range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field' name='gender_"+mrow_num+"_"+map+"' value='B'/> <input type='text' class='range_field agerange_l_"+mrow_num+"' name='agerange_l_"+mrow_num+"_"+map+"' id='agerange_l_"+mrow_num+"_"+map+"' value='0' /> : <input type='text' class='range_field agerange_u_"+mrow_num+"' name='agerange_u_"+mrow_num+"_"+map+"' id='agerange_u_"+mrow_num+"_"+map+"' value='100' /><br>";
-	$('#numeric_'+mrow_num).append(html_code);
-}	
-	function add_new_range_field(mrow_num, map_offset)
-	{
-if(num_ranges[mrow_num] == 0)
-	{
-		num_ranges[mrow_num] += map_offset;
-	}
-	else
-	{
-		num_ranges[mrow_num]++;
-	}
-	var num_row = num_ranges[mrow_num];
-	
-											
-	var html_code = "<input type='text' class='range_field' name='new_range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field' name='new_range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field' name='new_gender_"+mrow_num+"[]' value='B' /> <input type='text' class='range_field agerange_l_"+mrow_num+"[]' name='new_agerange_l_"+mrow_num+"[]' id='new_agerange_l_"+mrow_num+"[]' value='0' /> : <input type='text' class='range_field agerange_u_"+mrow_num+"[]' name='new_agerange_u_"+mrow_num+"[]' id='new_agerange_u_"+mrow_num+"[]' value='100' /><br>";
-	$('#new_numeric_'+mrow_num).append(html_code);
-}
-
- function addRowToTable()
-{
-  var tbl = document.getElementById('tblSample');
-  var lastRow = tbl.rows.length;
-  // if there's no header row in the table, then iteration = lastRow + 1
-  var iteration = lastRow;
-  var row = tbl.insertRow(lastRow);
-   // right cell
-  var cellRight = row.insertCell(0);
-  var el = document.createElement('input');
-  el.type = 'text';
-  el.name = 'txtRow' + iteration+'1';
-  el.id = 'txtRow' + iteration+'1';
-  el.size = 40;
-  cellRight.appendChild(el);
-  // select cell
-  var cellRightSel = row.insertCell(1);
-  var sel = document.createElement('input');
-  sel.type = 'text';
-  sel.name = 'txtRow' + iteration+'2';
-  sel.id = 'txtRow' + iteration+'2';
-  sel.size = 40;
-  cellRightSel.appendChild(sel);
-}
-
-function removeRowFromTable()
-{
-  var tbl = document.getElementById('tblSample');
-  var lastRow = tbl.rows.length;
-  if (lastRow > 2) tbl.deleteRow(lastRow - 1);
-}
-
-function validateRow()
-{
-  	var tbl = document.getElementById('tblSample');
-        var lastRow = tbl.rows.length - 1;
-	var i=0;
-	var clinical_data;
-	var aLeft= new Array();
-	var aRight=new Array();
-    for (i=1; i<=lastRow; i++) 
-	{
-       aLeft[i-1] = document.getElementById('txtRow' + i+1).value;
-       aRight[i-1] = document.getElementById('txtRow' + i+2).value;
-    }
-	
-		var total="";
-		if(aLeft[0]!="")
-	  total='%%%'+aLeft+'###'+aRight;
-	  var data= $('#clinical_data').attr("value");
-	  if(data!=""&& total!="")
-	  {
-	  clinical_data="!#!"+data+total;
-	  }
-	  else if(data!="-" && data!="")
-	  {
-	 clinical_data=data;
-	  }
-	  else if(total!="%%%")
-	  clinical_data=total;
-	  else 
-	  clinical_data="";
-	
-	$('#clinical_data').attr("value",clinical_data);
-	update_ttype();
-}
-  
-function addData(list) {
-	var dat=list.split('###');
-	var name=dat[0].split(',');
-	var valu =dat[1].split(',');
-	$('#extra').show();
-	$('#tblSample1').show();
-	for(var i=1; i<name.length+1;i++) {
-		$('#txtRow'+i+'1').attr("value",name[i-1]);
-		$('#txtRow'+i+'2').attr("value",valu[i-1]);
-		addRowToTable();
-	}
-	removeRowFromTable();
-}
-
-function addTable() {
-	field="extra";
-	if($('#'+field).is(":visible")==true) {
-		$('#extra').hide();
-		$('#tblSample1').hide();
-		$('#text').show();
-	}
-	else
-	{
-		$('#extra').show();
-		$('#tblSample1').show();
-		$('#text').hide();
-	}
-}
-
-function toggle_agerange(measure_num, row_num)
-{
-	var field_id = "agerange_l_"+measure_num+"_"+row_num;
-	if($('#'+field_id).is(":disabled") == false)
-	{
-		$('#'+field_id).attr("disabled", "true");
-	}
-	else
-	{
-		$('#'+field_id).removeAttr("disabled");
-	}
-	field_id = "agerange_u_"+measure_num+"_"+row_num;
-	if($('#'+field_id).is(":disabled") == false)
-	{
-		$('#'+field_id).attr("disabled", "true");
-	}
-	else
-	{
-		$('#'+field_id).removeAttr("disabled");
-	}	
-}
-function isInputNumber(evt) {
-	var characterCode = (evt.which) ? evt.which : event.keyCode
-
-	if (characterCode > 31 && (characterCode < 48 || characterCode > 57))
-		return false;
-
-	return true;
-}
-
-function isInputCurrency(evt) {
-        var characterCode = (evt.which) ? evt.which : event.keyCode
-        // 31 is the upper bound of non-printable characters
-        // numbers are between 48 and 57
-        // 46 is a decimal '.'
-        // 44 is a comma ','
-        if (characterCode > 31 && (characterCode < 48 || characterCode > 57) && characterCode != 46 && characterCode != 44)
-                return false;
-
-        return true;
-}
-</script>
 <style type='text/css'>
 .range_field {
 	width:30px;
@@ -760,7 +148,10 @@ function isInputCurrency(evt) {
 <form name='edit_ttype_form' id='edit_ttype_form' action='ajax/test_type_update.php' method='post'>
 <input type='hidden' name='ispanel' value='<?php if($test_type->isPanel === true) echo "1"; else echo "0"; ?>'></input>
 <input type='hidden' name='tid' id='tid' value='<?php echo $_REQUEST['tid']; ?>'></input>
-	<table cellspacing='4px'>
+    <div class="portlet-title" style="width: 380px">
+        <h4></i>Edit test</h4>
+        </div>
+	<table cellspacing='4px' class="table table-bordered table-hover">
 		<tbody>
 			<tr valign='top'>
 				<td><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
@@ -1297,9 +688,9 @@ function isInputCurrency(evt) {
 				<td></td>
 				<td>
 					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:validateRow();'></input>
+					<input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:validateRow();'></input>
 					&nbsp;&nbsp;&nbsp;
-					<a href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+					<a class="btn" href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 					&nbsp;&nbsp;&nbsp;
 					<span id='update_ttype_progress' style='display:none;'>
 						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
@@ -1346,9 +737,656 @@ To represent data like 56^5-65^5 ml add the range as 56-65 and the unit as 5:ml.
 It is used for test which are alphanumeric and autocomplete. The default value for that measure can be recorded in this section.
 </small>
 </div>
-
+</div>
+</div>
+</div>
+</div>
 <?php
+include("includes/scripts.php");
 $script_elems->enableJQueryForm();
 $script_elems->enableJQueryMask();
 $script_elems->enableTokenInput();
-include("includes/footer.php"); ?>
+$script_elems->enableDatePicker();
+?>
+
+<script type='text/javascript'>
+
+var num_submeasures = new Array(100);
+var len = 100;
+ while (--len >= 0) {
+        num_submeasures[len] = 0;
+    }
+var num_measures = 0;
+
+var num_ranges = new Array();
+for(var k = 0; k < 100; k++)
+{
+    num_ranges[k] = 0;
+}
+
+$(document).ready(function(){
+    $('#new_category').hide();
+    $('#cat_code').attr("value", "<?php echo $test_type->testCategoryId; ?>");
+    <?php
+    $specimen_list = get_compatible_specimens($test_type->testTypeId);
+    foreach($specimen_list as $specimen_type_id)
+    {
+        # Mark existing compatible specimens as checked
+        ?>
+        $('#s_type_<?php echo $specimen_type_id; ?>').attr("checked", "checked");
+        <?php
+    }
+    ?>
+    $('.range_select').change( function() {
+        toggle_range_type(this);
+    });
+    $('.new_range_select').change( function() {
+        toggle_new_range_type(this);
+    });
+});
+
+function toggle_range_type(select_elem)
+{
+    var elem_id = select_elem.id;
+    $('.values_section_'+elem_id).hide();
+    if(select_elem.value == <?php echo Measure::$RANGE_OPTIONS; ?>)
+        $('#alpha_'+elem_id).show();    
+    else if(select_elem.value == <?php echo Measure::$RANGE_NUMERIC; ?>)
+        $('#val_'+elem_id).show();
+    else if(select_elem.value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
+        $('#autocomplete_'+elem_id).show();
+        else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
+        $('#freetext_'+elem_id).show();
+}
+
+
+ function toggle_new_range_type(select_elem)
+{
+    var elem_id = select_elem.id;
+    $('.new_values_section_'+elem_id).hide();
+    if(select_elem.value == <?php echo Measure::$RANGE_OPTIONS; ?>)
+        $('#new_alpha_'+elem_id).show();    
+    else if(select_elem.value == <?php echo Measure::$RANGE_NUMERIC; ?>)
+        $('#new_val_'+elem_id).show();
+    else if(select_elem.value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
+        $('#new_autocomplete_'+elem_id).show(); 
+        else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
+        $('#new_freetext_'+elem_id).show(); 
+}
+
+ function add_option_field(mrow_num)
+{
+    var html_code = " / <input type='text' class='range_field' name='alpharange_"+mrow_num+"[]' value='' />";
+    $('#alpha_list_'+mrow_num).append(html_code);
+}
+
+function add_autocomplete_field(mrow_num)
+{
+    var html_code = "<input type='text' class='uniform_width' name='autocomplete_"+mrow_num+"[]' value='' /><br>";
+    $('#autocomplete_list_'+mrow_num).append(html_code);
+}
+
+function update_ttype()
+{
+    if($('#name').attr("value").trim() == "")
+    {
+        alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_TESTNAME']; ?>");
+        return;
+    }
+    if($('#cat_code').attr("value") == -1)
+    {
+        if($('#new_category_textbox').attr("value").trim() == "")
+        {
+            alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_CATNAME']; ?>");
+            return;
+        }
+    }
+    var is_panel = <?php if($test_type->isPanel == true) echo "true"; else echo "false"; ?>;
+    if(is_panel == false)
+    {
+        var measure_elems = $("input[name='measure[]']");
+        var new_measure_elems = $("input[name='new_measure[]']");
+        var range_type_elems = $("select[name='mtype[]']");
+        var new_range_type_elems = $("select[name='new_mtype[]']");
+        var measure_entered = false;
+        for(var j = 0; j < measure_elems.length; j++)
+        {       
+            if(measure_elems[j].value.trim() != "")
+            {  
+                measure_entered = true;
+                if(range_type_elems[j].value == <?php echo Measure::$RANGE_NUMERIC; ?>)
+                {
+                    // Check numeric ranges
+                    // Check all age ranges specified
+                    var range_l_elems = $("input[name='range_l_"+(j+1)+"[]']");
+                    
+                    var range_u_elems = $("input[name='range_u_"+(j+1)+"[]']");
+
+                    for(var k = 0; k < range_l_elems.length; k++)
+                    {
+                        var range_l = range_l_elems[k].value;
+                        var range_u = range_u_elems[k].value;
+
+                        if(isNaN(range_l))
+                        {
+                            
+                            alert("Lower Range value should be numeric: Not '"+range_l+"'!");
+                            return;
+                        }
+                        if(isNaN(range_u))
+                        {
+                            
+                            alert("Upper Range value should be numeric: Not '"+range_u+"'!");
+                            return;
+                        }
+                        if((range_l.trim()== "")&&(isNaN(range_u)==false))
+                        {
+                        
+                            alert("Lower bound cannot be blank");
+                            return;
+                        }
+                        if((range_u.trim()== "")&&(isNaN(range_l)==false))
+                        {
+                        
+                            alert("Upper bound cannot be blank");
+                            return;
+                        }
+                        if((range_u.trim()-range_l.trim())<=0)
+                        {
+                            alert("Upper bound cannot be less than or equal to lower bound");
+                            return;
+                        }
+
+                        if($("#agerange_l_"+(j+1)+"_"+k).is(":disabled") == true)
+                        {
+                            continue;
+                        }
+                        var lower_value = $("#agerange_l_"+(j+1)+"_"+k).attr("value");
+                        var upper_value = $("#agerange_u_"+(j+1)+"_"+k).attr("value");
+                        if(lower_value == undefined || upper_value == undefined)
+                        {
+                            continue;
+                        }
+                        if(lower_value.trim() == "" && upper_value.trim() == "")
+                        {
+                            continue;
+                        }
+                        else if(lower_value.trim() == "" || upper_value.trim() == "")
+                        {
+                            alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"':'"+upper_value+"'");
+                            return;
+                        }
+                        else if(isNaN(lower_value))
+                        {
+                            alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"'");
+                            return;
+                        }
+                        else if(isNaN(upper_value))
+                        {
+                            alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+upper_value+"'");
+                            return;
+                        }
+                        else if((upper_value.trim()-lower_value.trim())<=0)
+                        {
+                            alert("Age range cannot be negative");
+                            return;
+                        }
+                    }
+                }
+                else if(range_type_elems[j].value == <?php echo Measure::$RANGE_OPTIONS; ?>)
+                {
+                    //Check option values
+                    var option_elems = $("input[name='alpharange_"+(j+1)+"[]']");
+                    var option_exist = false;
+                    var count =0;
+                    for(var k = 0; k < option_elems.length; k++)
+                    {
+                        var option_val = option_elems[k].value;
+                        
+                        
+                        if(option_val.trim() != "")
+                        {
+                            option_exist = true;
+                            break
+                
+                        }
+                                
+                    }
+                    if(option_exist == false)
+                    {
+                        alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['DROPDOWN']; ?>");
+                        return;
+                    }
+                }
+                else if(range_type_elems[j].value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
+                {
+                    //Check autocomplete values
+                    var option_elems = $("input[name='autocomplete_"+(j+1)+"[]']");
+                    var option_exist = false;
+                    for(var k = 0; k < option_elems.length; k++)
+                    {
+                        var option_val = option_elems[k].value;
+                        if(option_val.trim() != "")
+                        {
+                            option_exist = true;
+                            break
+                        }
+                    }
+                    if(option_exist == false)
+                    {
+                        alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?>");
+                        return;
+                    }
+                }
+            }
+        }
+        for(var j = 0; j < new_measure_elems.length; j++)
+        {       
+            if(new_measure_elems[j].value.trim() != "")
+            {  
+                
+                if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_NUMERIC; ?>)
+                {
+                    // Check numeric ranges
+                    // Check all age ranges specified
+                    var range_l_elems = $("input[name='new_range_l_"+(j+1)+"[]']");
+                    
+                    var range_u_elems = $("input[name='new_range_u_"+(j+1)+"[]']");
+                    for(var k = 0; k < range_l_elems.length; k++)
+                    {
+                        var range_l = range_l_elems[k].value;
+                        var range_u = range_u_elems[k].value;
+                        if(range_l.trim()=="" && range_u.trim()=="")
+                        {
+                            alert("If you do not want to add new measure then please delete the name");
+                            return;
+                        }
+                        if(isNaN(range_l))
+                        {
+                            
+                            alert("Lower Range value should be numeric: Not '"+range_l+"'!");
+                            return;
+                        }
+                        if(isNaN(range_u))
+                        {
+                            
+                            alert("Upper Range value should be numeric: Not '"+range_u+"'!");
+                            return;
+                        }
+                        if((range_l.trim()== "")&&(isNaN(range_u)==false))
+                        {
+                        
+                            alert("Lower bound cannot be blank");
+                            return;
+                        }
+                        if((range_u.trim()== "")&&(isNaN(range_l)==false))
+                        {
+                        
+                            alert("Upper bound cannot be blank");
+                            return;
+                        }
+                        if((range_u.trim()-range_l.trim())<=0)
+                        {
+                            alert("Upper bound cannot be less than or equal to lower bound");
+                            return;
+                        }
+                        
+                        if($("#agerange_l_"+(j+1)+"_"+k).is(":disabled") == true)
+                        {
+                            continue;
+                        }
+                        var lower_value = $("#agerange_l_"+(j+1)+"_"+k).attr("value");
+                        var upper_value = $("#agerange_u_"+(j+1)+"_"+k).attr("value");
+                        if(lower_value == undefined || upper_value == undefined)
+                        {
+                            continue;
+                        }
+                        if(lower_value.trim() == "" && upper_value.trim() == "")
+                        {
+                            continue;
+                        }
+                        else if(lower_value.trim() == "" || upper_value.trim() == "")
+                        {
+                            alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"':'"+upper_value+"'");
+                            return;
+                        }
+                        else if(isNaN(lower_value))
+                        {
+                            alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+lower_value+"'");
+                            return;
+                        }
+                        else if(isNaN(upper_value))
+                        {
+                            alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['AGE']; ?>: '"+upper_value+"'");
+                            return;
+                        }
+                        else if((upper_value.trim()-lower_value.trim())<=0)
+                        {
+                            alert("Age range cannot be negative");
+                            return;
+                        }
+                    }
+                    measure_entered = true;
+                }
+                else if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_OPTIONS; ?>)
+                {
+                    //Check option values
+                    var option_elems = $("input[name='new_alpharange_"+(j+1)+"[]']");
+                    var option_exist = false;
+                    
+                    for(var k = 0; k < option_elems.length; k++)
+                    {
+                        var option_val = option_elems[k].value;
+                        
+                        
+                        if(option_val.trim() != "")
+                        {
+                            option_exist = true;
+                            break
+                            
+                        }
+                    }
+                    if(option_exist == false)
+                    {
+                        alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['DROPDOWN']; ?>");
+                        return;
+                    }
+                    measure_entered = true;
+                }
+                else if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
+                {
+                    //Check autocomplete values
+                    var option_elems = $("input[name='new_autocomplete_"+(j+1)+"[]']");
+                    var option_exist = false;
+                    for(var k = 0; k < option_elems.length; k++)
+                    {
+                        var option_val = option_elems[k].value;
+                        if(option_val.trim() != "")
+                        {
+                            option_exist = true;
+                            break
+                        }
+                    }
+                    if(option_exist == false)
+                    {
+                        alert("<?php echo LangUtil::$generalTerms['INVALID']." ".LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?>");
+                        return;
+                    }
+                    measure_entered = true;
+                }
+            }
+        }
+        if(measure_entered == false)
+        {
+            alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDMEASURES']; ?>");
+            return;
+        }
+    }
+    else
+    {
+        //TODO: Panel tests validation
+        /*
+        var mtype_entries = $('.m_entry');
+        var mtype_selected = false;
+        for(var i = 0; i < mtype_entries.length; i++)
+        {
+            if(mtype_entries[i].checked)
+            {
+                mtype_selected = true;
+                break;
+            }
+        }
+        if(mtype_selected == false)
+        {
+            alert("Error: No measures selected for panel test");
+            return;
+        }
+        */
+    }
+    var stype_entries = $('.stype_entry');
+    var stype_selected = false;
+    for(var i = 0; i < stype_entries.length; i++)
+    {
+        if(stype_entries[i].checked)
+        {
+            stype_selected = true;
+            break;
+        }
+    }
+    if(stype_selected == false)
+    {
+        alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDSPECIMEN']; ?>");
+        return;
+    }
+    $('#prevalenceThresholdError').hide();
+    if( $('#prevalenceThreshold').val() > 100 ) {
+        $('#prevalenceThresholdError').show();
+        return;
+    }
+    $('#update_ttype_progress').show();
+    $('#edit_ttype_form').ajaxSubmit({
+        success: function(msg) {
+            $('#update_ttype_progress').hide();
+            window.location="test_type_updated.php?tid=<?php echo $_REQUEST['tid']; ?>";
+        }
+    });
+}
+
+ function check_if_new_category(select_obj)
+{
+    var value = $('#cat_code').val();
+    if(value == -1)
+    {
+        $('#new_category').show();
+    }
+    else
+    {
+        $('#new_category_textbox').val("");
+        $('#new_category').hide();
+    }
+}
+
+
+
+function add_new_measure()
+{
+    num_measures++;
+    $('#new_mrow_'+num_measures).show();
+}
+
+function add_new_submeasure(mrow_num)
+{
+    num_submeasures[mrow_num]++;
+    $('#smrow_'+mrow_num+'_'+num_submeasures[mrow_num]).show();
+}
+
+
+ function add_new_option_field(mrow_num)
+{
+    var html_code = " / <input type='text' class='range_field' name='new_alpharange_"+mrow_num+"[]' value='' />";
+    $('#new_alpha_list_'+mrow_num).append(html_code);
+}
+
+ function add_new_autocomplete_field(mrow_num)
+{
+    var html_code = "<input type='text' class='uniform_width' name='new_autocomplete_"+mrow_num+"[]' value='' /><br>";
+    $('#new_autocomplete_list_new_'+mrow_num).append(html_code);
+}
+
+
+
+function add_range_field(mrow_num, map_offset)
+{
+
+if(num_ranges[mrow_num] == 0)
+    {
+        num_ranges[mrow_num] += map_offset;
+    }
+    else
+    {
+        num_ranges[mrow_num]++;
+    }
+    var num_row = num_ranges[mrow_num];
+    
+        var map=map_offset-1;                                   
+    var html_code = "<input type='text' class='range_field' name='range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field' name='range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field' name='gender_"+mrow_num+"_"+map+"' value='B'/> <input type='text' class='range_field agerange_l_"+mrow_num+"' name='agerange_l_"+mrow_num+"_"+map+"' id='agerange_l_"+mrow_num+"_"+map+"' value='0' /> : <input type='text' class='range_field agerange_u_"+mrow_num+"' name='agerange_u_"+mrow_num+"_"+map+"' id='agerange_u_"+mrow_num+"_"+map+"' value='100' /><br>";
+    $('#numeric_'+mrow_num).append(html_code);
+}   
+    function add_new_range_field(mrow_num, map_offset)
+    {
+if(num_ranges[mrow_num] == 0)
+    {
+        num_ranges[mrow_num] += map_offset;
+    }
+    else
+    {
+        num_ranges[mrow_num]++;
+    }
+    var num_row = num_ranges[mrow_num];
+    
+                                            
+    var html_code = "<input type='text' class='range_field' name='new_range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field' name='new_range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field' name='new_gender_"+mrow_num+"[]' value='B' /> <input type='text' class='range_field agerange_l_"+mrow_num+"[]' name='new_agerange_l_"+mrow_num+"[]' id='new_agerange_l_"+mrow_num+"[]' value='0' /> : <input type='text' class='range_field agerange_u_"+mrow_num+"[]' name='new_agerange_u_"+mrow_num+"[]' id='new_agerange_u_"+mrow_num+"[]' value='100' /><br>";
+    $('#new_numeric_'+mrow_num).append(html_code);
+}
+
+ function addRowToTable()
+{
+  var tbl = document.getElementById('tblSample');
+  var lastRow = tbl.rows.length;
+  // if there's no header row in the table, then iteration = lastRow + 1
+  var iteration = lastRow;
+  var row = tbl.insertRow(lastRow);
+   // right cell
+  var cellRight = row.insertCell(0);
+  var el = document.createElement('input');
+  el.type = 'text';
+  el.name = 'txtRow' + iteration+'1';
+  el.id = 'txtRow' + iteration+'1';
+  el.size = 40;
+  cellRight.appendChild(el);
+  // select cell
+  var cellRightSel = row.insertCell(1);
+  var sel = document.createElement('input');
+  sel.type = 'text';
+  sel.name = 'txtRow' + iteration+'2';
+  sel.id = 'txtRow' + iteration+'2';
+  sel.size = 40;
+  cellRightSel.appendChild(sel);
+}
+
+function removeRowFromTable()
+{
+  var tbl = document.getElementById('tblSample');
+  var lastRow = tbl.rows.length;
+  if (lastRow > 2) tbl.deleteRow(lastRow - 1);
+}
+
+function validateRow()
+{
+    var tbl = document.getElementById('tblSample');
+        var lastRow = tbl.rows.length - 1;
+    var i=0;
+    var clinical_data;
+    var aLeft= new Array();
+    var aRight=new Array();
+    for (i=1; i<=lastRow; i++) 
+    {
+       aLeft[i-1] = document.getElementById('txtRow' + i+1).value;
+       aRight[i-1] = document.getElementById('txtRow' + i+2).value;
+    }
+    
+        var total="";
+        if(aLeft[0]!="")
+      total='%%%'+aLeft+'###'+aRight;
+      var data= $('#clinical_data').attr("value");
+      if(data!=""&& total!="")
+      {
+      clinical_data="!#!"+data+total;
+      }
+      else if(data!="-" && data!="")
+      {
+     clinical_data=data;
+      }
+      else if(total!="%%%")
+      clinical_data=total;
+      else 
+      clinical_data="";
+    
+    $('#clinical_data').attr("value",clinical_data);
+    update_ttype();
+}
+  
+function addData(list) {
+    var dat=list.split('###');
+    var name=dat[0].split(',');
+    var valu =dat[1].split(',');
+    $('#extra').show();
+    $('#tblSample1').show();
+    for(var i=1; i<name.length+1;i++) {
+        $('#txtRow'+i+'1').attr("value",name[i-1]);
+        $('#txtRow'+i+'2').attr("value",valu[i-1]);
+        addRowToTable();
+    }
+    removeRowFromTable();
+}
+
+function addTable() {
+    field="extra";
+    if($('#'+field).is(":visible")==true) {
+        $('#extra').hide();
+        $('#tblSample1').hide();
+        $('#text').show();
+    }
+    else
+    {
+        $('#extra').show();
+        $('#tblSample1').show();
+        $('#text').hide();
+    }
+}
+
+function toggle_agerange(measure_num, row_num)
+{
+    var field_id = "agerange_l_"+measure_num+"_"+row_num;
+    if($('#'+field_id).is(":disabled") == false)
+    {
+        $('#'+field_id).attr("disabled", "true");
+    }
+    else
+    {
+        $('#'+field_id).removeAttr("disabled");
+    }
+    field_id = "agerange_u_"+measure_num+"_"+row_num;
+    if($('#'+field_id).is(":disabled") == false)
+    {
+        $('#'+field_id).attr("disabled", "true");
+    }
+    else
+    {
+        $('#'+field_id).removeAttr("disabled");
+    }   
+}
+function isInputNumber(evt) {
+    var characterCode = (evt.which) ? evt.which : event.keyCode
+
+    if (characterCode > 31 && (characterCode < 48 || characterCode > 57))
+        return false;
+
+    return true;
+}
+
+function isInputCurrency(evt) {
+        var characterCode = (evt.which) ? evt.which : event.keyCode
+        // 31 is the upper bound of non-printable characters
+        // numbers are between 48 and 57
+        // 46 is a decimal '.'
+        // 44 is a comma ','
+        if (characterCode > 31 && (characterCode < 48 || characterCode > 57) && characterCode != 46 && characterCode != 44)
+                return false;
+
+        return true;
+}
+</script>
+
+
+<?php include("includes/footer.php"); ?>
