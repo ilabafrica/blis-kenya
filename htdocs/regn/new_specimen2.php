@@ -107,7 +107,7 @@ if ($tests_requested != null){
 			{
 			    $test_id=TestType::getIdByName($test['investigation']);
                 $specimen_id=TestType::getSpecimenIdByTestName($test_id);
-                echo "Test ID is ".$test_id." Specimen ID is ".$specimen_id."<br>";
+                echo "Test id = " .$test_id . " : SpecimenID = ". $specimen_id ;
                 $testSpec[$specimen_id]  = $test_id;             
 			?>
 			<tr>

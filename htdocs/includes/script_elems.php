@@ -304,7 +304,7 @@ class ScriptElems
 		if($this->enabledJQueryMask === false)
 		{
 		?>
-                        <script type="text/javascript" src="js/jquery.maskedinput-1.3.js"></script>
+                        <script type="text/javascript" src="js/jquery.mask.js"></script>
 		<?php
 		}
 		$this->enabledJQueryMask = true;

@@ -2595,3 +2595,17 @@ DATETIME,IDENTIFIER,INFO,FILE,USER,LAB,VERSION,TAG1,TAG2,TAG3
 "2013-09-26 17:00:49",result_entry_tests,op=10&qr=,result_entry_tests,53,127,2.5,X,X,X
 "2013-09-26 17:00:50",find_patient,X,find_patient,53,127,2.5,X,X,X
 "2013-09-26 17:00:58",search_p,op=1&qr=der,search_p,53,127,2.5,X,X,X
+"2013-10-16 19:01:35",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:02:36",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:04:26",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:05:01",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:05:24",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:09:28",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:11:05",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:11:34",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:11:49",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:13:51",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:14:44",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:17:37",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:17:39",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
+"2013-10-16 19:22:54",test_type_edit,X,test_type_edit.php?tid=39,53,127,2.5,X,X,X
