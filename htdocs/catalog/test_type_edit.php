@@ -7,6 +7,10 @@ include("redirect.php");
 include("includes/header.php");
 include("includes/ajax_lib.php");
 LangUtil::setPageId("catalog");
+$script_elems = new ScriptElems();
+$script_elems->enableDatePicker();
+$script_elems->enableLatencyRecord();
+$script_elems->enableJQuery();
 
 putUILog('test_type_edit', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
@@ -27,16 +31,41 @@ function specimen_list_to_json($specimen_list)
 	return list_to_json($assoc_list, $json_params);
 }
 ?>
-
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li><i class='icon-cogs'></i> Test Types
+							</li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
 <br>
 <?php
 //$tips_string=LangUtil::$pageTerms['TIPS_MEASURES'];
 //$tips_string = LangUtil::$pageTerms['TIPS_CATALOG'];
-$tips_string="To know more about a particular field select on the [?] next to the field name.";
-$page_elems->getSideTip("Tips", $tips_string);
 ?>
+<div id='test_types_div' class='content_div'>
+    <div class="portlet box green">
+		<div class="portlet-title">
+			<h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['EDIT_TEST_TYPE']; ?></h4>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a>
+				
+			</div>
+		</div>
+		<div class="portlet-body">
+		<div id='sdel_msg' class='clean-orange' style='display:none;'>
+			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+		</div>
 <b><?php echo LangUtil::$pageTerms['EDIT_TEST_TYPE']; ?></b>
 | <a href="catalog.php?show_t=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+<?php $tips_string="To know more about a particular field select on the [?] next to the field name.";
+$page_elems->getSideTip("Tips", $tips_string);
+ ?>
+
 <br><br>
 
 <?php
@@ -51,6 +80,9 @@ if($test_type == null)
 ?>
 	<div class='sidetip_nopos'>
 	<?php echo LangUtil::$generalTerms['MSG_NOTFOUND']; ?>
+	</div>
+	</div>
+	</div>
 	</div>
 <?php
 	include("includes/footer.php");
@@ -564,13 +596,13 @@ function add_new_submeasure(mrow_num)
 
  function add_new_option_field(mrow_num)
 {
-	var html_code = " / <input type='text' class='range_field' name='new_alpharange_"+mrow_num+"[]' value='' />";
+	var html_code = " / <input type='text' class='range_field span6 m-wrap' name='new_alpharange_"+mrow_num+"[]' value='' />";
 	$('#new_alpha_list_'+mrow_num).append(html_code);
 }
 
  function add_new_autocomplete_field(mrow_num)
 {
-	var html_code = "<input type='text' class='uniform_width' name='new_autocomplete_"+mrow_num+"[]' value='' /><br>";
+	var html_code = "<input type='text' class='uniform_width span6 m-wrap' name='new_autocomplete_"+mrow_num+"[]' value='' /><br>";
 	$('#new_autocomplete_list_new_'+mrow_num).append(html_code);
 }
 
@@ -590,7 +622,7 @@ if(num_ranges[mrow_num] == 0)
 	var num_row = num_ranges[mrow_num];
 	
 		var map=map_offset-1;									
-	var html_code = "<input type='text' class='range_field' name='range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field' name='range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field' name='gender_"+mrow_num+"_"+map+"' value='B'/> <input type='text' class='range_field agerange_l_"+mrow_num+"' name='agerange_l_"+mrow_num+"_"+map+"' id='agerange_l_"+mrow_num+"_"+map+"' value='0' /> : <input type='text' class='range_field agerange_u_"+mrow_num+"' name='agerange_u_"+mrow_num+"_"+map+"' id='agerange_u_"+mrow_num+"_"+map+"' value='100' /><br>";
+	var html_code = "<input type='text' class='range_field span2 m-wrap' name='range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field span2 m-wrap' name='range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field span2 m-wrap' name='gender_"+mrow_num+"_"+map+"' value='B'/> <input type='text' class='range_field span2 m-wrap agerange_l_"+mrow_num+"' name='agerange_l_"+mrow_num+"_"+map+"' id='agerange_l_"+mrow_num+"_"+map+"' value='0' /> : <input type='text' class='range_field span2 m-wrap agerange_u_"+mrow_num+"' name='agerange_u_"+mrow_num+"_"+map+"' id='agerange_u_"+mrow_num+"_"+map+"' value='100' /><br>";
 	$('#numeric_'+mrow_num).append(html_code);
 }	
 	function add_new_range_field(mrow_num, map_offset)
@@ -606,7 +638,7 @@ if(num_ranges[mrow_num] == 0)
 	var num_row = num_ranges[mrow_num];
 	
 											
-	var html_code = "<input type='text' class='range_field' name='new_range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field' name='new_range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field' name='new_gender_"+mrow_num+"[]' value='B' /> <input type='text' class='range_field agerange_l_"+mrow_num+"[]' name='new_agerange_l_"+mrow_num+"[]' id='new_agerange_l_"+mrow_num+"[]' value='0' /> : <input type='text' class='range_field agerange_u_"+mrow_num+"[]' name='new_agerange_u_"+mrow_num+"[]' id='new_agerange_u_"+mrow_num+"[]' value='100' /><br>";
+	var html_code = "<input type='text' class='range_field span2 m-wrap' name='new_range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field span2 m-wrap' name='new_range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field span2 m-wrap' name='new_gender_"+mrow_num+"[]' value='B' /> <input type='text' class='range_field span2 m-wrap agerange_l_"+mrow_num+"[]' name='new_agerange_l_"+mrow_num+"[]' id='new_agerange_l_"+mrow_num+"[]' value='0' /> : <input type='text' class='range_field span2 m-wrap agerange_u_"+mrow_num+"[]' name='new_agerange_u_"+mrow_num+"[]' id='new_agerange_u_"+mrow_num+"[]' value='100' /><br>";
 	$('#new_numeric_'+mrow_num).append(html_code);
 }
 
@@ -757,32 +789,32 @@ function isInputCurrency(evt) {
 <br>
 
 <div class='pretty_box'>
-<form name='edit_ttype_form' id='edit_ttype_form' action='ajax/test_type_update.php' method='post'>
+<form name='edit_ttype_form' id='edit_ttype_form' action='ajax/test_type_update.php' method='post' class='form-horizontal'>
 <input type='hidden' name='ispanel' value='<?php if($test_type->isPanel === true) echo "1"; else echo "0"; ?>'></input>
 <input type='hidden' name='tid' id='tid' value='<?php echo $_REQUEST['tid']; ?>'></input>
-	<table cellspacing='4px'>
+	<table cellspacing='4px' class='table table-bordered'>
 		<tbody>
 			<tr valign='top'>
 				<td><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-				<td><input type='text' name='name' id='name' value='<?php echo $test_type->name; ?>' class='uniform_width'></input></td>
+				<td><input type='text' name='name' id='name' value='<?php echo $test_type->name; ?>' class='span6 m-wrap'></input></td>
 			</tr>
 			<tr valign='top'>
 				<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?><?php $page_elems->getAsterisk(); ?></td>
 				<td>
-				<SELECT name='cat_code' id='cat_code' onchange="javascript:check_if_new_category(this);" class='uniform_width'>
+				<SELECT name='cat_code' id='cat_code' onchange="javascript:check_if_new_category(this);" class='span6 m-wrap'>
 					<?php $page_elems->getTestCategorySelect(); ?>
 					<option value='-1'>--<?php echo LangUtil::$pageTerms['NEW_LAB_SECTION']; ?>--</option>
 				</select>
 				&nbsp;&nbsp;&nbsp;
 				<span id='new_category'>
 					<small><?php echo LangUtil::$generalTerms['NAME']; ?></small>&nbsp;
-					<input type='text' id='new_category_textbox' name='new_category' class='uniform_width' />
+					<input type='text' id='new_category_textbox' name='new_category' class='span4 m-wrap' />
 				</span>
 				</td>
 			</tr>
 			<tr valign='top'>
 				<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-				<td><textarea type='text' name='description' id='description' class='uniform_width'><?php echo trim($test_type->description); ?></textarea></td>
+				<td><textarea type='text' name='description' id='description' class='span6 m-wrap'><?php echo trim($test_type->description); ?></textarea></td>
 			</tr>
 		<tr valign='top'>
 		
@@ -808,7 +840,7 @@ function isInputCurrency(evt) {
 			?>
 		
 		
-			<textarea name='clinical_data' id='clinical_data' class='uniform_width'><?php echo $text;?></textarea>
+			<textarea name='clinical_data' id='clinical_data' class='span6 m-wrap'><?php echo $text;?></textarea>
 			</td></tr>
 			<tr><td>
 			<!--<div id="text" <?php if((stripos($test_type->clinical_data ,"%%%"))===0) { ?> style='display:none' <?php }?> >
@@ -820,10 +852,8 @@ function isInputCurrency(evt) {
 			</td>
 			<td>
 			<div id="tblSample1">
-			<table border="1" id="tblSample" >
-			<tr>
-				
-			</tr>
+			<table border="0" id="tblSample" class='table table-bordered' >
+			
 			<tr>
 				
 				<td>
@@ -834,9 +864,9 @@ function isInputCurrency(evt) {
 				</td>
 			</tr>
 			</table>
-			<input type="button" value="Add Row" onclick="addRowToTable();" />
+			<input type="button" class='btn green' value="Add Row" onclick="addRowToTable();" />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<input type="button" value="Remove Row" onclick="removeRowFromTable();" />
+			<input type="button" class='btn grey' value="Remove Row" onclick="removeRowFromTable();" />
 			</div>
 		</td>
 		
@@ -859,7 +889,7 @@ function isInputCurrency(evt) {
 				<tr valign='top'>
 					<td><?php echo LangUtil::$generalTerms['MEASURES']; ?> [<a href='#measures_help' rel='facebox'>?</a>]</td>
 					<td>
-						<table id='new_measure_list' class='smaller_font'>
+						<table id='new_measure_list' class='smaller_font table table-bordered'>
 							<tr>
 								<td><u>Delete</u></td>
 								<td><u><?php echo LangUtil::$generalTerms['NAME']; ?></u><?php $page_elems->getAsterisk(); ?></td>
@@ -907,7 +937,7 @@ function isInputCurrency(evt) {
 								if(strpos($encName, $start_tag) !==false)
 										echo "Sub:";
 
-								echo "<input type='text' name='measure[]' value='$decName' />";
+								echo "<input type='text' class='span12 m-wrap' name='measure[]' value='$decName' />";
 								echo "</td>";
 								echo "<td>";
 								$range_string = $curr_measure->range;
@@ -930,7 +960,7 @@ function isInputCurrency(evt) {
 								}
 								?>
 								<!--<select class='range_select' id='type_'<?php echo $i; ?>' name='mtype[]' onchange='javascript:add_label(<?php echo $i; ?>);'>-->
-									<select class='range_select' id='<?php echo $i; ?>' name='mtype[]'>
+									<select class='range_select' class='span12 m-wrap' id='<?php echo $i; ?>' name='mtype[]'>
 									<option value='<?php echo Measure::$RANGE_NUMERIC; ?>' <?php 
 									if($range_type == Measure::$RANGE_NUMERIC)
 										echo " selected='selected' ";
@@ -974,11 +1004,11 @@ function isInputCurrency(evt) {
 										?>
 										<span id='numeric_<?php echo $i; ?>'>
 											
-											<input type='text' class='range_field' name='range_l_<?php echo $i; ?>[]' value='<?php echo $lower_range; ?>' /> :
-											<input type='text' class='range_field' name='range_u_<?php echo $i; ?>[]' value='<?php echo $upper_range; ?>' />
-											<input type='text' class='range_field' name='gender_<?php echo $i; ?>[]' value='B'/>
-											<input type='text' class='range_field' name='age_l_<?php echo $i; ?>[]' value='0'/>
-											<input type='text' class='range_field' name='age_u_<?php echo $i; ?>[]' value='100'/>
+											<input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i; ?>[]' value='<?php echo $lower_range; ?>' /> :
+											<input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i; ?>[]' value='<?php echo $upper_range; ?>' />
+											<input type='text' class='range_field span2 m-wrap' name='gender_<?php echo $i; ?>[]' value='B'/>
+											<input type='text' class='range_field span2 m-wrap' name='age_l_<?php echo $i; ?>[]' value='0'/>
+											<input type='text' class='range_field span2 m-wrap' name='age_u_<?php echo $i; ?>[]' value='100'/>
 											<br>
 											
 										</span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;Age_Range
@@ -994,12 +1024,12 @@ function isInputCurrency(evt) {
 										{
 											
 										?>
-											<input type='text' class='range_field' name='range_l_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeLower; ?>' /> :
-											<input type='text' class='range_field' name='range_u_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeUpper; ?>' />
-											<input type='text' class='range_field' name='gender_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->sex; ?>'/>
-											<input type='text' class='range_field agerange_l_<?php echo $i; ?>' name='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' id='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMin; ?>' /> :
-											<input type='text' class='range_field agerange_u_<?php echo $i; ?>' name='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' id='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMax; ?>' />
-											<br>
+											<input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeLower; ?>' /> :
+											<input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeUpper; ?>' />
+											<input type='text' class='range_field span2 m-wrap' name='gender_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->sex; ?>'/>
+											<input type='text' class='range_field span2 m-wrap agerange_l_<?php echo $i; ?>' name='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' id='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMin; ?>' /> :
+											<input type='text' class='range_field span2 m-wrap agerange_u_<?php echo $i; ?>' name='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' id='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMax; ?>' />
+											<br><br>
 											<?php
 											$ref_count++;
 												
@@ -1081,7 +1111,7 @@ function isInputCurrency(evt) {
 								echo "<td align='center'>";
 							//	echo "<input type=checkbox name='delete_".$curr_measure->name."'  />";
 								echo "</td><td>";
-								echo "<input type='text' name='new_measure[]' value='' />";
+								echo "<input type='text' class='span12 m-wrap' name='new_measure[]' value='' />";
                                                                 echo "<br>";
                                         ?>
                                         <small><a id='new_submeasure_link' href='javascript:add_new_submeasure(<?php echo $i; ?>);'><?php echo 'Add Sub Measure'; ?> &raquo;</a></small>
@@ -1090,7 +1120,7 @@ function isInputCurrency(evt) {
 								echo "</td>";
 								echo "<td>";
 								?>
-								<select class='new_range_select' id='new_<?php echo $i; ?>' name='new_mtype[]'>
+								<select class='new_range_select span12 m-wrap' id='new_<?php echo $i; ?>' name='new_mtype[]'>
 									<option value='<?php echo Measure::$RANGE_NUMERIC; ?>'><?php echo LangUtil::$generalTerms['RANGE_NUMERIC']; ?></option>
 									<option value='<?php echo Measure::$RANGE_OPTIONS; ?>'><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
 									<option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>'><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
@@ -1103,11 +1133,11 @@ function isInputCurrency(evt) {
 								<span id='new_val_new_<?php echo $i; ?>' class='new_values_section_new_<?php echo $i; ?>'>
 									<div id='numeric_range_<?php echo $i; ?>' name=numeric_range_<?php echo $i; ?>'>
 									<span id='new_num eric_<?php echo $i; ?>'>
-											<input type='text' class='range_field' name='new_range_l_<?php echo $i; ?>[]' value='' /> :
-											<input type='text' class='range_field' name='new_range_u_<?php echo $i; ?>[]' value='' />
-											<input type='text' class='range_field' name='new_gender_<?php echo $i; ?>[]' value='B'/>
-											<input type='text' class='range_field agerange_l_<?php echo $i; ?>' name='new_agerange_l_<?php echo $i; ?>[]' id='new_agerange_l_<?php echo $i; ?>[]' value='0' /> :
-											<input type='text' class='range_field agerange_u_<?php echo $i; ?>' name='new_agerange_u_<?php echo $i; ?>[]' id='new_agerange_u_<?php echo $i; ?>[]' value='100' />
+											<input type='text' class='range_field span2 m-wrap' name='new_range_l_<?php echo $i; ?>[]' value='' /> :
+											<input type='text' class='range_field span2 m-wrap' name='new_range_u_<?php echo $i; ?>[]' value='' />
+											<input type='text' class='range_field span2 m-wrap' name='new_gender_<?php echo $i; ?>[]' value='B'/>
+											<input type='text' class='range_field span2 m-wrap agerange_l_<?php echo $i; ?>' name='new_agerange_l_<?php echo $i; ?>[]' id='new_agerange_l_<?php echo $i; ?>[]' value='0' /> :
+											<input type='text' class='range_field span2 m-wrap agerange_u_<?php echo $i; ?>' name='new_agerange_u_<?php echo $i; ?>[]' id='new_agerange_u_<?php echo $i; ?>[]' value='100' />
 																
 											<br>
 								</span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;Age_Range
@@ -1119,16 +1149,16 @@ function isInputCurrency(evt) {
 								
 								<span id='new_alpha_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
 									<span id='new_alpha_list_<?php echo $i; ?>'>
-										<input type='text' class='range_field' name='new_alpharange_<?php echo $i; ?>[]' value='' /> /
-										<input type='text' class='range_field' name='new_alpharange_<?php echo $i; ?>[]' value='' />
+										<input type='text' class='range_field span2 m-wrap' name='new_alpharange_<?php echo $i; ?>[]' value='' /> /
+										<input type='text' class='range_field span2 m-wrap' name='new_alpharange_<?php echo $i; ?>[]' value='' />
 									</span>
 									<br>
 									<small><a href="javascript:add_new_option_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
 								</span>
 								<span id='new_autocomplete_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
 									<span id='new_autocomplete_list_new_<?php echo $i; ?>'>
-										<input type='text' class='uniform_width' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
-										<input type='text' class='uniform_width' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
+										<input type='text' class='span4 m-wrap' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
+										<input type='text' class='span4 m-wrap' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
 									</span>
 									<small><a href="javascript:add_new_autocomplete_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
 								</span>
@@ -1140,7 +1170,7 @@ function isInputCurrency(evt) {
 								<?php
 								echo "</td>";
 								echo "<td id='unit_$i'>";
-								echo "<input type='text' name='new_unit[]' value='' />";
+								echo "<input type='text' class='span6 m-wrap' name='new_unit[]' value='' />";
 								echo "</td>";
 								echo "</tr>";
                                                                 
@@ -1161,12 +1191,12 @@ function isInputCurrency(evt) {
                                             
                                             echo "<td>";
                                             ?>
-                                            Sub: <input type='text' name='submeasure[<?php echo $i; ?>][]' value='' />
+                                            Sub: <input type='text' class='span6 m-wrap' name='submeasure[<?php echo $i; ?>][]' value='' />
                                             <?php
                                             echo "</td>";
                                             echo "<td>";
                                             ?>
-                                            <select class='range_select' id='<?php echo $i.$us.$y; ?>' name='smtype[<?php echo $i; ?>][]'>
+                                            <select class='range_select span6 m-wrap' id='<?php echo $i.$us.$y; ?>' name='smtype[<?php echo $i; ?>][]'>
                                                     <option value='<?php echo Measure::$RANGE_NUMERIC; ?>'><?php echo LangUtil::$generalTerms['RANGE_NUMERIC']; ?></option>
                                                     <option value='<?php echo Measure::$RANGE_OPTIONS; ?>'><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
                                                     <option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>'><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
@@ -1180,11 +1210,11 @@ function isInputCurrency(evt) {
                                             <span id='val_<?php echo $i.$us.$y; ?>' class='values_section_<?php echo $i.$us.$y; ?>'>
                                                     <span id='numeric_<?php echo $i.$us.$y; ?>'>
 
-                                                            <input type='text' class='range_field' name='range_l_<?php echo $i.$us.$y; ?>[]' value='' /> :
-                                                            <input type='text' class='range_field' name='range_u_<?php echo $i.$us.$y; ?>[]' value=''/>
-                                                            <input type='text' class='range_field' name='gender_<?php echo $i.$us.$y; ?>[]' value='B'/>
-                                                            <input type='text' class='range_field'  name='agerange_l_<?php echo $i.$us.$y; ?>[]' id='agerange_l_<?php echo $i.$us.$y; ?>[]' value='0' /> :
-                                                            <input type='text' class='range_field' name='agerange_u_<?php echo $i.$us.$y; ?>[]' id='agerange_u_<?php echo $i.$us.$y; ?>[]' value='100' />
+                                                            <input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i.$us.$y; ?>[]' value='' /> :
+                                                            <input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i.$us.$y; ?>[]' value=''/>
+                                                            <input type='text' class='range_field span2 m-wrap' name='gender_<?php echo $i.$us.$y; ?>[]' value='B'/>
+                                                            <input type='text' class='range_field span2 m-wrap'  name='agerange_l_<?php echo $i.$us.$y; ?>[]' id='agerange_l_<?php echo $i.$us.$y; ?>[]' value='0' /> :
+                                                            <input type='text' class='range_field span2 m-wrap' name='agerange_u_<?php echo $i.$us.$y; ?>[]' id='agerange_u_<?php echo $i.$us.$y; ?>[]' value='100' />
                                                             <br>
                                                     </span>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;Age_Range
@@ -1194,8 +1224,8 @@ function isInputCurrency(evt) {
                                             </span>
                                             <span id='alpha_<?php echo $i.$us.$y; ?>' style='display:none' class='values_section_<?php echo $i.$us.$y; ?>'>
                                                     <span id='alpha_list_<?php echo $i.$us.$y; ?>'>
-                                                            <input type='text' class='range_field' name='alpharange_<?php echo $i.$us.$y; ?>[]' value='' /> /
-                                                            <input type='text' class='range_field' name='alpharange_<?php echo $i.$us.$y; ?>[]' value='' />
+                                                            <input type='text' class='range_field span2 m-wrap' name='alpharange_<?php echo $i.$us.$y; ?>[]' value='' /> /
+                                                            <input type='text' class='range_field span2 m-wrap' name='alpharange_<?php echo $i.$us.$y; ?>[]' value='' />
                                                     </span>
                                                     <br>
                                                     <small><a href="javascript:add_new_option_field('<?php echo $i.$us.$y; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
@@ -1251,7 +1281,7 @@ function isInputCurrency(evt) {
 			<tr valign='top'>
 				<td>Hide Patient Name in Report </td>
 				<td>
-					<select name="hidePatientName">
+					<select name="hidePatientName" class='span6 m-wrap'>
 						<?php if ( $test_type->hidePatientName == 0 ) { ?>
 							<option value="0" selected>No</option>
 							<option value="1">Yes</option>
@@ -1265,7 +1295,7 @@ function isInputCurrency(evt) {
 
 			<tr valign='top'>
 				<td>Prevalence Threshold </td>
-				<td><input id='prevalenceThreshold' name='prevalenceThreshold' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" value=<?php echo $test_type->prevalenceThreshold; ?> />
+				<td><input id='prevalenceThreshold' class='span6 m-wrap' name='prevalenceThreshold' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" value=<?php echo $test_type->prevalenceThreshold; ?> />
 					<span id='prevalenceThresholdError' class='error_string' style='display:none;'>
 						<?php echo "Threshold Value cannot be more than 100"; ?>
 					</span>
@@ -1274,21 +1304,21 @@ function isInputCurrency(evt) {
 
 			<tr valign='top'>
 				<td>Target TAT</td>
-				<td><input id='targetTat' name='targetTat' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" value=<?php echo $test_type->targetTat; ?> />
+				<td><input id='targetTat' name='targetTat' class='span6 m-wrap' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" value=<?php echo $test_type->targetTat; ?> />
 				</td>
 			</tr>
 
 			<tr valign='top' <?php is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none;'") ?>>
 				<td>Cost to Patient</td>
 
-				<input type="hidden" name='cost_to_patient_dollars_old' value='<?php echo $cost_to_patient_dollars; ?>' />
-				<input type="hidden" name='cost_to_patient_cents_old' value='<?php echo $cost_to_patient_cents; ?>' />
+				<input type="hidden" class='span6 m-wrap' name='cost_to_patient_dollars_old' value='<?php echo $cost_to_patient_dollars; ?>' />
+				<input type="hidden" class='span6 m-wrap' name='cost_to_patient_cents_old' value='<?php echo $cost_to_patient_cents; ?>' />
 
 				<td>
-					<input id='cost_to_patient_dollars' name='cost_to_patient_dollars' type='text' size='4' maxLength='4' onkeypress="return isInputNumber(event);" value='<?php echo $cost_to_patient_dollars; ?>' />
+					<input id='cost_to_patient_dollars' class='span4 m-wrap' name='cost_to_patient_dollars' type='text' size='4' maxLength='4' onkeypress="return isInputNumber(event);" value='<?php echo $cost_to_patient_dollars; ?>' />
 					<?php echo get_currency_delimiter_from_lab_config_settings(); ?>
 
-					<input id='cost_to_patient_dollars' name='cost_to_patient_cents' type='text' size='2' maxLength='2' onkeypress="return isInputNumber(event);" value='<?php echo get_cents_as_whole_number($cost_to_patient_cents); ?>' />
+					<input id='cost_to_patient_dollars' class='span4 m-wrap' name='cost_to_patient_cents' type='text' size='2' maxLength='2' onkeypress="return isInputNumber(event);" value='<?php echo get_cents_as_whole_number($cost_to_patient_cents); ?>' />
 					<?php echo get_currency_type_from_lab_config_settings(); ?>
 				</td>
 			</tr>
@@ -1297,9 +1327,9 @@ function isInputCurrency(evt) {
 				<td></td>
 				<td>
 					<br><br>
-					<input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:validateRow();'></input>
+					<input type='button' class='btn green' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:validateRow();'></input>
 					&nbsp;&nbsp;&nbsp;
-					<a href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+					<a href='catalog.php?show_t=1' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 					&nbsp;&nbsp;&nbsp;
 					<span id='update_ttype_progress' style='display:none;'>
 						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>

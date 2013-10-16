@@ -858,7 +858,7 @@ class PageElems
 		# Returns HTML for displaying test type information
 		$test_type = get_test_type_by_name($test_name);
 		?>
-		<table class='hor-minimalist-b'>
+		<table class='hor-minimalist-b table table-striped' style='width:500px;'>
 			<tbody>
 				<tr>
 					<td><?php echo LangUtil::$generalTerms['NAME']; ?></td>
@@ -4789,7 +4789,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			$current_specimen_list = get_lab_config_specimen_types($lab_config_id);
 		# For each specimen type, create a check box. Check it if specimen already in lab configuration
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b table table-bordered' style='width:700px;'>
 			<tbody>
 			<tr>
 			<?php
