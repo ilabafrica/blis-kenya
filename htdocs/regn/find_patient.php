@@ -409,6 +409,7 @@ function fetch_patient_specimens_accept_reject()
 		{
 		    App.unblockUI(el);
 			handleDataTable(10);
+			handleDataTable('rejct_samples');
 			$("#sample_collection_body").css({'height':''});
 		}
 	);	

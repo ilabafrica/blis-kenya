@@ -336,9 +336,9 @@ function add_patient()
 				
 				card_num = new_card_num;	
 				var url = 'regn/new_specimen2.php';
-                $('#specimen_reg_body').load(url, {pid: card_num });  
                 $('.reg_subdiv').hide();     
                 $('#specimen_reg').show();
+                $('#specimen_reg_body').load(url, {pid: card_num });  
 			}
 		});
 		//Patient added

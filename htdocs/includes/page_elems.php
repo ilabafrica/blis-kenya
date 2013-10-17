@@ -3974,6 +3974,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
         
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
+			<input type='hidden' name='dnum' id="dnum_id" value='<?php echo $dnum ?>'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<?php 
 			if(is_array($external_requests) && $external_requests != null){
@@ -3984,7 +3985,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					if ($i!=$length-1)$labNumbers.=',';
 				}
 			?>
-			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>
+			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>		
 			<?php
 				
 			}?>
@@ -4002,8 +4003,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				<td width="250px" >
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
+				
 				<td>
-					<input type="text" name="dnum" id="dnum" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
+					<input type="text" name="dnum" id="dnum-disabled" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
 				</td>
 			</tr>
 			<tr >				
