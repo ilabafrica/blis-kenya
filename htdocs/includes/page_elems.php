@@ -6372,11 +6372,11 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	</>
 	<br />
 	</td></tr> <?php }?>
-		</table>
-		<table cellspacing='5px' class='table table-bordered table-hover smaller_font'>
+    </table>
+    
+		<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 400px;">
 			<tr valign='top'>
 				<td><b><?php echo LangUtil::$generalTerms['PATIENTS']?></b></td>
-				<td></td>
 			</tr>
 			<?php # Patient main fields ?>
 			<tr valign='top'>
@@ -6388,7 +6388,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['PATIENT_ID']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6399,7 +6398,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6409,7 +6407,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 						?>>
 					</input><?php echo LangUtil::$generalTerms['ADDL_ID']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6420,7 +6417,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['GENDER']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6431,7 +6427,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['AGE']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6442,7 +6437,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['DOB']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6453,7 +6447,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['NAME']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6464,7 +6457,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo LangUtil::$generalTerms['TEST']; ?>
 				</td>
-				<td></td>
 			</tr>
 			<tr valign='top'>
 				<td>
@@ -6475,7 +6467,6 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					</input>
 					<?php echo "Registration Date"; ?>
 				</td>
-				<td></td>
 			</tr>
 			<?php
 			# Patient custom fields
@@ -6499,7 +6490,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				}
 			}
 			?>
-				
+			</table>
+			
+			<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 400px;">	
 			<tr valign='top'<?php
 			if($report_config->reportId == 6)
 				echo " style='display:none;' ";
@@ -6637,7 +6630,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				}
 			}
 			?>
-			
+			</table>
+			<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 400px">
 			<tr valign='top'<?php
 			if($report_config->reportId == 6 || $report_config->reportId == 2)
 				echo " style='display:none;' ";
@@ -6772,7 +6766,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				</td>
 				
 			</tr>
-			
+			</table>
 		</table>
 		<table>
 			<tr valign='top'>

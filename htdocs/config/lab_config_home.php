@@ -371,9 +371,10 @@ if($lab_config == null)
                             <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
                         </span>
                         <br><br>
-                        <div id='report_config_content'>
-                        </div>
+                        
                     </form> 
+                </div>
+                <div id='report_config_content'>                 
                 </div>
         </div>
     </div>
@@ -1707,9 +1708,9 @@ if($lab_config == null)
 </table>
 </div>
 </div>
-<?php include("includes/scripts.php");
+<?php 
+include("includes/scripts.php");
 require_once("includes/script_elems.php");
-$script_elems = new ScriptElems();
 $script_elems->enableDatePicker();
 $script_elems->enableJQueryForm();
 ?>
