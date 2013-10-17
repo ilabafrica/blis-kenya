@@ -26,19 +26,19 @@ function check_input()
 
 </script>
 <br>
-<b><?php echo LangUtil::$pageTerms['NEW_LAB_SECTION']; ?></b>
+<b style="margin-left:50px;"><?php echo LangUtil::$pageTerms['NEW_LAB_SECTION']; ?></b>
 | <a href='catalog.php?show_tc=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br><br>
-<div class='pretty_box'>
+<div class='pretty_box' style='margin-left:50px;' >
 <form name='new_test_category_form' id='new_test_category_form' action='test_category_add.php' method='post'>
 <table class='smaller_font'>
 <tr>
 <td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='category_name' id='category_name' class='span12 m-wrap' /></td>
+<td><input type='text' name='category_name' id='category_name' class='span4 m-wrap' /></td>
 </tr>
 <tr valign='top'>
 <td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-<td><textarea name='category_descr' id='category_descr' class='span12 m-wrap'></textarea></td>
+<td><textarea name='category_descr' id='category_descr' class='span4 m-wrap'></textarea></td>
 <td></td></tr></table>
 <br><br>
 <div class="form-actions">

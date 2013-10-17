@@ -9,6 +9,14 @@ LangUtil::setPageId("catalog");
 putUILog('test_type_new', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 ?>
+<!-- BEGIN PAGE TITLE & BREADCRUMB-->		
+						<h3>
+						</h3>
+						<ul class="breadcrumb">
+							<li><i class='icon-cogs'></i> Test Types
+							</li>
+						</ul>
+						<!-- END PAGE TITLE & BREADCRUMB-->
 <b><?php echo LangUtil::$pageTerms['NEW_TEST_TYPE']; ?></b>
 | <a href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <br><br>

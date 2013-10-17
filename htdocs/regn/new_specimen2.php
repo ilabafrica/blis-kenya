@@ -31,8 +31,7 @@ if ( substr($session_num,strpos($session_num, "-")+1 ) )
 	
 $doc_array= getDoctorList();
 $php_array= addslashes(implode("%", $doc_array));
-	
-$uiinfo = "pid=".$_REQUEST['pid']."&dnum=".$_REQUEST['dnum'];
+
 ?>
 
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
@@ -84,7 +83,7 @@ if($patient == null)
 <div class="row-fluid">
 <div class="span6">
 <?php 
-if ($tests_requested != null){
+if(is_array($external_requests) && $external_requests != null){
 ?>
 	<table class ="table table-striped table-bordered table-advance" style="width:400px">
 		<thead>
@@ -107,7 +106,6 @@ if ($tests_requested != null){
 			{
 			    $test_id=TestType::getIdByName($test['investigation']);
                 $specimen_id=TestType::getSpecimenIdByTestName($test_id);
-                echo "Test ID is ".$test_id." Specimen ID is ".$specimen_id."<br>";
                 $testSpec[$specimen_id]  = $test_id;             
 			?>
 			<tr>
@@ -242,7 +240,7 @@ $(document).ready(function(){
         echo "; get_patient_info('".$pid."');";
         echo " patient_exists = true;";
     }
-    if($tests_requested != null) {
+   if(is_array($external_requests) && $external_requests != null) {
       $formcount = 1;
       $specarraycount = 0;
      

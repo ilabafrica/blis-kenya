@@ -858,7 +858,10 @@ class PageElems
 		# Returns HTML for displaying test type information
 		$test_type = get_test_type_by_name($test_name);
 		?>
-		<table class='hor-minimalist-b'>
+		<div class="portlet-title" style="width: 380px">
+        <h4></i>Test Type Information</h4>
+        </div>
+		<table class='table table-bordered table-hover' style="width: 400px">
 			<tbody>
 				<tr>
 					<td><?php echo LangUtil::$generalTerms['NAME']; ?></td>
@@ -1170,8 +1173,6 @@ class PageElems
 			</td>
 			<td>
 				<?php echo $cat_name; ?>
-			</td>
-			<td>
 			</td>
 			<td>
 				<a href='test_type_edit.php?tid=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Test Info'><i class='icon-pencil'></i>  <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
@@ -3975,6 +3976,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
         
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
+			<input type='hidden' name='dnum' id="dnum_id" value='<?php echo $dnum ?>'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<?php 
 			if(is_array($external_requests) && $external_requests != null){
@@ -3985,7 +3987,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					if ($i!=$length-1)$labNumbers.=',';
 				}
 			?>
-			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>
+			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>		
 			<?php
 				
 			}?>
@@ -4003,8 +4005,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				<td width="250px" >
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
+				
 				<td>
-					<input type="text" name="dnum" id="dnum" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
+					<input type="text" name="dnum" id="dnum-disabled" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
 				</td>
 			</tr>
 			<tr >				
@@ -4744,10 +4747,10 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<td></td>
 					<td>
 					<br>
-					<input type='button' id='cfield_edit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
+					<input type='button' class="btn green" id='cfield_edit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:checkandsubmit()'>
 					</input>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<small><a href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+					<small><a class="btn" href='lab_config_home.php?id=<?php echo $lab_config_id; ?>&show_f=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<span id='cfield_progress_spinner' style='display:none;'>
 						<?php $this->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
@@ -4791,7 +4794,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			$current_specimen_list = get_lab_config_specimen_types($lab_config_id);
 		# For each specimen type, create a check box. Check it if specimen already in lab configuration
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b table table-bordered' style='width:700px;'>
 			<tbody>
 			<tr>
 			<?php

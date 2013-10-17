@@ -61,7 +61,6 @@ $title=$_REQUEST['title'];
 $tests_list = $_REQUEST['t_type_list'];
 $external_lab_no = $_REQUEST['external_lab_no'];
 
-putUILog('specimen_add', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 begin_transaction();
 

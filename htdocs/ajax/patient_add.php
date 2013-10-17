@@ -19,8 +19,6 @@ $pid = $_REQUEST['pid']; # Surrogate key]
 $dob = "";
 $partial_dob = "";
 
-$uiinfo = "agep=".$age_param;
-putUILog('patient_add', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 if(trim($_REQUEST['dob']) == "")
 {
@@ -131,6 +129,7 @@ $patient->age = $age;
 $patient->sex = $sex;
 $patient->regDate=$date_receipt;
 $patient->surrogateId = $pid;
+$patient->from_external_system = FALSE;
 $patient->createdBy = $_SESSION['user_id'];
 $patient_added = add_patient($patient);
 echo json_encode($patient_data);

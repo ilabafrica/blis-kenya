@@ -143,7 +143,7 @@ $specimen_list = get_specimens_by_session($session_num);
 							echo "</li>";
 						
 							echo "<li>"; 
-							echo "The specimen number is indicated in in bigger fonts than the other details (e.g. MIC-5210).";
+							echo "The specimen number is indicated in in bigger fonts than the other details (e.g. MIC-52510).";
 							echo "</li>"; 
 						
 						?>
