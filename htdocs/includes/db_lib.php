@@ -2843,7 +2843,7 @@ class Specimen
 
 	public function getLabSection()
 	{
-		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM blis_127.test_category tc, blis_127.test_type tt, blis_127.test t, blis_127.specimen s WHERE tc.test_category_id = tt.test_category_id AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
+		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM test_category tc, test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = "";
 		$count = 0;
@@ -6081,6 +6081,22 @@ function get_user_by_name($username)
 	DbUtil::switchRestore($saved_db);
 	return User::getObject($record);
 }
+
+
+function get_emr_user_id($user_id)
+{
+	global $con;
+	$user_id = mysql_real_escape_string($user_id, $con);
+	$saved_db = DbUtil::switchToGlobal();
+	$query_string = "SELECT emr_user_id FROM user WHERE user_id=$user_id";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	if($record == null)
+		return "0";
+	else
+		return $record['emr_user_id'];
+}
+
 
 function get_admin_users()
 {
