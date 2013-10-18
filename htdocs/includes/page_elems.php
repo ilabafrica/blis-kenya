@@ -1154,7 +1154,6 @@ class PageElems
 					<th><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></th>
 					<th><?php echo "Action(s)"; ?></th>
 					<th></th>
-					<th></th>
 			</thead>
 		<tbody>
 		<?php
