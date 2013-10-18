@@ -428,7 +428,31 @@ $script_elems->enableTokenInput();
 tableml = "";
 unreported_fetched = false;
 
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+}
+
 $(document).ready(function(){
+
+
+	readTextFile("http://192.168.1.88/celtac/celtac-results.txt");
+	
+	
+	
 	$('#cat_code').change( function() { get_test_types_bycat() });
 	$('#worksheet_test_type').change( function() { reset_worksheet_custom_type() });
 	get_test_types_bycat();

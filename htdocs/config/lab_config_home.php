@@ -2929,7 +2929,7 @@ function hide_remarks_form()
 }
 
 function import_users(){
-	var jsonUrl = '192.168.1.9:8888/sanitas/bliss/getUsers';
+	var jsonUrl = '192.168.1.9:8888/sanitas/bliss/getUsers?api_key=ZUJ5EDTBY';
 	var importURL='ajax/import_users.php';
 	$('#import_users').modal('show');
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");

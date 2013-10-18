@@ -13,37 +13,25 @@ $ON_ARC = 2;
 $ON_PORTABLE = 3;
 
 $SERVER = $ON_DEV;
-
+/*
+ * Language Definitions Folder Path Settings
+ */
 $LOCAL_PATH = "../locale/";
 if($SERVER == $ON_ARC)
 {
 	$LOCAL_PATH = "../local/";
 }
 
+/*
+ * Database Settings
+ */
+
 $DB_HOST = "localhost";
 $DB_USER = "root";
-// $d = dirname(__FILE__);
-// $name= strrpos($d,"htdocs");
-// //if($name === false)
-// // echo "Not found";
-// $new_name=substr($d,0,$name)."dbdir";
-// //echo $new_name;
-// $dir1 = opendir($new_name); #open directory
-
-// $count=0;
-// while (($file = readdir($dir1)) !== false) {
-	// if($count==3)
-// {
-// $GLOBAL_DB = $file;
-
-// }	
-	// $count++;	
-// }
-// closedir($dir1);
-
-$GLOBAL_DB_NAME="blis_revamp";
+$GLOBAL_DB_NAME="blis_revamp_test";
 
 $DB_NAME = $GLOBAL_DB_NAME;	
+
 $DB_PASS = "";
 
 if($SERVER == $ON_DEV)

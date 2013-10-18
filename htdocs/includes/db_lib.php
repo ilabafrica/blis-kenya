@@ -3083,7 +3083,7 @@ class Test
 			$auditTrail = new AuditTrail();		
 		    $auditTrail->tablename = "test";
 			$auditTrail->objectid = $this->testId;
-			$auditTrail->logTestResultAdd($auditTrail);		
+			$auditTrail->logTestResultAdd();		
 		}
 		
 		# If specimen ID was passed, update its status
@@ -3793,7 +3793,7 @@ class Test
 			$auditTrail = new AuditTrail();		
 		    $auditTrail->tablename = "test";
 			$auditTrail->objectid = $test_id;
-			$auditTrail->logVerifyResult($auditTrail);		
+			$auditTrail->logVerifyResult();		
 		}
 	}
 	
@@ -6083,6 +6083,22 @@ function get_user_by_name($username)
 	return User::getObject($record);
 }
 
+
+function get_emr_user_id($user_id)
+{
+	global $con;
+	$user_id = mysql_real_escape_string($user_id, $con);
+	$saved_db = DbUtil::switchToGlobal();
+	$query_string = "SELECT emr_user_id FROM user WHERE user_id=$user_id";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	if($record == null)
+		return "0";
+	else
+		return $record['emr_user_id'];
+}
+
+
 function get_admin_users()
 {
 	# Fetches list (assoc array) of admin users
@@ -6217,7 +6233,6 @@ function add_patient($patient, $importOn = false)
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `dob`, `age`, `sex`, `surr_id`, `created_by`, `hash_value`, `ts`) ".
 			"VALUES ($pid, '$addl_id', '$name', '$dob', $age, '$sex', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
 	}
-	
 	$result = query_insert_one($query_string);
 	
 	if($result){
@@ -6226,10 +6241,14 @@ function add_patient($patient, $importOn = false)
 	    $auditTrail->tablename = "patient";
 		$auditTrail->objectid = $pid;
 
-		$auditTrail->logPatientReg($auditTrail);		
+		$auditTrail->logPatientReg();		
 	}
-	if(!$patient->from_external_system)
-		print $query_string;
+
+        
+    if($patient->from_external_system == FALSE)
+    {
+        print $query_string;
+    }
 	return true;
 }
 
@@ -7036,7 +7055,7 @@ function add_test($test, $testId=null)
 		$auditTrail = new AuditTrail();		
 	    $auditTrail->tablename = "test";
 		$auditTrail->objectid = $last_insert_id;
-		$auditTrail->logAddTest($auditTrail);	
+		$auditTrail->logAddTest();	
 	}
 	
 	return $last_insert-id;
@@ -12924,6 +12943,9 @@ function update_lab_config_settings_search($num)
 
 function putUILog($id, $info, $file, $tag1, $tag2, $tag3)
 {
+    //DIsabling UI Log
+    return TRUE;  
+    /*
     $uiLog = new UILog();
     $uiLog->id = $id;
     $uiLog->info = $info;
@@ -12932,6 +12954,7 @@ function putUILog($id, $info, $file, $tag1, $tag2, $tag3)
     $uiLog->tag2 = $tag2;
     $uiLog->tag3 = $tag3;
     $uiLog->writeUILog();
+    */
 }
 
 class Inventory
@@ -15224,7 +15247,7 @@ Class AuditTrail {
 		$this->USER_ID = $_SESSION['user_id'];
 	} 
 	
-    public function logPatientReg($auditTrailObj){
+    public function logPatientReg(){
 
 		$saved_db = DbUtil::switchToGlobal(); //Switch to Global DB
 		
@@ -15239,7 +15262,7 @@ Class AuditTrail {
 			
 		DbUtil::switchRestore($saved_db);		
 	}
-	public function logSpecimenReg($auditTrailObj){
+	public function logSpecimenReg(){
 		$saved_db = DbUtil::switchToGlobal(); //Switch to Global DB
 		
 		$query_string = "INSERT into audit_trail ".
@@ -15253,7 +15276,7 @@ Class AuditTrail {
 		DbUtil::switchRestore($saved_db);	
 	}
 	
-	public function logTestResultAdd($auditTrailObj){
+	public function logTestResultAdd(){
 		$saved_db = DbUtil::switchToGlobal(); //Switch to Global DB
 		
 		$query_string = "INSERT into audit_trail ".
@@ -15267,7 +15290,7 @@ Class AuditTrail {
 		DbUtil::switchRestore($saved_db);	
 	} 
 	
-	public function logAddTest($auditTrailObj){
+	public function logAddTest(){
 		$saved_db = DbUtil::switchToGlobal(); //Switch to Global DB
 		
 		$query_string = "INSERT into audit_trail ".
@@ -15280,7 +15303,7 @@ Class AuditTrail {
 		
 		DbUtil::switchRestore($saved_db);	
 	}
-	public function logVerifyResult($auditTrailObj){
+	public function logVerifyResult(){
 		$saved_db = DbUtil::switchToGlobal(); //Switch to Global DB
 		
 		$query_string = "INSERT into audit_trail ".

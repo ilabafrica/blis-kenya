@@ -13,11 +13,16 @@ $patient = get_patient_by_id($specimen->patientId);
 
 $result = str_replace("<br>","",$test->decodeResult());
 $result = str_replace("&nbsp;","",$result);
+$result = str_replace("<b>","",$result);
+$result = str_replace("</b>","",$result);
+
+$emr_user_id = get_emr_user_id($_SESSION['user_id']);
+if ($emr_user_id ==null)$emr_user_id="59";
  
-$json_string ='{"labNo": '.$specimen->external_lab_no.',"requestingClinician": '.$_SESSION['user_id'].',"result": '.$result.'}';
+$json_string ='{"labNo": '.$specimen->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.'}';
 
 echo $json_string;
-$api_key = "6ZZXWUKE9";
+$api_key = "ZUJ5EDTBY";
 $Sanitas_inbound_url = "http://192.168.1.9:8888/sanitas/bliss/notify?api_key=".$api_key;
 /*
  * Send POST request with HttpRequest

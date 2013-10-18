@@ -1147,12 +1147,14 @@ class PageElems
 		}
 		?>
 
-		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 600px;">
+		<table id="sample_1" class='table table-striped table-condensed table-bordered table-hover' style="width: 900px;">
 			<thead>
 					<th>#</th>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></th>
 					<th><?php echo "Action(s)"; ?></th>
+					<th></th>
+					<th></th>
 			</thead>
 		<tbody>
 		<?php
@@ -1171,8 +1173,6 @@ class PageElems
 			</td>
 			<td>
 				<?php echo $cat_name; ?>
-			</td>
-			<td>
 			</td>
 			<td>
 				<a href='test_type_edit.php?tid=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Test Info'><i class='icon-pencil'></i>  <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
@@ -3976,6 +3976,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
         
 		<form name='<?php echo $form_name; ?>' id='<?php echo $form_id; ?>' action='ajax/specimen_add.php?session_num=<?php echo $session_num ?>' method='post'>
 			<input type='hidden' name='pid' value='<?php echo $pid; ?>' class='uniform_width'></input>
+			<input type='hidden' name='dnum' id="dnum_id" value='<?php echo $dnum ?>'></input>
 			<?php /*<input type='hidden' name='session_num' value='<?php echo get_session_number(); ?>' class='uniform_width'></input> */ ?>
 			<?php 
 			if(is_array($external_requests) && $external_requests != null){
@@ -3986,7 +3987,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					if ($i!=$length-1)$labNumbers.=',';
 				}
 			?>
-			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>
+			<input type='hidden' name='external_lab_no' value='<?php echo $labNumbers?>'></input>		
 			<?php
 				
 			}?>
@@ -4004,8 +4005,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				<td width="250px" >
 					<?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?><?php $this->getAsterisk(); ?>
 				</td>
+				
 				<td>
-					<input type="text" name="dnum" id="dnum" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
+					<input type="text" name="dnum" id="dnum-disabled" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
 				</td>
 			</tr>
 			<tr >				
@@ -7512,6 +7514,13 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		{
 			$lab_config = LabConfig::getById($_SESSION['lab_config_id']); 
                         $patientBarcodeSearch = patientSearchBarcodeCheck();
+                        
+            if($lab_config->pid != 0)
+            {
+               ?>
+               <option value='0'><?php echo "Patient Number"; ?></option>
+              <?php
+            }
 			if($hide_patient_name === false && $lab_config->pname != 0)
 			{
 				?>
@@ -7521,19 +7530,14 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			if($lab_config->dailyNum == 1 || $lab_config->dailyNum == 11 || $lab_config->dailyNum == 2 || $lab_config->dailyNum == 12)
 			{
 				?>
-				<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
+				<!--option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option-->
 				<?php
 			}
-			if($lab_config->pid != 0)
-			{
-				?>
-				<option value='0'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></option>
-				<?php
-			}
+			
 			if($lab_config->patientAddl != 0)
 			{
 				?>
-				<option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option>
+				<!--option value='2'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></option-->
 				<?php
 			}
                         if($patientBarcodeSearch != 0 && is_country_dir($userrr) != 1 && is_super_admin($userrr) != 1 )
@@ -7586,7 +7590,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 
 			# Show all options
 			?>
-			<option value='0'>Patient Number</option>
+			<option value='0'><?php echo "Patient Number"; ?></option>
 			<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
 			<!--
 			<option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option>
