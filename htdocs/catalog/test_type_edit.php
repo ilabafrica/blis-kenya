@@ -5,7 +5,6 @@
 #
 include("redirect.php");
 include("includes/header.php");
-include("includes/scripts.php");
 include("includes/ajax_lib.php");
 LangUtil::setPageId("catalog");
 
