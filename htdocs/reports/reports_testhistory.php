@@ -753,8 +753,60 @@ for($i = 0; $i < count($margin_list); $i++) {
 		cursor:pointer;
 
 	}
-
-	
+#sample_test{
+	width:97%;
+	height:100px;
+	border:1px solid;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+#result_data{
+	width:97%;
+	height:100px;
+	border:1px solid;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+#clinician_data{
+	width:97%;
+	height:70px;
+	border:1px solid;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+#result_interpretation{
+	width:97%;
+	height:100px;
+	border:1px solid;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+#comments{
+	width:97%;
+	height:40px;
+	border:1px solid;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+#controls{
+	width:97%;
+	height:30px;
+	border:0px solid;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
 
 </style> 
 
@@ -1412,7 +1464,7 @@ else if(file_exists($logo_path) === true)
 ?>
 <img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:left;' width='140px'></src>
 
-	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right;' width='140px'></src>
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right; padding-right:10px;' width='140px'></src>
 
 	<?php
 
@@ -1434,9 +1486,9 @@ else if(file_exists($logo_path) === true)
 
 <?php $align=$report_config->alignment_header;?>
 
-<h5 align="center"><?php echo "BUNGOMA DISTRICT HOSPITAL LABORATORY";#$report_config->headerText; ?><br><?php ; ?><br><?php echo "BUNGOMA TOWN HOSPITAL ROAD";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "OPPOSITE POLICE LINE/DISTRICT";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "HEADQUARTERS";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "P.O BOX 14";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "BUNGOMA TOWN";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "Phone: +254 055-30401 Ext 203/208";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?></h5>
+<h5 align="<?php echo $align; ?>"><?php echo $report_config->headerText; ?></h5>
 
-<h4 align="center"><?php echo $report_config->titleText; ?></h4>
+<h4 align="<?php echo $align; ?>"><?php echo $report_config->titleText; ?></h4>
 
 </div>
 
@@ -1625,8 +1677,210 @@ else
 			?>
 
 	</div>
+    <div id='sample_test'> 
+    <table width="100%" align="left" class="no_border">
+    <tbody>
+		<tr>
+            <td>Sample Type</td>
+            <?php
+            if($report_config->useSpecimenName == 1)
 
-	<table class='print_entry_border'>
+				{?>
+
+					<td><?php echo get_specimen_name_by_id($specimen->specimenTypeId);?></td>
+				<?php
+				}
+				?>
+            <td><?php echo ""; ?></td>
+            <td><?php echo ""; ?></td>
+            <td>Section</td>
+            <td><?php echo ""; ?></td>
+        </tr>
+		<tr>
+            <td>Collected By</td>
+            <td><?php echo ""; ?></td>
+            <td>Date Collected</td>
+            <td><?php echo ""; ?></td>
+            <td>Time Collected</td>
+            <td><?php echo ""; ?></td>
+        </tr>
+        <tr>
+        	<td>Test Requested</td>
+			<?php
+            if($report_config->useTestName == 1)
+
+				{ ?>
+
+					<td ><?php if(get_test_name_by_id($test->testTypeId)=="")
+								{echo "No Tests Found";}
+								else{echo get_test_name_by_id($test->testTypeId);}
+					;?></td>
+				<?php
+				}
+                ?>
+            <td><?php echo ""; ?></td>
+            <td>Date Registered</td>
+            <td><?php echo ""; ?></td>
+            <td>Time Registered</td>
+            <td><?php echo ""; ?></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    
+        <div id='sample_test'> 
+    <table width="100%" class="no_border" align="left">
+    <tbody>
+		<tr>
+        <?php
+        	if( ($report_config->usePatientName == 1) && ($hidePatientName != 1) ) {
+
+				?>
+
+                <td><?php echo "Patient Name"; ?></td>
+
+                <td colspan="3"><?php echo $patient->name; ?></td>
+
+				<?php
+
+			}
+			if($report_config->useGender == 1) {
+
+				?>			
+
+				<td><?php echo "Patient Sex"; ?></td>
+
+				<td><?php echo $patient->sex; ?></td>
+				<?php
+
+			}
+			?>
+        </tr>
+		<tr>
+        <?php
+
+			if($report_config->usePatientId == 1) {
+
+				?>
+					<td><?php echo "Patient Number"; ?></td>
+
+					<td><?php echo $patient->getSurrogateId(); ?></td>
+
+				<?php
+
+			}
+			?>
+            <td>Visit Number</td>
+            <td><?php echo ""; ?></td>
+            <?php
+            if($report_config->useAge == 1) {
+
+				?>
+
+				<td><?php echo "Patient Age"; ?></td>
+
+				<td><?php echo $patient->getAge(); ?></td>
+
+				<?php 
+
+			}
+			?>
+        </tr>
+        <tr>
+            <td colspan="3">Requesting Department/Facility</td>
+            <td colspan="3"><?php echo ""; ?></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <div id='clinician_data'> 
+    <table width="100%" class="no_border" align="left">
+        <tbody>
+		<tr>
+            <td colspan="2">Name of Requester</td>
+            <td colspan="2"><?php echo $previous_physician; ?></td>
+            <td>Phone Number</td>
+            <td><?php echo ""; ?></td>
+        </tr>
+		<tr>
+            <td colspan="3">Email Address</td>
+            <td colspan="3"><?php echo ""; ?></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <div id="result_data">
+    <table width="100%" class="no_border" align="left">
+  <tr>
+    <td colspan="5"><strong>RESULTS</strong></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>ANALYTE NAME</td>
+    <td>VALUE/RESULT</td>
+    <td>UNITS</td>
+    <td>BIOLOGICAL REFERENCE INTERVAL</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</div>
+<div id="result_interpretation">
+<p align="center">RESULT INTERPRETATION, WHERE APPROPRIATE</p>
+</div>
+<div id="comments">
+Comment(s):
+</div>
+ <div id='clinician_data'> 
+    <table width="100%" class="no_border" align="left">
+        <tbody>
+		<tr>
+            <td>Performed By</td>
+            <td><?php echo ""; ?></td>
+            <td>Signature</td>
+            <td><?php echo ""; ?></td>
+            <td>Date</td>
+            <td><?php echo ""; ?></td>
+            <td>Time</td>
+            <td><?php echo ""; ?></td>
+        </tr>
+		<tr>
+            <td>Vefiried By</td>
+            <td><?php echo ""; ?></td>
+            <td>Signature</td>
+            <td><?php echo ""; ?></td>
+            <td>Date</td>
+            <td><?php echo ""; ?></td>
+            <td>Time</td>
+            <td><?php echo ""; ?></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <div id="controls">
+    <h5 align="left">Form No. BDHL-QUA-017F3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Version 1</h5>
+    </div>
+
+	<table class='print_entry_border' style="display:none;">
 
 		<tbody>
 
@@ -1764,13 +2018,13 @@ else
 
 				?>
 
-				<tr valign='top'>
+				<!--<tr valign='top'>
 
-					<td><?php echo "Barcode"; ?></td>
+					<td><?php #echo "Barcode"; ?></td>
 
 					<td><div id="patientBarcode"></div></td>
 
-				</tr>
+				</tr>-->
 
 				<?php 
 
@@ -1888,11 +2142,11 @@ else
 
 			?>
 
-			<div id="myNicPanel" style="width: 525px;"></div>
+			<div id="myNicPanel" style="width: 525px; display:none;"></div>
 
 			<div id="patient_table">
 
-				<table class='print_entry_border draggable' id='report_content_table1'>
+				<table class='print_entry_border draggable' style='display:none;' id='report_content_table1'>
 
 					<thead>
 
@@ -3505,7 +3759,7 @@ echo("Page generated in " . $page_load_time . " seconds");
 
 </div>
 
-<?php include('lab_report_footer.php'); ?>
+<?php #include('lab_report_footer.php'); ?>
 
 </div>
 
