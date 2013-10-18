@@ -76,6 +76,7 @@ foreach($measure_list as $measure)
 	if($range_type == Measure::$RANGE_AUTOCOMPLETE)
 	{
 		$result_value = $result_values[$measure_count];
+		$result_to_push = $result_value;
 		$autocomplete_selected_list = explode(",", $result_value);
 		$value_string = "";
 		foreach($autocomplete_selected_list as $value)
@@ -91,6 +92,7 @@ foreach($measure_list as $measure)
         else if($range_type == Measure::$RANGE_FREETEXT)
 	{
 		$result_value = $result_values[$measure_count];
+		$result_to_push = $result_value ;
 		$result_value = "[\$]".$result_value."[\/\$]";
 		$result_values[$measure_count] = $result_value;
 	}
@@ -117,6 +119,7 @@ $user_id = $_SESSION['user_id'];
 //$ts =date("Y-m-d H:i:s", $unix_ts);
 //-NC3065
 add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue());
+API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push);
 update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
 # Show confirmation with details.
@@ -215,6 +218,6 @@ else
 </div>
 </div>
 <div class="modal-footer">
-<a href='' class='btn danger'>Edit</a>
+<!-- a href='' class='btn danger'>Edit</a-->
 <a href='javascript:hide_test_result_form_confirmed(<?php echo $test_id ?>);' class='btn success'>Close</a>
 </div>
