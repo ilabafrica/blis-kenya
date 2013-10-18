@@ -430,6 +430,9 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						"<li>
 							<a id='test' class='menu_option' href='javascript:test_setup();'><i class='icon-tag'></i> ".LangUtil::$allTerms['Tests']." </a>
 						</li>
+						<li>
+							<a id='specimen_rejection' class='menu_option' href='javascript:specimen_rejection_setup();'><i class='icon-tag'></i> "."Specimen Rejection"." </a>
+						</li>
 						<li>                         
 							<a id='option21' class='menu_option' href='javascript:right_load(21, ".$quote."search_div".$quote.");'><i class='icon-tag'></i> Search</a>
 						</li>

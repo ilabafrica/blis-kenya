@@ -1113,6 +1113,78 @@ if($lab_config == null)
 </small>
 </div>
 
+
+<div class="portlet box green right_pane" id="specimen_rejection_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Specimen Rejection</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a href="#portlet-config" data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        
+        <div class="portlet-body" >
+            <!--BEGIN TABS-->
+                       <div class="tabbable tabbable-custom">
+                           <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#tab_1_1" data-toggle="tab">Rejection Phases </a></li>
+                                                <li><a href="#tab_1_2" data-toggle="tab">Reasons for Rejection </a></li>
+                                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1_1">
+                                                    <div class='st_pane' id='st_types_div' style='margin-left:10px;'>
+                                                        <p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
+                                                            
+                                                            <div id='sttypes_msg' class='clean-orange' style='display:none;width:350px;'>
+                                                            </div>
+                                                            <form id='st_types_form' name='st_types_form' action='ajax/st_types_update.php' method='post'>
+                                                            <input type='hidden' name='lid' value='<?php echo $lab_config->id; ?>'></input>                 
+                                                            <h4><?php echo "Rejection Phases"; ?>&nbsp;&nbsp;&nbsp;
+                                                            <a id='new_phase_link' href='javascript:add_phase();'><?php echo "Add New Phase"; ?></a></h4>
+                                                            <div class='pretty_box' id='stype_box' style='display:none'>
+                                                            
+                                                                <?php $page_elems->getSpecimenTypeCheckboxes($lab_config->id); ?>
+                                                            </div>
+                                                            
+                                                            <input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='checkandsubmit_st_types()'>
+                                                            </input>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span id='st_types_progress' style='display:none;'>
+                                                                          
+                                                                <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                                                            </span>
+                                                            </form>
+                                                        </div>
+                                                </div>
+                                <div class="tab-pane" id="tab_1_2">
+                                                    <div class='target_tat' id='target_tat_div' style='margin-left:10px;'>
+                                                        <p style="text-align: right;"><a rel='facebox' href='#Tests_config'>Page Help</a></p>
+                                                            <b><?php echo LangUtil::$pageTerms['MENU_TAT']; ?></b>
+                                                             | <a href="javascript:toggletatdivs();" id='toggletat_link'><?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+                                                            <br><br>
+                                                            <div id='tat_msg' class='clean-orange' style='display:none;width:350px;'>
+                                                            </div>
+                                                            <div id='goal_tat_list'>
+                                                            <?php $page_elems->getGetGoalTatTable($lab_config->id); ?>
+                                                            </div>
+                                                            <form id='goal_tat_form' style='display:none' name='goal_tat_form' action='ajax/lab_config_tat_update.php' method='post'>
+                                                                <?php $page_elems->getGoalTatForm($lab_config->id); ?>
+                                                                <input type='button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_goal_tat();'></input>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <small><a href='javascript:toggletatdivs();'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <span id='tat_progress_spinner' style='display:none;'>
+                                                                    <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                                                                </span>
+                                                            </form>
+                                                        </div>
+                                                </div>
+                       </div>
+             </div>                                
+                       <!--END TABS-->
+         </div>
+     </div>
+
     
     
     
@@ -1709,10 +1781,13 @@ if($lab_config == null)
 </div>
 <?php include("includes/scripts.php");
 require_once("includes/script_elems.php");
-$script_elems = new ScriptElems();
-$script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
 $script_elems->enableJQueryForm();
+$script_elems->enableDatePicker();
 ?>
+<script type="text/javascript" src="js/jquery.ui.js"></script>
+<script type="text/javascript" src="js/dialog/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/dialog/jquery.ui.dialog.js"></script>
 <script type='text/javascript'>
 
 <?php $page_elems->getCompatibilityJsArray("st_map", $lab_config_id); ?>
@@ -1916,6 +1991,7 @@ $(document).ready(function(){
 		fetch_report_summary();
 		<?php
 	}
+
 	else if(isset($_REQUEST['wcfgupdate']))
 	{
 		# Show report config updated message
@@ -1996,6 +2072,24 @@ function performDbUpdate() {
 	});
 }
 
+function add_phase(){
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	
+	var url = 'regn/rejection_phase_new.php';
+	$('#form').html("");
+	var target_div = "form";
+	$("#"+ target_div).load(url, 
+		{lab_config: "" }, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+	
+}
+
 function get_testbox2(stype_id)
 {
 	//var stype_val = $('#'+stype_id).attr("value");
@@ -2046,6 +2140,10 @@ function performUpdate()
 function test_setup()
 {   
     right_load(2, "test_div");
+}
+function specimen_rejection_setup()
+{   
+    right_load(2, "specimen_rejection_div");
 }
 
 function report_setup()
@@ -2486,7 +2584,6 @@ var report_id = $('#report_type11').attr("value");
 		}
 	});
 }
-
 function get_test_types_bycat()
 {
 	var cat_code = $('#cat_code12').attr("value");

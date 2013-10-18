@@ -787,7 +787,7 @@ $page_elems = new PageElems();
 
 
 
-var curr_orientation = 0;
+var curr_orientation = 1;
 
 
 
@@ -1289,7 +1289,7 @@ $monthago_array = explode("-", $monthago_date);
 <hr>
 
 </div>
-
+*************************************************************************************************************
 <div id='report_content'>
 
 <link rel='stylesheet' type='text/css' href='css/table_print.css' />
@@ -1400,7 +1400,7 @@ if(file_exists($logo_path1) === true)
 
 	?>
 
-	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px'    ></src>
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px'></src>
 
 	<?php
 
@@ -1411,8 +1411,9 @@ else if(file_exists($logo_path) === true)
 {
 
 ?>
+<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:left;' width='140px'></src>
 
-	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' width='140px'></src>
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right;' width='140px'></src>
 
 	<?php
 
@@ -1434,9 +1435,9 @@ else if(file_exists($logo_path) === true)
 
 <?php $align=$report_config->alignment_header;?>
 
-<h3 align="<?php echo $align; ?>"><?php echo $report_config->headerText; ?><?php #echo LangUtil::$pageTerms['MENU_PHISTORY']; ?></h3>
+<h5 align="center"><?php echo "BUNGOMA DISTRICT HOSPITAL LABORATORY";#$report_config->headerText; ?><br><?php ; ?><br><?php echo "BUNGOMA TOWN HOSPITAL ROAD";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "OPPOSITE POLICE LINE/DISTRICT";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "HEADQUARTERS";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "P.O BOX 14";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "BUNGOMA TOWN";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?><br><?php echo "Phone: +254 055-30401 Ext 203/208";#echo LangUtil::$pageTerms['MENU_PHISTORY']; ?></h5>
 
-<h4 align="<?php echo $align; ?>"><?php echo $report_config->titleText; ?></h4>
+<h4 align="center"><?php echo $report_config->titleText; ?></h4>
 
 </div>
 

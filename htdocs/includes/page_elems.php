@@ -7223,6 +7223,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			if($left_margin_line)
 			{
 				echo "border-left: 1px solid black;";
+				echo "border-right: 1px solid black;";
+				echo "border-top: 1px solid black;";
+				echo "border-bottom: 1px solid black;";
 			}
 			?>			
 		}

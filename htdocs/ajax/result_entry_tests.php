@@ -422,8 +422,8 @@ else{
 			<td id=actionA'.$test->testId.' style="width:100px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
-			<td id=actionB'.$test->testId.' style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$test->testId.$quote.');" title="Reject specimen" class="btn black mini">
-				<i class="icon-remove"></i>Reject Sample</a>
+			<td id=actionB'.$test->testId.' style="width:100px;"><a href="javascript:refer_specimen('.$quote.$test->testId.$quote.');" title="Click here to refer specimen" class="btn black mini">
+				<i class="icon-remove"></i>Refer Sample</a>
 			</td></div>';
 			}else
 			if($status == Specimen::$STATUS_DONE){
