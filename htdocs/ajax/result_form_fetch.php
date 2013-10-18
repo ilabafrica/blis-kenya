@@ -195,7 +195,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 			</span>
 		</td>
 	</tr>
-	<tr>
+	<!--tr>
 		<td>
 			<label for='<?php echo $curr_form_id; ?>_comments_1'>
 				<?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?> (<?php echo LangUtil::$generalTerms['OPTIONAL']; ?>)
@@ -205,7 +205,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 				<textarea name='comments_1' id='<?php echo $curr_form_id; ?>_comments_1'  class='uniform_width'></textarea>
 			</span>
 		</td>
-	</tr>
+	</tr-->
 	</table>
 	</form>
 	
@@ -278,6 +278,27 @@ $test_type = get_test_type_by_id($test_type_id);
 	<div class="span6 sortable">
 	<?php	
 	get_result_form($test_type, $test_id, 0, $patient);
+	
+	$child_tests = get_child_tests($test_type_id);
+	if (count($child_tests)>0){
+		foreach($child_tests as $child_test)
+		{
+			$test_type = get_test_type_by_id($child_test['test_type_id']);
+			$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
+			
+			get_result_form($test_type, $chid_test_entry->testId, 0, $patient);
+			$child_tests = get_child_tests($child_test['test_type_id']);
+			if (count($child_tests)>0){
+				foreach($child_tests as $child_test)
+				{
+					$test_type = get_test_type_by_id($child_test['test_type_id']);
+					$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
+					get_result_form($test_type, $chid_test_entry->testId, 0, $patient);
+				}
+			}
+		}
+	}
+	
 	?>
 	</div>
 	<div class="span6 sortable">

@@ -449,7 +449,7 @@ function readTextFile(file)
 $(document).ready(function(){
 
 
-	readTextFile("http://192.168.1.88/celtac/celtac-results.txt");
+	//readTextFile("http://192.168.1.88/celtac/celtac-results.txt");
 	
 	
 	
@@ -874,32 +874,37 @@ function submit_forms(test_id)
 	var target_div_id = "result_form_pane_"+test_id;
 	for(var i = 0; i < form_id_list.length; i++)
 	{
+		console.log(i);
 		if($('#'+form_id_list[i]+'_skip').is(':checked'))
 		{
 			continue;
 		}
 		var params = $('#'+form_id_list[i]).formSerialize();
+		var string = params.toString();
+		var str1 = string.split("&");
+		var str2 = str1[0].split("=");
+		var actual_test_id = str2[1];
+	
 			$.ajax({
 			type: "POST",
 			url: "ajax/result_add.php",
 			data: params,
 			success: function(msg) {
-				$("#test_"+test_id)[0].reset();
-				$("#test_"+test_id).remove();
+				//$("#test_"+actual_test_id)[0].reset();
+				$("#test_"+actual_test_id).remove();
 				$("#"+target_div_id).html(msg);
-				$("tr#"+test_id).remove();
-
-				//push results to sanitas
-				var pushURL ='ajax/push_results.php';
-				$.post(
-					pushURL,
-					{test_id:test_id},  
-			        function(responseText){
-						alert(responseText); 
-			        }
-				);
+				$("tr#"+actual_test_id).remove();		
 			}
 		});
+
+		//push results to sanitas
+		var pushURL ='ajax/push_results.php';
+		$.post(
+			pushURL,
+			{test_id:actual_test_id},  
+	        function(responseText){ 
+	        }
+		);
 	}
 	
 }
