@@ -1289,7 +1289,6 @@ $monthago_array = explode("-", $monthago_date);
 <hr>
 
 </div>
-*************************************************************************************************************
 <div id='report_content'>
 
 <link rel='stylesheet' type='text/css' href='css/table_print.css' />
@@ -3506,12 +3505,13 @@ echo("Page generated in " . $page_load_time . " seconds");
 
 </div>
 
+<?php include('lab_report_footer.php'); ?>
+
 </div>
 
 </div>
 
 </body>
-
 
 
 </html>
