@@ -2844,7 +2844,9 @@ class Specimen
 
 	public function getLabSection()
 	{
-		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM test_category tc, test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
+		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM test_category tc, 
+		test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+		AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = "";
 		$count = 0;
@@ -3049,6 +3051,28 @@ class Test
 			return get_username_by_id($this->userId);
 		}
 	}
+    
+    public function getLabSectionByTest()
+    {
+        $query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench, t.specimen_id as specID FROM test_category tc, 
+        test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
+        $resultset = query_associative_all($query_string, $row_count);
+        $retval = "";
+        $count = 0;
+        foreach($resultset as $record)
+        {
+            $count++;
+            $bench = $record['bench'];
+            $specimen_id = $record['specID'];
+            $retval .= $bench."-".$specimen_id;
+            if($count < count($resultset))
+            {
+                $retval .= "<br>";
+            }
+        }
+        return $retval;
+    }
 	
 	public function getVerifiedBy()
 	{
@@ -15304,8 +15328,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->ADD, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->ADD_SPECIMEN ) ";
 		
-		
-		query_insert_one($query_string);
+	    query_insert_one($query_string);
 		
 		DbUtil::switchRestore($saved_db);	
 	}
