@@ -2844,7 +2844,9 @@ class Specimen
 
 	public function getLabSection()
 	{
-		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM test_category tc, test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
+		$query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench FROM test_category tc, 
+		test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+		AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = "";
 		$count = 0;
@@ -2921,6 +2923,7 @@ class Test
 	public $timestamp;
 	public $ts;
 	public $status;
+	public $external_lab_no;
 	
 	public static function getObject($record)
 	{
@@ -2989,6 +2992,11 @@ class Test
 		else
 			$test->status = null;
 		
+		if(isset($record['external_lab_no']))
+			$test->external_lab_no = $record['external_lab_no'];
+		else
+			$test->external_lab_no = null;
+		
 		return $test;
 	}
 	public function getStatusCode()
@@ -3043,6 +3051,28 @@ class Test
 			return get_username_by_id($this->userId);
 		}
 	}
+    
+    public function getLabSectionByTest()
+    {
+        $query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench, t.specimen_id as specID FROM test_category tc, 
+        test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
+        $resultset = query_associative_all($query_string, $row_count);
+        $retval = "";
+        $count = 0;
+        foreach($resultset as $record)
+        {
+            $count++;
+            $bench = $record['bench'];
+            $specimen_id = $record['specID'];
+            $retval .= $bench."-".$specimen_id;
+            if($count < count($resultset))
+            {
+                $retval .= "<br>";
+            }
+        }
+        return $retval;
+    }
 	
 	public function getVerifiedBy()
 	{
@@ -7045,8 +7075,8 @@ function add_test($test, $testId=null)
 	if( $testId == null)
 		$testId = bcadd(get_max_test_id(),1);
 	$query_string = 
-		"INSERT INTO `test` ( test_id, specimen_id, test_type_id, result, comments, verified_by, user_id ) ".
-		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId )";
+		"INSERT INTO `test` ( test_id, specimen_id, test_type_id, result, comments, verified_by, user_id, external_lab_no ) ".
+		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId, '$test->external_lab_no' )";
 	$result = query_insert_one($query_string);
 	$last_insert_id = get_last_insert_id();
 	
@@ -8925,6 +8955,18 @@ function get_test_types_wcat_catalog()
 	}
 	DbUtil::switchRestore($saved_db);
 	return $retval;	
+}
+
+function get_child_tests($test_type_id)
+{
+	# Returns a list of all measures available in catalog
+	
+	$query_child_tests =
+	"SELECT test_type_id FROM test_type WHERE parent_test_type_id = $test_type_id";
+	$resultset = query_associative_all($query_child_tests, $row_count);
+	$retval = array();
+	$retval = $resultset;
+	return $retval;
 }
 
 function getMeasuresByLab($labConfigId) {
@@ -15140,6 +15182,22 @@ class API
 	    return $tests_ordered;
     }
     
+    
+    public static function getExternalLabNo($patient_id, $test_name)
+    {
+    # gets pending lab requests from external_lab_reqeuest_table
+    	global $con;
+    	$patient_id = mysql_real_escape_string($patient_id, $con);
+    	$query_string = "SELECT labNo FROM external_lab_request 
+    	WHERE patient_id='$patient_id' AND investigation='$test_name' AND (test_status = 8 or test_status = 0)";
+	    $saved_db = DbUtil::switchToGlobal();
+    	$results = query_associative_all($query_string, $row_count);
+    	foreach($results as $result)
+    		$labNo = $result['labNo'];
+    	DbUtil::switchRestore($saved_db);
+    	return $labNo;
+    }
+    
     public static function updateExternalLabrequest($patient_id, $lab_no, $result){
     	
     	global $con;
@@ -15270,8 +15328,7 @@ Class AuditTrail {
 		" values($this->USER_ID, $this->ADD, '$this->dbname', '$this->tablename', $this->objectid, ".
 		" '$this->SESSION_ID', $this->ADD_SPECIMEN ) ";
 		
-		
-		query_insert_one($query_string);
+	    query_insert_one($query_string);
 		
 		DbUtil::switchRestore($saved_db);	
 	}

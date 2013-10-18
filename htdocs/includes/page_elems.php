@@ -2888,7 +2888,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='table table-hover' style="width: 330px">
+		<table class='table table-hover' style="width: 380px">
 			<tbody>
 				<tr>
 					<td><u><?php echo LangUtil::$generalTerms['TYPE']; ?></u></td>

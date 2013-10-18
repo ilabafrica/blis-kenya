@@ -15,14 +15,16 @@ $result = str_replace("<br>","",$test->decodeResult());
 $result = str_replace("&nbsp;","",$result);
 $result = str_replace("<b>","",$result);
 $result = str_replace("</b>","",$result);
+$time_stamp = date("Y-m-d H:i:s");
 
 $emr_user_id = get_emr_user_id($_SESSION['user_id']);
 if ($emr_user_id ==null)$emr_user_id="59";
  
-$json_string ='{"labNo": '.$specimen->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.'}';
+$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.'}';
+error_log("\n".$time_stamp.": Push ===>".$json_string, 3, "/home/royrutto/Desktop/my.error.log");
 
 echo $json_string;
-$api_key = "ZUJ5EDTBY";
+$api_key = "6M2802LX3";
 $Sanitas_inbound_url = "http://192.168.1.9:8888/sanitas/bliss/notify?api_key=".$api_key;
 /*
  * Send POST request with HttpRequest
@@ -34,7 +36,6 @@ if($specimen->external_lab_no!=NULL){
 	try {
 		
 		$response = $r->send()->getBody();
-		$time_stamp = date("Y-m-d H:i:s");
 		error_log("\n".$time_stamp.": HTTP Response: Uploaded Result ===>".$response, 3, "/home/royrutto/Desktop/my.error.log");
 		
 	} catch (HttpException $ex) {

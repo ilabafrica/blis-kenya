@@ -164,6 +164,7 @@ else
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
                     	WHERE t.status_code_id=".$status."
             			AND s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
+                    	AND tt.parent_test_type_id = 0
                     	ORDER BY s.date_recvd DESC, s.ts DESC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
@@ -282,10 +283,10 @@ else{
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo "Patient No." ?></th>
+				<th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
 			<?php
 			}
-			if($_SESSION['dnum'] != 0)
+			if(false) //Not displaying Lab no
 			{
 			?>
 				<th style='width:100px;'><?php echo "Lab. No"; ?></th>
@@ -297,9 +298,7 @@ else{
 				<th style='width:75px;'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></th>
 			<?php
 			}
-			//if($_SESSION['sid'] != 0)
-			// "Specimen ID" now refers to aux_id
-			if(false)
+			if($_SESSION['sid'] != 0)
 			{
 			?>
 				<th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
@@ -364,7 +363,7 @@ else{
 				<td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
 			<?php
 			}
-			if($_SESSION['dnum'] != 0)
+			if(false) // Stopping displaying the Lab No
 			{
 			?>
 				<td style='width:100px;'><?php echo $specimen->getDailyNumFull(); ?></td>
@@ -376,12 +375,10 @@ else{
 				<td style='width:75px;'><?php echo $patient->getAddlId(); ?></td>
 			<?php
 			}
-			//if($_SESSION['sid'] != 0)
-			// "Specimen ID" now refers to aux_id
-			if(false)
+			if($_SESSION['sid'] != 0)
 			{
 			?>
-				<td style='width:75px;'><?php echo $specimen->specimenId; ?></td>
+				<td style='width:75px;'><?php echo $test->getLabSectionByTest(); ?></td>
 			<?php
 			}
 			if($_SESSION['s_addl'] != 0)

@@ -111,10 +111,10 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
                         <?php
                         }
-                        if($_SESSION['dnum'] != 0)
+                        if(false) //Not displaying Lab no
                         {
                         ?>
-                            <th style='width:100px;'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></th>
+                            <th style='width:100px;'><?php echo "Lab. No"; ?></th>
                         <?php
                         }
                         if($_SESSION['p_addl'] != 0)
@@ -123,9 +123,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></th>
                         <?php
                         }
-                        //if($_SESSION['sid'] != 0)
-                        // "Specimen ID" now refers to aux_id
-                        if(false)
+                        if($_SESSION['sid'] != 0)
                         {
                         ?>
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
@@ -181,7 +179,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         if($_SESSION['dnum'] != 0)
                         {
                         ?>
-                            <td style='width:100px;'><?php echo $specimen->getDailyNumFull(); ?></td>
+                            <td style='width:100px;'><?php echo $specimen->getLabSection();  ?></td>
                         <?php
             
                         }
@@ -295,10 +293,10 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
                         <?php
                         }
-                        if($_SESSION['dnum'] != 0)
+                        if(false) //Not displaying Lab no
                         {
                         ?>
-                            <th style='width:100px;'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></th>
+                            <th style='width:100px;'><?php echo "Lab. No"; ?></th>
                         <?php
                         }
                         if($_SESSION['p_addl'] != 0)
@@ -307,9 +305,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></th>
                         <?php
                         }
-                        //if($_SESSION['sid'] != 0)
-                        // "Specimen ID" now refers to aux_id
-                        if(false)
+                        if($_SESSION['sid'] != 0)
                         {
                         ?>
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
@@ -362,7 +358,8 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <td style='width:75px;'><?php echo $patient->getPatientID(); ?></td>
                         <?php
                         }
-                        if($_SESSION['dnum'] != 0)
+                        //if($_SESSION['dnum'] != 0)
+                        if(false)
                         {
                         ?>
                             <td style='width:100px;'><?php echo $specimen->getDailyNumFull(); ?></td>
@@ -375,12 +372,10 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <td style='width:75px;'><?php echo $patient->getAddlId(); ?></td>
                         <?php
                         }
-                        //if($_SESSION['sid'] != 0)
-                        // "Specimen ID" now refers to aux_id
-                        if(false)
+                        if($_SESSION['sid'] != 0)
                         {
                         ?>
-                            <td style='width:75px;'><?php echo $specimen->specimenId; ?></td>
+                            <td style='width:75px;'><?php echo $specimen->getLabSection(); ?></td>
                         <?php
                         }
                         if($_SESSION['s_addl'] != 0)

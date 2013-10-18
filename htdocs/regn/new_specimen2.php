@@ -80,6 +80,7 @@ if($patient == null)
 	return;
 }
 ?>
+<?php $external_requests = $tests_requested;?>
 <div class="row-fluid">
 <div class="span6">
 <?php 
