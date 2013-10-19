@@ -1684,7 +1684,7 @@ else
 
 			}
 
-			if($report_config->useDailyNum == 1 && $daily_number_same === true) {
+			/*if($report_config->useDailyNum == 1 && $daily_number_same === true) {
 
 				?>
 
@@ -1698,7 +1698,7 @@ else
 
 				<?php 
 
-			}
+			}*/
 
 			if($report_config->usePatientRegistrationDate == 1) {
 
@@ -1716,7 +1716,7 @@ else
 
 			}
 
-			if($report_config->usePatientAddlId == 1) {
+			/*if($report_config->usePatientAddlId == 1) {
 
 				?>
 
@@ -1746,7 +1746,7 @@ else
 
 				<?php 
 
-			}
+			}*/
                         
                         if($printPatientBarcode == 1) {
 
@@ -1836,7 +1836,7 @@ else
 
 			}
 
-			if($report_config->useDoctor != 1 && $physician_same === true) {
+			/*if($report_config->useDoctor != 1 && $physician_same === true) {
 
 				?>
 
@@ -1850,7 +1850,7 @@ else
 
 				<?php 
 
-			}
+			}*/
 
 			?>
 
