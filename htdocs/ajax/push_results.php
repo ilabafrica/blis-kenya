@@ -6,7 +6,8 @@
 include("../includes/db_lib.php");
 
 $test_id = $_REQUEST['test_id'];
-
+$api_key = "0QLUIWX3R";
+$sanitas_inbound_url = "http://192.168.1.9:8888/sanitas/bliss/notify?api_key=".$api_key;
 
 $lab_numbers = API::getTestLabNoToPush();
 
@@ -28,15 +29,11 @@ foreach ($lab_numbers as $lab_no){
 	 
 	$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.'}';
 	error_log("\n".$time_stamp.": Push ===>".$json_string, 3, "/home/royrutto/Desktop/my.error.log");
-	
-	echo $json_string;
-	$api_key = "0QLUIWX3R";
-	$Sanitas_inbound_url = "http://192.168.1.9:8888/sanitas/bliss/notify?api_key=".$api_key;
+
 	/*
 	 * Send POST request with HttpRequest
 	 */
-	
-	$r = new HttpRequest($Sanitas_inbound_url, HttpRequest::METH_POST);
+	$r = new HttpRequest($sanitas_inbound_url, HttpRequest::METH_POST);
 	$r->addPostFields(array('labResult' => $json_string));
 	if($specimen->external_lab_no!=NULL){
 		try {

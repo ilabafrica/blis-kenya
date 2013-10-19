@@ -13,7 +13,9 @@ $page_elems = new PageElems();
 
 $test_id = $_REQUEST['tid'];
 $test = Test::getById($test_id);
-$test_name = get_test_name_by_id($test->testTypeId);
+$test_type_id  = $test->testTypeId;
+$specimen_id = $test->specimenId;
+$test_name = get_test_name_by_id($test_type_id);
 
 ?>
 <div class="modal-header">
@@ -47,7 +49,30 @@ Verified by
 </th>
 </thead>
 <tbody>
- <?php $page_elems->getTestInfoRow($test, true);?>
+ <?php $page_elems->getTestInfoRow($test, true);
+ 
+ $child_tests = get_child_tests($test_type_id);
+ if (count($child_tests)>0){
+ 	foreach($child_tests as $child_test)
+ 	{
+ 		$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
+ 			
+ 		$page_elems->getTestInfoRow($chid_test_entry, true);
+ 		$child_tests = get_child_tests($child_test['test_type_id']);
+ 		if (count($child_tests)>0){
+ 			foreach($child_tests as $child_test)
+ 			{
+ 				$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
+ 				$page_elems->getTestInfoRow($chid_test_entry, true);
+ 			}
+ 		}
+ 	}
+ }
+ 
+ 
+ ?>
+ 
+ 
  </tbody>
  </table>
 

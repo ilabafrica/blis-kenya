@@ -66,7 +66,7 @@ header('Content-Type: text/html; charset=UTF-8');
   <!-- BEGIN LOGIN -->
   <div class="content">
   <center>
-   <img src="logos/logo_127.png" alt="" width="90" height="90" /> 
+   <img src="logos/logo_300.png" alt="" width="90" height="90" /> 
    <h3> Bungoma District Hospital Laboratory </h3>
    </center>
     <!-- BEGIN LOGIN FORM -->
