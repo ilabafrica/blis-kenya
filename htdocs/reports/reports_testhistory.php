@@ -1836,7 +1836,7 @@ else
 
 			}
 
-			if($report_config->useDoctor == 1 && $physician_same === true) {
+			if($report_config->useDoctor != 1 && $physician_same === true) {
 
 				?>
 
@@ -2052,7 +2052,7 @@ else
 
 				}
 				
-				echo "<td>".$specimen->getTestNames()."<strong>(".$test->getFullLabSectionByTest().")</strong>"."</td>";
+				echo "<td>".$test->getFullLabSectionByTest()."</td>";
 
 				if($report_config->useDateRecvd == 1)
 

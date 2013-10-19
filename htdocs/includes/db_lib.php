@@ -2870,6 +2870,29 @@ class Specimen
 		}
 		return $retval;
 	}
+	
+	public function getTestNamesWithCategory()
+	{
+		$query_string = "SELECT test.test_type_id, test_type.test_category_id FROM test, test_type WHERE specimen_id=$this->specimenId";
+		$resultset = query_associative_all($query_string, $row_count);
+		$retval = "";
+		$count = 0;
+		foreach($resultset as $record)
+		{
+			$count++;
+			$test_type_id = $record['test_type_id'];
+			$test_name = get_test_name_by_id($test_type_id);
+			$test_category_id = $record['test_category_id'];
+			$test_category_name = get_test_category_from_specimen_test($test_category_id);
+			$retval .= $test_name."(".$test_category_name.")";
+			if($count < count($resultset))
+			{
+				$retval .= "<br>";
+			}
+		}
+		return $retval;
+		log_error(msg, 3, "log.log");
+	}
 
 	public function getLabSection()
 	{
@@ -3117,7 +3140,7 @@ class Test
     }
 	public function getFullLabSectionByTest()
     {
-        $query_string = "SELECT DISTINCT(tc.name) AS bench FROM test_category tc, 
+        $query_string = "SELECT DISTINCT(tc.name) AS bench, tt.name AS test_name FROM test_category tc, 
         test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
         AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
         $resultset = query_associative_all($query_string, $row_count);
@@ -3126,8 +3149,9 @@ class Test
         foreach($resultset as $record)
         {
             $count++;
+			$test_name = $record['test_name'];
             $bench = $record['bench'];
-            $retval .= $bench;
+            $retval .= $test_name."<strong>(".$bench.")</strong>";
             if($count < count($resultset))
             {
                 $retval .= "<br>";
@@ -9267,6 +9291,18 @@ function get_test_category_by_id($test_category_id)
 	$record = query_associative_one($query_string);
 	DbUtil::switchRestore($saved_db);
 	return TestCategory::getObject($record);
+}
+
+function get_test_category_from_specimen_test($test_category_id)
+{
+	global $con;
+	$test_category_id = mysql_real_escape_string($test_category_id, $con);
+	# Returns specimen type record in DB
+	$query_string =
+		"SELECT * FROM test_category WHERE test_category_id=$test_category_id LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return $record['test_category'];
 }
 
 
