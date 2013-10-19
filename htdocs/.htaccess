@@ -125,6 +125,7 @@ RewriteRule ^find_patient\.php$ regn/find_patient.php
 RewriteRule ^new_patient\.php$ regn/new_patient.php
 RewriteRule ^new_specimen\.php$ regn/new_specimen.php
 RewriteRule ^specimen_added\.php$ regn/specimen_added.php
+RewriteRule ^rejection_phase_new\.php$ regn/rejection_phase_new.php
 RewriteRule ^specimen_referral\.php$ regn/specimen_referral.php
 RewriteRule ^session_print\.php$ regn/session_print.php
 RewriteRule ^accept_reject_specimen\.php$ regn/accept_reject_specimen.php
