@@ -753,60 +753,6 @@ for($i = 0; $i < count($margin_list); $i++) {
 		cursor:pointer;
 
 	}
-#sample_test{
-	width:97%;
-	height:100px;
-	border:1px solid;
-	margin-bottom:5px;
-	padding-left:5px;
-	padding-right:5px;
-	padding-top:5px;
-}
-#result_data{
-	width:97%;
-	height:100px;
-	border:1px solid;
-	margin-bottom:5px;
-	padding-left:5px;
-	padding-right:5px;
-	padding-top:5px;
-}
-#clinician_data{
-	width:97%;
-	height:70px;
-	border:1px solid;
-	margin-bottom:5px;
-	padding-left:5px;
-	padding-right:5px;
-	padding-top:5px;
-}
-#result_interpretation{
-	width:97%;
-	height:100px;
-	border:1px solid;
-	margin-bottom:5px;
-	padding-left:5px;
-	padding-right:5px;
-	padding-top:5px;
-}
-#comments{
-	width:97%;
-	height:40px;
-	border:1px solid;
-	margin-bottom:5px;
-	padding-left:5px;
-	padding-right:5px;
-	padding-top:5px;
-}
-#controls{
-	width:97%;
-	height:30px;
-	border:0px solid;
-	margin-bottom:5px;
-	padding-left:5px;
-	padding-right:5px;
-	padding-top:5px;
-}
 
 </style> 
 
@@ -1677,69 +1623,22 @@ else
 			?>
 
 	</div>
-    <div id='sample_test'> 
-    <table width="100%" align="left" class="no_border">
-    <tbody>
-		<tr>
-            <td>Sample Type</td>
-            <?php
-            if($report_config->useSpecimenName == 1)
 
-				{?>
+	<table class='print_entry_border' style='width:97%; margin-bottom:5px;'>
 
-					<td><?php echo get_specimen_name_by_id($specimen->specimenTypeId);?></td>
-				<?php
-				}
-				?>
-            <td><?php echo ""; ?></td>
-            <td><?php echo ""; ?></td>
-            <td>Section</td>
-            <td><?php echo ""; ?></td>
-        </tr>
-		<tr>
-            <td>Collected By</td>
-            <td><?php echo ""; ?></td>
-            <td>Date Collected</td>
-            <td><?php echo ""; ?></td>
-            <td>Time Collected</td>
-            <td><?php echo ""; ?></td>
-        </tr>
-        <tr>
-        	<td>Test Requested</td>
+		<tbody>
+
 			<?php
-            if($report_config->useTestName == 1)
-
-				{ ?>
-
-					<td ><?php if(get_test_name_by_id($test->testTypeId)=="")
-								{echo "No Tests Found";}
-								else{echo get_test_name_by_id($test->testTypeId);}
-					;?></td>
-				<?php
-				}
-                ?>
-            <td><?php echo ""; ?></td>
-            <td>Date Registered</td>
-            <td><?php echo ""; ?></td>
-            <td>Time Registered</td>
-            <td><?php echo ""; ?></td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-    
-        <div id='sample_test'> 
-    <table width="100%" class="no_border" align="left">
-    <tbody>
-		<tr>
-        <?php
-        	if( ($report_config->usePatientName == 1) && ($hidePatientName != 1) ) {
+			if( ($report_config->usePatientName == 1) && ($hidePatientName != 1) ) {
 
 				?>
 
-                <td><?php echo "Patient Name"; ?></td>
+				<tr valign='top'>
 
-                <td colspan="3"><?php echo $patient->name; ?></td>
+					<td><strong><?php echo "Patient Name"; ?></strong></td>
+
+					<td><?php echo $patient->name; ?></td>
+
 
 				<?php
 
@@ -1748,153 +1647,36 @@ else
 
 				?>			
 
-				<td><?php echo "Patient Sex"; ?></td>
+					<td><strong><?php echo "Patient Sex"; ?></strong></td>
 
-				<td><?php echo $patient->sex; ?></td>
-				<?php
+					<td><?php echo $patient->sex; ?></td>
 
-			}
-			?>
-        </tr>
-		<tr>
-        <?php
-
-			if($report_config->usePatientId == 1) {
-
-				?>
-					<td><?php echo "Patient Number"; ?></td>
-
-					<td><?php echo $patient->getSurrogateId(); ?></td>
+				</tr>
 
 				<?php
 
 			}
-			?>
-            <td>Visit Number</td>
-            <td><?php echo ""; ?></td>
-            <?php
-            if($report_config->useAge == 1) {
-
-				?>
-
-				<td><?php echo "Patient Age"; ?></td>
-
-				<td><?php echo $patient->getAge(); ?></td>
-
-				<?php 
-
-			}
-			?>
-        </tr>
-        <tr>
-            <td colspan="3">Requesting Department/Facility</td>
-            <td colspan="3"><?php echo ""; ?></td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-    <div id='clinician_data'> 
-    <table width="100%" class="no_border" align="left">
-        <tbody>
-		<tr>
-            <td colspan="2">Name of Requester</td>
-            <td colspan="2"><?php echo $previous_physician; ?></td>
-            <td>Phone Number</td>
-            <td><?php echo ""; ?></td>
-        </tr>
-		<tr>
-            <td colspan="3">Email Address</td>
-            <td colspan="3"><?php echo ""; ?></td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-    <div id="result_data">
-    <table width="100%" class="no_border" align="left">
-  <tr>
-    <td colspan="5"><strong>RESULTS</strong></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>ANALYTE NAME</td>
-    <td>VALUE/RESULT</td>
-    <td>UNITS</td>
-    <td>BIOLOGICAL REFERENCE INTERVAL</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
-</div>
-<div id="result_interpretation">
-<p align="center">RESULT INTERPRETATION, WHERE APPROPRIATE</p>
-</div>
-<div id="comments">
-Comment(s):
-</div>
- <div id='clinician_data'> 
-    <table width="100%" class="no_border" align="left">
-        <tbody>
-		<tr>
-            <td>Performed By</td>
-            <td><?php echo ""; ?></td>
-            <td>Signature</td>
-            <td><?php echo ""; ?></td>
-            <td>Date</td>
-            <td><?php echo ""; ?></td>
-            <td>Time</td>
-            <td><?php echo ""; ?></td>
-        </tr>
-		<tr>
-            <td>Vefiried By</td>
-            <td><?php echo ""; ?></td>
-            <td>Signature</td>
-            <td><?php echo ""; ?></td>
-            <td>Date</td>
-            <td><?php echo ""; ?></td>
-            <td>Time</td>
-            <td><?php echo ""; ?></td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-    <div id="controls">
-    <h5 align="left">Form No. BDHL-QUA-017F3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Version 1</h5>
-    </div>
-
-	<table class='print_entry_border' style="display:none;">
-
-		<tbody>
-
-			<?php
 
 			if($report_config->usePatientId == 1) {
 
 				?>
 
 				<tr valign='top'>
+                
+					<td><strong><?php echo "Patient Number"; ?></strong></td>
 
-					<td><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></td>
+					<td><?php echo $patient->getPatientId(); ?></td>
 
-					<td><?php echo $patient->getSurrogateId(); ?></td>
+				<?php
+
+			}
+			if($report_config->useAge == 1) {
+
+				?>
+
+					<td><strong><?php echo "Patient Age"; ?></strong></td>
+
+					<td><?php echo $patient->getAge(); ?></td>
 
 				</tr>
 
@@ -1950,54 +1732,6 @@ Comment(s):
 
 			}
 
-			if( ($report_config->usePatientName == 1) && ($hidePatientName != 1) ) {
-
-				?>
-
-				<tr valign='top'>
-
-					<td><?php echo LangUtil::$generalTerms['NAME']; ?></td>
-
-					<td><?php echo $patient->name; ?></td>
-
-				</tr>
-
-				<?php
-
-			}
-
-			if($report_config->useAge == 1) {
-
-				?>
-
-				<tr valign='top'>
-
-					<td><?php echo LangUtil::$generalTerms['AGE']; ?></td>
-
-					<td><?php echo $patient->getAge(); ?></td>
-
-				</tr>
-
-				<?php
-
-			}
-
-			if($report_config->useGender == 1) {
-
-				?>			
-
-				<tr valign='top'>	
-
-					<td><?php echo LangUtil::$generalTerms['GENDER']; ?></td>
-
-					<td><?php echo $patient->sex; ?></td>
-
-				</tr>
-
-				<?php
-
-			}
-
 			if($report_config->useDob == 1) {
 
 				?>
@@ -2029,6 +1763,20 @@ Comment(s):
 				<?php 
 
 			}
+			?>
+			<tr valign='top'>	
+
+					<td><strong><?php echo "Visit Number"; ?></strong></td>
+
+					<td><?php echo $patient->getDailyNum(); ?></td>
+
+
+					<td><strong><?php echo "Requesting Department/Facility"; ?></strong></td>
+
+					<td><?php $patient_type=$patient->getPatientType(); if($patient_type!=null||$patient_type!=""){ echo $patient->getPatientFacility();}else{echo "Bungoma District Hospital";} ?></td>
+
+				</tr>
+			<?php
 
 			# Patient Custom fields here
 
@@ -2122,7 +1870,7 @@ Comment(s):
 
 	else {
 
-		echo LangUtil::$generalTerms['TESTS']; 
+		echo "<strong>".LangUtil::$generalTerms['SPECIMENS']."</strong>";
 
 	}
 
@@ -2146,7 +1894,7 @@ Comment(s):
 
 			<div id="patient_table">
 
-				<table class='print_entry_border draggable' style='display:none;' id='report_content_table1'>
+				<table class='print_entry_border draggable' id='report_content_table1' style="width:97%; margin-bottom:5px;margin-top:5px;">
 
 					<thead>
 
@@ -2171,6 +1919,8 @@ Comment(s):
 					echo "<th>".LangUtil::$generalTerms['TYPE']."</th>";
 
 				}
+				
+				echo "<th>"."Tests Requested(Lab Section)"."</th>";
 
 				if($report_config->useDateRecvd == 1) {
 
@@ -2179,7 +1929,8 @@ Comment(s):
 				}
 
 				# Specimen Custom fields headers here
-
+				$patient_type=$patient->getPatientType();
+				if($patient_type != null || $patient_type != ""){
 				$custom_field_list = $lab_config->getSpecimenCustomFields();
 
 				foreach($custom_field_list as $custom_field) {
@@ -2192,9 +1943,258 @@ Comment(s):
 
 						echo "<th>".$field_name."</th>";
 
+						}
+	
 					}
+				}
+				else{
+					echo "<th>"."Collected By"."</th>";
+					echo "<th>"."Date Collected"."</th>";
+					echo "<th>"."Time Collected"."</th>";
+				}
+				
+				if($report_config->useStatus == 1 && $all_tests_completed === false) {
+
+					echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
 
 				}
+
+				
+
+				// add visualization title column
+                                if($view_viz == 1)
+                                {
+                                    echo "<th>Visualized Results</th>";
+                                }
+
+				?>
+
+				</tr>
+
+			</thead>
+
+			<tbody>
+
+			<?php
+
+			if(isset($_REQUEST['sid'])) {
+
+				# Called after result entry for a single specimen
+
+				$value = array($_REQUEST['sid'], $_REQUEST['tid']);
+
+				$record_list = array();
+
+				$record_list[] = $value;
+
+				$data_list=array();
+
+			}
+
+			foreach($record_list as $record_set) {
+
+				$value = $record_set;
+
+				$test = $value[0];
+                                
+                                if(in_array($test->specimenId, $rem_specs))
+                                    {
+                                            continue;
+                                    }
+                                
+				$specimen = $value[1];
+
+				$id=$test->testTypeId;
+
+				$clinical_data=get_clinical_data_by_id($test->testTypeId)
+
+				?>
+
+				<tr valign='top'>
+
+				<?php
+
+				if($report_config->useSpecimenAddlId != 0)
+
+				{
+
+					echo "<td>";
+
+					$specimen->getAuxId();
+
+					echo "</td>";
+
+				}
+
+				if($clinical_data!='')
+
+				{
+
+					$data_list[$id]=$clinical_data;
+
+				}
+
+				if($report_config->useDailyNum == 1 && $daily_number_same === false)
+
+				{
+
+					echo "<td>".$specimen->specimenId."</td>";
+
+				}
+
+				
+
+				if($report_config->useSpecimenName == 1)
+
+				{
+
+					echo "<td>".get_specimen_name_by_id($specimen->specimenTypeId)."</td>";
+
+				}
+				
+				echo "<td>".$specimen->getTestNames()."<strong>(".$test->getFullLabSectionByTest().")</strong>"."</td>";
+
+				if($report_config->useDateRecvd == 1)
+
+				{
+
+					echo "<td>".DateLib::mysqlToString($specimen->dateRecvd)."</td>";
+
+				}
+
+				# Specimen Custom fields here
+				if($patient_type != null || $patient_type != ""){
+				//$custom_field_list = $lab_config->getSpecimenCustomFields();
+				foreach($custom_field_list as $custom_field)
+
+				{
+
+					if(in_array($custom_field->id, $report_config->specimenCustomFields))
+
+					{
+
+						echo "<td>";
+
+						$custom_data = get_custom_data_specimen_bytype($specimen->specimenId, $custom_field->id);
+
+						if($custom_data == null)
+
+						{
+
+							echo "-";
+
+						}
+
+						else
+
+						{
+
+							$field_value = $custom_data->getFieldValueString($lab_config->id, 1);
+
+							if($field_value == "" or $field_value == null) 
+
+							$field_value = "-";
+
+							echo $field_value; 
+
+						}
+
+						echo "</td>";
+
+						}
+
+					}
+				}
+				else{
+						echo "<td>".$specimen->getSpecimenCollector()."</td>";
+						echo "<td>".DateLib::mysqlToString($specimen->dateCollected)."</td>";
+						echo "<td>".$specimen->timeCollected."</td>";
+
+				}
+#				<!------------------------------------------------------->
+				if($report_config->useStatus == 1 && $all_tests_completed === false) {
+
+					echo "<td>".$test->getStatus()."</td>";
+
+				}
+
+				
+
+				// Add visualization column
+                                if($view_viz == 1)
+                                {
+                                        echo "<td>";
+
+                                        $cleaned_result_array = clean_result($test, $report_config);
+
+                                        $cleaned_range_array = clean_range($test, $report_config, $patient);
+
+
+
+                                        for($i=0; $i<count($cleaned_result_array); $i++){
+
+                                                echo "<br>";
+
+
+
+                                                $parsable_result = is_result_parsable($cleaned_result_array[$i]);
+
+
+
+                                                if($cleaned_result_array[$i]==""){
+
+                                                        // pending test
+
+                                                        echo "Pending";
+
+                                                        echo "<br>";
+
+                                                }else if ($cleaned_range_array[$i]=="" || !$parsable_result){
+
+                                                        echo "Result cannot be visualized";
+
+                                                        echo "<br>";
+
+                                                }else{
+
+                                                        // draw visualization
+
+                                                        $visualized_results = draw_visualization($cleaned_result_array[$i], $cleaned_range_array[$i]);
+
+                                                        echo $visualized_results;
+
+                                                        //echo $visualized_results.$cleaned_result_array[$i]." | ".$cleaned_range_array[$i];
+
+                                                }
+
+                                        }
+
+
+
+                                        echo "</td>";
+                                }
+				?>
+
+				</tr>
+
+			<?php
+
+			}
+
+			?>
+
+			</tbody>
+
+		</table>
+        <!-------------------------------------------------------BEGIN TESTS TABLE------------------------------------------------------>
+        <strong><?php echo "Results";  ?></strong>
+        <table class='print_entry_border draggable' id='report_content_table1' style="margin-top:5px;margin-bottom:5px; width:97%;">
+
+					<thead>
+
+						<tr valign='top'>
+
+						<?php 
 
 				if($report_config->useTestName == 1) {
 
@@ -2203,6 +2203,9 @@ Comment(s):
 					echo "</th>";
 
 				}
+				echo "<th>"."Date(Time Registered)";
+
+					echo "</th>";
 
 				if($report_config->useComments == 1) {
 
@@ -2224,11 +2227,11 @@ Comment(s):
 
 				if($report_config->useMeasures == 1)
 
-					echo "<th>".LangUtil::$generalTerms['MEASURES']."</th>";
+					echo "<th>"."Analyte"."</th>";
 
 				if($report_config->useResults == 1)
 
-					echo "<th>".LangUtil::$generalTerms['RESULTS']."</th>";
+					echo "<th>".LangUtil::$generalTerms['RESULTS']."/Value"."</th>";
 
 				if($report_config->useRange == 1)
 
@@ -2319,96 +2322,7 @@ Comment(s):
 
 				<?php
 
-				if($report_config->useSpecimenAddlId != 0)
-
-				{
-
-					echo "<td>";
-
-					$specimen->getAuxId();
-
-					echo "</td>";
-
-				}
-
-				if($clinical_data!='')
-
-				{
-
-					$data_list[$id]=$clinical_data;
-
-				}
-
-				if($report_config->useDailyNum == 1 && $daily_number_same === false)
-
-				{
-
-					echo "<td>".$specimen->getDailyNum()."</td>";
-
-				}
-
-				
-
-				if($report_config->useSpecimenName == 1)
-
-				{
-
-					echo "<td>".get_specimen_name_by_id($specimen->specimenTypeId)."</td>";
-
-				}
-
-				if($report_config->useDateRecvd == 1)
-
-				{
-
-					echo "<td>".DateLib::mysqlToString($specimen->dateRecvd)."</td>";
-
-				}
-
-				# Specimen Custom fields here
-
-				$custom_field_list = $lab_config->getSpecimenCustomFields();
-
-				foreach($custom_field_list as $custom_field)
-
-				{
-
-					if(in_array($custom_field->id, $report_config->specimenCustomFields))
-
-					{
-
-						echo "<td>";
-
-						$custom_data = get_custom_data_specimen_bytype($specimen->specimenId, $custom_field->id);
-
-						if($custom_data == null)
-
-						{
-
-							echo "-";
-
-						}
-
-						else
-
-						{
-
-							$field_value = $custom_data->getFieldValueString($lab_config->id, 1);
-
-							if($field_value == "" or $field_value == null) 
-
-							$field_value = "-";
-
-							echo $field_value; 
-
-						}
-
-						echo "</td>";
-
-					}
-
-				}
-
+#				<!------------------------------------------------------->
 				if($report_config->useTestName == 1)
 
 				{
@@ -2416,10 +2330,10 @@ Comment(s):
 					echo "<td >".get_test_name_by_id($test->testTypeId)."</td>";
 
 				}
-
+				$timestamp = strtotime($test->timestamp);
+				$time=date("H:i:s", $timestamp);
 				
-
-				
+				echo "<td >".DateLib::mysqlToString($test->timestamp)."(".$time.")"."</td>";
 
 				if($report_config->useComments == 1)
 
@@ -2809,6 +2723,7 @@ Comment(s):
 			</tbody>
 
 		</table>
+        <!--------------------------------------------------------END TESTS TABLE------------------------------------------------------->
 
 		</div>
 
@@ -3759,7 +3674,7 @@ echo("Page generated in " . $page_load_time . " seconds");
 
 </div>
 
-<?php #include('lab_report_footer.php'); ?>
+<?php include('lab_report_footer.php'); ?>
 
 </div>
 

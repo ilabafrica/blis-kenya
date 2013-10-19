@@ -19,12 +19,18 @@ Size : 8.27in and 11.69 inches
 div.Section1 {
   page:Section1;
 }
+.quality_no{
+	text-align:left;
+}
+.version{
+	text-align:right;
+}
 </style>
 </head>
 
 <body>
 <div class=Section1> 
-     type your content here... 
+    <h5><div class="quality_no">Form No. BDHL-QUA-017F3</div><div class="version">Version 1</div></h5>
 </div>
 </body>
 </html>

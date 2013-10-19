@@ -2495,6 +2495,27 @@ class Patient
 		return $retval;
 	}
 	
+	public function getPatientType()
+	{
+		# Get whether patient is New or Referral
+		$query_string = "SELECT DISTINCT(field_value) AS patient_type FROM patient_custom_data WHERE field_id IN (SELECT id FROM patient_custom_field WHERE field_name='Patient type';) AND patient_id=$this->patientId;";
+		$record = query_associative_one($query_string);		
+		$retval = "";
+			$retval = $record['patient_type'];
+		return $retval;
+	}
+	
+	public function getPatientFacility()
+	{
+		# Get Referring Facility if patient is referral
+		#$pat_type=$this->getPatientType();
+		$query_string = "SELECT DISTINCT(field_value) AS facility FROM patient_custom_data WHERE field_id IN (SELECT id FROM patient_custom_field WHERE field_name='Location';) AND patient_id=$this->patientId;";
+		$record = query_associative_one($query_string);		
+		$retval = "";
+			$retval = $record['facility'];
+		return $retval;
+	}
+	
 	public function getDailyNum()
 	{
 		# Returns daily number ("patient number")
@@ -2674,7 +2695,15 @@ class Specimen
 			$specimen->external_lab_no = null;
 		return $specimen;
 	}
-	
+	public function getSpecimenCollector()
+	{
+		# Get whether patient is New or Referral
+		$query_string = "SELECT DISTINCT(actualname) AS collector FROM user WHERE user_id=$this->userId;";
+		$record = query_associative_one($query_string);		
+		$retval = "";
+			$retval = $record['collector'];
+		return $retval;
+	}
 	public static function getById($specimen_id)
 	{
 		global $con;
@@ -3066,6 +3095,26 @@ class Test
             $bench = $record['bench'];
             $specimen_id = $record['specID'];
             $retval .= $bench."-".$specimen_id;
+            if($count < count($resultset))
+            {
+                $retval .= "<br>";
+            }
+        }
+        return $retval;
+    }
+	public function getFullLabSectionByTest()
+    {
+        $query_string = "SELECT DISTINCT(tc.name) AS bench FROM test_category tc, 
+        test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
+        $resultset = query_associative_all($query_string, $row_count);
+        $retval = "";
+        $count = 0;
+        foreach($resultset as $record)
+        {
+            $count++;
+            $bench = $record['bench'];
+            $retval .= $bench;
             if($count < count($resultset))
             {
                 $retval .= "<br>";
