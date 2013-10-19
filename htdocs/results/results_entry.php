@@ -874,7 +874,6 @@ function submit_forms(test_id)
 	var target_div_id = "result_form_pane_"+test_id;
 	for(var i = 0; i < form_id_list.length; i++)
 	{
-		console.log(i);
 		if($('#'+form_id_list[i]+'_skip').is(':checked'))
 		{
 			continue;
@@ -895,18 +894,21 @@ function submit_forms(test_id)
 				$("#"+target_div_id).html(msg);
 				$("tr#"+actual_test_id).remove();		
 			}
-		});
-
-		//push results to sanitas
-		var pushURL ='ajax/push_results.php';
-		$.post(
-			pushURL,
-			{test_id:actual_test_id},  
-	        function(responseText){ 
-	        }
-		);
+		});	
 	}
-	
+	push_results_to_external_system();
+}
+
+function push_results_to_external_system(){
+	//push results to sanitas
+	var pushURL ='ajax/push_results.php';
+	$.post(
+		pushURL,
+		{test_id:0},  
+        function(responseText){
+	         
+        }
+	);
 }
 
 function get_batch_form()

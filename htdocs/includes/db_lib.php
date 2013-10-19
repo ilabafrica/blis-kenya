@@ -3046,6 +3046,19 @@ class Test
 		$record = query_associative_one($query_string);
 		return Test::getObject($record);
 	}
+	public static function getByExternalLabno($lab_no)
+	{
+		# Returns a test result entry by test_id field
+		if($lab_no == null || trim($lab_no) == "")
+		{
+		return null;
+		}
+		global $con;
+		$lab_no = mysql_real_escape_string($lab_no, $con);
+		$query_string = "SELECT * FROM test WHERE `external_lab_no` = $lab_no";
+		$record = query_associative_one($query_string);
+		return Test::getObject($record);
+	}
 	
 	public function isPending()
 	{
@@ -15234,7 +15247,7 @@ class API
     
     public static function getExternalLabNo($patient_id, $test_name)
     {
-    # gets pending lab requests from external_lab_reqeuest_table
+    # gets external lab no
     	global $con;
     	$patient_id = mysql_real_escape_string($patient_id, $con);
     	$query_string = "SELECT labNo FROM external_lab_request 
@@ -15247,6 +15260,23 @@ class API
     	return $labNo;
     }
     
+    public static function getTestLabNoToPush()
+    {
+    # gets pending lab requests from external_lab_reqeuest_table
+    	global $con;
+    	$patient_id = mysql_real_escape_string($patient_id, $con);
+    	$query_string = "SELECT 
+						    labNo
+						FROM
+							external_lab_request
+						WHERE
+				   		result_returned = 0 AND result IS NOT NULL";
+    	$saved_db = DbUtil::switchToGlobal();
+    	$returnarr = query_associative_all($query_string, $row_count);
+  		DbUtil::switchRestore($saved_db);
+    	return $returnarr;
+    }
+    
     public static function updateExternalLabrequest($patient_id, $lab_no, $result){
     	
     	global $con;
@@ -15254,8 +15284,8 @@ class API
     	$query_string = 
     	"UPDATE external_lab_request 
     	SET 
-    	result = '$result', 
-    	result_returned = 1
+    	result = '$result',
+    	test_status = ".Specimen::$STATUS_TOVERIFY."
     	WHERE patient_id='$patient_id' AND labNo='$lab_no'";
     	$saved_db = DbUtil::switchToGlobal();
     	$update = query_update($query_string);
