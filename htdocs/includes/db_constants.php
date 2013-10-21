@@ -36,7 +36,7 @@ $DB_PASS = "";
 
 if($SERVER == $ON_DEV)
 {
-	$DB_PASS = "admin123";
+	$DB_PASS = "";
 }
 else if($SERVER == $ON_ARC)
 {

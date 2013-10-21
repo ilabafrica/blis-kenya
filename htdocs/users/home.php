@@ -25,7 +25,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 				
                 <div class="portlet box blue">
                     <div class="portlet-title">
-                        <h4><i class="icon-reorder"></i>Home</h4>
+                        <h4><i class="icon-reorder"></i>Kapsabet District Hospital Laboratory</h4>
                         <div class="tools">
                         <a href="javascript:;" class="collapse"></a>
                         <a href="javascript:;" class="reload"></a>
@@ -33,10 +33,91 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
                     </div>
                     <div class="portlet-body form" style="height: 400px">
 				
-                    <?php $page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip); ?>
+                    <?php #$page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip); ?>
                     <!-- DASH BOARD -->
-                    <?php // include('dashboard.php');?>
-                    
+                    <div class="row-fluid">
+									<div class="span12">
+										<!--BEGIN TABS-->
+										<div class="tabbable tabbable-custom">
+											<ul class="nav nav-tabs">
+												<li class="active"><a href="#tab_1_1" data-toggle="tab">Director's Note</a></li>
+												<li><a href="#tab_1_2" data-toggle="tab">Organizational Chart</a></li>
+                                                <li><a href="#tab_1_3" data-toggle="tab">Laboratory Master Calendar</a></li>
+												<li><a href="#tab_1_4" data-toggle="tab">Wall of Fame/Shame</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane active" id="tab_1_1">
+													<div class="portlet-body" id="chats">
+									<div class="scroller" data-height="343px" data-always-visible="1" data-rail-visible1="1">
+										<ul class="chats">
+											<li class="in">
+												<img class="avatar" alt="" src="../img/avatar.png" />
+												<div class="message">
+													<span class="arrow"></span>
+													<a href="#" class="name"><h4>David Kibet Koech</h4></a>
+													<span class="body"><h5>
+													Director's message to be here....</h5>
+													</span>
+												</div>
+											</li>
+											<li class="out">
+												<img class="avatar" alt="" src="../img/avatar.png" />
+												<div class="message">
+													<span class="arrow"></span>
+													<a href="#" class="name">Our Mission</a>
+													<span class="body">
+													Mission goes here...
+													</span>
+												</div>
+											</li>
+											<li class="in">
+												<img class="avatar" alt="" src="../img/avatar.png" />
+												<div class="message">
+													<span class="arrow"></span>
+													<a href="#" class="name">Our Vision</a>
+													<span class="body">
+													Vision goes here...
+													</span>
+												</div>
+											</li>
+											
+											<li class="out">
+												<img class="avatar" alt="" src="../img/avatar.png" />
+												<div class="message">
+													<span class="arrow"></span>
+													<a href="#" class="name">Our Values</a>
+													<span class="body">
+													Values go here...
+													</span>
+												</div>
+											</li>
+											
+										</ul>
+									</div>
+                                    </div>
+												</div>
+												<div class="tab-pane" id="tab_1_2">
+													<p>
+												    <img src="../logos/kdh_organogram_transparent.png" height="600px;" alt="Kapsabet District Hospital Organogram" /> </p>
+												</div>
+												<div class="tab-pane" id="tab_1_3">
+													
+													<p>
+													Laboratory Master Calendar to be here...	
+													</p>
+												</div>
+                                                <div class="tab-pane" id="tab_1_4">
+													
+													<p>
+													Laboratory wall of fame/shame...	
+													</p>
+												</div>
+											</div>
+										</div>
+										<!--END TABS-->
+									</div>
+									
+								</div>
                     </div>
                 </div>
                     <?php
