@@ -15302,7 +15302,9 @@ class API
     	global $con;
     	$patient_id = mysql_real_escape_string($patient_id, $con);
     	$query_string = "SELECT 
-						    labNo
+						    labNo,
+    						system_id, 
+    						result
 						FROM
 							external_lab_request
 						WHERE
