@@ -47,7 +47,7 @@ foreach ($lab_numbers as $lab_no){
 	$emr_user_id = get_emr_user_id($_SESSION['user_id']);
 	if ($emr_user_id ==null)$emr_user_id="59";
 	
-	$user_name = get_username_by_id($_SESSION['user_id']);
+	$user_name = get_actualname_by_id($_SESSION['user_id']);
 	
 	if ($system_id == "sanitas")
 	{

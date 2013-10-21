@@ -452,8 +452,8 @@ else{
 			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn mini">
 				<i class="icon-search"></i>View Results</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="Verify test" class="btn green mini">
-				<i class="icon-ok"></i>Verify</a>
+			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="Verify test" class="btn green mini">
+				<i class="icon-info-sign"></i>Specimen Info</a>
 			</td>';
 			}else
 			if($status == Specimen::$STATUS_REPORTED){

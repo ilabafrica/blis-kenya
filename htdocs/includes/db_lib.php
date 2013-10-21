@@ -6185,6 +6185,21 @@ function get_username_by_id($user_id)
 		return $record['username'];
 }
 
+function get_actualname_by_id($user_id)
+{
+	# Returns username as string
+	global $con;
+	$user_id = mysql_real_escape_string($user_id, $con);
+	$saved_db = DbUtil::switchToGlobal();
+	$query_string = "SELECT actualname FROM user WHERE user_id=$user_id";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	if($record == null)
+		return LangUtil::$generalTerms['NOTKNOWN'];
+	else
+		return $record['actualname'];
+}
+
 function get_user_by_name($username)
 {
 	global $con;
