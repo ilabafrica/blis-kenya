@@ -26,9 +26,10 @@ foreach ($lab_numbers as $lab_no){
 	
 	$emr_user_id = get_emr_user_id($_SESSION['user_id']);
 	if ($emr_user_id ==null)$emr_user_id="59";
-	 
+
+	error_log("\n=======================================================================================", 3, "../logs/blis.api.error.log");
 	$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.'}';
-	error_log("\n".$time_stamp.": Push ===>".$json_string, 3, "/home/royrutto/Desktop/my.error.log");
+	error_log("\n".$time_stamp.": Push ===>".$json_string, 3, "../logs/blis.api.error.log");
 
 	/*
 	 * Send POST request with HttpRequest
@@ -39,18 +40,18 @@ foreach ($lab_numbers as $lab_no){
 		try {
 			
 			$response = $r->send()->getBody();
-			error_log("\n".$time_stamp.": HTTP Response: Uploaded Result ===>".$response, 3, "/home/royrutto/Desktop/my.error.log");
+			error_log("\n".$time_stamp.": HTTP Response: Uploaded Result ===>".$response, 3, "../logs/blis.api.error.log");
 			
 		} catch (HttpException $ex) {
 			
-			error_log("\n".$time_stamp.": HTTP Exception: ======>".$ex, 3, "/home/royrutto/Desktop/my.error.log");
+			error_log("\n".$time_stamp.": HTTP Exception: ======>".$ex, 3, "../logs/blis.api.error.log");
 			
 		}
 	}
-	
+	error_log("\n=======================================================================================", 3, "../logs/blis.api.error.log");
 	if($response=="Test updated"){
 		
-		//API::updateExternalLabrequest($patient->surrogateId, $specimen->external_lab_no, $result);
+		API::updateExternalLabRequestSentStatus($lab_no['labNo'], 1);
 		
 	}
 }

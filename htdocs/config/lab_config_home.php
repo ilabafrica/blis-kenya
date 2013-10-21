@@ -1366,7 +1366,7 @@ if($lab_config == null)
 					 </a>
 					 <a class="btn blue-stripe" href='javascript:import_users();'>
 					 <i class='icon-download'></i> 
-					 <?php echo 'Import from Sanitas' ?>
+					 <?php echo 'Import from HMIS/EMR' ?>
 					 </a>
 					<br><br>
 					<div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>

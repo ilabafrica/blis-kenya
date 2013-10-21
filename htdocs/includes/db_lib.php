@@ -15331,8 +15331,8 @@ class API
     public static function getLabRequestFromView($patient_id){
     	#gets lab request from external system view/table
     	$retval = array();
-//     	$server = '192.168.6.4:1433';
-    	$server = '192.168.184.121:1432';
+     	$server = '192.168.6.4:1433';
+    	//$server = '192.168.184.121:1432';
     	$dbuser = 'kapsabetadmin';
     	$dbpass = 'kapsabet';
     	$database = '[Kapsabet]';
@@ -15375,6 +15375,17 @@ class API
     	$saved_db = DbUtil::switchToGlobal();
     	query_blind($query_string);
  
+    	DbUtil::switchRestore($saved_db);
+    }
+    
+    public static function updateExternalLabRequestSentStatus($labNo, $status){
+    	$query_string =
+    	"UPDATE external_lab_request ".
+    	"SET result_returned = '$status'".
+    	"WHERE labNo = '$labNo'";
+    	$saved_db = DbUtil::switchToGlobal();
+    	query_blind($query_string);
+    
     	DbUtil::switchRestore($saved_db);
     }
 }
