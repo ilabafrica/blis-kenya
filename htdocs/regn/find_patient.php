@@ -309,7 +309,7 @@ function restrictCharacters(e) {
 	var character = String.fromCharCode(code);
 	
 	if( !e.ctrlKey && code!=9 && code!=8 && code!=27 && code!=36 && code!=37 && code!=38  && code!=40 &&code!=13 &&code!=32 ) {
-		if ( !character.match(alphabets) && !character.match(numbers) )
+		if ( !character.match(alphabets) && !character.match(numbers) && !character.match("/"))
 			return false;
 		else
 			return true;
@@ -343,7 +343,7 @@ function fetch_patients()
 function continue_fetch_patients()
 {   
 	var patient_id = $.trim($('#pq').val());
-	patient_id = patient_id.replace(/[^a-z0-9 ]/gi,'');
+	patient_id = patient_id.replace(/[^a-z0-9 /]/gi,'');
 	var search_attrib = $('#p_attrib').val();
 	$('#psearch_progress_spinner').show();
 	if(patient_id == "")
@@ -428,10 +428,9 @@ function load_patient_reg()
 function load_specimen_reg(patient_id, is_external_patient)
 {
 	$('.reg_subdiv').hide();
-	var patientid = patient_id;
 	//Load new_specimen2.php via ajax
 	var url = 'regn/new_specimen2.php';
-	$('#specimen_reg_body').load(url, {pid: patient_id, ex: is_external_patient });		
+	$('#specimen_reg_body').load(url, {pid: patient_id, ex: is_external_patient});		
 	$('#specimen_reg').show();
 }
 

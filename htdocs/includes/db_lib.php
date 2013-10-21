@@ -2431,8 +2431,7 @@ class Patient
 	{
 		# Returns patient record by ID
 		global $con;
-		$patient_id = mysql_real_escape_string($surr_id, $con);
-		$query_string = "SELECT * FROM patient WHERE surr_id=$surr_id";
+		$query_string = "SELECT * FROM patient WHERE surr_id='$surr_id'";
 		$record = query_associative_one($query_string);
 		//return 1;
 		return Patient::getObject($record);
@@ -2442,7 +2441,6 @@ class Patient
 	{
 		# Get Patient from Lab request table, save patient record and return patient record
 		global $con;
-		$patient_id = mysql_real_escape_string($patient_id, $con);
 		$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING;
 		$saved_db = DbUtil::switchToGlobal();
 		$record = query_associative_one($query_string);
@@ -6415,7 +6413,6 @@ function get_patient_by_id($pid)
 function get_patient_by_external_id($pid)
 {
 	global $con;
-	$pid = mysql_real_escape_string($pid, $con);
 	# Fetches a patient record from sanits_lab_request_table by patient_id
 	return Patient::getByExternalId($pid);
 }
@@ -6423,7 +6420,8 @@ function get_patient_by_external_id($pid)
 function search_patients_by_id($q)
 {
 	global $con;
-	$q = mysql_real_escape_string($q, $con);
+	//$q = mysql_real_escape_string($q, $con);
+
 	# Searches for patients with similar PID
 	$query_string = 
 		"SELECT * FROM patient ".
@@ -15272,7 +15270,67 @@ class API
     {
 	    # gets pending lab requests from external_lab_reqeuest_table
 	    global $con;
-	    $patient_id = mysql_real_escape_string($patient_id, $con);
+	    
+	    $external_lab_reqeusts = API::getLabRequestFromView($patient_id);
+	    	
+	    if($external_lab_reqeusts!=null){
+	    	foreach ($external_lab_reqeusts as $request_data){
+	    		$value_string="";
+	    		$value_string.= '(';
+	    		$value_string.=
+	    		#labNo
+	    		'"'.$request_data['RequestID'].'",'.
+	    		#parentLabNo
+	    		'"'."0".'",'.
+	    		#requestingClinician
+	    		'"'.$request_data['DoctorRequesting'].'",'.
+	    		#investigation
+	    		'"'.$request_data['Name'].'",'.
+	    		#requestDate
+	    		#TODO convert date to mysql format
+	    		'"'./*$request_data['DateOfRequest']*/"NULL".'",'.
+	    		#patient_id
+	    		'"'.$request_data['PatientNumber'].'",'.
+	    		#full_name
+	    		'"'.$request_data['FullNames'].'",'.
+	    		#dateOfBirth
+	    		'"'."NULL".'",'.
+	    		#age
+	    		'"'.$request_data['Age'].'",'.
+	    		#gender
+	    		'"'.$request_data['Sex'].'",'.
+	    		#address
+	    		'"'.$request_data['PoBox'].'",'.
+	    		#postalCode
+	    		'"'."NULL".'",'.
+	    		#phoneNumber
+	    		'"'.$request_data['Telephone'].'",'.
+	    		#city
+	    		'"'."NULL".'",'.
+	    		#revisitNumber
+	    		'"'.$request_data['RevisitNumber'].'",'.
+	    		#cost
+	    		'"'.$request_data['Cost'].'",'.
+	    		#patientContact
+	    		'"'.$request_data['PatientsContact'].'",'.
+	    		#receiptNumber
+	    		'"'.$request_data['ReceiptNumber'].'",'.
+	    		#waiverNo
+	    		'"'.$request_data['WaiverNo'].'",'.
+	    		#comments
+	    		'"'.$request_data['Comments'].'",'.
+	    		#provisionalDiagnosis
+	    		'"'.$request_data['ProvisionalDiagnosis'].'",'.
+	    		#system_id
+	    		'"'."medboss".'"';
+	    		$value_string.= ')';
+	    			
+	    		$LabRequest = $value_string;
+	    			
+	    		API::save_external_lab_request($LabRequest);
+	    	}
+	    }
+	    
 	   	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
 	    $tests_ordered = query_associative_all($query_string, $row_count);
