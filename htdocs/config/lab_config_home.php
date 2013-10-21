@@ -326,6 +326,46 @@ if($lab_config == null)
                 </div>
         </div>
     </div>
+    
+    <!-------------------------------------------------BEGIN SPECIMEN REJECTION---------------------------------------------------------->
+    <div class="portlet box green" id="specimen_rejection_div" style='display:none;'>
+							<div class="portlet-title">
+								<h4><i class="icon-reorder"></i>Specimen Phases and Rejection</h4>
+								<div class="tools">
+									<a href="javascript:;" class="collapse"></a>
+									<a href="#portlet-config" data-toggle="modal" class="config"></a>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row-fluid">
+									<div class="span12">
+										<!--BEGIN TABS-->
+										<div class="tabbable tabbable-custom">
+											<ul class="nav nav-tabs">
+												<li class="active"><a href="#tab_phases" data-toggle="tab"><h4>Specimen Rejection Phases</h4></a></li>
+												<li><a href="#tab_reasons" data-toggle="tab"><h4>Specimen Rejection Reasons</h4></a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane active" id="tab_phases">
+													<p>Specimen Rejection Phases</p>
+													<p>
+														Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.
+													</p>
+												</div>
+												<div class="tab-pane" id="tab_reasons">
+													<p>Specimen Rejection Reasons</p>
+													<p>
+														Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation.
+													</p>
+												</div>
+                                                </div>
+                                                </div>
+											</div>
+										</div>
+										<!--END TABS-->
+									</div>
+								</div>
+    <!--------------------------------------------------END SPECIMEN REJECTION----------------------------------------------------------->
 
 <div class="portlet box green right_pane" id="report_config_div" style="display: none">
         <div class="portlet-title" >
@@ -2067,6 +2107,13 @@ function performUpdate()
 function test_setup()
 {   
     right_load(2, "test_div");
+	$('#specimen_rejection_div').hide();
+}
+
+function specimen_rejection_setup()
+{   
+    right_load(2, "specimen_rejection_div");
+	$('#test_div').hide();
 }
 
 function report_setup()
