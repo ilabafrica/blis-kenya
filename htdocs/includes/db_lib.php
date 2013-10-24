@@ -1915,7 +1915,7 @@ class Measure
 		# Updates an existing measure entry in DB
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"UPDATE measure SET name='$this->name', range='$this->range', unit='$this->unit' ".
+			"UPDATE measure SET name='$this->name', measure_range='$this->range', unit='$this->unit' ".
 			"WHERE measure_id=$this->measureId";
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
@@ -2014,7 +2014,7 @@ class Measure
 		# Updates an existing measure entry in DB
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"INSERT INTO measure (name, range, unit_id) ".
+			"INSERT INTO measure (name, measure_range, unit) ".
 			"VALUES ('$this->name', '$this->range', '$this->unit')".
 		query_insert_one($query_string);
 		DbUtil::switchRestore($saved_db);
@@ -2132,6 +2132,7 @@ class Patient
 	$patient->name = $record['full_name'];
 	$patient->dob = $record['dateOfBirth'];
 	$patient->sex = $record['gender'];
+	$patient->age = $record['age'];
 	$patient->from_external_system = "true";
 	$patient->clinician = $record['requestingClinician'];
 		
@@ -2450,8 +2451,12 @@ class Patient
 		$external_patient = Patient::getLabRequest($record);
 		$dob = $external_patient->dob;
 		$clinician = $external_patient->clinician;
+		$age = $external_patient->age;
 		if($age == "")
 			$age = 0;
+		if ($age != 0){
+			$dob = reverse_birthday($age);
+		}
 		$sex = $external_patient->sex;
 		$date_receipt = date("Y-m-d H:i:s");
 		$patient = new Patient();
@@ -6432,6 +6437,10 @@ function get_patient_by_external_id($pid)
 	return Patient::getByExternalId($pid);
 }
 
+function reverse_birthday( $days ){
+	return date("Y-m-d", mktime(0, 0, 0, date("m") < 1 ? 12 : date("m"), date("d") - $days, date("Y")));
+}
+
 function search_patients_by_id($q)
 {
 	global $con;
@@ -6496,7 +6505,7 @@ function search_patients_by_id($q)
 					#full_name
 					'"'.$request_data['FullNames'].'",'.
 					#dateOfBirth
-					'"'."NULL".'",'.
+					'"'.NULL.'",'.
 					#age
 					'"'.$request_data['Age'].'",'.
 					#gender
@@ -8705,7 +8714,7 @@ function add_measure($measure, $range, $unit)
 	$unit = mysql_real_escape_string($unit, $con);
 	$saved_db = DbUtil::switchToLabConfigRevamp();
 	$query_string = 
-		"INSERT INTO measure(name, measure_range, unit_id) ".
+		"INSERT INTO measure(name, measure_range, unit) ".
 		"VALUES ('$measure', '$range', '$unit')";
 	query_insert_one($query_string);
 	# Return primary key of the record just inserted
@@ -15285,66 +15294,6 @@ class API
     {
 	    # gets pending lab requests from external_lab_reqeuest_table
 	    global $con;
-	    
-	    $external_lab_reqeusts = API::getLabRequestFromView($patient_id);
-	    	
-	    if($external_lab_reqeusts!=null){
-	    	foreach ($external_lab_reqeusts as $request_data){
-	    		$value_string="";
-	    		$value_string.= '(';
-	    		$value_string.=
-	    		#labNo
-	    		'"'.$request_data['RequestID'].'",'.
-	    		#parentLabNo
-	    		'"'."0".'",'.
-	    		#requestingClinician
-	    		'"'.$request_data['DoctorRequesting'].'",'.
-	    		#investigation
-	    		'"'.$request_data['Name'].'",'.
-	    		#requestDate
-	    		#TODO convert date to mysql format
-	    		'"'./*$request_data['DateOfRequest']*/"NULL".'",'.
-	    		#patient_id
-	    		'"'.$request_data['PatientNumber'].'",'.
-	    		#full_name
-	    		'"'.$request_data['FullNames'].'",'.
-	    		#dateOfBirth
-	    		'"'."NULL".'",'.
-	    		#age
-	    		'"'.$request_data['Age'].'",'.
-	    		#gender
-	    		'"'.$request_data['Sex'].'",'.
-	    		#address
-	    		'"'.$request_data['PoBox'].'",'.
-	    		#postalCode
-	    		'"'."NULL".'",'.
-	    		#phoneNumber
-	    		'"'.$request_data['Telephone'].'",'.
-	    		#city
-	    		'"'."NULL".'",'.
-	    		#revisitNumber
-	    		'"'.$request_data['RevisitNumber'].'",'.
-	    		#cost
-	    		'"'.$request_data['Cost'].'",'.
-	    		#patientContact
-	    		'"'.$request_data['PatientsContact'].'",'.
-	    		#receiptNumber
-	    		'"'.$request_data['ReceiptNumber'].'",'.
-	    		#waiverNo
-	    		'"'.$request_data['WaiverNo'].'",'.
-	    		#comments
-	    		'"'.$request_data['Comments'].'",'.
-	    		#provisionalDiagnosis
-	    		'"'.$request_data['ProvisionalDiagnosis'].'",'.
-	    		#system_id
-	    		'"'."medboss".'"';
-	    		$value_string.= ')';
-	    			
-	    		$LabRequest = $value_string;
-	    			
-	    		API::save_external_lab_request($LabRequest);
-	    	}
-	    }
 	    
 	   	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
 	    $saved_db = DbUtil::switchToGlobal();
