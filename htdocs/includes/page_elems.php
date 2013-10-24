@@ -3993,7 +3993,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			<table class='regn_form_table'>
 			<tbody>
 
-			<tr valign='top' <?php
+			<!--tr valign='top' <?php
 				if(is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0)
 				{
 					# Hide if daily num not in use
@@ -4008,19 +4008,19 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				<td>
 					<input type="text" name="dnum" id="dnum-disabled" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
 				</td>
-			</tr>
+			</tr-->
 			<tr >				
 				<td>
 					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?><?php $this->getAsterisk(); ?>
 				</td>
 				<td>
-					<select
+					<select class="chosen"
 						name='stype'
 						id='<?php echo $stype_id; ?>'
 						onchange="javascript:get_testbox('<?php echo $testbox_id; ?>', '<?php echo $stype_id; ?>');"
 						class='uniform_width'
 					>
-						option value="">-<?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>-</option>
+						<option value="">-<?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>-</option>
 						<?php $this->getSpecimenTypesSelect($_SESSION['lab_config_id']); ?>
 					</select>
 				</td>

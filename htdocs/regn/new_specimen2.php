@@ -242,17 +242,29 @@ $(document).ready(function(){
         echo " patient_exists = true;";
     }
    if(is_array($external_requests) && $external_requests != null) {
+		#Get Tests
+		$length = count($external_requests);
+		$test_check="";
+		$testNames="";
+		for($i=0; $i<$length; $i++){
+			#prevent repeated tests
+			if($test_check != $external_requests[$i]['investigation'])
+			$testNames.=$external_requests[$i]['investigation'];
+			$test_check = $external_requests[$i]['investigation'];
+			if ($i!=$length-1)$testNames.=',';
+		}
+		
       $formcount = 1;
       $specarraycount = 0;
-     
       while ($SpecimenCount > 0){
           $testBox = specimenform_.$formcount._testbox;
           $specType = specimenform_.$formcount._stype;
           ?>
+        
             $("#<?php echo $testBox; ?>").load(
                 "ajax/test_type_options.php", 
                 {
-                    stype: <?php echo $uniqspecid[$specarraycount] ?>
+                    stype: <?php echo $uniqspecid[$specarraycount] ?>, ext: "<?php echo $testNames; ?>"
                 });
            $("#<?php echo $specType; ?>").val(<?php echo $uniqspecid[$specarraycount] ?>);     
         <?php 
@@ -355,15 +367,10 @@ function add_specimens()
             return;
         }
         var ttype_list = $("#"+form_id+" [name='t_type_list[]']");
+        
         var ttype_notselected = true;
-        for(var i = 0; i < ttype_list.length; i++)
-        {
-            if(ttype_list[i].checked)
-            {
-                ttype_notselected = false;
-                break;
-            }
-        }
+        if (ttype_list.val()!= null) ttype_notselected = false;
+        
         if(ttype_notselected == true)
         {
             alert("<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$pageTerms['MSG_NOTESTS_SELECTED']; ?>");
@@ -464,7 +471,7 @@ function add_specimenbox()
     });
 }
 
-function get_testbox(testbox_id, stype_id)
+function get_testbox(testbox_id, stype_id, external_tests)
 {
     var stype_val = $('#'+stype_id).val();
     if(stype_val == "")
@@ -477,7 +484,7 @@ function get_testbox(testbox_id, stype_id)
     $('#'+testbox_id).load(
         "ajax/test_type_options.php", 
         {
-            stype: stype_val
+            stype: stype_val, ext: external_tests
         }
     );
 }
