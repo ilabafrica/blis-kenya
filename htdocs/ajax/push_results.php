@@ -8,7 +8,7 @@ include("../includes/db_lib.php");
 $test_id = $_REQUEST['test_id'];
 
 #Sanitas Server Parameters
-$api_key = "0QLUIWX3R";
+$api_key = "XJBW4IQC1";
 $sanitas_inbound_url = "http://192.168.1.9:8888/sanitas/bliss/notify?api_key=".$api_key;
 
 #MedBoss MSSQL Server Parameters
@@ -20,7 +20,6 @@ $password = 'kapsabet';
 
 #Log Path for logging push result errors
 $error_log_path ="/var/www/BLIS/htdocs/logs/blis.api.error.log";
-
 
 $lab_numbers = API::getTestLabNoToPush();
 
@@ -51,7 +50,7 @@ foreach ($lab_numbers as $lab_no){
 	
 	if ($system_id == "sanitas")
 	{
-		$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.'}';
+		$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.',"verifiedby": 57}';
 		
 		/*
 		 * Send POST request with HttpRequest
@@ -76,7 +75,7 @@ foreach ($lab_numbers as $lab_no){
 			
 		}else if($response!="Test updated"){
 			
-				error_log("\n".$time_stamp.": HTTP Response Exception: ======>".$ex, 3, $error_log_path);
+				error_log("\n".$time_stamp.": Response Error: ======>".$json_string, 3, $error_log_path);
 				
 		}
 	}

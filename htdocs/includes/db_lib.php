@@ -6526,6 +6526,8 @@ function search_patients_by_id($q)
 					'"'.$request_data['PatientsContact'].'",'.
 					#receiptNumber
 					'"'.$request_data['ReceiptNumber'].'",'.
+					#receiptType
+					'"'.NULL.'",'.
 					#waiverNo
 					'"'.$request_data['WaiverNo'].'",'.
 					#comments
@@ -15279,6 +15281,7 @@ class API
 			`cost`,
 			`patientContact`,
 			`receiptNumber`,
+			`receiptType`,
 			`waiverNo`,
 			`comments`,
 			`provisionalDiagnosis`,
