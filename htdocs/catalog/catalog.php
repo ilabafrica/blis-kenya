@@ -109,6 +109,53 @@ if(is_super_admin($user) || is_country_dir($user))
 		</div>
 	</div>
 	</div>
+    
+        
+    <!-------------------------------------------------BEGIN SPECIMEN REJECTION---------------------------------------------------------->
+	<div id="specimen_rejection_div"  class='content_div'>
+    		<div class="portlet box green">
+							<div class="portlet-title">
+								<h4><i class="icon-reorder"></i>Specimen Phases and Rejection</h4>
+								<div class="tools">
+									<a href="javascript:;" class="collapse"></a>
+									<a href="#portlet-config" data-toggle="modal" class="config"></a>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row-fluid">
+									<div class="span12">
+										<!--BEGIN TABS-->
+										<div class="tabbable tabbable-custom">
+											<ul class="nav nav-tabs">
+												<li class="active"><a href="#tab_phases" data-toggle="tab"><h4>Specimen Rejection Phases</h4></a></li>
+												<li><a href="#tab_reasons" data-toggle="tab"><h4>Specimen Rejection Reasons</h4></a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane active" id="tab_phases">
+		<a href='javascript:add_phase();' class="btn blue-stripe" title='Click to Add a New Specimen Rejection Phase'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		<br><br>
+		<div id='sdel_msg' class='clean-orange' style='display:none;'>
+			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+		</div>
+		<?php $page_elems->getRejectionPhaseTable($_SESSION['lab_config_id']); ?>
+												</div>
+												<div class="tab-pane" id="tab_reasons">
+													<a href='javascript:add_reason();' class="btn blue-stripe" title='Click to Add a New Specimen Rejection Reason'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		<br><br>
+		<div id='sdel_msg' class='clean-orange' style='display:none;'>
+			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+		</div>
+		<?php $page_elems->getRejectionPhaseTable($_SESSION['lab_config_id']); ?>
+												</div>
+                                                </div>
+                                                </div>
+											</div>
+										</div>
+										<!--END TABS-->
+									</div>
+								</div>
+                              </div>
+    <!--------------------------------------------------END SPECIMEN REJECTION----------------------------------------------------------->
 	
 	<div id='TestType_tc' class='right_pane' style='display:none;margin-left:10px;'>
 		<ul>
@@ -167,6 +214,7 @@ if(is_super_admin($user) || is_country_dir($user))
 require_once("includes/script_elems.php");
 $script_elems = new ScriptElems();
 $script_elems->enableDatePicker();
+$script_elems->enableValidation();
 ?>
 <script type='text/javascript'>
 $(document).ready(function(){
@@ -174,6 +222,7 @@ $(document).ready(function(){
 	$('#test_types_div').hide();
 	$('#specimen_types_div').hide();
 	$('#test_categories_div').hide();
+	$('#specimen_rejection_div').hide();
 	$('#<?php echo $dialog_id; ?>').show();
 	<?php
 	if(isset($_REQUEST['show_t']))
@@ -192,6 +241,12 @@ $(document).ready(function(){
 	{
 		?>
 		load_right_pane('test_categories_div');
+		<?php
+	}
+	else if(isset($_REQUEST['show_sr']))
+	{
+		?>
+		load_right_pane('specimen_rejection_div');
 		<?php
 	}
 	else if(isset($_REQUEST['tdel']))
@@ -268,6 +323,43 @@ function add_section(){
 	);
 	
 }
+
+function add_phase(){
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	
+	var url = 'catalog/rejection_phase_new.php';
+	$('#form').html("");
+	var target_div = "form";
+	$("#"+ target_div).load(url, 
+		{lab_config: "" }, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+	
+}
+
+function add_reason(){
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	
+	var url = 'catalog/rejection_reason_new.php';
+	$('#form').html("");
+	var target_div = "form";
+	$("#"+ target_div).load(url, 
+		{lab_config: "" }, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+	
+}
+
 $(document).ready(function(){
 	load_right_pane('test_categories_div');
 });

@@ -1028,6 +1028,40 @@ class PageElems
 		<?php
 	}
 	
+	public function getRejectionPhaseInfo($rejection_phase_name, $show_db_name=false)
+	{
+		# Returns HTML for displaying rejection phase information
+		# Fetch rejection phase record
+		$rejection_phase = get_rejection_phase_by_name($rejection_phase_name);
+		?>
+		<table class='hor-minimalist-b'>
+			<tbody>
+				<tr valign='top'>
+					<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?></td>
+					<td>
+						<?php
+						if($show_db_name === true)
+						{
+							# Show original name stored in DB
+							echo $rejection_phase->name;
+						}
+						else
+						{
+							# Show name store din locale string
+							echo $rejection_phase->getName();
+						}
+						?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
+					<td><?php echo $rejection_phase->getDescription(); ?></td>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
+	
 	public function getTestCategoryInfo($test_category_name, $show_db_name=false)
 	{
 		# Returns HTML for displaying specimen type information
@@ -1147,7 +1181,7 @@ class PageElems
 		}
 		?>
 
-		<table id="sample_1" class='table table-striped table-condensed table-bordered table-hover' style="width: 900px;">
+		<table id="sample_1" class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
 			<thead>
 					<th>#</th>
 					<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
@@ -1208,7 +1242,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 400px;">
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
 		<thead>
 		<tr>
 		<th>
@@ -1262,7 +1296,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 400px;">
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
 		<thead>
 		<tr>
 		<th>Section Name</th>
@@ -1303,6 +1337,65 @@ class PageElems
 		</table>
 		<?php
 	}
+	
+	#return all available specimen rejection phases
+	public function getRejectionPhaseTable($lab_config_id)
+	{
+		# Returns HTML table listing all test categories in catalog
+		$phases_list = get_rejection_phases_catalog($lab_config_id);
+		if(count($phases_list) == 0)
+		{
+			echo "<div class='sidetip_nopos'>"."No Specimen Rejection Phases Found."."</div>";
+			return;
+		}
+		?>
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
+		<thead>
+		<tr>
+		<th>Phase Name</th>
+        <th>Phase Description</th>
+		<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		$count = 1;
+		foreach($phases_list as $key => $value)
+		{
+			$phase_name = SpecimenRejectionPhases::getDescriptionById($key);
+			?>
+			<tr>
+			
+			<td>
+				<?php echo $value; ?>
+			</td>
+            <td>
+				<?php echo $phase_name; ?>
+			</td>
+			<td>
+				<a href='rejection_phase_edit.php?rp=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Rejection Phase Info'><i class='icon-pencil'></i> <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+			</td>
+			<?php
+			$user = get_user_by_id($_SESSION['user_id']);
+			if(is_country_dir($user) || is_super_admin($user)|| is_admin($user))
+			{
+			?>
+			<td>
+				<a href='rejection_phase_delete.php?rp=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+			</td>
+			<?php
+			}
+			?>
+			</tr>
+			<?php
+			$count++;
+		}
+		?>
+		</tbody>
+		</table>
+		<?php
+	}
+	#end getRejectionPhasesTable
 	/////////////////////begin function to get quality control information//////////////////////////////
 	public function getQualityControlCategoryInfo($qcc_name, $show_db_name=false)
 	{
@@ -3684,6 +3777,34 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				foreach($category_list as $category)
 				{
 					echo "<td>".$category."</td>";
+					$count++;
+					if($count % 3 == 0)
+					{
+					?>
+						</tr>
+						<tr valign='top'>
+					<?php
+					}
+				}
+				?>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
+	
+	public function getAllRejectionPhaseList()
+	{
+		$phases_list = get_rejection_phases_catalog();
+		$count = 0;
+		?>
+		<table cellspacing='4px'>
+			<tbody>
+				<tr valign='top'>
+				<?php
+				foreach($phases_list as $phase)
+				{
+					echo "<td>".$phase."</td>";
 					$count++;
 					if($count % 3 == 0)
 					{
@@ -7217,10 +7338,10 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			<?php
 			if($left_margin_line)
 			{
-				echo "border-left: 1px solid black;";
-				echo "border-right: 1px solid black;";
-				echo "border-top: 1px solid black;";
-				echo "border-bottom: 1px solid black;";
+				echo "border-left: 0px solid black;";
+				echo "border-right: 0px solid black;";
+				echo "border-top: 0px solid black;";
+				echo "border-bottom: 0px solid black;";
 			}
 			?>			
 		}
