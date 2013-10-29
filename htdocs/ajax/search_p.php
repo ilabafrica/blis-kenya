@@ -23,29 +23,32 @@ $a = $_REQUEST['a'];
 $saved_db = "";
 $lab_config = null;
 $uiinfo = "op=".$a."&qr=".$q;
-putUILog('search_p', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
-
 ?>
 
 <?php
-if(isset($_REQUEST['l']))
+$patient_list = array();
+if(isset($_REQUEST['search_all_external'])){
+    
+    # Fetch all patients with pending request from external system   
+    $patient_list = search_all_pending_external_requests();
+}
+else if(isset($_REQUEST['l']))
 {
 	# Save context
 	$lab_config = LabConfig::getById($_REQUEST['l']);
 	$saved_db = DbUtil::switchToLabConfig($_REQUEST['l']);
 }
-else
+else 
 {
 	$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 }
-$patient_list = array();
 # Fetch list from DB
-if($a == 0)
+if(isset($_REQUEST['a']) && $_REQUEST['a'] == 0)
 {
 	# Fetch by patient ID
 	$patient_list = search_patients_by_id($q);
 }
-else if($a == 1)
+else if(isset($_REQUEST['a']) && $_REQUEST['a'] == 1)
 {
 	# Fetch by patient name
 	$patient_list = search_patients_by_name($q);
@@ -57,12 +60,12 @@ else if($a == 1)
 		autoImportPatientEntry($patient, $q);
 	}*/
 }
-else if($a == 2)
+else if(isset($_REQUEST['a']) && $_REQUEST['a'] == 2)
 {
 	# Fetch by additional ID
 	$patient_list = search_patients_by_addlid($q);
 }
-else if($a == 3)
+else if(isset($_REQUEST['a']) && $_REQUEST['a'] == 3)
 {
 	# Fetch by daily number
 	$patient_list = search_patients_by_dailynum("-".$q);
@@ -117,7 +120,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 	<thead>
 		<tr valign='top'>
 			<?php
-			if($lab_config->pid != 0)
+			if(true /*$lab_config->pid != 0*/)
 			{
 				?>
 				<th><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
@@ -167,7 +170,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 	?>
 		<tr valign='top'>
 			<?php
-			if($lab_config->pid != 0)
+			if(true /*$lab_config->pid != 0*/)
 			{
 				?>
 				<td>
