@@ -2616,7 +2616,7 @@ class PageElems
 			$pid=$specimen->patientId;
 			
 			?>
-			<td><input id="liked" type="checkbox" name="liked" value=<?php echo $specimen->specimenId; ?>> </td>
+			<td><input id="liked" type="checkbox" name="liked" value=<?php echo $specimen->specimenId; ?>/> </td>
 		</tr>
 		</form>
 		<?php
@@ -3511,9 +3511,9 @@ public function getTestsDoneStatsTable($stat_list)
 			?>
 			<tr>
 				<td><form id='updateDoctorNameForm<?php echo $count; ?>' name='updateDoctorName<?php echo $count; ?>' action='ajax/UpdateDoctorNames.php?id=<?php echo $count; ?>' method='POST'>
-					<input type='hidden' id='dateFrom' name='dateFrom' value=<?php echo $dateFrom; ?>
-					<input type='hidden' id='dateTo' name='dateTo' value=<?php echo $dateTo; ?>
-					<input type='hidden' id='location' name='location' value=<?php echo $location; ?>
+					<input type='hidden' id='dateFrom' name='dateFrom' value=<?php echo $dateFrom; ?>/>
+					<input type='hidden' id='dateTo' name='dateTo' value=<?php echo $dateTo; ?>/>
+					<input type='hidden' id='location' name='location' value=<?php echo $location; ?>/>
 					<div id='originalDoctorNameDiv<?php echo $count; ?>' name='originalDoctorNameDiv<?php echo $count; ?>' >
 						<input type='text' id='originalDoctorName<?php echo $count; ?>' name='originalDoctorName<?php echo $count; ?>' value='<?php echo $doctor_name; ?>' readonly></input>
 					</div>
@@ -4114,7 +4114,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			<table class='regn_form_table'>
 			<tbody>
 
-			<tr valign='top' <?php
+			<!--tr valign='top' <?php
 				if(is_numeric($_SESSION['dnum']) && $_SESSION['dnum'] == 0)
 				{
 					# Hide if daily num not in use
@@ -4129,19 +4129,19 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				<td>
 					<input type="text" name="dnum" id="dnum-disabled" value="" size="20" class='uniform_width' style='background-color:#FFC' disabled> </input>
 				</td>
-			</tr>
+			</tr-->
 			<tr >				
 				<td>
 					<?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?><?php $this->getAsterisk(); ?>
 				</td>
 				<td>
-					<select
+					<select class="chosen"
 						name='stype'
 						id='<?php echo $stype_id; ?>'
 						onchange="javascript:get_testbox('<?php echo $testbox_id; ?>', '<?php echo $stype_id; ?>');"
 						class='uniform_width'
 					>
-						option value="">-<?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>-</option>
+						<option value="">-<?php echo LangUtil::$generalTerms['CMD_SELECT']; ?>-</option>
 						<?php $this->getSpecimenTypesSelect($_SESSION['lab_config_id']); ?>
 					</select>
 				</td>
@@ -4890,7 +4890,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		<?php
 	}
 	
-	public function getSpecimenTypeCheckboxes($lab_config_id=null, $allCompatibleCheckingOn=true)
+	public function getSpecimenTypeCheckboxes($lab_config_id=null, $allCompatibleCheckingOn=true, $test_type_id=null)
 	{
 		# Returns a set of checkboxes with existing specimen types checked if allCompatibleCheckingOn is set to true,
 		# else only returns checkboxes with available specimen names
@@ -4919,14 +4919,24 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			<tr>
 			<?php
 			$count = 0;
+			$compatible_specimen_types = get_compatible_specimens($test_type_id);
 			foreach($specimen_list as $key=>$value)
 			{
 				$specimen_type_id = $key;
 				$specimen_name = $value;
 				$count++;
+				$checked = false;
+				foreach($compatible_specimen_types as $compatible_specimen_type_id){
+		
+				 if ($compatible_specimen_type_id== $specimen_type_id)
+				 	$checked =true;
+				}
 				?>
+				
 				<td><input type='checkbox' class='stype_entry' name='s_type_<?php echo $key; ?>' id='s_type_<?php echo $key; ?>' value='<?php echo $key; ?>'
 				<?php
+				if ($checked) echo "checked";
+				
 				if($allCompatibleCheckingOn==true) {
 					if(in_array($specimen_type_id, $current_specimen_list))
 					{

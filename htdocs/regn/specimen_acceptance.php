@@ -35,7 +35,7 @@ $pid = $_REQUEST['pid'];
         				<a href="javascript:;" class="remove"></a>
         			</div>
         		</div>
-        		<div class="portlet-body form" style="height: 450px">
+        		<div class="portlet-body form">
                      <a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a>
                     <br><br>
                     <?php

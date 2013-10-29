@@ -451,7 +451,7 @@ $(document).ready(function(){
 
 	//readTextFile("http://192.168.1.88/celtac/celtac-results.txt");
 	
-	
+	push_results_to_external_system();
 	
 	$('#cat_code').change( function() { get_test_types_bycat() });
 	$('#worksheet_test_type').change( function() { reset_worksheet_custom_type() });

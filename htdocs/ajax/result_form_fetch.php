@@ -154,9 +154,9 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
                 else if($range_type == Measure::$RANGE_FREETEXT)
 		{
                         # Text box
-                    echo "<div>";
-                        echo "<textarea name='result[]' id='$input_id' class='uniform_width results_entry'></textarea>";
-                    echo "</div>";
+                    //echo "<div>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry'></input>";
+                  // echo "</div>";
                                 	
 		}
 		if(stripos($measure->unit,":")!=false)
@@ -166,7 +166,6 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 		}else
 		if(stripos($measure->unit,",")===false)
 		echo $measure->unit;
-		
 		if($num_tests > 1 && $count == 0)
 		{
 			# Checkbox to skip results for this test type

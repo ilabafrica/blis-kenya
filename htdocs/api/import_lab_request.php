@@ -12,6 +12,8 @@
  * 		table => external_lab_request
  */
 include("../includes/db_lib.php");
+$time_stamp = date("Y-m-d H:i:s");
+$error_log_path ="/var/www/BLIS/htdocs/logs/blis.api.error.log";
 
 $value_string = '';
 $length = count($_POST);
@@ -23,6 +25,7 @@ if (!$length >1 || !$_POST==null){
 		 	$value_string = '';
 		 	
 		 	$json_request = (string)$value;
+		 	error_log("\n".$time_stamp.": Lab Request Recieved: ======", 3, $error_log_path);
 		 	$request_data = json_decode($json_request, true);
 		 	
 		 	$value_string.= '(';
@@ -58,11 +61,13 @@ if (!$length >1 || !$_POST==null){
 		 	#revisitNumber
 		 	'"'."NULL".'",'.
 		 	#cost
-		 	'"'."NULL".'",'.
+		 	'"'.$request_data['cost'].'",'.
 		 	#patientContact
 		 	'"'."NULL".'",'.
 		 	#receiptNumber
-		 	'"'."NULL".'",'.
+		 	'"'.$request_data['receiptNumber'].'",'.
+		 	#receiptType
+		 	'"'.$request_data['receiptType'].'",'.
 		 	#waiverNo
 		 	'"'."NULL".'",'.
 		 	#comments
@@ -71,6 +76,7 @@ if (!$length >1 || !$_POST==null){
 		 	'"'."NULL".'",'.
 		 	#system_id
 		 	'"'."sanitas".'"';
+		 	
 		 	$value_string.= ')';
 		 	
 		 	$LabRequest = $value_string;

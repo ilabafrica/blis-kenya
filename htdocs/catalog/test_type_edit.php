@@ -143,7 +143,10 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 ?>
     <div class="portlet-title" style="width: 380px">
         <h4></i>Edit test</h4>
-        </div>
+    </div>
+    <form name='edit_ttype_form' id='edit_ttype_form' action='ajax/test_type_update.php' method='post' class='form-horizontal'>
+	<input type='hidden' name='ispanel' value='<?php if($test_type->isPanel === true) echo "1"; else echo "0"; ?>'></input>
+	<input type='hidden' name='tid' id='tid' value='<?php echo $_REQUEST['tid']; ?>'></input>
 	<table cellspacing='4px' class="table table-bordered table-hover">
 		<tbody>
 			<tr valign='top'>
@@ -625,7 +628,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 			<tr valign='top'>
 				<td><?php echo LangUtil::$generalTerms['COMPATIBLE_SPECIMENS']; ?><?php $page_elems->getAsterisk(); ?>  [<a href='#specimen_help' rel='facebox'>?</a>] </td>
 				<td>
-					<?php $page_elems->getSpecimenTypeCheckboxes($lab_config_id, false); ?>
+					<?php $page_elems->getSpecimenTypeCheckboxes($lab_config_id, false,$test_type->testTypeId); ?>
 					<br>
 				</td>
 			</tr>
@@ -647,7 +650,8 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 
 			<tr valign='top'>
 				<td>Prevalence Threshold </td>
-				<td><input id='prevalenceThreshold' class='span6 m-wrap' name='prevalenceThreshold' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" value=<?php echo $test_type->prevalenceThreshold; ?> />
+				<td><input id='prevalenceThreshold' class='span6 m-wrap' name='prevalenceThreshold' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
+				value=<?php if($test_type->prevalenceThreshold==null) {echo 0;} else echo $test_type->prevalenceThreshold; ?> />
 					<span id='prevalenceThresholdError' class='error_string' style='display:none;'>
 						<?php echo "Threshold Value cannot be more than 100"; ?>
 					</span>
@@ -656,7 +660,8 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 
 			<tr valign='top'>
 				<td>Target TAT</td>
-				<td><input id='targetTat' name='targetTat' class='span6 m-wrap' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" value=<?php echo $test_type->targetTat; ?> />
+				<td><input id='targetTat' name='targetTat' class='span6 m-wrap' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
+				value=<?php if($test_type->targetTat==null) {echo 0;} else echo $test_type->targetTat; ?> />
 				</td>
 			</tr>
 
@@ -719,7 +724,8 @@ For e.g., if test results can be either one from 'P','N' or 'D', please enter 'P
 More than one <u>Compatible Specimen </u> can be selected/deselected at a time. But atleast one speciemen has to be selected. In case a new added specimen is missing in the list then go to lab configuration to set it.
 </small>
 </div>
-<div id='unit_help' style='display:none'>
+<div id='
+_help' style='display:none'>
 <small>
 <u>Unit</u>
 Inorder to represent ranges like 2mins30secs please enter the range as 2.30 and in the unit add as min,secs.<br>
@@ -757,17 +763,7 @@ for(var k = 0; k < 100; k++)
 
 $(document).ready(function(){
     $('#new_category').hide();
-    $('#cat_code').attr("value", "<?php echo $test_type->testCategoryId; ?>");
-    <?php
-    $specimen_list = get_compatible_specimens($test_type->testTypeId);
-    foreach($specimen_list as $specimen_type_id)
-    {
-        # Mark existing compatible specimens as checked
-        ?>
-        $('#s_type_<?php echo $specimen_type_id; ?>').attr("checked", "checked");
-        <?php
-    }
-    ?>
+    $('#cat_code').val("<?php echo $test_type->testCategoryId; ?>");
     $('.range_select').change( function() {
         toggle_range_type(this);
     });
@@ -819,14 +815,14 @@ function add_autocomplete_field(mrow_num)
 
 function update_ttype()
 {
-    if($('#name').attr("value").trim() == "")
+    if($('#name').val().trim() == "")
     {
         alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_TESTNAME']; ?>");
         return;
     }
-    if($('#cat_code').attr("value") == -1)
+    if($('#cat_code').val() == -1)
     {
-        if($('#new_category_textbox').attr("value").trim() == "")
+        if($('#new_category_textbox').val().trim() == "")
         {
             alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_CATNAME']; ?>");
             return;
@@ -892,8 +888,8 @@ function update_ttype()
                         {
                             continue;
                         }
-                        var lower_value = $("#agerange_l_"+(j+1)+"_"+k).attr("value");
-                        var upper_value = $("#agerange_u_"+(j+1)+"_"+k).attr("value");
+                        var lower_value = $("#agerange_l_"+(j+1)+"_"+k).val();
+                        var upper_value = $("#agerange_u_"+(j+1)+"_"+k).val();
                         if(lower_value == undefined || upper_value == undefined)
                         {
                             continue;
@@ -1026,8 +1022,8 @@ function update_ttype()
                         {
                             continue;
                         }
-                        var lower_value = $("#agerange_l_"+(j+1)+"_"+k).attr("value");
-                        var upper_value = $("#agerange_u_"+(j+1)+"_"+k).attr("value");
+                        var lower_value = $("#agerange_l_"+(j+1)+"_"+k).val();
+                        var upper_value = $("#agerange_u_"+(j+1)+"_"+k).val();
                         if(lower_value == undefined || upper_value == undefined)
                         {
                             continue;
@@ -1289,7 +1285,7 @@ function validateRow()
         var total="";
         if(aLeft[0]!="")
       total='%%%'+aLeft+'###'+aRight;
-      var data= $('#clinical_data').attr("value");
+      var data= $('#clinical_data').val();
       if(data!=""&& total!="")
       {
       clinical_data="!#!"+data+total;
@@ -1303,7 +1299,7 @@ function validateRow()
       else 
       clinical_data="";
     
-    $('#clinical_data').attr("value",clinical_data);
+    $('#clinical_data').val(clinical_data);
     update_ttype();
 }
   
