@@ -6470,6 +6470,7 @@ function search_all_pending_external_requests(){
             }
            
             else{
+            	if ($_SESSION["lab_config_id"]=='302'){
             /*
              * Search from view and import to local table => external_lab_request
              */
@@ -6543,6 +6544,7 @@ function search_all_pending_external_requests(){
                 error_log($count, 3, "log.txt");
         }   else return null;
     }
+   }//end for Kapsabet
     return $patient_list;
 
 }
@@ -6585,6 +6587,7 @@ function search_patients_by_id($q)
 				$patient_list[] = Patient::getLabRequest($record);
 			}
 		}else{
+			if ($_SESSION['lab_config_id']=='302'){
 			/*
 			 * Search from view and import to local table => external_lab_request
 			 */
@@ -6657,6 +6660,7 @@ function search_patients_by_id($q)
 				}	
 			}else return null;
 		}
+	}
 	}
 	return $patient_list;
 }
