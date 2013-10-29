@@ -30,6 +30,7 @@ class ScriptElems
     public $enabledBootstrap = false;
     public $enabledBootstrapFormBuilder = false;
     public $enabledPulsate = false;
+	public $enabledValidation = false;
 	
 	public function enableJQuery()
 	{
@@ -208,6 +209,31 @@ class ScriptElems
 	</script>
 		<?php
 			$this->enabledPulsate = true;
+		}
+	}
+	
+	public function enableValidation()
+	{
+		# Enable the jquery
+
+		if($this->enabledValidation === false)
+		{
+		?>
+			<!-- Load javascripts at bottom, this will reduce page load time -->
+		<link rel="stylesheet" href="css/validationEngine.jquery.css" type="text/css"/>
+        <link rel="stylesheet" href="css/template.css" type="text/css"/>
+        <script src="js/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8">
+        </script>
+        <script src="js/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+        </script>
+		<script>
+		jQuery(document).ready(function(){
+			// binds form submission and fields to the validation engine
+			jQuery("#formID").validationEngine({autoHidePrompt:true});
+		});
+	</script>
+		<?php
+			$this->enabledValidation = true;
 		}
 	}
 	

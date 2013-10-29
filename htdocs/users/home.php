@@ -25,7 +25,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 				
                 <div class="portlet box blue">
                     <div class="portlet-title">
-                        <h4><i class="icon-reorder"></i>Kapsabet District Hospital Laboratory</h4>
+                        <h4><i class="icon-reorder"></i>Bungoma District Hospital Laboratory</h4>
                         <div class="tools">
                         <a href="javascript:;" class="collapse"></a>
                         <a href="javascript:;" class="reload"></a>
@@ -54,7 +54,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 												<img class="avatar" alt="" src="../img/avatar.png" />
 												<div class="message">
 													<span class="arrow"></span>
-													<a href="#" class="name"><h4>David Kibet Koech</h4></a>
+													<a href="#" class="name"><h4>Dr. Ekesa Mulianga</h4></a>
 													<span class="body"><h5>
 													Director's message to be here....</h5>
 													</span>
@@ -98,7 +98,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 												</div>
 												<div class="tab-pane" id="tab_1_2">
 													<p>
-												    <img src="../logos/kdh_organogram_transparent.png" height="600px;" alt="Kapsabet District Hospital Organogram" /> </p>
+												    <img src="../logos/bdh_organogram_transparent.png" height="600px;" alt="Kapsabet District Hospital Organogram" /> </p>
 												</div>
 												<div class="tab-pane" id="tab_1_3">
 													

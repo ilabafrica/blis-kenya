@@ -2595,6 +2595,9 @@ class Patient
 			"WHERE patient_id=$this->patientId";
 		query_update($query_string);
 	}
+	function reverse_birthday( $days ){
+		return date("Y-m-d", mktime(0, 0, 0, date("m") < 1 ? 12 : date("m"), date("d") - $days, date("Y")));
+	}
 }
 
 class Specimen
@@ -8753,6 +8756,22 @@ function add_test_category($cat_name, $cat_descr="")
 	return get_max_test_cat_id();
 }
 
+function add_rejection_phase($phase_name, $phase_descr)
+{
+	global $con;
+	$phase_name = mysql_real_escape_string($phase_name, $con);
+	$phase_descr = mysql_real_escape_string($phase_descr, $con);
+	# Adds a new test category to catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string = 
+		"INSERT INTO rejection_phases(name, description) ".
+		"VALUES ('$phase_name', '$phase_descr')";
+	query_insert_one($query_string);
+	# Return primary key of the record just inserted
+	DbUtil::switchRestore($saved_db);
+	return get_max_test_cat_id();
+}
+
 function add_quality_control_category($qcc_description)
 {
 	global $con;
@@ -8785,6 +8804,27 @@ function update_test_category($updated_entry)
 		"SET name='$updated_entry->name', ".
 		"description='$updated_entry->description', ".
 		"WHERE test_category_id=$updated_entry->testCategoryId";
+	query_blind($query_string);
+	DbUtil::switchRestore($saved_db);
+}
+///////////////////////////////////////////////////////////////////////////
+////////////function to update rejection phase//////////////////
+function update_rejection_phase($updated_entry)
+{
+	# Updates specimen type info in DB catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$existing_entry = get_rejection_phase_by_id($updated_entry->phaseId);
+	if($existing_entry == null)
+	{
+		# No record found
+		DbUtil::switchRestore($saved_db);
+		return;
+	}
+	$query_string =
+		"UPDATE rejection_phases ".
+		"SET name='$updated_entry->name', ".
+		"description='$updated_entry->description', ".
+		"WHERE rejection_phase_id=$updated_entry->phaseId";
 	query_blind($query_string);
 	DbUtil::switchRestore($saved_db);
 }
@@ -8931,6 +8971,67 @@ function get_test_categories_catalog($lab_config_id=null, $reff=null)
 	}
 	DbUtil::switchRestore($saved_db);
 	return $retval;
+}
+
+/******/
+
+/******/
+function get_rejection_phases_catalog($lab_config_id=null, $reff=null)
+{
+	global $CATALOG_TRANSLATION;
+        //NC3065
+        //global $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR;
+        if($reff == 1)
+        {
+            $user = get_user_by_id($_SESSION['user_id']);
+            $lab_config_id = $user->labConfigId;
+        }
+        //-NC3065
+
+	if($lab_config_id == null)
+		return;
+	else
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+	$query_stypes =
+		"SELECT rejection_phase_id, name FROM rejection_phases ORDER BY name";
+	$resultset = query_associative_all($query_stypes, $row_count);
+	$retval = array();
+	if($resultset) {
+		foreach($resultset as $record)
+		{
+			if($CATALOG_TRANSLATION === true)
+				$retval[$record['rejection_phase_id']] = LangUtil::getRejectionPhaseName($record['rejection_phase_id']);
+			else
+				$retval[$record['rejection_phase_id']] = $record['name'];
+		}
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}
+
+/******/
+
+/******/
+function get_rejection_phases($lab_config_id=null, $reff=null)
+{
+	global $CATALOG_TRANSLATION;
+        //NC3065
+        //global $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR;
+        if($reff == 1)
+        {
+            $user = get_user_by_id($_SESSION['user_id']);
+            $lab_config_id = $user->labConfigId;
+        }
+        //-NC3065
+
+	if($lab_config_id == null)
+		return;
+	else
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+	$query_stypes =
+		"SELECT rejection_phase_id, name FROM rejection_phases ORDER BY name";
+	$resultset = query_associative_all($query_stypes, $row_count);
+	return $resultset;
 }
 
 /******/
@@ -9278,6 +9379,22 @@ function get_test_category_by_name($test_category_name)
 	return TestCategory::getObject($record);
 }
 
+//get rejection phase by name
+function get_rejection_phase_by_name($rejection_phase_name)
+{
+	global $con;
+	$rejection_phase_name = mysql_real_escape_string($rejection_phase_name, $con);
+	# Returns specimen type record in DB
+	$user = get_user_by_id($_SESSION['user_id']);
+	$lab_config_id = $user->labConfigId;
+	$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
+	$query_string = 
+		"SELECT * FROM rejection_phases WHERE name='$rejection_phase_name' LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return SpecimenRejectionPhases::getObject($record);
+}
+
 //get quality control category by name
 function get_quality_control_category_by_name($qcc_name)
 {
@@ -9418,6 +9535,19 @@ function get_test_category_by_id($test_category_id)
 	$record = query_associative_one($query_string);
 	DbUtil::switchRestore($saved_db);
 	return TestCategory::getObject($record);
+}
+
+function get_rejection_phase_by_id($rejection_phase_id)
+{
+	global $con;
+	$rejection_phase_id = mysql_real_escape_string($rejection_phase_id, $con);
+	# Returns rejection phase record in DB
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string =
+		"SELECT * FROM rejection_phases WHERE rejection_phase_id=$rejection_phase_id LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return SpecimenRejectionPhases::getObject($record);
 }
 
 function get_test_category_from_specimen_test($test_category_id)
@@ -16019,4 +16149,256 @@ function setPagination($query_string,$limit, $page, $url,$num_records){
 	
 	return $pagination_array;
 }
+############################################# Begin Class SpecimenRejectionReasons############################################
+class SpecimenRejectionReasons
+{
+	public $testCategoryId;
+	public $name;
+	public $description;
+	public $category_name;
+	
+	public static function getObject($record)
+	{
+		if($record == null)
+			return null;
+			
+		$test_category = new TestCategory();
+		
+		if(isset($record['test_category_id']))
+			$test_category->testCategoryId = $record['test_category_id'];
+		else
+			$test_category->testCategoryId = null;
+		
+		if(isset($record['name']))
+			$test_category->name = $record['name'];
+		else
+			$test_category->name = null;
+			
+		if(isset($record['description']))
+			$test_category->description = $record['description'];
+		else
+			$test_category->description = null;
+		
+		if(isset($record['category_name']))
+			$test_category->category_name = $record['category_name'];
+		else
+			$test_category->category_name = null;
+			
+		return $test_category;
+	}
+	
+	public function getName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getTestCategoryName($this->testCategoryId);
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public function getCategoryName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return $this->category_name;
+		}
+		else
+		{
+			return $this->category_name;
+		}
+	}
+	
+	public function getLabSectionDescription()
+	{
+		if(trim($this->description) == "" || $this->description == null)
+			return "-";
+		else 
+			return trim($this->description);
+	}
+	
+	public static function getById($test_category_id)
+	{
+		# Returns a lab section entry fetch by ID
+		global $con;
+		$test_category_id = mysql_real_escape_string($test_category_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT * FROM test_category ".
+			"WHERE test_category_id=$test_category_id";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return SpecimenType::getObject($record);
+	}
+	
+	public static function deleteById($test_category_id)
+	{
+		# Deletes test category from database
+		# 1. Delete entries in lab_config_test_category
+		global $con;
+		$test_category_id = mysql_real_escape_string($test_category_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"DELETE FROM lab_config_test_category WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		# 2. Delete entries from specimen_test
+		$query_string =
+			"DELETE FROM specimen_test WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		# 3. Set disabled flag in test_category entry
+		$query_string =
+			"UPDATE test_category SET disabled=1 WHERE test_category_id=$test_category_id";
+		query_blind($query_string);
+		DbUtil::switchRestore($saved_db);
+	}
+	
+	public static function geAllTestCategories($lab_config_id)
+	{
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+		$query_string =
+		"SELECT test_category_id, name FROM test_category";
+	
+		$retval = array();
+		$section_details =  array();
+		$resultset = query_associative_all($query_string, $row_count);
+		foreach($resultset as $record)
+		{
+			$section_details['test_category_id'] = $record['test_category_id'];
+			$section_details['name'] = $record['name'];
+			array_push($retval, $section_details);
+		}
+		DbUtil::switchRestore($saved_db);
+		return $retval;
+	}
+	
+}
+#####################################End Class SpecimenRejectionReasons################################################
+#############################################Class SpecimenRejectionPhases############################################
+class SpecimenRejectionPhases
+{
+	public $phaseID;
+	public $name;
+	public $description;
+	public $phase_name;
+	
+	public static function getObject($record)
+	{
+		if($record == null)
+			return null;
+			
+		$rejection_phase = new SpecimenRejectionPhases();
+		
+		if(isset($record['rejection_phase_id']))
+			$rejection_phase->phaseId = $record['rejection_phase_id'];
+		else
+			$rejection_phase->specimenTypeId = null;
+		
+		if(isset($record['name']))
+			$rejection_phase->name = $record['name'];
+		else
+			$rejection_phase->name = null;
+			
+		if(isset($record['description']))
+			$rejection_phase->description = $record['description'];
+		else
+			$rejection_phase->description = null;
+		
+		if(isset($record['specimen_name']))
+			$rejection_phase->phase_name = $record['name'];
+		else
+			$rejection_phase->phase_name = null;
+			
+		return $rejection_phase;
+	}
+	
+	public function getName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getRejectionPhaseName($this->name);
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public function getRejectionPhaseName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getRejectionPhaseName($this->phase_name);
+		}
+		else
+		{
+			return $this->phase_name;
+		}
+	}
+	
+	public function getDescription()
+	{
+		if(trim($this->description) == "" || $this->description == null)
+			return "-";
+		else 
+			return trim($this->description);
+	}
+	
+	public static function getById($rejection_phase_id)
+	{
+		# Returns a rejection phase entry fetch by ID
+		global $con;
+		$rejection_phase_id = mysql_real_escape_string($rejection_phase_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT * FROM rejection_phases ".
+			"WHERE rejection_phase_id=$rejection_phase_id";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return SpecimenRejectionPhases::getObject($record);
+	}
+	
+	public static function getNameById($id)
+	{
+		$query_string = "SELECT name FROM `rejection_phases` WHERE `rejection_phase_id` = $id";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_one($query_string);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['name'];
+	}
+	public static function getDescriptionById($id)
+	{
+		$query_string = "SELECT description FROM `rejection_phases` WHERE `rejection_phase_id` = $id";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_one($query_string);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['description'];
+	}
+	public static function getRejectionPhases()
+	{
+		$query_string = "SELECT rejection_phase_id, name FROM rejection_phases ORDER BY name";
+		
+		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+
+		$retVal = query_associative_all($query_string, $row_count);
+
+		DbUtil::switchRestore($saved_db);
+		
+		return $retVal['name'];
+	}
+}
+#####################################End Class SpecimenRejectionPhases###############################################
 ?>

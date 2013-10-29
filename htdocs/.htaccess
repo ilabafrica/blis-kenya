@@ -119,18 +119,32 @@ RewriteRule ^test_type_edit_dir\.php$ catalog/test_type_edit_dir.php
 RewriteRule ^lab_section_edit_dir\.php$ catalog/lab_section_edit_dir.php
 RewriteRule ^test_type_updated_agg\.php$ catalog/test_type_updated_agg.php
 
+RewriteRule ^rejection_phase_new\.php$ catalog/rejection_phase_new.php
+RewriteRule ^rejection_phase_add\.php$ catalog/rejection_phase_add.php
+RewriteRule ^rejection_phase_added\.php$ catalog/rejection_phase_added.php
+RewriteRule ^rejection_phase_edit\.php$ catalog/rejection_phase_edit.php
+RewriteRule ^rejection_phase_updated\.php$ catalog/rejection_phase_updated.php
+RewriteRule ^rejection_phase_delete\.php$ catalog/rejection_phase_delete.php
+
+RewriteRule ^rejection_reason_new\.php$ catalog/rejection_reason_new.php
+RewriteRule ^rejection_phase_add\.php$ catalog/rejection_phase_add.php
+RewriteRule ^rejection_phase_added\.php$ catalog/rejection_phase_added.php
+RewriteRule ^rejection_phase_edit\.php$ catalog/rejection_phase_edit.php
+RewriteRule ^rejection_phase_updated\.php$ catalog/rejection_phase_updated.php
+RewriteRule ^rejection_phase_delete\.php$ catalog/rejection_phase_delete.php
+
 
 ## /regn folder
 RewriteRule ^find_patient\.php$ regn/find_patient.php
 RewriteRule ^new_patient\.php$ regn/new_patient.php
 RewriteRule ^new_specimen\.php$ regn/new_specimen.php
 RewriteRule ^specimen_added\.php$ regn/specimen_added.php
-RewriteRule ^rejection_phase_new\.php$ regn/rejection_phase_new.php
 RewriteRule ^specimen_referral\.php$ regn/specimen_referral.php
 RewriteRule ^session_print\.php$ regn/session_print.php
 RewriteRule ^accept_reject_specimen\.php$ regn/accept_reject_specimen.php
 RewriteRule ^specimen_acceptance\.php$ regn/specimen_acceptance.php
 RewriteRule ^patient_sample_accept_reject\.php$ regn/patient_sample_accept_reject.php
+RewriteRule ^days_to_dob\.php$ regn/days_to_dob.php
 
 
 ## /results folder
@@ -164,8 +178,8 @@ RewriteRule ^quality_control_category_new\.php$ quality_control/quality_control_
 RewriteRule ^quality_control_category_add\.php$ quality_control/quality_control_category_add.php
 RewriteRule ^quality_control_category_added\.php$ quality_control/quality_control_category_added.php
 RewriteRule ^quality_control_category_edit\.php$ quality_control/quality_control_category_edit.php
-RewriteRule ^quality_control_category_updated\.php$ catalog/test_category_updated.php
-RewriteRule ^quality_control_category_delete\.php$ catalog/test_category_delete.php
+RewriteRule ^quality_control_category_updated\.php$ quality_control/quality_control_category_updated.php
+RewriteRule ^quality_control_category_delete\.php$ quality_control/quality_control_category_delete.php
 
 RewriteRule ^quality_control_field_groups\.php$ quality_control/quality_control_field_groups.php
 RewriteRule ^quality_control_fieldgroups_add\.php$ catalog/quality_control_fieldgroups_add.php

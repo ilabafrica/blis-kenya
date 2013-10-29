@@ -743,6 +743,7 @@ include("includes/scripts.php");
 $script_elems->enableJQueryForm();
 $script_elems->enableTokenInput();
 $script_elems->enableDatePicker();
+$script_elems->enableJQueryMask();
 ?>
 
 <script type='text/javascript'>
