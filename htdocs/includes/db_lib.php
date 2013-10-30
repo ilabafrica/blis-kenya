@@ -2982,6 +2982,8 @@ class Test
 	public $ts;
 	public $status;
 	public $external_lab_no;
+	public $ts_started;
+	public $ts_result_entered;
 	
 	public static function getObject($record)
 	{
@@ -3055,6 +3057,16 @@ class Test
 		else
 			$test->external_lab_no = null;
 		
+		if(isset($record['ts_started']))
+			$test->ts_started = $record['ts_started'];
+		else
+			$test->ts_started = null;
+		
+		if(isset($record['ts_result_entered']))
+			$test->ts_result_entered = $record['ts_result_entered'];
+		else
+			$test->ts_result_entered = null;
+		
 		return $test;
 	}
 	public function getStatusCode()
@@ -3122,7 +3134,13 @@ class Test
 			return get_username_by_id($this->userId);
 		}
 	}
-    
+	public function getTurnaroundTime()
+	{
+		$start_time = new DateTime($this->ts_started);
+		$end_time = new DateTime($this->ts_result_entered);
+		$interval = date_diff($start_time, $end_time);
+		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+	}
     public function getLabSectionByTest()
     {
         $query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench, t.specimen_id as specID FROM test_category tc, 
@@ -7368,6 +7386,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 		"comments='$comments', ".
 		"user_id=$user_id, ".
 		"ts='$current_ts', ".
+		"ts_result_entered='$current_ts', ".
 		"status_code_id='".Specimen::$STATUS_TOVERIFY."' ".
 		"WHERE test_id=$test_id ";
 	

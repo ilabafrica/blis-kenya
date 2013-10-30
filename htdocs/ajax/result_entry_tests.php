@@ -181,12 +181,23 @@ else
 	}else if($attrib_type == 12)
 	{	
 		# Update specimen to started status code
-		$query_string = "UPDATE test SET status_code_id = ".Specimen::$STATUS_STARTED." where test_id ='$attrib_value'";
+		$ts = date("Y-m-d H:i:s");
+		$query_string = "UPDATE test SET 
+                    		status_code_id = ".Specimen::$STATUS_STARTED.",
+                    		ts_started = '$ts',
+                    		ts = '$ts' 
+						WHERE test_id ='$attrib_value'";
 	}
 	else if($attrib_type == 13)
 	{
 		#Update specimen to started status code
-		$query_string = "UPDATE test SET status_code_id = ".Specimen::$STATUS_VERIFIED.", verified_by = ".$_SESSION['user_id']."  where test_id ='$attrib_value'";
+		$ts = date("Y-m-d H:i:s");
+		$query_string = "UPDATE test SET 
+                    		status_code_id = ".Specimen::$STATUS_VERIFIED.",
+                    		ts = '$ts',
+                    		date_verified = '$ts',
+                    		verified_by = ".$_SESSION['user_id']."  
+                    		WHERE test_id ='$attrib_value'";
 	}
 }
 //RUN QUERY DEPENDING ON PARAMENTERS
@@ -283,7 +294,7 @@ else{
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+				<th style='width:75px;'><?php echo "Patient No."; ?></th>
 			<?php
 			}
 			if(false) //Not displaying Lab no

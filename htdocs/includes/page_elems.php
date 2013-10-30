@@ -3364,6 +3364,7 @@ class PageElems
 					<th><?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['ENTERED_BY']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['VERIFIED_BY']; ?></th>
+					<th><?php echo "Turnaround time"; ?></th>
 					
 				</tr>
 			</thead>
@@ -3402,6 +3403,9 @@ class PageElems
 			</td>
 			<td>
 				<?php echo get_username_by_id($test->userId); ?>
+			</td>
+			<td>
+				<?php echo $test->getTurnaroundTime(); ?>
 			</td>
 			<td>
 				<span id="verifydby<?php echo $test->testId;?>" class="label label-warning">

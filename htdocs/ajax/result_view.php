@@ -43,6 +43,9 @@ Remarks
 Entered by
 </th>
 <th>
+Turnaround time
+</th>
+<th>
 Verified by
 </th>
 <th>
