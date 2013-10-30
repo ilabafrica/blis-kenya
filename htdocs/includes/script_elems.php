@@ -31,6 +31,7 @@ class ScriptElems
     public $enabledBootstrapFormBuilder = false;
     public $enabledPulsate = false;
 	public $enabledValidation = false;
+	public $enabledNivoSlider = false;
 	
 	public function enableJQuery()
 	{
@@ -234,6 +235,29 @@ class ScriptElems
 	</script>
 		<?php
 			$this->enabledValidation = true;
+		}
+	}
+	
+	public function enableNivoSlider()
+	{
+		# Enable the jquery
+
+		if($this->enabledNivoSlider === false)
+		{
+		?>
+			<!-- Load javascripts at bottom, this will reduce page load time -->
+        <link rel="stylesheet" href="nivo/themes/default/default.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="nivo/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="nivo/nivo-slider.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="nivo/jquery-1.9.0.min.js"></script>
+    	<script type="text/javascript" src="nivo/jquery.nivo.slider.js"></script>
+        <script type="text/javascript">
+    $(window).load(function() {
+        $('#slider').nivoSlider();
+    });
+    </script>
+		<?php
+			$this->enabledNivoSlider = true;
 		}
 	}
 	

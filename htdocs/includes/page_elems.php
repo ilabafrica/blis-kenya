@@ -795,6 +795,32 @@ class PageElems
 			return 0;
 	}
 	
+	public function getRejectionPhasesSelect($lab_config_id=null)
+	{
+		# Returns a set of drop down options for specimen rejection reasons in catalog
+		$phases_list = get_rejection_phases($lab_config_id);
+		if($phases_list) {
+			foreach($phases_list as $key => $value)
+				echo "<option value='$key'>$value</option>";
+			return 1;
+		}
+		else
+			return 0;
+	}
+	
+	public function getRejectionReasonsSelect($lab_config_id=null)
+	{
+		# Returns a set of drop down options for specimen rejection reasons in catalog
+		$reasons_list = get_rejection_reasons($lab_config_id);
+		if($reasons_list) {
+			foreach($reasons_list as $key => $value)
+				echo "<option value='$key'>$value</option>";
+			return 1;
+		}
+		else
+			return 0;
+	}
+	
 	public function getTestCategoryCountrySelect($lab_config_id=null)
 	{
 		#Returns a set of drop down options for test categories in catalog of all labs in a country
@@ -1056,6 +1082,40 @@ class PageElems
 				<tr valign='top'>
 					<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
 					<td><?php echo $rejection_phase->getDescription(); ?></td>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
+	
+	public function getRejectionReasonInfo($rejection_reason_name, $show_db_name=false)
+	{
+		# Returns HTML for displaying rejection reason information
+		# Fetch rejection reason record
+		$rejection_reason = get_rejection_reason_by_name($rejection_reason_name);
+		?>
+		<table class='hor-minimalist-b'>
+			<tbody>
+				<tr valign='top'>
+					<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?></td>
+					<td>
+						<?php
+						if($show_db_name === true)
+						{
+							# Show original name stored in DB
+							echo $rejection_reason->description;
+						}
+						else
+						{
+							# Show name store din locale string
+							echo $rejection_reason->getName();
+						}
+						?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo "Rejection Phase"; ?></td>
+					<td><?php echo $phase_name = get_rejection_phase_name_by_reason_id($rejection_reason->reasonId); ?></td>
 				</tr>
 			</tbody>
 		</table>
@@ -1396,6 +1456,65 @@ class PageElems
 		<?php
 	}
 	#end getRejectionPhasesTable
+	
+	#return all available specimen rejection reasons
+	public function getRejectionReasonTable($lab_config_id)
+	{
+		# Returns HTML table listing all specimen rejection reasons in catalog
+		$reasons_list = get_rejection_reasons_catalog($lab_config_id);
+		if(count($reasons_list) == 0)
+		{
+			echo "<div class='sidetip_nopos'>"."No Specimen Rejection Reasons Found."."</div>";
+			return;
+		}
+		?>
+		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
+		<thead>
+		<tr>
+		<th>Specimen Rejection Reason</th>
+        <th>Specimen Rejection Phase</th>
+		<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		$count = 1;
+		foreach($reasons_list as $key => $value)
+		{
+			$phase_name = get_rejection_phase_name_by_reason_id($key);
+			?>
+			<tr>
+			
+			<td>
+				<?php echo $value; ?>
+			</td>
+            <td>
+				<?php echo $phase_name; ?>
+			</td>
+			<td>
+				<a href='rejection_reason_edit.php?rr=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Rejection Reason Info'><i class='icon-pencil'></i> <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+			</td>
+			<?php
+			$user = get_user_by_id($_SESSION['user_id']);
+			if(is_country_dir($user) || is_super_admin($user)|| is_admin($user))
+			{
+			?>
+			<td>
+				<a href='rejection_reason_delete.php?rr=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+			</td>
+			<?php
+			}
+			?>
+			</tr>
+			<?php
+			$count++;
+		}
+		?>
+		</tbody>
+		</table>
+		<?php
+	}
+	#end getRejectionReasonsTable
 	/////////////////////begin function to get quality control information//////////////////////////////
 	public function getQualityControlCategoryInfo($qcc_name, $show_db_name=false)
 	{

@@ -9,8 +9,6 @@ require_once("includes/db_lib.php");
 $script_elems = new ScriptElems();
 $page_elems = new PageElems();
 
-$phases = new SpecimenRejectionPhases();
-echo $phases->getRejectionPhases();
 LangUtil::setPageId("catalog");
 ?>
 <script type='text/javascript'>
@@ -43,7 +41,7 @@ function check_input()
 </tr>
 <tr valign='top'>
 <td><?php echo "Specimen Rejection Phase"; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><select></select></td>
+<td><select name="phase" id="phase"><?php $page_elems->getRejectionPhasesSelect(); ?></select></td>
 <td></td></tr></table>
 <br><br>
 <div class="form-actions">

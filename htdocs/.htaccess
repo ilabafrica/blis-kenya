@@ -127,11 +127,11 @@ RewriteRule ^rejection_phase_updated\.php$ catalog/rejection_phase_updated.php
 RewriteRule ^rejection_phase_delete\.php$ catalog/rejection_phase_delete.php
 
 RewriteRule ^rejection_reason_new\.php$ catalog/rejection_reason_new.php
-RewriteRule ^rejection_phase_add\.php$ catalog/rejection_phase_add.php
-RewriteRule ^rejection_phase_added\.php$ catalog/rejection_phase_added.php
-RewriteRule ^rejection_phase_edit\.php$ catalog/rejection_phase_edit.php
-RewriteRule ^rejection_phase_updated\.php$ catalog/rejection_phase_updated.php
-RewriteRule ^rejection_phase_delete\.php$ catalog/rejection_phase_delete.php
+RewriteRule ^rejection_reason_add\.php$ catalog/rejection_reason_add.php
+RewriteRule ^rejection_reason_added\.php$ catalog/rejection_reason_added.php
+RewriteRule ^rejection_reason_edit\.php$ catalog/rejection_reason_edit.php
+RewriteRule ^rejection_reason_updated\.php$ catalog/rejection_reason_updated.php
+RewriteRule ^rejection_reason_delete\.php$ catalog/rejection_reason_delete.php
 
 
 ## /regn folder

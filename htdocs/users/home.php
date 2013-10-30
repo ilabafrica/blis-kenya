@@ -3,6 +3,7 @@ include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("home");
 $page_elems = new PageElems();
+
 $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
@@ -31,7 +32,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
                         <a href="javascript:;" class="reload"></a>
                         </div>
                     </div>
-                    <div class="portlet-body form" style="height: 400px">
+                    <div class="portlet-body form" style="height: auto;">
 				
                     <?php #$page_elems->getSideTip(LangUtil::getGeneralTerm("TIPS"), $profile_tip); ?>
                     <!-- DASH BOARD -->
@@ -47,58 +48,22 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 											</ul>
 											<div class="tab-content">
 												<div class="tab-pane active" id="tab_1_1">
-													<div class="portlet-body" id="chats">
-									<div class="scroller" data-height="343px" data-always-visible="1" data-rail-visible1="1">
-										<ul class="chats">
-											<li class="in">
-												<img class="avatar" alt="" src="../img/avatar.png" />
-												<div class="message">
-													<span class="arrow"></span>
-													<a href="#" class="name"><h4>Dr. Ekesa Mulianga</h4></a>
-													<span class="body"><h5>
-													Director's message to be here....</h5>
-													</span>
-												</div>
-											</li>
-											<li class="out">
-												<img class="avatar" alt="" src="../img/avatar.png" />
-												<div class="message">
-													<span class="arrow"></span>
-													<a href="#" class="name">Our Mission</a>
-													<span class="body">
-													Mission goes here...
-													</span>
-												</div>
-											</li>
-											<li class="in">
-												<img class="avatar" alt="" src="../img/avatar.png" />
-												<div class="message">
-													<span class="arrow"></span>
-													<a href="#" class="name">Our Vision</a>
-													<span class="body">
-													Vision goes here...
-													</span>
-												</div>
-											</li>
-											
-											<li class="out">
-												<img class="avatar" alt="" src="../img/avatar.png" />
-												<div class="message">
-													<span class="arrow"></span>
-													<a href="#" class="name">Our Values</a>
-													<span class="body">
-													Values go here...
-													</span>
-												</div>
-											</li>
-											
-										</ul>
-									</div>
-                                    </div>
+													<div class="slider-wrapper theme-default">
+            <div id="slider" class="nivoSlider">
+                <img src="nivo/images/one.jpg" data-thumb="nivo/images/one.jpg" alt="" title="BLIS Launch photo."/>
+                <img src="nivo/images/two.jpg" data-thumb="nivo/images/two.jpg" alt="" title="Specimen ready for test." />
+                <img src="nivo/images/three.jpg" data-thumb="nivo/images/three.jpg" alt="" data-transition="slideInLeft" title="Full Haemogram machine - CELLTAC F."/>
+                <img src="nivo/images/four.jpg" data-thumb="nivo/images/four.jpg" alt="" title="Laboratory staff during the BLIS Launch." />
+                <img src="nivo/images/five.jpg" data-thumb="nivo/images/five.jpg" alt="" title="Specimen in preparation for testing." />
+                <img src="nivo/images/six.jpg" data-thumb="nivo/images/six.jpg" alt="" title="Humalyzer 2000 machine at the Laboratory." />
+                <img src="nivo/images/seven.jpg" data-thumb="nivo/images/seven.jpg" alt="" title="BLIS Launch Photoshoot session." />
+                <img src="nivo/images/eight.jpg" data-thumb="nivo/images/eight.jpg" alt="" title="Vincent Tieni processing tests using the Celltac F machine." />
+            </div>
+        </div>
 												</div>
 												<div class="tab-pane" id="tab_1_2">
 													<p>
-												    <img src="../logos/bdh_organogram_transparent.png" height="600px;" alt="Kapsabet District Hospital Organogram" /> </p>
+												    <img src="logos/bdh_organogram_transparent.png" height="600px;" alt="Kapsabet District Hospital Organogram" /> </p>
 												</div>
 												<div class="tab-pane" id="tab_1_3">
 													
@@ -124,6 +89,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
                     include("includes/scripts.php");
                     $script_elems->enableLatencyRecord();
                     $script_elems->enableDatePicker();
+					$script_elems->enableNivoSlider();
                     ?>
                     <script type='text/javascript'>
                     
