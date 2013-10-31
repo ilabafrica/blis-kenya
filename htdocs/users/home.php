@@ -50,14 +50,14 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 												<div class="tab-pane active" id="tab_1_1">
 													<div class="slider-wrapper theme-default">
             <div id="slider" class="nivoSlider">
-                <img src="nivo/images/one.jpg" data-thumb="nivo/images/one.jpg" alt="" title="BLIS Launch photo."/>
-                <img src="nivo/images/two.jpg" data-thumb="nivo/images/two.jpg" alt="" title="Specimen ready for test." />
-                <img src="nivo/images/three.jpg" data-thumb="nivo/images/three.jpg" alt="" data-transition="slideInLeft" title="Full Haemogram machine - CELLTAC F."/>
-                <img src="nivo/images/four.jpg" data-thumb="nivo/images/four.jpg" alt="" title="Laboratory staff during the BLIS Launch." />
-                <img src="nivo/images/five.jpg" data-thumb="nivo/images/five.jpg" alt="" title="Specimen in preparation for testing." />
-                <img src="nivo/images/six.jpg" data-thumb="nivo/images/six.jpg" alt="" title="Humalyzer 2000 machine at the Laboratory." />
-                <img src="nivo/images/seven.jpg" data-thumb="nivo/images/seven.jpg" alt="" title="BLIS Launch Photoshoot session." />
-                <img src="nivo/images/eight.jpg" data-thumb="nivo/images/eight.jpg" alt="" title="Vincent Tieni processing tests using the Celltac F machine." />
+                <img src="nivo/images/one.JPG" data-thumb="nivo/images/one.jpg" alt="" title="BLIS Launch photo."/>
+                <img src="nivo/images/two.JPG" data-thumb="nivo/images/two.jpg" alt="" title="Specimen ready for test." />
+                <img src="nivo/images/three.JPG" data-thumb="nivo/images/three.jpg" alt="" data-transition="slideInLeft" title="Full Haemogram machine - CELLTAC F."/>
+                <img src="nivo/images/four.JPG" data-thumb="nivo/images/four.jpg" alt="" title="Laboratory staff during the BLIS Launch." />
+                <img src="nivo/images/five.JPG" data-thumb="nivo/images/five.jpg" alt="" title="Specimen in preparation for testing." />
+                <img src="nivo/images/six.JPG" data-thumb="nivo/images/six.jpg" alt="" title="Humalyzer 2000 machine at the Laboratory." />
+                <img src="nivo/images/seven.JPG" data-thumb="nivo/images/seven.jpg" alt="" title="BLIS Launch Photoshoot session." />
+                <img src="nivo/images/eight.JPG" data-thumb="nivo/images/eight.jpg" alt="" title="Vincent Tieni processing tests using the Celltac F machine." />
             </div>
         </div>
 												</div>

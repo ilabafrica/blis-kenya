@@ -9,6 +9,7 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 
 $test_id = $_REQUEST['test_id'];
+$parent_test_id = $_REQUEST['parent_test_id'];
 $test_name = get_test_name_by_id($test_id);
 $test = Test::getById($test_id);
 $test_type = TestType::getById($test->testTypeId);
@@ -219,5 +220,5 @@ else
 </div>
 <div class="modal-footer">
 <!-- a href='' class='btn danger'>Edit</a-->
-<a href='javascript:hide_test_result_form_confirmed(<?php echo $test_id ?>);' class='btn success'>Close</a>
+<a href='javascript:hide_test_result_form_confirmed(<?php echo $parent_test_id ?>);' class='btn success'>Close</a>
 </div>

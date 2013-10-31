@@ -11,7 +11,7 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 
-function get_result_form($test_type, $test_id, $num_tests, $patient)
+function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
 	global $form_id_list, $specimen_id, $page_elems;
@@ -22,6 +22,8 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method=''>
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
+	<input type='hidden' name='parent_test_id' value='<?php echo $parent_test_id; ?>'></input>   
+	
 	<?php
 	# Fetch all measures for this test
 	$measure_list = $test_type->getMeasures();
@@ -275,8 +277,9 @@ $test_type = get_test_type_by_id($test_type_id);
 <div class="modal-body">
 	<div class="row-fluid">
 	<div class="span6 sortable">
-	<?php	
-	get_result_form($test_type, $test_id, 0, $patient);
+	<?php
+	$parent_test_id = $test_id;
+	get_result_form($test_type, $test_id, 0, $patient, $parent_test_id);
 	
 	$child_tests = get_child_tests($test_type_id);
 	if (count($child_tests)>0){
@@ -285,14 +288,14 @@ $test_type = get_test_type_by_id($test_type_id);
 			$test_type = get_test_type_by_id($child_test['test_type_id']);
 			$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
 			
-			get_result_form($test_type, $chid_test_entry->testId, 0, $patient);
+			get_result_form($test_type, $chid_test_entry->testId, 0, $patient, $parent_test_id);
 			$child_tests = get_child_tests($child_test['test_type_id']);
 			if (count($child_tests)>0){
 				foreach($child_tests as $child_test)
 				{
 					$test_type = get_test_type_by_id($child_test['test_type_id']);
 					$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
-					get_result_form($test_type, $chid_test_entry->testId, 0, $patient);
+					get_result_form($test_type, $chid_test_entry->testId, 0, $patient, $parent_test_id);
 				}
 			}
 		}
