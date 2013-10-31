@@ -333,7 +333,7 @@ $test_type = get_test_type_by_id($test_type_id);
 <script type='text/javascript'>
 	$(document).ready(function() {
 	    
-	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
+	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
@@ -341,7 +341,7 @@ $test_type = get_test_type_by_id($test_type_id);
 	
 	function insertCelltacResults(){
 	     
-       if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
+       if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
            //Fill results
            var jqxhr = $.getJSON( "http://192.168.1.5/blis/htdocs/ajax/results_celltac_get.php", function(data) {
             })
