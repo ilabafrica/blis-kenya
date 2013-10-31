@@ -333,27 +333,21 @@ $test_type = get_test_type_by_id($test_type_id);
 <script type='text/javascript'>
 	$(document).ready(function() {
 	    
-	    if ( <?php echo $test_type->testTypeId; ?> == 192 ) {
-            $.get( "http://192.168.1.5/blis.test/htdocs/results/emptyfile.php" );
+	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
+            $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
 	})
 	
 	function insertCelltacResults(){
 	     
-       if ( <?php echo $test_type->testTypeId; ?> == 192 ) {
+       if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
            //Fill results
-           var jqxhr = $.getJSON( "http://192.168.1.5/blis.test/htdocs/ajax/results_celltac_get.php", function(data) {
-               
-            console.log(data);
+           var jqxhr = $.getJSON( "http://192.168.1.5/blis/htdocs/ajax/results_celltac_get.php", function(data) {
             })
            .done(function(data) {
                 console.log( "Success" );
-                
-                if(jQuery.type(data) === "object"){
-
                 $RES = data;
-
                 //Hardcoded the ID's for the full bloud count inputs
                 //to enable dynamic results from celltac
                 $('#measure_181_0').val($RES.WBC);
@@ -372,16 +366,13 @@ $test_type = get_test_type_by_id($test_type_id);
                 $('#measure_189_0').val($RES.PLT);
                 $('#measure_190_0').val($RES.PCT);
                 $('#measure_191_0').val($RES.MPV);
-                $('#measure_192_0').val($RES.PDW);
-                
-               }
-               else {
-                   $('#celltacerror').show();
-                   $('#celltacerror').html(data);
-               }
+                $('#measure_192_0').val($RES.PDW);               
+              $('#celltacerror').hide();
            })
            .fail(function() {
                 console.log( "error" );
+                 $('#celltacerror').show();
+                $('#celltacerror').html("Print celltac results to read!");
            });
        }
 	}
