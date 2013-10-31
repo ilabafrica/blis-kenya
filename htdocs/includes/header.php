@@ -174,7 +174,13 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					$page_value = explode(".", $value);
 					$page_value1 = explode("s", $value);
 					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
-						echo "<li class='has-sub active'>";
+						if($page=='find_patient'){
+							$p = explode("=",$page_value[1]);
+							if($p[1]==$_GET['div']){
+								echo "<li class='has-sub active'>";
+							}else echo "<li class='has-sub'>";
+						}else if($page!='find_patient')
+							echo "<li class='has-sub active'>";
 					}else if ($page_value[0]=="home"){
 						echo "<li class=''>";
 					}
@@ -197,8 +203,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						echo " class='' ";
 					}
 					echo ">";
-				
-					//echo $key;
+
 					
 					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
 						$selected = "<span class='selected'></span></a>";
@@ -221,33 +226,16 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					break;
 					
 					case 'find_patient':
-						echo "<i class='icon-download-alt'></i>";
+						
+						if($value=="find_patient.php?div=sample_collection"){
+							echo "<i class='icon-tint'></i>";
+						}else 
+							echo "<i class='icon-download-alt'></i>";
 						echo $key.$selected;
-						echo "<ul class='sub'>".
-							"<li><a href='javascript:right_load(".$quote."lab_requests".$quote.");' title='Lab Test Requests' 
-									class='' id='patient_lookup_menu'>
-									<i class='icon-inbox'></i>&nbsp;&nbsp;"
-									.LangUtil::$allTerms['MENU_LAB_REQUESTS'].
-								"</a>
-							</li>
-							<li><a href='javascript:right_load(".$quote."sample_collection".$quote.");' title='Sample collection' 
-									class='' id='patient_lookup_menu'>
-									<i class='icon-tint'></i>&nbsp;&nbsp;Sample Collection</a>
-							</li>
-						</ul>";
 					break;
 					case 'results_entry':
 						echo "<i class='icon-beaker'></i>";
 						echo $key.$selected;
-						echo "<ul class='sub'>".
-									"<li>
-										<a href='javascript:right_load(".$quote."pending_tests".$quote.");' title='Lab Test Requests'
-										class='' id='specimen_results_menu'>
-										<i class='icon-tasks'></i>&nbsp;&nbsp;
-										Test Queue
-										</a>
-									</li>".
-								"</ul>";
 					break;
 					case "catalog":
 						echo "<i class='icon-cogs'></i>";

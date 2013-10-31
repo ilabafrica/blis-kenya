@@ -39,7 +39,8 @@ function get_top_menu_options($user_role)
 	}
 	else if($user_role == $LIS_TECH_RW || $user_role == $LIS_TECH_SHOWPNAME)
 	{
-		$page_list["Reception"] = "find_patient.php";
+		$page_list["Reception"] = "find_patient.php?div=reception";
+		$page_list["Sample Collection"] = "find_patient.php?div=sample_collection";
 		$page_list[LangUtil::getPageTitle("results_entry")] = "results_entry.php";
 		//$page_list[LangUtil::getPageTitle("search")] = "search.php";
 		$page_list[LangUtil::getPageTitle("reports")] = "reports.php";
