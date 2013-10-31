@@ -6473,7 +6473,7 @@ function search_all_pending_external_requests(){
             
             $query_string = "SELECT * FROM external_lab_request ".
             "WHERE test_status ='".Specimen::$STATUS_PENDING.
-            "' GROUP BY patient_id ORDER BY requestDate DESC";
+            "' GROUP BY patient_id ORDER BY requestDate ASC";
             $saved_db = DbUtil::switchToGlobal();
             $resultset = query_associative_all($query_string, $row_count);
             DbUtil::switchRestore($saved_db);

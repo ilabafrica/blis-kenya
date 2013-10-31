@@ -165,7 +165,7 @@ else
                     	WHERE t.status_code_id=".$status."
             			AND s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
                     	AND tt.parent_test_type_id = 0
-                    	ORDER BY s.date_recvd DESC, s.ts DESC";
+                    	ORDER BY s.date_recvd ASC, s.ts ASC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
     }

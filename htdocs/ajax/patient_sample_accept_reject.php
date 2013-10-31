@@ -33,7 +33,7 @@ $query_string_not_collected = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_NOT_COLLECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by t.ts desc limit 200";
+                    "AND t.result = '' order by s.date_recvd ASC, s.time_collected ASC limit 200";
 
 $query_string_rejected = "";
 
@@ -43,7 +43,7 @@ $query_string_rejected = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_REJECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by t.ts desc limit 200";
+                    "AND t.result = '' order by s.date_recvd ASC, s.time_collected ASC limit 200";
 
 
 $resultset_not_collected = query_associative_all($query_string_not_collected, $row_count);
