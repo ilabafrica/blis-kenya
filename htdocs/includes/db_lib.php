@@ -2083,6 +2083,7 @@ class Patient
 	public $regDate;
 	public $patient_name;
 	public $from_external_system = "false";
+	public $tests_requested = null;
 	public static function getObject($record)
 	{
 		# Converts a patient record in DB into a Patient object
@@ -2135,28 +2136,29 @@ class Patient
 	$patient->age = $record['age'];
 	$patient->from_external_system = "true";
 	$patient->clinician = $record['requestingClinician'];
+	$patient->tests_requested = API::getExternalLabRequest($record['patient_id']);
 		
 	if(isset($record['partial_dob']))
-			$patient->partialDob = $record['partial_dob'];
-		else
-						$patient->partialDob = null;
-						if(isset($record['surr_id']))
-			$patient->surrogateId = $record['surr_id'];
-		else
-			$patient->surrogateId = null;
-			if(isset($record['created_by']))
-			$patient->createdBy = $record['created_by'];
-		else
-						$patient->createdBy = null;
-						if(isset($record['hash_value']))
-								$patient->hashValue = $record['hash_value'];
-								else
-									$patient->hashValue = null;
-									if(isset($record['patient_name']))
-									$patient->patient_name = $record['patient_name'];
-									else
-							$patient->patient_name = null;
-			return $patient;
+		$patient->partialDob = $record['partial_dob'];
+	else
+		$patient->partialDob = null;
+	if(isset($record['surr_id']))
+		$patient->surrogateId = $record['surr_id'];
+	else
+		$patient->surrogateId = null;
+	if(isset($record['created_by']))
+		$patient->createdBy = $record['created_by'];
+	else
+		$patient->createdBy = null;
+	if(isset($record['hash_value']))
+		$patient->hashValue = $record['hash_value'];
+	else
+		$patient->hashValue = null;
+	if(isset($record['patient_name']))
+		$patient->patient_name = $record['patient_name'];
+	else
+		$patient->patient_name = null;
+	return $patient;
 	}
 	
 	public static function checkNameExists($name)

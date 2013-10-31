@@ -175,7 +175,9 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 					$page_value1 = explode("s", $value);
 					if($page== $page_value[0] || $page==$page_value1[0].'_home'){
 						echo "<li class='has-sub active'>";
-					}else if ($page_value[0]=="home")echo "<li class=''>";
+					}else if ($page_value[0]=="home"){
+						echo "<li class=''>";
+					}
 					else echo "<li class='has-sub'>";
 					echo "<a href='".$value."' ";
 					if(

@@ -159,6 +159,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
 			}
 			?>
+			<th>Test(s) Requested</th>
 			<th></th>
 			<th></th>
 		</tr>
@@ -253,6 +254,19 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				echo "<td>$status</td>";
 			}
 			?>
+			<td>
+			<?php 
+			if (isset($patient->tests_requested)){
+				$tests = $patient->tests_requested;
+			foreach($tests as $test){
+				echo $test['investigation']."<br>";
+								
+			
+			}
+			}
+			?>
+			
+			</td>
 			<td>
 				<?php 
 				if(strpos($_SERVER["HTTP_REFERER"], "find_patient.php") !== false)
