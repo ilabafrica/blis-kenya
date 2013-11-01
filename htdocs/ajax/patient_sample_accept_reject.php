@@ -151,6 +151,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         ?>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
+                        <th>Date Registered</th>
                         <th style='width:100px;'><?php echo "Accept/Reject"; ?></th>
                     </tr>
                 </thead>
@@ -232,6 +233,12 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             }
                         }
                         ?>
+                        </td>
+                        <td style='width:100px;'> 
+                        <?php 
+                        	echo $specimen->dateRecvd." ".$specimen->timeCollected;
+                        ?>
+                        
                         </td>
                         <?php if($attrib_type == 10)
                         {?>

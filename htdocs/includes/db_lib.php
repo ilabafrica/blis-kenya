@@ -2623,6 +2623,7 @@ class Specimen
 	public $dailyNum;
 	public $labSection;
 	public $external_lab_no;
+	public $ts_collected;
 	
 	public static $STATUS_PENDING = 0;
 	public static $STATUS_DONE = 1;
@@ -2701,6 +2702,11 @@ class Specimen
 			$specimen->external_lab_no = $record['external_lab_no'];
 		else
 			$specimen->external_lab_no = null;
+		
+		if(isset($record['ts_collected']))
+			$specimen->ts_collected = $record['ts_collected'];
+		else
+			$specimen->ts_collected = null;
 		return $specimen;
 	}
 	public function getSpecimenCollector()
@@ -3138,7 +3144,8 @@ class Test
 	}
 	public function getTurnaroundTime()
 	{
-		$start_time = new DateTime($this->ts_started);
+		$specimen = get_specimen_by_id($this->specimenId);
+		$start_time = new DateTime($specimen->ts_collected);
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
 		return $interval->format('%d days, %H hrs, %I mins, %S secs');
@@ -7451,9 +7458,12 @@ function set_specimen_status($specimen_id, $status_code)
 	$specimen_id = mysql_real_escape_string($specimen_id, $con);
 	# Sets specimen status to specified status code
 	# TODO: Link this to customized status codes in 'status_code' table
+	$current_ts = date("Y-m-d H:i:s");
 	$query_string = 
-		"UPDATE `specimen` SET status_code_id=$status_code ".
-		"WHERE specimen_id=$specimen_id";
+		"UPDATE `specimen` SET 
+			status_code_id=$status_code,
+			ts_collected='$current_ts'
+		WHERE specimen_id=$specimen_id";
 	query_blind($query_string);
 }
 

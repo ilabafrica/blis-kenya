@@ -321,6 +321,10 @@ else{
 				<th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
 			<?php
 			}
+			?>
+			
+			<th style='width:100px;'><?php echo "Time Collected";?></th>
+			<?php
 			//if($lab_config->hidePatientName == 0)
 			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
 			{
@@ -398,6 +402,9 @@ else{
 				<td style='width:75px;'><?php echo $specimen->getAuxId(); ?></td>
 			<?php
 			}
+			?>
+			<td style='width:75px;'><?php echo $specimen->ts_collected; ?></td>
+			<?php
 			//if($lab_config->hidePatientName == 0)
 			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
 			{

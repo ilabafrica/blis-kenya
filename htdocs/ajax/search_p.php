@@ -259,7 +259,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			if (isset($patient->tests_requested)){
 				$tests = $patient->tests_requested;
 			foreach($tests as $test){
-				echo $test['investigation']."<br>";
+				echo $test['investigation']." - (".$test['requestDate'].")<br>";
 								
 			
 			}
