@@ -6519,6 +6519,8 @@ function search_all_pending_external_requests(){
                     #requestDate
                     #TODO convert date to mysql format
                     '"'./*$request_data['DateOfRequest']*/"NULL".'",'.
+                    #orderStage
+                    '"'.NULL.'",'.
                     #patient_id
                     '"'.$request_data['PatientNumber'].'",'.
                     #full_name
@@ -6636,6 +6638,8 @@ function search_patients_by_id($q)
 					#requestDate
 					#TODO convert date to mysql format
 					'"'./*$request_data['DateOfRequest']*/"NULL".'",'.
+					#orderStage
+					'"'.NULL.'",'.
 					#patient_id
 					'"'.$request_data['PatientNumber'].'",'.
 					#full_name
@@ -15675,6 +15679,7 @@ class API
 			`requestingClinician`,
 			`investigation`,
 			`requestDate`,
+			`orderStage`,
 			`patient_id`,
 			`full_name`,
 			`dateOfBirth`,

@@ -40,6 +40,8 @@ if (!$length >1 || !$_POST==null){
 		 	'"'.$request_data['investigation'].'",'.
 		 	#requestDate
 		 	'"'.$request_data['requestDate'].'",'.
+		 	#orderStage
+		 	'"'.$request_data['orderStage'].'",'.
 		 	#patient_id
 		 	'"'.$request_data['patient']['id'].'",'.
 		 	#full_name
