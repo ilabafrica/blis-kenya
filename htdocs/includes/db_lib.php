@@ -15763,7 +15763,7 @@ class API
     	return $returnarr;
     }
     
-    public static function updateExternalLabrequest($patient_id, $lab_no, $result){
+    public static function updateExternalLabrequest($patient_id, $lab_no, $result, $comment=null){
     	
     	global $con;
     	$patient_id = mysql_real_escape_string($patient_id, $con);
@@ -15771,6 +15771,7 @@ class API
     	"UPDATE external_lab_request 
     	SET 
     	result = '$result',
+    	comments = '$comment',
     	test_status = ".Specimen::$STATUS_TOVERIFY."
     	WHERE patient_id='$patient_id' AND labNo='$lab_no'";
     	$saved_db = DbUtil::switchToGlobal();

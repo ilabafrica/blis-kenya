@@ -120,7 +120,7 @@ $user_id = $_SESSION['user_id'];
 //$ts =date("Y-m-d H:i:s", $unix_ts);
 //-NC3065
 add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue());
-API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push);
+API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
 update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
 # Show confirmation with details.

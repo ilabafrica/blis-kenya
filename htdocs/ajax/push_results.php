@@ -8,8 +8,8 @@ include("../includes/db_lib.php");
 $test_id = $_REQUEST['test_id'];
 
 #Sanitas Server Parameters
-$api_key = "XJBW4IQC1";
-$sanitas_inbound_url = "http://192.168.1.9:8888/sanitas/bliss/notify?api_key=".$api_key;
+$api_key = "OGLZ4JDBL";
+$sanitas_inbound_url = "http://192.168.1.10:8888/sanitas/bliss/notify?api_key=".$api_key;
 
 #MedBoss MSSQL Server Parameters
 
@@ -34,6 +34,7 @@ foreach ($lab_numbers as $lab_no){
 	$specimen_id = $test->specimenId;
 	$specimen = get_specimen_by_id($specimen_id);
 	$patient = get_patient_by_id($specimen->patientId);
+	$comments = $test->comments;
 	
 	#Test Result (Strip unecessary characters)
 	$result = str_replace("<br>","",$test->decodeResult());
@@ -50,7 +51,7 @@ foreach ($lab_numbers as $lab_no){
 	
 	if ($system_id == "sanitas")
 	{
-		$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.',"verifiedby": 57}';
+		$json_string ='{"labNo": '.$test->external_lab_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result.',"verifiedby": '.$emr_user_id.', "techniciancomment": '.$comments.'}';
 		
 		/*
 		 * Send POST request with HttpRequest
