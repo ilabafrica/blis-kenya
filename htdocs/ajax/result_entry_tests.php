@@ -289,7 +289,9 @@ else{
 <div class="clearfix"><br></div>
 <table class="table table-striped table-condensed" id="<?php echo $attrib_type; ?>">
 	<thead>
+	
 		<tr>
+		<th style='width:100px;'><?php echo "Section";?></th>
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
@@ -340,7 +342,7 @@ else{
 			}
 			?>
 		
-			<th style='width:100px;'><?php echo "Section";?></th>
+			
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
 			<th style='width:100px;'><?php echo "Test"; ?></th>
 			<th style='width:100px;'><?php echo "Status";?></th>
@@ -364,6 +366,7 @@ else{
 		$test_type = TestType::getObject($record);
 		$test_category = TestCategory::getObject($record);
 		?>
+		
 		<tr <?php
 		if($attrib_type == 3 && $count != 1)
 		{
@@ -371,6 +374,7 @@ else{
 			echo " class='old_pnum_records' style='display:none' ";
 		}
 		?> id="<?php echo $test->testId; ?>">
+		<td style='width:100px;'><?php echo $test_category->getCategoryName(); ?></td>
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
@@ -419,7 +423,7 @@ else{
 			<?php
 			}
 			?>
-			<td style='width:100px;'><?php echo $test_category->getCategoryName(); ?></td>
+			
 			<td style='width:100px;'><?php echo $specimen_type->getSpecimenName(); ?></td>
 			<td style='width:100px;'>
 			<?php
