@@ -11,7 +11,7 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 
-function get_result_form($test_type, $test_id, $num_tests, $patient)
+function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
 	global $form_id_list, $specimen_id, $page_elems;
@@ -22,6 +22,8 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method=''>
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
+	<input type='hidden' name='parent_test_id' value='<?php echo $parent_test_id; ?>'></input>   
+	
 	<?php
 	# Fetch all measures for this test
 	$measure_list = $test_type->getMeasures();
@@ -67,7 +69,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient)
 			$decName = $measure->getName().":";
 		}
 		?>
-		<label for='<?php echo $input_id; ?>'><?php echo $decName; echo "\n"; ?></label>
+		<label for='<?php echo $input_id; ?>'><?php echo $decName; ?></label>
 		<?php
 		$range = $measure->range;
 		$range_type = $measure->getRangeType();
@@ -275,9 +277,15 @@ $test_type = get_test_type_by_id($test_type_id);
 <div class="modal-body">
 	<div class="row-fluid">
 	<div class="span6 sortable">
-	<?php	
-	get_result_form($test_type, $test_id, 0, $patient);
-	
+    <div id="ctbutton" style="display: none"> 
+        <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
+        </div>
+        <div id="celltacerror" style="display: none">
+            
+        </div>
+	<?php
+	$parent_test_id = $test_id;
+	get_result_form($test_type, $test_id, 0, $patient, $parent_test_id);	  
 	$child_tests = get_child_tests($test_type_id);
 	if (count($child_tests)>0){
 		foreach($child_tests as $child_test)
@@ -285,14 +293,14 @@ $test_type = get_test_type_by_id($test_type_id);
 			$test_type = get_test_type_by_id($child_test['test_type_id']);
 			$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
 			
-			get_result_form($test_type, $chid_test_entry->testId, 0, $patient);
+			get_result_form($test_type, $chid_test_entry->testId, 0, $patient, $parent_test_id);
 			$child_tests = get_child_tests($child_test['test_type_id']);
 			if (count($child_tests)>0){
 				foreach($child_tests as $child_test)
 				{
 					$test_type = get_test_type_by_id($child_test['test_type_id']);
 					$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
-					get_result_form($test_type, $chid_test_entry->testId, 0, $patient);
+					get_result_form($test_type, $chid_test_entry->testId, 0, $patient, $parent_test_id);
 				}
 			}
 		}
@@ -324,8 +332,51 @@ $test_type = get_test_type_by_id($test_type_id);
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
 	$(document).ready(function() {
-	
+	    
+	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
+            $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
+             $('#ctbutton').show();
+       }
 	})
+	
+	function insertCelltacResults(){
+	     
+       if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
+           //Fill results
+           var jqxhr = $.getJSON( "http://192.168.1.5/blis/htdocs/ajax/results_celltac_get.php", function(data) {
+            })
+           .done(function(data) {
+                console.log( "Success" );
+                $RES = data;
+                //Hardcoded the ID's for the full bloud count inputs
+                //to enable dynamic results from celltac
+                $('#measure_181_0').val($RES.WBC);
+                $('#measure_176_0').val($RES.BA);
+                $('#measure_177_0').val($RES.EO);
+                $('#measure_178_0').val($RES.MO);
+                $('#measure_179_0').val($RES.LY);
+                $('#measure_180_0').val($RES.NE);
+                $('#measure_182_0').val($RES.RBC);
+                $('#measure_183_0').val($RES.HGB);
+                $('#measure_184_0').val($RES.HCT);
+                $('#measure_185_0').val($RES.MCV);
+                $('#measure_186_0').val($RES.MCH);
+                $('#measure_187_0').val($RES.MCHC);
+                $('#measure_188_0').val($RES.RDW);
+                $('#measure_189_0').val($RES.PLT);
+                $('#measure_190_0').val($RES.PCT);
+                $('#measure_191_0').val($RES.MPV);
+                $('#measure_192_0').val($RES.PDW);               
+              $('#celltacerror').hide();
+           })
+           .fail(function() {
+                console.log( "error" );
+                 $('#celltacerror').show();
+                $('#celltacerror').html("Print celltac results to read!");
+           });
+       }
+	}
+	
 	function update_remarks1()
 	{
 		var result_elems = $("input[name='result[]']").attr("value");

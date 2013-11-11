@@ -2083,6 +2083,7 @@ class Patient
 	public $regDate;
 	public $patient_name;
 	public $from_external_system = "false";
+	public $tests_requested = null;
 	public static function getObject($record)
 	{
 		# Converts a patient record in DB into a Patient object
@@ -2135,28 +2136,29 @@ class Patient
 	$patient->age = $record['age'];
 	$patient->from_external_system = "true";
 	$patient->clinician = $record['requestingClinician'];
+	$patient->tests_requested = API::getExternalLabRequest($record['patient_id']);
 		
 	if(isset($record['partial_dob']))
-			$patient->partialDob = $record['partial_dob'];
-		else
-						$patient->partialDob = null;
-						if(isset($record['surr_id']))
-			$patient->surrogateId = $record['surr_id'];
-		else
-			$patient->surrogateId = null;
-			if(isset($record['created_by']))
-			$patient->createdBy = $record['created_by'];
-		else
-						$patient->createdBy = null;
-						if(isset($record['hash_value']))
-								$patient->hashValue = $record['hash_value'];
-								else
-									$patient->hashValue = null;
-									if(isset($record['patient_name']))
-									$patient->patient_name = $record['patient_name'];
-									else
-							$patient->patient_name = null;
-			return $patient;
+		$patient->partialDob = $record['partial_dob'];
+	else
+		$patient->partialDob = null;
+	if(isset($record['surr_id']))
+		$patient->surrogateId = $record['surr_id'];
+	else
+		$patient->surrogateId = null;
+	if(isset($record['created_by']))
+		$patient->createdBy = $record['created_by'];
+	else
+		$patient->createdBy = null;
+	if(isset($record['hash_value']))
+		$patient->hashValue = $record['hash_value'];
+	else
+		$patient->hashValue = null;
+	if(isset($record['patient_name']))
+		$patient->patient_name = $record['patient_name'];
+	else
+		$patient->patient_name = null;
+	return $patient;
 	}
 	
 	public static function checkNameExists($name)
@@ -2621,6 +2623,7 @@ class Specimen
 	public $dailyNum;
 	public $labSection;
 	public $external_lab_no;
+	public $ts_collected;
 	
 	public static $STATUS_PENDING = 0;
 	public static $STATUS_DONE = 1;
@@ -2699,6 +2702,11 @@ class Specimen
 			$specimen->external_lab_no = $record['external_lab_no'];
 		else
 			$specimen->external_lab_no = null;
+		
+		if(isset($record['ts_collected']))
+			$specimen->ts_collected = $record['ts_collected'];
+		else
+			$specimen->ts_collected = null;
 		return $specimen;
 	}
 	public function getSpecimenCollector()
@@ -2982,6 +2990,8 @@ class Test
 	public $ts;
 	public $status;
 	public $external_lab_no;
+	public $ts_started;
+	public $ts_result_entered;
 	
 	public static function getObject($record)
 	{
@@ -3055,6 +3065,16 @@ class Test
 		else
 			$test->external_lab_no = null;
 		
+		if(isset($record['ts_started']))
+			$test->ts_started = $record['ts_started'];
+		else
+			$test->ts_started = null;
+		
+		if(isset($record['ts_result_entered']))
+			$test->ts_result_entered = $record['ts_result_entered'];
+		else
+			$test->ts_result_entered = null;
+		
 		return $test;
 	}
 	public function getStatusCode()
@@ -3122,7 +3142,14 @@ class Test
 			return get_username_by_id($this->userId);
 		}
 	}
-    
+	public function getTurnaroundTime()
+	{
+		$specimen = get_specimen_by_id($this->specimenId);
+		$start_time = new DateTime($specimen->ts_collected);
+		$end_time = new DateTime($this->ts_result_entered);
+		$interval = date_diff($start_time, $end_time);
+		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+	}
     public function getLabSectionByTest()
     {
         $query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench, t.specimen_id as specID FROM test_category tc, 
@@ -6453,7 +6480,7 @@ function search_all_pending_external_requests(){
             
             $query_string = "SELECT * FROM external_lab_request ".
             "WHERE test_status ='".Specimen::$STATUS_PENDING.
-            "' GROUP BY patient_id ORDER BY requestDate DESC";
+            "' GROUP BY patient_id ORDER BY requestDate ASC";
             $saved_db = DbUtil::switchToGlobal();
             $resultset = query_associative_all($query_string, $row_count);
             DbUtil::switchRestore($saved_db);
@@ -6492,6 +6519,8 @@ function search_all_pending_external_requests(){
                     #requestDate
                     #TODO convert date to mysql format
                     '"'./*$request_data['DateOfRequest']*/"NULL".'",'.
+                    #orderStage
+                    '"'.NULL.'",'.
                     #patient_id
                     '"'.$request_data['PatientNumber'].'",'.
                     #full_name
@@ -6609,6 +6638,8 @@ function search_patients_by_id($q)
 					#requestDate
 					#TODO convert date to mysql format
 					'"'./*$request_data['DateOfRequest']*/"NULL".'",'.
+					#orderStage
+					'"'.NULL.'",'.
 					#patient_id
 					'"'.$request_data['PatientNumber'].'",'.
 					#full_name
@@ -7368,6 +7399,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 		"comments='$comments', ".
 		"user_id=$user_id, ".
 		"ts='$current_ts', ".
+		"ts_result_entered='$current_ts', ".
 		"status_code_id='".Specimen::$STATUS_TOVERIFY."' ".
 		"WHERE test_id=$test_id ";
 	
@@ -7430,9 +7462,12 @@ function set_specimen_status($specimen_id, $status_code)
 	$specimen_id = mysql_real_escape_string($specimen_id, $con);
 	# Sets specimen status to specified status code
 	# TODO: Link this to customized status codes in 'status_code' table
+	$current_ts = date("Y-m-d H:i:s");
 	$query_string = 
-		"UPDATE `specimen` SET status_code_id=$status_code ".
-		"WHERE specimen_id=$specimen_id";
+		"UPDATE `specimen` SET 
+			status_code_id=$status_code,
+			ts_collected='$current_ts'
+		WHERE specimen_id=$specimen_id";
 	query_blind($query_string);
 }
 
@@ -15644,6 +15679,7 @@ class API
 			`requestingClinician`,
 			`investigation`,
 			`requestDate`,
+			`orderStage`,
 			`patient_id`,
 			`full_name`,
 			`dateOfBirth`,
@@ -15727,7 +15763,7 @@ class API
     	return $returnarr;
     }
     
-    public static function updateExternalLabrequest($patient_id, $lab_no, $result){
+    public static function updateExternalLabrequest($patient_id, $lab_no, $result, $comment=null){
     	
     	global $con;
     	$patient_id = mysql_real_escape_string($patient_id, $con);
@@ -15735,6 +15771,7 @@ class API
     	"UPDATE external_lab_request 
     	SET 
     	result = '$result',
+    	comments = '$comment',
     	test_status = ".Specimen::$STATUS_TOVERIFY."
     	WHERE patient_id='$patient_id' AND labNo='$lab_no'";
     	$saved_db = DbUtil::switchToGlobal();

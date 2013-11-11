@@ -33,7 +33,7 @@ $query_string_not_collected = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_NOT_COLLECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by t.ts desc limit 200";
+                    "AND t.result = '' order by s.date_recvd ASC, s.time_collected ASC limit 200";
 
 $query_string_rejected = "";
 
@@ -43,7 +43,7 @@ $query_string_rejected = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_REJECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by t.ts desc limit 200";
+                    "AND t.result = '' order by s.date_recvd ASC, s.time_collected ASC limit 200";
 
 
 $resultset_not_collected = query_associative_all($query_string_not_collected, $row_count);
@@ -151,6 +151,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         ?>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
+                        <th>Date Registered</th>
                         <th style='width:100px;'><?php echo "Accept/Reject"; ?></th>
                     </tr>
                 </thead>
@@ -232,6 +233,12 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             }
                         }
                         ?>
+                        </td>
+                        <td style='width:100px;'> 
+                        <?php 
+                        	echo $specimen->dateRecvd." ".$specimen->timeCollected;
+                        ?>
+                        
                         </td>
                         <?php if($attrib_type == 10)
                         {?>

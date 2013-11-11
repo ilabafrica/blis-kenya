@@ -309,11 +309,16 @@ $(document).ready(function() {
         }
                
     }
-    else {
+    else if ($_REQUEST['div']=="reception"){
         ?>
         right_load("lab_requests");
         <?php 
     }
+    else if ($_REQUEST['div']=="sample_collection"){
+    	?>
+            right_load("sample_collection");
+            <?php 
+        }
     ?>
 });
 

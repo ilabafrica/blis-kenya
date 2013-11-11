@@ -892,7 +892,7 @@ function submit_forms(test_id)
 				//$("#test_"+actual_test_id)[0].reset();
 				$("#test_"+actual_test_id).remove();
 				$("#"+target_div_id).html(msg);
-				$("tr#"+actual_test_id).remove();		
+				$("tr#"+test_id).remove();		
 			}
 		});	
 	}

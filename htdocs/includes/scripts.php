@@ -234,10 +234,10 @@ function handleDataTable(table_id) {
     jQuery('#sample_3_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
     /* Add a select menu for each TH element in the table footer */
     $("#section").each( function ( i ) {
-		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(3) );
+		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(0) );
 		$(".chosen").chosen();
 		$('select', this).change( function () {
-			oTable.fnFilter( $(this).val(), 3 );
+			oTable.fnFilter( $(this).val(), 0 );
 			$section = $(this).val();
 			$('.section-name').html('All Sections');
 			if($section==''){

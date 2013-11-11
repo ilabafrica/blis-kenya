@@ -165,7 +165,7 @@ else
                     	WHERE t.status_code_id=".$status."
             			AND s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
                     	AND tt.parent_test_type_id = 0
-                    	ORDER BY s.date_recvd DESC, s.ts DESC";
+                    	ORDER BY s.date_recvd ASC, s.ts ASC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
     }
@@ -181,12 +181,23 @@ else
 	}else if($attrib_type == 12)
 	{	
 		# Update specimen to started status code
-		$query_string = "UPDATE test SET status_code_id = ".Specimen::$STATUS_STARTED." where test_id ='$attrib_value'";
+		$ts = date("Y-m-d H:i:s");
+		$query_string = "UPDATE test SET 
+                    		status_code_id = ".Specimen::$STATUS_STARTED.",
+                    		ts_started = '$ts',
+                    		ts = '$ts' 
+						WHERE test_id ='$attrib_value'";
 	}
 	else if($attrib_type == 13)
 	{
 		#Update specimen to started status code
-		$query_string = "UPDATE test SET status_code_id = ".Specimen::$STATUS_VERIFIED.", verified_by = ".$_SESSION['user_id']."  where test_id ='$attrib_value'";
+		$ts = date("Y-m-d H:i:s");
+		$query_string = "UPDATE test SET 
+                    		status_code_id = ".Specimen::$STATUS_VERIFIED.",
+                    		ts = '$ts',
+                    		date_verified = '$ts',
+                    		verified_by = ".$_SESSION['user_id']."  
+                    		WHERE test_id ='$attrib_value'";
 	}
 }
 //RUN QUERY DEPENDING ON PARAMENTERS
@@ -278,12 +289,14 @@ else{
 <div class="clearfix"><br></div>
 <table class="table table-striped table-condensed" id="<?php echo $attrib_type; ?>">
 	<thead>
+	
 		<tr>
+		<th style='width:100px;'><?php echo "Section";?></th>
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+				<th style='width:75px;'><?php echo "Patient No."; ?></th>
 			<?php
 			}
 			if(false) //Not displaying Lab no
@@ -310,6 +323,10 @@ else{
 				<th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
 			<?php
 			}
+			?>
+			
+			<th style='width:100px;'><?php echo "Time Collected";?></th>
+			<?php
 			//if($lab_config->hidePatientName == 0)
 			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
 			{
@@ -325,7 +342,7 @@ else{
 			}
 			?>
 		
-			<th style='width:100px;'><?php echo "Section";?></th>
+			
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
 			<th style='width:100px;'><?php echo "Test"; ?></th>
 			<th style='width:100px;'><?php echo "Status";?></th>
@@ -349,6 +366,7 @@ else{
 		$test_type = TestType::getObject($record);
 		$test_category = TestCategory::getObject($record);
 		?>
+		
 		<tr <?php
 		if($attrib_type == 3 && $count != 1)
 		{
@@ -356,6 +374,7 @@ else{
 			echo " class='old_pnum_records' style='display:none' ";
 		}
 		?> id="<?php echo $test->testId; ?>">
+		<td style='width:100px;'><?php echo $test_category->getCategoryName(); ?></td>
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
@@ -387,6 +406,9 @@ else{
 				<td style='width:75px;'><?php echo $specimen->getAuxId(); ?></td>
 			<?php
 			}
+			?>
+			<td style='width:75px;'><?php echo $specimen->ts_collected; ?></td>
+			<?php
 			//if($lab_config->hidePatientName == 0)
 			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
 			{
@@ -401,7 +423,7 @@ else{
 			<?php
 			}
 			?>
-			<td style='width:100px;'><?php echo $test_category->getCategoryName(); ?></td>
+			
 			<td style='width:100px;'><?php echo $specimen_type->getSpecimenName(); ?></td>
 			<td style='width:100px;'>
 			<?php
