@@ -51,6 +51,7 @@ class User
 	public $langId;
 	public $country;
     public $img;
+	public $canverify;
 	
     public static function getObject($record)
 	{
@@ -69,6 +70,7 @@ class User
 		$user->createdBy = $record['created_by'];
 		$user->labConfigId = $record['lab_config_id'];
         $user->img = $record['img'];
+		$user->canverify = $record['verify'];
 		if(isset($record['lang_id']))
 			$user->langId = $record['lang_id'];
 		else
@@ -6165,6 +6167,7 @@ function update_lab_user($updated_entry)
 		"phone='$updated_entry->phone', ".
 		"email='$updated_entry->email', ".
 		"level=$updated_entry->level, ".
+		"verify=$updated_entry->canverify, ".
 		"lang_id='$updated_entry->langId' ".
 		"WHERE user_id=$updated_entry->userId";
 	query_blind($query_string);

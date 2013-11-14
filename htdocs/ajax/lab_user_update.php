@@ -17,6 +17,7 @@ $phone = $_REQUEST['ph'];
 $new_pwd = $_REQUEST['p'];
 $level = $_REQUEST['lev'];
 $lang_id = $_REQUEST['lang'];
+$verify = $_REQUEST['verify'];
 if($level == $LIS_TECH_RW)
 {
 	if($_REQUEST['showpname'] == 1)
@@ -34,6 +35,7 @@ $user->phone = $phone;
 $user->password = $new_pwd;
 $user->level = $level;
 $user->langId = $lang_id;
+$user->canverify = $verify;
 
 update_lab_user($user);
 

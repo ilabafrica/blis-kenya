@@ -2800,7 +2800,7 @@ class PageElems
             	if($specimenBarcode)
 					{?>
            <td><a href="javascript:print_specimen_barcode(<?php echo $pid;?>,<?php echo $sid;?> )">Print Barcode</a> </td>
-             <?}
+             <?php }
 			}
              ?>
 		</tr>
@@ -2891,7 +2891,7 @@ class PageElems
                             {
                             ?>
                                  <th></th>
-                            <? 
+                            <?php 
                             }
 					}     
                         ?>
@@ -3326,7 +3326,7 @@ class PageElems
                             {
                             ?>
                             <a href="javascript:print_specimen_barcode(<?php echo $specimen->patientId;?>,<?php echo $specimen->specimenId;?> )" class="icon-btn span12"><i class="icon-barcode"></i><div>Print Barcode</div></a>
-                            <? 
+                            <?php 
                             }
                                 
                         ?>
@@ -3385,7 +3385,10 @@ class PageElems
 	{
 		# Returns HTML table row containing specimen info
 		# Called by getSpecimenTestsTable() function
+		
+		$user = get_user_by_id($_SESSION['user_id']);
 		?>
+		
 		<tr valign='top'>
 			<td>
 				<?php echo get_test_name_by_id($test->testTypeId); ?>
@@ -3413,7 +3416,7 @@ class PageElems
 				</span>
 			</td>
 			<td>
-				<?php if($is_modal){?>
+				<?php if($is_modal &&  $user->canverify == 1 && $test->userId != $user->userId ){?> 
 				<a href="javascript:verify_result('<?php echo $test->testId; ?>');" 
 					title="Click to Verify" class="btn green mini" id='verifybtn<?php echo $test->testId;?>'>
 					<i class="icon-ok"></i>Verify result

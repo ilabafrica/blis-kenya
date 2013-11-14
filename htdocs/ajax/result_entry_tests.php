@@ -471,7 +471,7 @@ else{
 				echo 'label-info">Not Verified';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn mini">
+			<td style="width:110px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn mini">
 				<i class="icon-search"></i>View Results</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="Verify test" class="btn green mini">
