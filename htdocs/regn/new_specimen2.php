@@ -37,7 +37,7 @@ $php_array= addslashes(implode("%", $doc_array));
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
 <span class='page_title'><?php echo LangUtil::getTitle(); ?></span>
  | Lab No:<?php //echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
- | <a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+ | <a href="find_patient.php?div=reception">Back</a>
 <br>
 <br>
 <?php
@@ -80,11 +80,10 @@ if($patient == null)
 	return;
 }
 ?>
-<?php $external_requests = $tests_requested;?>
 <div class="row-fluid">
 <div class="span6">
 <?php 
-if(is_array($external_requests) && $external_requests != null){
+if(is_array($tests_requested) && $tests_requested != null){
 ?>
 	<table class ="table table-striped table-bordered table-advance" style="width:400px">
 		<thead>
@@ -101,13 +100,17 @@ if(is_array($external_requests) && $external_requests != null){
 			$clinician = array();
 			$clinician['clinician']=$tests_requested['requestingClinician'];
             
-            $testSpec = array();
-            
+			//$testspec is an array containing specimenID and testId as the key value pairs respectively
+            //$testSpec = array();
+            $testNmSpecID = array();
+			
 			foreach ($tests_requested as $test)
-			{
-			    $test_id=TestType::getIdByName($test['investigation']);
+			{	//Filling up the $testspec array for some manipulation down below
+				$test_name = $test['investigation'];
+			    $test_id=TestType::getIdByName($test_name);
                 $specimen_id=TestType::getSpecimenIdByTestName($test_id);
-                $testSpec[$specimen_id]  = $test_id;             
+                //$testSpec[$specimen_id]  = $test_id;
+				$testNmSpecID[$test_name] =  $specimen_id;   			      
 			?>
 			<tr>
 				<td><?php echo $test['investigation'];?></td>
@@ -123,16 +126,16 @@ if(is_array($external_requests) && $external_requests != null){
             <td>
                 <span id='specimenboxes'>
                 <?php 
-                $specimenFormCount = 1;
-                $unqSpecimen = array_unique($testSpec);
-                $uniqspecid = array_keys($unqSpecimen);
-                $SpecimenCount = count($unqSpecimen);
+                $testcount = 1;
+                //$unqSpecimen = array_unique($testSpec);
+                //$uniqspecid = array_keys($unqSpecimen);
+                //$SpecimenCount = count($unqSpecimen);
 
-                while ($SpecimenCount > 0)
-                {
-                echo $page_elems->getNewSpecimenForm($specimenFormCount, $pid, $dnum, $session_num, $tests_requested);
-                    $specimenFormCount++;
-                    $SpecimenCount--; 
+                foreach ($tests_requested as $test)
+				{
+                echo $page_elems->getNewSpecimenForm($testcount, $pid, $dnum, $session_num, $tests_requested);
+                    $testcount++;
+                    //$SpecimenCount--;
                 }
                 ?>
                 </span>
@@ -218,14 +221,14 @@ $script_elems->enableAutocomplete();
 <script>
 // <!-- <![CDATA[
 <?php
-     $SpecimenCount = count($unqSpecimen);
-     if($tests_requested != null) {
-        echo "specimen_count = ".$SpecimenCount.";";
-   }
-     else {
-         echo "specimen_count = 1;";
-     }
-  ?>
+   //  $SpecimenCount = count($unqSpecimen);
+ //    if($tests_requested != null) {
+      //  echo "specimen_count = ".$SpecimenCount.";";
+  // }
+   //  else {
+       //  echo "specimen_count = 1;";
+   //  }
+ ?>
 patient_exists = false;
 $(document).ready(function(){
     //var data = "Core Selectors Attributes Traversing Manipulation CSS Events Effects Ajax Utilities".split(" ");
@@ -241,36 +244,38 @@ $(document).ready(function(){
         echo "; get_patient_info('".$pid."');";
         echo " patient_exists = true;";
     }
-   if(is_array($external_requests) && $external_requests != null) {
+   if(is_array($tests_requested) && $tests_requested != null) {
 		#Get Tests
-		$length = count($external_requests);
-		$test_check="";
-		$testNames="";
-		for($i=0; $i<$length; $i++){
-			#prevent repeated tests
-			if($test_check != $external_requests[$i]['investigation'])
-			$testNames.=$external_requests[$i]['investigation'];
-			$test_check = $external_requests[$i]['investigation'];
-			if ($i!=$length-1)$testNames.=',';
-		}
+		//$length = count($tests_requested);
+		//$test_check="";
+		//$testNames="";
+		//for($i=0; $i<$length; $i++){
+		//	#prevent repeated tests
+		//	if($test_check != $tests_requested[$i]['investigation'])
+		//	$testNames.=$tests_requested[$i]['investigation'];
+		//	$test_check = $tests_requested[$i]['investigation'];
+		//	if ($i!=$length-1)$testNames.=',';
+		//}
 		
       $formcount = 1;
-      $specarraycount = 0;
-      while ($SpecimenCount > 0){
+      //$specarraycount = 0;
+      foreach ($tests_requested as $test)
+				{
           $testBox = specimenform_.$formcount._testbox;
           $specType = specimenform_.$formcount._stype;
+		  $testname = $test['investigation'];
           ?>
         
             $("#<?php echo $testBox; ?>").load(
                 "ajax/test_type_options.php", 
                 {
-                    stype: <?php echo $uniqspecid[$specarraycount] ?>, ext: "<?php echo $testNames; ?>"
+                    stype: <?php echo $testNmSpecID[$testname] ?>, ext: "<?php echo $testname; ?>"
                 });
-           $("#<?php echo $specType; ?>").val(<?php echo $uniqspecid[$specarraycount] ?>);     
+           $("#<?php echo $specType; ?>").val(<?php echo  $testNmSpecID[$testname] ?>);     
         <?php 
         $formcount++;
-        $SpecimenCount--;
-        $specarraycount++;
+        //$SpecimenCount--;
+        //$specarraycount++;
         }
     }
     ?>
