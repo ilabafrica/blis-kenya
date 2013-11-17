@@ -221,13 +221,14 @@ $script_elems->enableAutocomplete();
 <script>
 // <!-- <![CDATA[
 <?php
-   //  $SpecimenCount = count($unqSpecimen);
- //    if($tests_requested != null) {
-      //  echo "specimen_count = ".$SpecimenCount.";";
-  // }
-   //  else {
-       //  echo "specimen_count = 1;";
-   //  }
+      //count($unqSpecimen);
+ 	 if($tests_requested != null) {
+ 	   	$SpecimenCount = count($tests_requested);
+        echo "specimen_count = ".$SpecimenCount.";";
+  	 }
+     else {
+        echo "specimen_count = 1;";
+     }
  ?>
 patient_exists = false;
 $(document).ready(function(){
