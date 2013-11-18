@@ -117,10 +117,11 @@ foreach($tests_list as $test_type_id)
 	$test->userId = $_SESSION['user_id'];
 	$test->result = "";
 	$test->external_lab_no=API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($test_type_id, $_SESSION['lab_config_id']));
+	$test->external_parent_lab_no=API::getExternalParentLabNo($patient->surrogateId,  get_test_name_by_id($test_type_id, $_SESSION['lab_config_id']));
 	
-	error_log("\n".$time_stamp.": Exter: ======>".API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($test_type_id, $_SESSION['lab_config_id'])), 3, "/home/royrutto/Desktop/my.error.log");
 	add_test($test);
-//Add Two Levels of CHild tests form sanitas	
+	
+	//Add two levels of child tests form external system (sanitas)	
 	$child_tests = get_child_tests($test_type_id);
 	if (count($child_tests)>0){
 		foreach($child_tests as $child_test)
@@ -132,6 +133,7 @@ foreach($tests_list as $test_type_id)
 			$test->userId = $_SESSION['user_id'];
 			$test->result = "";
 			$test->external_lab_no=API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($child_test['test_type_id'], $_SESSION['lab_config_id']));
+			$test->external_parent_lab_no=API::getExternalParentLabNo($patient->surrogateId,  get_test_name_by_id($child_test['test_type_id'], $_SESSION['lab_config_id']));
 			add_test($test);
 			
 			$child_tests = get_child_tests($child_test['test_type_id']);
@@ -145,6 +147,7 @@ foreach($tests_list as $test_type_id)
 					$test->userId = $_SESSION['user_id'];
 					$test->result = "";
 					$test->external_lab_no=API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($child_test['test_type_id'], $_SESSION['lab_config_id']));
+					$test->external_parent_lab_no=API::getExternalParentLabNo($patient->surrogateId,  get_test_name_by_id($child_test['test_type_id'], $_SESSION['lab_config_id']));
 					add_test($test);
 				}
 			}
