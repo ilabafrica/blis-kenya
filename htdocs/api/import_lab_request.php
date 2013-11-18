@@ -82,8 +82,12 @@ if (!$length >1 || !$_POST==null){
 		 	$value_string.= ')';
 		 	
 		 	$LabRequest = $value_string;
-		 
-		 	API::save_external_lab_request($LabRequest);
+		 	
+		 	if ($request_data['orderStage'] == 'op' && $request_data['receiptNumber']=='')
+		 	{
+		 		//invalid order (not paid)
+		 	}
+		 	else API::save_external_lab_request($LabRequest);
 		 } 
 		}
 }
