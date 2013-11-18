@@ -3408,7 +3408,10 @@ class PageElems
 				<?php echo get_username_by_id($test->userId); ?>
 			</td>
 			<td>
-				<?php echo $test->getTurnaroundTime(); ?>
+				<?php echo $test->getSpecimenTurnaroundTime(); ?>
+			</td>
+			<td>
+				<?php echo $test->getTestTurnaroundTime(); ?>
 			</td>
 			<td>
 				<span id="verifydby<?php echo $test->testId;?>" class="label label-warning">
