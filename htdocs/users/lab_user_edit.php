@@ -175,13 +175,13 @@ function update_lab_user()
     }
     // End email address test
 
-    var username = $('#username').attr('value');
-    var pwd = $('#pwd').attr('value');
-    var email = $('#email').attr('value');
-    var phone = $('#phone').attr('value');
-    var fullname = $('#fullname').attr('value');
-    var level = $('#level').attr('value');
-    var lang_id = $('#lang_id').attr('value');
+    var username = $('#username').val();
+    var pwd = $('#pwd').val();
+    var email = $('#email').val();
+    var phone = $('#phone').val();
+    var fullname = $('#fullname').val();
+    var level = $('#level').val();
+    var lang_id = "default";
     var url_string = 'ajax/lab_user_update.php';
     var showpname = 0;
     if($('#showpname').is(":checked"))
