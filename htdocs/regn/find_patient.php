@@ -355,7 +355,7 @@ function load_all_external_requests(){
          function(response, status) 
         {
             App.unblockUI(el);
-            handleDataTable('patientListTable');
+            handlePaginateDataTable('patientListTable');
             $("#external_labreq").removeAttr('style');
         }
      );
