@@ -627,7 +627,7 @@ function fetch_specimen()
 /**
  * FETCH PENDING SPECIMENS
  */
-function fetch_tests(status,page)
+function fetch_tests(status,page,search_term)
 {	
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
@@ -639,7 +639,7 @@ function fetch_tests(status,page)
 		var page = 0;
 	}
 	$("#fetched_specimens_entry").load(url, 
-		{a: '', t: 10, df:date_from, dt:date_to, s:status, p:page}, 
+		{a: '', t: 10, df:date_from, dt:date_to, s:status, p:page, st:search_term}, 
 		function() 
 		{
 			handleDataTable(10);
@@ -654,6 +654,7 @@ function fetch_tests(status,page)
 				$('select', '#status')[0].selectedIndex = 4;
 			}
 			$(".chosen").chosen();
+			$("#search_tests").val(search_term);
 			App.unblockUI(el);
 		}
 	);

@@ -12,6 +12,9 @@ $attrib_type = $_REQUEST['t'];
 $date_from = $_REQUEST['df'];
 $date_to = $_REQUEST['dt'];
 $status = $_REQUEST['s'];
+$search_term = $_REQUEST['st'];
+
+
 $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
@@ -162,9 +165,16 @@ else
 						LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
 						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-                    	WHERE t.status_code_id=".$status."
-            			AND s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
+            		WHERE";
+            
+            if ($status!="all")
+            	$query_string.="
+                    	 t.status_code_id=$status AND";
+            
+            $query_string.="
+            			s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
                     	AND (tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')
+            			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
                     	ORDER BY s.date_recvd ASC, s.ts ASC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
@@ -237,12 +247,12 @@ else{
 //$specimen_id_list = array_values(array_unique($specimen_id_list));
 ?>
 <div class="row-fluid">
-	<div class="span4">Date: <br>
+	<!--div class="span4">Date: <br>
 		<div id="form-date-range" class="btn date-range">
 			<i class="icon-calendar"></i> &nbsp;<span></span> 
 			<b class="caret"></b>
 		</div>
-	</div>
+	</div-->
 	<br>
 	<div class="span3 alert alert-info">
 		<div class='sidetip_nopos'>
@@ -278,16 +288,28 @@ else{
 		</div>
 	</div>
 </div>
-<div class="clearfix"></div>
+
 <div class="row-fluid">
+	<div class="span1">
+	Refresh:
+	<span>
+	<button id="refresh" class="btn blue icn-only"><i class="icon-refresh m-icon-white"></i>
+	</button></span> </div>
+	<div class="span3">
+	
+	Search: <span id="search">
+	
+	<input type=text id="search_tests"></input>
+	
+	
+	</span> 
+	</div>
 	<div class="span3">Lab Section: <span id="section"></span> </div>
 	<div class="span3">Status: <span id="status"></span> </div>
 	<!-- div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
 	<div class="span3">Test Type: <span id="test_type"></span> </div-->
 </div>
-
-<div class="clearfix"><br></div>
-<table class="table table-striped table-condensed" id="<?php echo $attrib_type; ?>">
+<table class="table tale-striped table-condensed" id="<?php echo $attrib_type; ?>">
 	<thead>
 	
 		<tr>
@@ -559,5 +581,20 @@ if($attrib_type == 3 && $count > 2)
 	<br><br>
 	<?php
 }
-
 ?>
+<script type="text/javascript">
+$("#search_tests").keypress(function(e) {
+	var code = e.keyCode || e.which;
+	var s = 'all';
+	var search_term= $("#search_tests").val();
+    if(code == 13) {
+    	fetch_tests(s,null,search_term);
+    }
+});
+
+
+
+$("#refresh").click(function() {
+	fetch_tests(0,null,null);
+});
+</script>
