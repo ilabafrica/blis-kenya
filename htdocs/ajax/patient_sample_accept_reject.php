@@ -108,7 +108,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         if($_SESSION['pid'] != 0)
                         {
                         ?>
-                            <th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+                            <th style='width:75px;'><?php echo "Patient ID"; ?></th>
                         <?php
                         }
                         if(false) //Not displaying Lab no
@@ -174,7 +174,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         if($_SESSION['pid'] != 0)
                         {
                         ?>
-                            <td style='width:75px;'><?php echo $patient->getPatientID(); ?></td>
+                            <td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
                         <?php
                         }
                         if($_SESSION['dnum'] != 0)

@@ -93,6 +93,9 @@ if(is_array($tests_requested) && $tests_requested != null){
 			<th>
 			Requesting Clinician
 			</th>
+			<th>
+			Date Requested
+			</th>
 		</thead>
 		<tbody>
 			<?php
@@ -115,6 +118,7 @@ if(is_array($tests_requested) && $tests_requested != null){
 			<tr>
 				<td><?php echo $test['investigation'];?></td>
 				<td><?php echo $test['requestingClinician'];?></td>
+				<td><?php echo $test['requestDate'];?></td>
 			</tr>
 			<?php }?>
 		</tbody>

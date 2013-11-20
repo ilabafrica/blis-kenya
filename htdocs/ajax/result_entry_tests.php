@@ -318,7 +318,7 @@ else{
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo "Patient No."; ?></th>
+				<th style='width:75px;'><?php echo "Patient ID"; ?></th>
 			<?php
 			}
 			if(false) //Not displaying Lab no

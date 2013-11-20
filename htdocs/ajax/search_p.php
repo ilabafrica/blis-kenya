@@ -123,7 +123,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			if(true /*$lab_config->pid != 0*/)
 			{
 				?>
-				<th><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+				<th><?php echo "Patient ID" ?></th>
 				<?php
 			}
 			if($lab_config->dailyNum >= 11)
