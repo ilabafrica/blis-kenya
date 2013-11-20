@@ -171,9 +171,9 @@ else
             	$query_string.="
                     	 t.status_code_id=$status AND";
             
-            $query_string.="
-            			s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.")
-                    	AND (tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')
+            $query_string.="	
+            			s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND 
+                    	(tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')
             			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
                     	ORDER BY s.date_recvd ASC, s.ts ASC";
                     	/*LIMIT 0,10 ";
@@ -554,6 +554,14 @@ else{
 			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="Specimen Information" class="btn green mini">
 				<i class="icon-info-sign"></i>Specimen Info</a>
 			</td>';
+			}else 
+			if($status == Specimen::$STATUS_NOT_COLLECTED){
+				echo 'label-success">Not Collected';
+				echo '</span></td>';
+				echo '
+						td style="width:100px;"><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+                        <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
+                        </td>';
 			}else{
 				echo '';
 			}
