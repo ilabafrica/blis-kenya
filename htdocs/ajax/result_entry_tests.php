@@ -455,7 +455,7 @@ else{
 					<td id=actionA'.$test->testId.' style="width:100px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 						<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
 					</td>
-					<td id=actionB'.$test->testId.' style="width:100px;">
+					<td id=actionB'.$test->testId.' style="width:130px;">
 						<a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View test details" class="btn mini">
 							<i class="icon-search"></i> View Details
 						</a>
