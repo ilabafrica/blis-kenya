@@ -64,12 +64,20 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
     </div>
 
     <div class="portlet-body form" >
-		
+				<div class="span1">
+					Refresh:
+					<span>
+					</span> 
+				</div>
             	<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
                 
                 <div id='add_anyway_div' >
                     <a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+                	<a href='javascript:load_all_external_requests();' id="refresh" class="btn blue icn-only">
+                	<i class="icon-refresh m-icon-white"></i>
+					</a>
                 </div>
+               
                 <div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
                     <ul>
                         <?php

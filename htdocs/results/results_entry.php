@@ -708,6 +708,34 @@ function fetch_verify_results()
 		}
 	);
 }
+
+function accept_specimen(specimen_id,test_id)
+{
+
+		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+		App.blockUI(el);
+		//Mark specimen as accepted
+  		url = "ajax/specimen_change_status.php";
+  		$.post(url, 
+		{sid: specimen_id}, 
+		function(result) 
+		{
+			$('#span'+test_id).addClass('label-important');
+			$('#span'+test_id).html('Pending');
+			actions = result.split('%');
+			$('#actionA'+test_id).html('<td id=actionA'+test_id+' style="width:100px;">'+
+					'<a href="javascript:start_test('+test_id+');"'+ 
+					'title="Click to begin testing this Specimen" class="btn red mini">'+
+					'<i class="icon-ok"></i> Start Test</a></td>');
+			$('#actionB'+test_id).html('<td id=actionB'+test_id+' style="width:100px;">'+
+					'<a href="javascript:refer_specimen('+test_id+');"'+ 
+					'title="Click to begin testing this Specimen" class="btn inverse mini">'+
+					'<i class="icon-ok"></i>Refer</a></td>');
+			App.unblockUI(el);
+		}
+	);
+		
+}
 function start_test(test_id)
 {
 	var r=confirm("Start test?");

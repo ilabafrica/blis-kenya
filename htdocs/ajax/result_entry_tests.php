@@ -13,8 +13,7 @@ $date_from = $_REQUEST['df'];
 $date_to = $_REQUEST['dt'];
 $status = $_REQUEST['s'];
 $search_term = $_REQUEST['st'];
-
-
+$search_id = substr($search_term, 4);
 $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
@@ -169,12 +168,12 @@ else
             
             if ($status!="all")
             	$query_string.="
-                    	 t.status_code_id=$status AND";
+                    	 t.status_code_id=$status AND
+            			 s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND ";
             
             $query_string.="	
-            			s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND 
                     	(tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')
-            			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
+            			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or s.specimen_id = '$search_id')
                     	ORDER BY s.date_recvd ASC, s.ts ASC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
@@ -294,7 +293,8 @@ else{
 	Refresh:
 	<span>
 	<button id="refresh" class="btn blue icn-only"><i class="icon-refresh m-icon-white"></i>
-	</button></span> </div>
+	</button></span> 
+	</div>
 	<div class="span3">
 	
 	Search: <span id="search">
@@ -452,22 +452,38 @@ else{
 			echo $test_type->getTestName();
 			?>
 			</td>
-			<?php $status = $test->getStatusCode();
+			<?php 
+			$specimen_status = $specimen->statusCodeId;
+			$test_status = $test->getStatusCode();
+				
 			
 			echo '<td class="hidden-phone"><span id=span'.$test->testId.' class="label ';
 			
-			if($status == Specimen::$STATUS_PENDING){
-				echo 'label-important">Pending';
-				echo '</span></td>';
-				echo '<div id=action'.$test->testId.'>
-			<td id=actionA'.$test->testId.' style="width:100px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
-				<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
-			</td>
-			<td id=actionB'.$test->testId.' style="width:100px;"><a href="javascript:refer_specimen('.$quote.$test->testId.$quote.');" title="Click here to refer specimen" class="btn black mini">
-				<i class="icon-remove"></i>Refer Sample</a>
-			</td></div>';
+			if($test_status == Specimen::$STATUS_PENDING){
+				if($specimen_status == Specimen::$STATUS_NOT_COLLECTED){
+					echo 'label-success">Not Collected';
+					echo '</span></td>';
+					echo '
+						<td id=actionA'.$test->testId.' style="width:100px;">
+							<a href="javascript:accept_specimen('.$quote.$specimen->specimenId.$quote.', '.$quote.$test->testId.$quote.');" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+                        </td>
+						<td id=actionB'.$test->testId.'  style="width:100px;">
+                        	<a href="javascript:load_specimen_rejection('.$specimen->specimenId.')" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
+                        </td>';
+				}else{
+					
+						echo 'label-important">Pending';
+						echo '</span></td>';
+						echo '<div id=action'.$test->testId.'>
+					<td id=actionA'.$test->testId.' style="width:100px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+						<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
+					</td>
+					<td id=actionB'.$test->testId.' style="width:100px;"><a href="javascript:refer_specimen('.$quote.$test->testId.$quote.');" title="Click here to refer specimen" class="btn black mini">
+						<i class="icon-remove"></i>Refer</a>
+					</td></div>';
+					}
 			}else
-			if($status == Specimen::$STATUS_DONE){
+			if($test_status == Specimen::$STATUS_DONE){
 				echo 'label-info">Completed';
 				echo '</span></td>';
 				echo '
@@ -478,7 +494,7 @@ else{
 				<i class="icon-ok"></i> Verify</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_REFERRED){
+			if($test_status == Specimen::$STATUS_REFERRED){
 				echo 'label-warning">Referred';
 				echo '</span></td>';
 				echo '
@@ -489,7 +505,7 @@ else{
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_TOVERIFY){
+			if($test_status == Specimen::$STATUS_TOVERIFY){
 				echo 'label-info">Not Verified';
 				echo '</span></td>';
 				echo '
@@ -500,7 +516,7 @@ else{
 				<i class="icon-info-sign"></i>Specimen Info</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_REPORTED){
+			if($test_status == Specimen::$STATUS_REPORTED){
 				echo 'label-success">Reported';
 				echo '</span></td>';
 				echo '
@@ -511,7 +527,7 @@ else{
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_RETURNED){
+			if($test_status == Specimen::$STATUS_RETURNED){
 				echo 'label-info warning">Returned';
 				echo '</span></td>';
 				echo '
@@ -522,7 +538,7 @@ else{
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_REJECTED){
+			if($test_status == Specimen::$STATUS_REJECTED){
 				echo 'label-inverse">Rejected';
 				echo '</span></td>';
 				echo '
@@ -533,7 +549,7 @@ else{
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_STARTED){
+			if($test_status == Specimen::$STATUS_STARTED){
 				echo 'label-warning">Started';
 				echo '</span></td>';
 				echo '
@@ -544,7 +560,7 @@ else{
 				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else
-			if($status == Specimen::$STATUS_VERIFIED){
+			if($test_status == Specimen::$STATUS_VERIFIED){
 				echo 'label-success">Verified';
 				echo '</span></td>';
 				echo '
@@ -555,14 +571,7 @@ else{
 				<i class="icon-info-sign"></i>Specimen Info</a>
 			</td>';
 			}else 
-			if($status == Specimen::$STATUS_NOT_COLLECTED){
-				echo 'label-success">Not Collected';
-				echo '</span></td>';
-				echo '
-						td style="width:100px;"><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
-                        <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
-                        </td>';
-			}else{
+			{
 				echo '';
 			}
 			
