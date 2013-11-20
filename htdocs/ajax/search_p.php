@@ -142,11 +142,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			<?php  #TODO: Add check if user has patient name/private data access here ?>
                         
 			<th><?php echo LangUtil::$generalTerms['NAME']; ?></th>
-			<th><?php echo LangUtil::$generalTerms['GENDER']; ?></th>
-                        
-				<th><?php echo LangUtil::$generalTerms['AGE']; ?></th>
-			
-                        <?php
+           <?php
 			if(strpos($_SERVER["HTTP_REFERER"], "search.php") !== false)
 			{
 				# Show status of most recently registered specimens
@@ -208,15 +204,8 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			}
 			?>
 			<td>
-				<?php echo $patient->name; ?>
+				<?php echo $patient->getName()." (".substr($patient->sex, 0, 1)." ".$patient->getAgeNumber().") "; ?>
 			</td>
-			<td>
-				<?php echo $patient->sex; ?>
-			</td>
-				<td>
-					<?php echo $patient->getAge(); ?>
-				</td>
-				        
 			<?php
 			if(strpos($_SERVER["HTTP_REFERER"], "search.php") !== false)
 			{

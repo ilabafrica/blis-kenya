@@ -447,9 +447,6 @@ function readTextFile(file)
 }
 
 $(document).ready(function(){
-
-
-	//readTextFile("http://192.168.1.88/celtac/celtac-results.txt");
 	
 	push_results_to_external_system();
 	
@@ -1055,7 +1052,7 @@ function update_numeric_remarks(test_type_id, count, patient_age, patient_sex)
 		 url: url_string,
 		 data: data_string,
 		 success: function(msg) {
-		$("#"+remarks_input_id).attr("value", msg)
+		$("#"+remarks_input_id).val( msg)
 		 }
 	 });
 

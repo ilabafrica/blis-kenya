@@ -135,20 +135,10 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
                         <?php
                         }
-                        //if($lab_config->hidePatientName == 0)
-                        if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-                        {
+						//Removing Blocking showing patient Name based on user level
+                        //if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
                         ?>
-                            <th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
-                        <?php
-                        }
-                        else
-                        {
-                        ?>
-                        <th style='width:100px;'><?php echo LangUtil::$generalTerms['GENDER']."/".LangUtil::$generalTerms['AGE']; ?></th>
-                        <?php
-                        }
-                        ?>
+                        <th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
                         <th>Date Registered</th>
@@ -205,19 +195,10 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         <?php
                         }
                         //if($lab_config->hidePatientName == 0)
-                        if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-                        {
+                        //if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
+                        //{
                         ?>
-                            <td style='width:200px;'><?php echo $patient->getName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
-                        <?php
-                        }
-                        else
-                        {
-                        ?>
-                            <td style='width:100px;'><?php echo $patient->sex."/".$patient->getAgeNumber(); ?></td>
-                        <?php
-                        }
-                        ?>
+                        <td style='width:200px;'><?php echo $patient->getName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
                         <td style='width:100px;'><?php echo get_specimen_name_by_id($specimen->specimenTypeId); ?></td>
                         <td style='width:100px;'>
                         <?php
