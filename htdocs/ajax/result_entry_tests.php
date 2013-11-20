@@ -342,29 +342,18 @@ else{
 			if($_SESSION['s_addl'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
+				<th style='width:90px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
 			<?php
 			}
 			?>
 			
 			<th style='width:100px;'><?php echo "Time Collected";?></th>
 			<?php
+			//Showing patient name to all
 			//if($lab_config->hidePatientName == 0)
-			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-			{
+			//if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
 			?>
-				<th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
-			<?php
-			}
-			else
-			{
-			?>
-			<th style='width:100px;'><?php echo LangUtil::$generalTerms['GENDER']."/".LangUtil::$generalTerms['AGE']; ?></th>
-			<?php
-			}
-			?>
-		
-			
+			<th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
 			<th style='width:100px;'><?php echo "Test"; ?></th>
 			<th style='width:100px;'><?php echo "Status";?></th>
@@ -407,7 +396,7 @@ else{
 			if(false) // Stopping displaying the Lab No
 			{
 			?>
-				<td style='width:100px;'><?php echo $specimen->getDailyNumFull(); ?></td>
+				<td style='width:80px;'><?php echo $specimen->getDailyNumFull(); ?></td>
 			<?php
 			}
 			if($_SESSION['p_addl'] != 0)
@@ -432,20 +421,8 @@ else{
 			<td style='width:75px;'><?php echo $specimen->ts_collected; ?></td>
 			<?php
 			//if($lab_config->hidePatientName == 0)
-			if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-			{
 			?>
-				<td style='width:200px;'><?php echo $patient->getPatientName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
-			<?php
-			}
-			else
-			{
-			?>
-				<td style='width:100px;'><?php echo $patient->sex."/".$patient->getAgeNumber(); ?></td>
-			<?php
-			}
-			?>
-			
+			<td style='width:200px;'><?php echo $patient->getPatientName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
 			<td style='width:100px;'><?php echo $specimen_type->getSpecimenName(); ?></td>
 			<td style='width:100px;'>
 			<?php
@@ -478,8 +455,10 @@ else{
 					<td id=actionA'.$test->testId.' style="width:100px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 						<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
 					</td>
-					<td id=actionB'.$test->testId.' style="width:100px;"><a href="javascript:refer_specimen('.$quote.$test->testId.$quote.');" title="Click here to refer specimen" class="btn black mini">
-						<i class="icon-remove"></i>Refer</a>
+					<td id=actionB'.$test->testId.' style="width:100px;">
+						<a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View test details" class="btn mini">
+							<i class="icon-search"></i> View Details
+						</a>
 					</td></div>';
 					}
 			}else

@@ -210,11 +210,20 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 	</div>
 </div>
 <!-- END SPECIMEN ACCEPTANCE-->   
-
+<div id="specimen_info" class="modal hide fade" tabindex="-1" data-backdrop="static" data-keyboard="true" style="width:900px;">
+	  <div class="modal-body">
+	   
+	  </div>
+	  <div class="modal-footer">
+	    <button type="button" data-dismiss="modal" class="btn" onclick='javascript:cancel_hide()'>No</button>
+	  
+	  </div>
+</div>
 
 <?php
 include("includes/scripts.php");
 $script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
 ?>
 <script type='text/javascript'>
 $(document).ready(function() {
@@ -296,6 +305,23 @@ function load_all_external_requests(){
         }
      );
 }
+
+function specimen_info(specimen_id)
+{
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'search/specimen_info.php';
+	var target_div = "specimen_info";
+	$("#"+target_div).load(url, 
+		{sid: specimen_id, modal:1}, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+}
+
 
 function fetch_patients()
 {

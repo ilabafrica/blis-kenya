@@ -143,6 +143,7 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
                         <th>Date Registered</th>
                         <th style='width:100px;'><?php echo "Accept/Reject"; ?></th>
+                        <th> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,11 +222,15 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         ?>
                         
                         </td>
+                        </td>
                         <?php if($attrib_type == 10)
                         {?>
                         <td style='width:100px;'><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
                         <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
                         </td>
+                        <td style="width:80px;"><a href="javascript:specimen_info(<?php echo $specimen->specimenId; ?>);" title="View test details" class="btn mini">
+							<i class="icon-search"></i> View Details</a>
+						</td>
                         <?php }?>
                     </tr>
                     
