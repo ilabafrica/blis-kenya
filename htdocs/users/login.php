@@ -1,17 +1,6 @@
 <?php
 include("redirect.php");
-include("includes/stats_lib.php");
-$file = "../../BlisSetup.html";
-$content =<<<content
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<META HTTP-EQUIV="Refresh"
-CONTENT="1; URL=http://{$_SERVER['SERVER_ADDR']}:4001/login.php">
-</head>
-</html>
-content;
-file_put_contents($file, $content);
+
 
 session_start();
 # If already logged in, redirect to home page
@@ -28,6 +17,7 @@ if($TRACK_LOADTIME)
 	$starttime = $startarray[1] + $startarray[0];
 }
 # Include required libraries
+
 require_once("includes/db_lib.php");
 require_once("includes/page_elems.php");
 require_once("includes/script_elems.php");

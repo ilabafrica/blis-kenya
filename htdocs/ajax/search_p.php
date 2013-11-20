@@ -144,13 +144,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			<th><?php echo LangUtil::$generalTerms['NAME']; ?></th>
 			<th><?php echo LangUtil::$generalTerms['GENDER']; ?></th>
                         
-                        <?php
-			if($lab_config->age >= 11)
-			{
-				?>
 				<th><?php echo LangUtil::$generalTerms['AGE']; ?></th>
-				<?php
-			}?>
 			
                         <?php
 			if(strpos($_SERVER["HTTP_REFERER"], "search.php") !== false)
@@ -160,7 +154,6 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			}
 			?>
 			<th>Test(s) Requested</th>
-			<th></th>
 			<th></th>
 		</tr>
 	</thead>
@@ -220,16 +213,10 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			<td>
 				<?php echo $patient->sex; ?>
 			</td>
-			<?php
-                        if($lab_config->age >= 11)
-			{
-				?>
 				<td>
 					<?php echo $patient->getAge(); ?>
 				</td>
-				<?php
-			}?>
-                        
+				        
 			<?php
 			if(strpos($_SERVER["HTTP_REFERER"], "search.php") !== false)
 			{
@@ -274,8 +261,8 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 					# Called from find_patient.php. Show 'profile' and 'register specimen' link
 					?>
 					<a href='javascript:load_specimen_reg("<?php echo $patient->patientId; ?>", <?php echo (string)$patient->from_external_system; ?>)' class="btn mini red-stripe" title='Click to add lab request'><i class="icon-sign-up"></i> Lab request</a>
-					</td><td>
-					<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' class="btn mini blue-stripe" title='Click to View Patient Profile'><i class="icon-search"></i> <?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a>
+					
+					<!--<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' class="btn mini blue-stripe" title='Click to View Patient Profile'><i class="icon-search"></i> <?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a> -->
 					<?php
 				}
 				else if(strpos($_SERVER["HTTP_REFERER"], "reports.php") !== false || strpos($_SERVER["HTTP_REFERER"], "reports2.php") !== false)

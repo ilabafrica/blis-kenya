@@ -37,7 +37,6 @@ $RESULTS_KEYS = array(
         'SS-CT'
         );
 
-    //$RESULTS_STRING = file_get_contents("http://192.168.1.88/celtac/celtac-results.txt");
     $RESULTS_STRING = file_get_contents("http://192.168.1.88/celtac/celtac-results.txt");
     if ($RESULTS_STRING === FALSE){
         print "Something went wrong with getting the File";
