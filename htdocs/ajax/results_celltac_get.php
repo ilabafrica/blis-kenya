@@ -99,12 +99,18 @@ $RESULTS_KEYS = array(
         
         //Search using using key of current patient in Results entry page
         $idKey = $keyofyear + 6; 
-        $patientID =  $str_array[$idKey];
+        $patientID =  $COMPLETE_RESULT_ARRAY[$idKey];
+		
+		//Assuming they have not put patientID in celltac we start reading results immediately
+		$resultsKey = $idKey;
+		
+		//sometimes they dont input patient ID thus we have to check to see if its there if not start results
+		if (strpos($patientID, ".") == false) {
+			//There could also be Age / comments inputs Between patient ID and Results
+        	$resultsKey = $idKey+1;
+		}
         
         //TODO Check if Patient ID from results matches with current patient
-                
-        //There could also be Age / comments inputs Between patient ID and Results
-        $resultsKey = $idKey+1;
         
         //After $idKey next 22 values are results
         $RESULTS_VALUES = array_slice($COMPLETE_RESULT_ARRAY, $resultsKey , 22);
