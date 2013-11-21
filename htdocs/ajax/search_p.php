@@ -236,9 +236,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				$tests = $patient->tests_requested;
 			foreach($tests as $test){
 				echo "-> ".$test['investigation']." - (".$test['requestDate'].")<br>";
-								
-			
-			}
+					}
 			}
 			?>
 			
