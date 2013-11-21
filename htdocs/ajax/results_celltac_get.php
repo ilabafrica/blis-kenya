@@ -99,7 +99,7 @@ $RESULTS_KEYS = array(
         
         //Search using using key of current patient in Results entry page
         $idKey = $keyofyear + 6; 
-        $patientID =  $str_array[$idKey];
+        $patientID =  $COMPLETE_RESULT_ARRAY[$idKey];
 		
 		//Assuming they have not put patientID in celltac we start reading results immediately
 		$resultsKey = $idKey;
