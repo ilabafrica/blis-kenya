@@ -1157,6 +1157,7 @@ class TestType
 	public $prevalenceThreshold;
 	public $targetTat;
 	public $test_name;
+	public $parent_test_type_id;
 	
 	public static function getObject($record)
 	{
@@ -1185,6 +1186,11 @@ class TestType
 			$test_type->test_name = $record['test_name'];
 		else
 			$test_type->test_name = null;
+		
+		if(isset($record['parent_test_type_id']))
+			$test_type->parent_test_type_id = $record['parent_test_type_id'];
+		else
+			$test_type->parent_test_type_id = null;
 		
 		return $test_type;
 	}

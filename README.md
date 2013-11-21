@@ -1,4 +1,4 @@
-BLIS
+BLIS-Kenya
 ====
 
-C4G Basic Laboratory Information System
+BLIS-Kenya is a customized version of C4G BLIS, specifically for Kenyan Public Hospital Laboratories.

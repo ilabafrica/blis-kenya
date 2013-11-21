@@ -34,8 +34,8 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 <div class="row-fluid">
 <div class="span12 sortable">
 
-<!-- BEGIN PENDING TESTS PORTLET-->	
-<div id="pending_tests" class='results_subdiv' style='display:none;'>
+<!-- BEGIN TESTS PORTLET-->	
+<div id="tests" class='results_subdiv' style='display:none;'>
 	<div class="portlet box blue">
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
@@ -47,7 +47,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 		<div class="portlet-body">
 			<div class="scroller" data-height=900px" data-always-visible="0">
 				<div id='fetched_specimens_entry'>
-				<!--PENDING SPECIMENTS LOADED IN THIS DIV-->
+				<!--TESTS LOADED IN THIS DIV-->
 				</div>
 				<div id="fetched_specimen">
 				<?php
@@ -59,55 +59,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 		</div>
 	</div>
 </div>
-<!-- END PENDING TESTS PORTLET-->
-
-<!-- BEGIN PENDING RESULTS PORTLET-->		
-<div id="pending_results" class='results_subdiv' style='display:none;'>
-	<div class="portlet box blue">
-		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
-			<div class="tools">
-				<a href="javascript:fetch_pending_results();" class="reload"></a>
-				<a href="javascript:;" class="collapse"></a>
-			</div>
-		</div>
-		<div class="portlet-body">
-			<div class="scroller" data-height="400px" data-always-visible="1">
-				<div id='fetched_pending_results_entry'>
-				<!--PENDING RESULTS FETCHED IN THIS DIV-->
-				</div>
-				<div id="fetched_specimen">
-				<?php
-				if(isset($_REQUEST['ajax_response']))
-					echo $_REQUEST['ajax_response'];
-				?>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- END PENDING RESULTS PORTLET-->
-
-<!-- BEGIN VERIFY RESULTS PORTLET-->		
-<div id="verify_results_new" class='results_subdiv'>
-	<div class="portlet box blue">
-		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo "Verify Results";?></h4>
-			<div class="tools">
-				<a href="javascript:;" class="reload"></a>
-				<a href="javascript:;" class="collapse"></a>
-			</div>
-		</div>
-		<div class="portlet-body">
-			<div class="scroller" data-height="400px" data-always-visible="1">
-				<div id='fetched_verify_results'>
-				<!--RESULTS TO BE VERIFIED FETCHED IN THIS DIV-->
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- END VERIFY RESULTS PORTLET-->	
+<!-- END TESTS PORTLET-->
 
 
 
@@ -455,7 +407,7 @@ $(document).ready(function(){
 	get_test_types_bycat();
 	$("#worksheet_results").hide();
 	$('.results_subdiv').hide();
-	right_load("pending_tests");
+	right_load("tests");
 	<?php 
 	if(isset($_REQUEST['ajax_response']))
 	{
@@ -525,15 +477,9 @@ function right_load(destn_div)
 	{
 		load_unreported_results();
 	}
-	else if(destn_div == "pending_tests"){
+	else if(destn_div == "tests"){
 		fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
 		
-	}
-	else if(destn_div == "pending_results"){
-		fetch_pending_results();
-	}
-	else if(destn_div == "verify_results_new"){
-		fetch_verify_results();
 	}
 }
 
@@ -667,40 +613,6 @@ function refresh_date_range(date_from,date_to)
 		{
 			handleDataTable(10);
 			enableAdvancedDatePicker(date_from, date_to);
-			App.unblockUI(el);
-		}
-	);
-}
-/**
- * FETCH TEST STARTED AND PENDING RESULTS
- */
-function fetch_pending_results()
-{	
-	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-	App.blockUI(el);
-	var url = 'ajax/result_entry_patient_dyn.php';
-	$("#fetched_pending_results_entry").load(url, 
-		{a: '', t: 11}, 
-		function() 
-		{
-			handleDataTable(11);
-			App.unblockUI(el);
-		}
-	);
-}
-/**
- * FETCH RESULTS TO BE VERIFIED
- */
-function fetch_verify_results()
-{	
-	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-	App.blockUI(el);
-	var url = 'ajax/results_verify.php';
-	$("#fetched_verify_results").load(url, 
-		{a: '', t: 12}, 
-		function() 
-		{
-			handleDataTable(12);
 			App.unblockUI(el);
 		}
 	);
@@ -918,7 +830,16 @@ function submit_forms(test_id)
 				//$("#test_"+actual_test_id)[0].reset();
 				$("#test_"+actual_test_id).remove();
 				$("#"+target_div_id).html(msg);
-				$("tr#"+test_id).remove();		
+				$("tr#"+test_id).remove();
+
+
+
+				$('#span'+actual_test_id).removeClass('label-warning');
+				$('#span'+actual_test_id).addClass('label-info');
+				$('#span'+actual_test_id).html('Tested');
+				actions = result.split('%');
+				$('#actionA'+test_id).html(actions[0]);
+				$('#actionB'+test_id).html(actions[1]);		
 			}
 		});	
 	}

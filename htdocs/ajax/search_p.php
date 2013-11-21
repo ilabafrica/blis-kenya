@@ -116,7 +116,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 }
 # Build HTML table
 ?>
-<table class='table table-striped table-bordered dataTable table-condensed' id='patientListTable' name='patientListTable'>
+<table class='table tale-striped table-condensed' id='patientListTable' name='patientListTable'>
 	<thead>
 		<tr valign='top'>
 			<?php
@@ -141,7 +141,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			?>
 			<?php  #TODO: Add check if user has patient name/private data access here ?>
                         
-			<th><?php echo LangUtil::$generalTerms['NAME']; ?></th>
+			<th><?php echo "Patient Name"; ?> </th>
            <?php
 			if(strpos($_SERVER["HTTP_REFERER"], "search.php") !== false)
 			{
@@ -235,7 +235,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			if (isset($patient->tests_requested)){
 				$tests = $patient->tests_requested;
 			foreach($tests as $test){
-				echo $test['investigation']." - (".$test['requestDate'].")<br>";
+				echo "-> ".$test['investigation']." - (".$test['requestDate'].")<br>";
 								
 			
 			}
@@ -249,7 +249,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				{
 					# Called from find_patient.php. Show 'profile' and 'register specimen' link
 					?>
-					<a href='javascript:load_specimen_reg("<?php echo $patient->patientId; ?>", <?php echo (string)$patient->from_external_system; ?>)' class="btn mini red-stripe" title='Click to add lab request'><i class="icon-sign-up"></i> Lab request</a>
+					<a href='javascript:load_specimen_reg("<?php echo $patient->patientId; ?>", <?php echo (string)$patient->from_external_system; ?>)' class="btn mini red-stripe" title='Click to add lab request'><i class="icon-sign-up"></i> Receive lab request</a>
 					
 					<!--<a href='patient_profile.php?pid=<?php echo $patient->patientId; ?>' class="btn mini blue-stripe" title='Click to View Patient Profile'><i class="icon-search"></i> <?php echo LangUtil::$pageTerms['CMD_VIEWPROFILE']; ?></a> -->
 					<?php

@@ -169,18 +169,18 @@ function handleDataTable(table_id) {
     jQuery('#'+table_id+'_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
 
     /* Add a select menu for each TH element in the table footer */
-    $("#section").each( function ( i ) {
-		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(0) );
-		$(".chosen").chosen();
-		$('select', this).change( function () {
-			oTable.fnFilter( $(this).val(), 0 );
-			$section = $(this).val();
-			$('.section-name').html('All Sections');
-			if($section==''){
-			}else
-			$('.section-name').html($section);
-		} );
-	} );
+//     $("#section").each( function ( i ) {
+// 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(0) );
+// 		$(".chosen").chosen();
+// 		$('select', this).change( function () {
+// 			oTable.fnFilter( $(this).val(), 0 );
+// 			$section = $(this).val();
+// 			$('.section-name').html('All Sections');
+// 			if($section==''){
+// 			}else
+// 			$('.section-name').html($section);
+// 		} );
+// 	} );
 	$("#specimen_type").each( function ( i ) {
 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(4) );
 		$(".chosen").chosen();
@@ -199,8 +199,8 @@ function handleDataTable(table_id) {
 		var test_status = new Array();
 		test_status[0] = "Pending";
 		test_status[1] = "Started";
-		test_status[2] = "Completed";
-		test_status[3] = "Verified";
+		test_status[2] = "Tested";
+		test_status[3] = "Tested & Verified";
 		this.innerHTML = fnCreateSelect( test_status );
 		$('select', this).change( function () {
 			//oTable.fnFilter($(this).val() , 6);
@@ -209,9 +209,9 @@ function handleDataTable(table_id) {
 				fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
 			} else if (val=="Started"){
 				fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);
-			}else if (val=="Completed"){
+			}else if (val=="Tested"){
 				fetch_tests(<?php echo Specimen::$STATUS_TOVERIFY?>);
-			}else if (val=="Verified"){
+			}else if (val=="Tested & Verified"){
 				fetch_tests(<?php echo Specimen::$STATUS_VERIFIED?>);
 			}
 		} );
