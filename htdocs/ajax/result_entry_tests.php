@@ -172,7 +172,7 @@ else
             
             $query_string.="	
                     	(tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')
-            			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
+            			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or tt.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
                     	ORDER BY s.date_recvd DESC, s.ts DESC";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
@@ -494,7 +494,7 @@ else{
 				echo '</span></td>';
 				echo '
 			<td style="width:130px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn blue mini">
-				<i class="icon-edit"></i> View Results</a>
+				<i class="icon-edit"></i> Verify Results</a>
 			</td>
 			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>

@@ -3289,7 +3289,7 @@ class PageElems
 				)
 				{
 					?>
-					<p><a href='specimen_verify.php?sid=<?php echo $specimen_id; ?>' title='Click to Verify or Update result values for this Specimen'><?php echo LangUtil::$generalTerms['CMD_VERIFY']; ?></a></p>
+					
 					<?php
 				}
 				else
