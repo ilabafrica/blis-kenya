@@ -88,14 +88,6 @@ $script_elems->enableDatePicker();
                     			<td><input type="text" name="phone" id="phone" value="<?php echo $user->phone; ?>" class='uniform_width' /><br></td>
                     		</tr>
                     		<tr>
-                    			<td><?php echo LangUtil::$generalTerms['LANGUAGE'] ?>&nbsp;&nbsp;&nbsp;</td>
-                    			<td>
-                    				<select name='lang_id' id='lang_id' class='uniform_width'>
-                    					<?php echo $page_elems->getLangSelect(); ?>
-                    				</select>
-                    			</td>
-                    		</tr>
-                    		<tr>
                     			<td><?php echo LangUtil::$generalTerms['TYPE'] ?></td>
                     			<td>
                     			<select name='level' id='level' class='uniform_width'>
@@ -103,6 +95,17 @@ $script_elems->enableDatePicker();
                     			$page_elems->getLabUserTypeOptions($user->level);
                     			?>
                     			</select>
+                    			</td>
+                    		</tr>
+                    		<tr>
+                    			<td>Can verify results?&nbsp;&nbsp;&nbsp;</td>
+                    			<td>
+                    				<input type="checkbox" name="canverify" id="verify"
+                    				<?php
+                    				if($user->canverify == 1)
+                    					echo "checked ";
+                    				?>
+                    				/>
                     			</td>
                     		</tr>
                     		<tr valign='top'>
@@ -172,20 +175,25 @@ function update_lab_user()
     }
     // End email address test
 
-    var username = $('#username').attr('value');
-    var pwd = $('#pwd').attr('value');
-    var email = $('#email').attr('value');
-    var phone = $('#phone').attr('value');
-    var fullname = $('#fullname').attr('value');
-    var level = $('#level').attr('value');
-    var lang_id = $('#lang_id').attr('value');
+    var username = $('#username').val();
+    var pwd = $('#pwd').val();
+    var email = $('#email').val();
+    var phone = $('#phone').val();
+    var fullname = $('#fullname').val();
+    var level = $('#level').val();
+    var lang_id = "default";
     var url_string = 'ajax/lab_user_update.php';
     var showpname = 0;
     if($('#showpname').is(":checked"))
     {
         showpname = 1;
     }
-    var data_string = 'id=<?php echo $user_id; ?>&un='+username+'&p='+pwd+'&fn='+fullname+'&em='+email+'&ph='+phone+'&lev='+level+'&lang='+lang_id+"&showpname="+showpname;
+     var canverify = 0;
+    if($('#verify').is(":checked"))
+    {
+        canverify = 1;
+    }
+    var data_string = 'id=<?php echo $user_id; ?>&un='+username+'&p='+pwd+'&fn='+fullname+'&em='+email+'&ph='+phone+'&lev='+level+'&lang='+lang_id+"&showpname="+showpname+"&verify="+canverify;
     $('#edit_user_progress').show();
     $.ajax({
         type: "POST",

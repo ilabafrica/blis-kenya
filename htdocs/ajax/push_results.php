@@ -19,7 +19,7 @@ $username = 'kapsabetadmin';
 $password = 'kapsabet';
 
 #Log Path for logging push result errors
-$error_log_path ="/var/www/BLIS/htdocs/logs/blis.api.error.log";
+$error_log_path ="../logs/blis.api.error.log";
 
 $lab_numbers = API::getTestLabNoToPush();
 
@@ -35,6 +35,9 @@ foreach ($lab_numbers as $lab_no){
 	$specimen = get_specimen_by_id($specimen_id);
 	$patient = get_patient_by_id($specimen->patientId);
 	$comments = $test->comments;
+	if($comments==null or $comments==''){
+		$comments = 'No Comments';
+	}
 	
 	#Test Result (Strip unecessary characters)
 	$result = str_replace("<br>","",$test->decodeResult());

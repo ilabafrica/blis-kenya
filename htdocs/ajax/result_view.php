@@ -43,7 +43,10 @@ Remarks
 Entered by
 </th>
 <th>
-Turnaround time
+Specimen TT
+</th>
+<th>
+Test TT
 </th>
 <th>
 Verified by

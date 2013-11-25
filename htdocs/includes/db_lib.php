@@ -51,6 +51,7 @@ class User
 	public $langId;
 	public $country;
     public $img;
+	public $canverify;
 	
     public static function getObject($record)
 	{
@@ -69,6 +70,7 @@ class User
 		$user->createdBy = $record['created_by'];
 		$user->labConfigId = $record['lab_config_id'];
         $user->img = $record['img'];
+		$user->canverify = $record['verify'];
 		if(isset($record['lang_id']))
 			$user->langId = $record['lang_id'];
 		else
@@ -1155,6 +1157,7 @@ class TestType
 	public $prevalenceThreshold;
 	public $targetTat;
 	public $test_name;
+	public $parent_test_type_id;
 	
 	public static function getObject($record)
 	{
@@ -1183,6 +1186,11 @@ class TestType
 			$test_type->test_name = $record['test_name'];
 		else
 			$test_type->test_name = null;
+		
+		if(isset($record['parent_test_type_id']))
+			$test_type->parent_test_type_id = $record['parent_test_type_id'];
+		else
+			$test_type->parent_test_type_id = null;
 		
 		return $test_type;
 	}
@@ -2990,6 +2998,7 @@ class Test
 	public $ts;
 	public $status;
 	public $external_lab_no;
+	public $external_parent_lab_no;
 	public $ts_started;
 	public $ts_result_entered;
 	
@@ -3064,6 +3073,11 @@ class Test
 			$test->external_lab_no = $record['external_lab_no'];
 		else
 			$test->external_lab_no = null;
+		
+		if(isset($record['external_parent_lab_no']))
+			$test->external_parent_lab_no = $record['external_parent_lab_no'];
+		else
+			$test->external_parent_lab_no = null;
 		
 		if(isset($record['ts_started']))
 			$test->ts_started = $record['ts_started'];
@@ -3142,10 +3156,20 @@ class Test
 			return get_username_by_id($this->userId);
 		}
 	}
-	public function getTurnaroundTime()
+	public function getSpecimenTurnaroundTime()
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
 		$start_time = new DateTime($specimen->ts_collected);
+		error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
+		$end_time = new DateTime($this->ts_result_entered);
+		$interval = date_diff($start_time, $end_time);
+		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+	}
+	
+	public function getTestTurnaroundTime()
+	{
+		$specimen = get_specimen_by_id($this->specimenId);
+		$start_time = new DateTime($this->ts_started);
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
 		return $interval->format('%d days, %H hrs, %I mins, %S secs');
@@ -6165,6 +6189,7 @@ function update_lab_user($updated_entry)
 		"phone='$updated_entry->phone', ".
 		"email='$updated_entry->email', ".
 		"level=$updated_entry->level, ".
+		"verify=$updated_entry->canverify, ".
 		"lang_id='$updated_entry->langId' ".
 		"WHERE user_id=$updated_entry->userId";
 	query_blind($query_string);
@@ -6480,7 +6505,7 @@ function search_all_pending_external_requests(){
             
             $query_string = "SELECT * FROM external_lab_request ".
             "WHERE test_status ='".Specimen::$STATUS_PENDING.
-            "' GROUP BY patient_id ORDER BY requestDate ASC";
+            "' GROUP BY patient_id ORDER BY requestDate ASC LIMIT 300";
             $saved_db = DbUtil::switchToGlobal();
             $resultset = query_associative_all($query_string, $row_count);
             DbUtil::switchRestore($saved_db);
@@ -7330,8 +7355,8 @@ function add_test($test, $testId=null)
 	if( $testId == null)
 		$testId = bcadd(get_max_test_id(),1);
 	$query_string = 
-		"INSERT INTO `test` ( test_id, specimen_id, test_type_id, result, comments, verified_by, user_id, external_lab_no ) ".
-		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId, '$test->external_lab_no' )";
+		"INSERT INTO `test` ( test_id, specimen_id, test_type_id, result, comments, verified_by, user_id, external_lab_no, external_parent_lab_no ) ".
+		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId, '$test->external_lab_no', '$test->external_parent_lab_no' )";
 	$result = query_insert_one($query_string);
 	$last_insert_id = get_last_insert_id();
 	
@@ -7460,18 +7485,24 @@ function set_specimen_status_reject($specimen_id, $status_code, $rejectionreason
 }
 
 
-function set_specimen_status($specimen_id, $status_code)
+function set_specimen_status($specimen_id, $status_code, $time_collected=null)
 {
 	global $con;
 	$specimen_id = mysql_real_escape_string($specimen_id, $con);
 	# Sets specimen status to specified status code
 	# TODO: Link this to customized status codes in 'status_code' table
-	$current_ts = date("Y-m-d H:i:s");
-	$query_string = 
-		"UPDATE `specimen` SET 
-			status_code_id=$status_code,
-			ts_collected='$current_ts'
+	if ($time_collected!=null){
+		$query_string = 
+			"UPDATE `specimen` SET 
+				status_code_id=$status_code,
+				ts_collected='$time_collected'
+			WHERE specimen_id=$specimen_id";
+	}else{
+		$query_string =
+		"UPDATE `specimen` SET
+		status_code_id=$status_code
 		WHERE specimen_id=$specimen_id";
+	}
 	query_blind($query_string);
 }
 
@@ -15747,7 +15778,67 @@ class API
     	DbUtil::switchRestore($saved_db);
     	return $labNo;
     }
+    public static function getExternalParentLabNo($patient_id, $test_name)
+    {
+    # gets external lab no
+    	global $con;
+    	$patient_id = mysql_real_escape_string($patient_id, $con);
+    	$query_string = "SELECT parentLabNo FROM external_lab_request
+    	WHERE patient_id='$patient_id' AND investigation='$test_name' AND (test_status = 8 or test_status = 0)";
+    	$saved_db = DbUtil::switchToGlobal();
+    	$results = query_associative_all($query_string, $row_count);
+    	foreach($results as $result)
+    		$parentLabNo = $result['parentLabNo'];
+    		DbUtil::switchRestore($saved_db);
+    				return $parentLabNo;
+    }
+
     
+    #Temporary  funtion to be removed (usd by updateTest() function)
+    public static function getExternalParentLabNo1($patient_id, $labNo)
+    {
+    # gets external lab no
+    	global $con;
+    	$patient_id = mysql_real_escape_string($patient_id, $con);
+    	$query_string = "SELECT parentLabNo FROM external_lab_request
+    	WHERE patient_id='$patient_id' AND labNo='$labNo' AND (test_status = 8 or test_status = 0)";
+    	$saved_db = DbUtil::switchToGlobal();
+    	$results = query_associative_all($query_string, $row_count);
+    	foreach($results as $result)
+    		$parentLabNo = $result['parentLabNo'];
+    		DbUtil::switchRestore($saved_db);
+    				return $parentLabNo;
+    }
+    /**
+     * Temporary  funtion to be removed 
+     * updates tests with correct external_parent_lab_no
+     */
+    public static function updateTests()
+    {
+    	global $con;
+    	 $saved_db =DbUtil:: switchToLabConfig($_SESSION['lab_config_id']);
+    	$query = 'SELECT p.surr_id, tt.name, t.test_id, t.external_lab_no
+			FROM test t, test_type tt, specimen s, patient p
+			WHERE
+			t.test_type_id = tt.test_type_id AND
+			t.specimen_id = s.specimen_id AND
+			p.patient_id = s.patient_id';
+    	$results = query_associative_all($query, $row_count);
+    
+    	foreach($results as $result){
+    		$patient_id = $result["surr_id"];
+    		$test_name = $result["name"];
+    		$test_id = $result["test_id"];
+    		$test_external_lab = $result["external_lab_no"];
+    		
+    		$query2 = "UPDATE test SET external_parent_lab_no ='".API::getExternalParentLabNo1($patient_id, $test_external_lab)."' 
+    				WHERE test_id = $test_id";
+    		$update = query_update($query2);
+    		
+    	}
+    	DbUtil::switchRestore($saved_db);
+    	
+    }
     public static function getTestLabNoToPush()
     {
     # gets pending lab requests from external_lab_reqeuest_table
@@ -16254,7 +16345,7 @@ function setPagination($query_string,$limit, $page, $url,$num_records){
 	$pagination = "";
 	if($lastpage > 1)
 	{
-		$pagination .= "<div class=\"pagination\"><ul>";
+		$pagination .= "<div class=\"pagination\" align='right'><ul>";
 		//previous button
 		if ($page > 1)
 			$pagination.= "<li><a href=\"$targetpage,$prev)\")><i class='icon-chevron-left'></i> Previous</a></li>";

@@ -144,6 +144,7 @@ function handleDataTable(table_id) {
         },*/
         "bPaginate":false,
         "bInfo":false,
+        "bFilter": false,
         "aaSorting": [],
         "aoColumnDefs": [{
             'bSortable': false,
@@ -167,84 +168,19 @@ function handleDataTable(table_id) {
     jQuery('#'+table_id+'_wrapper .dataTables_filter input').addClass("m-wrap medium"); // modify table search input
     jQuery('#'+table_id+'_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
 
-    // begin second table
-    $('#sample_2').dataTable({
-        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-        "sPaginationType": "bootstrap",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ per page",
-            "oPaginate": {
-                "sPrevious": "Prev",
-                "sNext": "Next"
-            }
-        },
-        "aoColumnDefs": [{
-            'bSortable': false,
-            'aTargets': [0]
-        }]
-    });
-
-    jQuery('#sample_2 .group-checkable').change(function () {
-        var set = jQuery(this).attr("data-set");
-        var checked = jQuery(this).is(":checked");
-        jQuery(set).each(function () {
-            if (checked) {
-                $(this).attr("checked", true);
-            } else {
-                $(this).attr("checked", false);
-            }
-        });
-        jQuery.uniform.update(set);
-    });
-
-    jQuery('#sample_2_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
-    jQuery('#sample_2_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
-
-    // begin: third table
-    $('#sample_3').dataTable({
-        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-        "sPaginationType": "bootstrap",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ per page",
-            "oPaginate": {
-                "sPrevious": "Prev",
-                "sNext": "Next"
-            }
-        },
-        "aoColumnDefs": [{
-            'bSortable': false,
-            'aTargets': [0]
-        }]
-    });
-
-    jQuery('#sample_3 .group-checkable').change(function () {
-        var set = jQuery(this).attr("data-set");
-        var checked = jQuery(this).is(":checked");
-        jQuery(set).each(function () {
-            if (checked) {
-                $(this).attr("checked", true);
-            } else {
-                $(this).attr("checked", false);
-            }
-        });
-        jQuery.uniform.update(set);
-    });
-
-    jQuery('#sample_3_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
-    jQuery('#sample_3_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown
     /* Add a select menu for each TH element in the table footer */
-    $("#section").each( function ( i ) {
-		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(0) );
-		$(".chosen").chosen();
-		$('select', this).change( function () {
-			oTable.fnFilter( $(this).val(), 0 );
-			$section = $(this).val();
-			$('.section-name').html('All Sections');
-			if($section==''){
-			}else
-			$('.section-name').html($section);
-		} );
-	} );
+//     $("#section").each( function ( i ) {
+// 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(0) );
+// 		$(".chosen").chosen();
+// 		$('select', this).change( function () {
+// 			oTable.fnFilter( $(this).val(), 0 );
+// 			$section = $(this).val();
+// 			$('.section-name').html('All Sections');
+// 			if($section==''){
+// 			}else
+// 			$('.section-name').html($section);
+// 		} );
+// 	} );
 	$("#specimen_type").each( function ( i ) {
 		this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(4) );
 		$(".chosen").chosen();
@@ -263,8 +199,8 @@ function handleDataTable(table_id) {
 		var test_status = new Array();
 		test_status[0] = "Pending";
 		test_status[1] = "Started";
-		test_status[2] = "Completed";
-		test_status[3] = "Verified";
+		test_status[2] = "Tested";
+		test_status[3] = "Tested & Verified";
 		this.innerHTML = fnCreateSelect( test_status );
 		$('select', this).change( function () {
 			//oTable.fnFilter($(this).val() , 6);
@@ -273,13 +209,121 @@ function handleDataTable(table_id) {
 				fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
 			} else if (val=="Started"){
 				fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);
-			}else if (val=="Completed"){
+			}else if (val=="Tested"){
 				fetch_tests(<?php echo Specimen::$STATUS_TOVERIFY?>);
-			}else if (val=="Verified"){
+			}else if (val=="Tested & Verified"){
 				fetch_tests(<?php echo Specimen::$STATUS_VERIFIED?>);
 			}
 		} );
 	} );
+}
+
+/*
+ * Includes pagination
+ */
+function handlePaginateDataTable(table_id) {
+    if (!jQuery().dataTable) {
+        return;
+    }
+    (function($) {
+    	/*
+    	 * Function: fnGetColumnData
+    	 * Purpose:  Return an array of table values from a particular column.
+    	 * Returns:  array string: 1d data array 
+    	 * Inputs:   object:oSettings - dataTable settings object. This is always the last argument past to the function
+    	 *           int:iColumn - the id of the column to extract the data from
+    	 *           bool:bUnique - optional - if set to false duplicated values are not filtered out
+    	 *           bool:bFiltered - optional - if set to false all the table data is used (not only the filtered)
+    	 *           bool:bIgnoreEmpty - optional - if set to false empty values are not filtered from the result array
+    	 * Author:   Benedikt Forchhammer <b.forchhammer /AT\ mind2.de>
+    	 */
+    	$.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique, bFiltered, bIgnoreEmpty ) {
+    		// check that we have a column id
+    		if ( typeof iColumn == "undefined" ) return new Array();
+    		
+    		// by default we only wany unique data
+    		if ( typeof bUnique == "undefined" ) bUnique = true;
+    		
+    		// by default we do want to only look at filtered data
+    		if ( typeof bFiltered == "undefined" ) bFiltered = true;
+    		
+    		// by default we do not wany to include empty values
+    		if ( typeof bIgnoreEmpty == "undefined" ) bIgnoreEmpty = true;
+    		
+    		// list of rows which we're going to loop through
+    		var aiRows;
+    		
+    		// use only filtered rows
+    		if (bFiltered == true) aiRows = oSettings.aiDisplay; 
+    		// use all rows
+    		else aiRows = oSettings.aiDisplayMaster; // all row numbers
+
+    		// set up data array	
+    		var asResultData = new Array();
+    		
+    		for (var i=0,c=aiRows.length; i<c; i++) {
+    			iRow = aiRows[i];
+    			var aData = this.fnGetData(iRow);
+    			var sValue = aData[iColumn];
+    			
+    			// ignore empty values?
+    			if (bIgnoreEmpty == true && sValue.length == 0) continue;
+
+    			// ignore unique values?
+    			else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1) continue;
+    			
+    			// else push the value onto the result data array
+    			else asResultData.push(sValue);
+    		}
+    		
+    		return asResultData;
+    	}}(jQuery));
+
+
+    	function fnCreateSelect( aData )
+    	{
+    		var r='<select class="chosen" data-placeholder="Select" tabindex="1"><option value=""/>All</option>', i, iLen=aData.length;
+    		for ( i=0 ; i<iLen ; i++ )
+    		{
+    			r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+    		}
+    		return r+'</select>';
+    	}
+    // begin first table
+    var oTable = $('#'+table_id).dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ records per page",
+            "oPaginate": {
+                "sPrevious": "Prev",
+                "sNext": "Next"
+            }
+        
+        },
+       
+        "aaSorting": [],
+        "aoColumnDefs": [{
+            'bSortable': false,
+            'aTargets': [0]
+        }],
+    });
+
+    jQuery('#'+table_id+' .group-checkable').change(function () {
+        var set = jQuery(this).attr("data-set");
+        var checked = jQuery(this).is(":checked");
+        jQuery(set).each(function () {
+            if (checked) {
+                $(this).attr("checked", true);
+            } else {
+                $(this).attr("checked", false);
+            }
+        });
+        jQuery.uniform.update(set);
+    });
+
+    jQuery('#'+table_id+'_wrapper .dataTables_filter input').addClass("m-wrap medium"); // modify table search input
+    jQuery('#'+table_id+'_wrapper .dataTables_length select').addClass("m-wrap xsmall"); // modify table per page dropdown  
 }
 </script>
 <SCRIPT type="text/javascript" charset="utf-8">

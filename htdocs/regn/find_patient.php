@@ -63,55 +63,21 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
             </div>
     </div>
 
-    <div class="portlet-body form">
-		<div class="tabbable tabbable-custom">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#tab_1_1" data-toggle="tab">Search for Lab requests</a></li>
-                <li><a href="#tab_1_2" data-toggle="tab" onclick="load_all_external_requests()">All pending lab requests</a></li>
-            </ul>
-            
-        <div class="tab-content">
-            <div class="tab-pane active" id="tab_1_1">
+    <div class="portlet-body form" >
+				<div class="span1">
+					Refresh:
+					<span>
+					</span> 
+				</div>
+            	<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
                 
-            <p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
-
-            <div class="scroller" data-height="400px" data-always-visible="1">
-                <p>Search existing patients</p>
-                <form>
-                <select name='p_attrib' id='p_attrib' style='font-family:Tahoma;' class='uniform_width m-wrap tooltips'>
-                <?php $page_elems->getPatientSearchAttribSelect(); ?>
-                </select>
-                &nbsp;&nbsp;
-                <input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" class='uniform_width m-wrap tooltips' />
-                &nbsp;&nbsp;
-                <button id='psearch_button' class="btn blue button-submit" type="button" onclick="javascript:fetch_patients();">
-                <i class='icon-search'></i> <?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?></button>
-                <span id='psearch_progress_spinner'>
-                <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
-                </span>
-                </form><div class="span4" id="help_text" style="position: absolute;top: 0px;right: 0px;">
-                        <!-- BEGIN Portlet PORTLET-->
-                        <div class="">
-                                            <div class="well text-info">
-                                            <?php
-                                            echo "<li>";
-                                            echo "Search Patients using the HMIS Number.";
-                                            echo "</li>";
-                                        
-                                            echo "<li>"; 
-                                            echo "If the patient details are not found, then proceed to register the patient using the <a href='javascript:load_patient_reg();'><abbr title='Add New Patient'>Add New Patient </abbr></a> Link as shown.";
-                                            echo "</li>";
-                                        
-                                            ?>
-                                                
-                                                
-                                            </div>
-                                        </div>
-                    </div>
-                <br />
                 <div id='add_anyway_div' >
                     <a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
+                	<a href='javascript:load_all_external_requests();' id="refresh" class="btn blue icn-only">
+                	<i class="icon-refresh m-icon-white"></i>
+					</a>
                 </div>
+               
                 <div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
                     <ul>
                         <?php
@@ -133,44 +99,13 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
                         ?>
                     </ul>
                 </div>
-                <div id='Rejection' class='right_pane' style='display:none;margin-left:10px;'>
-                    <ul>
-                        <?php
-                        if(LangUtil::$pageTerms['TIPS_REGISTRATION_1']!="-") {
-                            echo "<li>";
-                            echo "This page allows us to lookup existing specimens based on patients name, patient ID or number.";
-                            echo "</li>";
-                        }   
-                        if(LangUtil::$pageTerms['TIPS_REGISTRATION_2']!="-") {
-                            echo "<li>"; 
-                            echo "Once a specimen has been registered, we can use this page to accept or reject the specimen.";
-                            echo "</li>";
-                        }
-                        if(LangUtil::$pageTerms['TIPS_PATIENT_LOOKUP']!="-")    {
-                            echo "<li>"; 
-                            echo "To Accept/Reject a specimen, use the buttons as shown clearly.";
-                            echo "</li>"; 
-                        }
-                        ?>
-                    </ul>
-                </div>
-                <div id='patients_found' style='position:relative;left:10px;'>
-                </div>
-                </div>
-               </div> 
-               
-               <div class="tab-pane" id="tab_1_2">
-                   <div id="external_labreq" style="height: 400px">
+           		
+           		<div id="external_labreq" style="height: 400px">
                    
-                   </div>
-               </div>
-               
-            </div>
-                       
-        </div>
-        </div>
-		
-		</div>
+               </div> 
+       </div> 
+    </div>
+        
 </div>
 <!-- END LAB REQUEST -->
 
@@ -275,11 +210,20 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
 	</div>
 </div>
 <!-- END SPECIMEN ACCEPTANCE-->   
-
+<div id="specimen_info" class="modal hide fade" tabindex="-1" data-backdrop="static" data-keyboard="true" style="width:900px;">
+	  <div class="modal-body">
+	   
+	  </div>
+	  <div class="modal-footer">
+	    <button type="button" data-dismiss="modal" class="btn" onclick='javascript:cancel_hide()'>No</button>
+	  
+	  </div>
+</div>
 
 <?php
 include("includes/scripts.php");
 $script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
 ?>
 <script type='text/javascript'>
 $(document).ready(function() {
@@ -289,6 +233,7 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
+	load_all_external_requests();
 	<?php
     if(isset($_REQUEST['show_sc']))
     {
@@ -347,7 +292,7 @@ function restrictCharacters(e) {
 function load_all_external_requests(){
         
     var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-    App.blockUI(el);
+	App.blockUI(el);
     
     var url = 'ajax/search_p.php';
     $("#external_labreq").load(url, 
@@ -355,11 +300,28 @@ function load_all_external_requests(){
          function(response, status) 
         {
             App.unblockUI(el);
-            handleDataTable('patientListTable');
+            handlePaginateDataTable('patientListTable');
             $("#external_labreq").removeAttr('style');
         }
      );
 }
+
+function specimen_info(specimen_id)
+{
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	var url = 'search/specimen_info.php';
+	var target_div = "specimen_info";
+	$("#"+target_div).load(url, 
+		{sid: specimen_id, modal:1}, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+}
+
 
 function fetch_patients()
 {
@@ -451,8 +413,8 @@ function fetch_patient_specimens_accept_reject()
 		function(response, status) 
 		{
 		    App.unblockUI(el);
-			handleDataTable(10);
-			handleDataTable('rejct_samples');
+		    handlePaginateDataTable(10);
+		    handlePaginateDataTable('rejct_samples');
 			$("#sample_collection_body").css({'height':''});
 		}
 	);	

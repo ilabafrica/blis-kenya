@@ -33,7 +33,7 @@ $query_string_not_collected = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_NOT_COLLECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by s.date_recvd ASC, s.time_collected ASC limit 200";
+                    "AND t.result = '' order by s.date_recvd DESC, s.time_collected DESC limit 200";
 
 $query_string_rejected = "";
 
@@ -43,7 +43,7 @@ $query_string_rejected = "";
                     "WHERE p.patient_id=s.patient_id ".
                     "AND (s.status_code_id=".Specimen::$STATUS_REJECTED.") ".
                     "AND s.specimen_id=t.specimen_id ".
-                    "AND t.result = '' order by s.date_recvd ASC, s.time_collected ASC limit 200";
+                    "AND t.result = '' order by s.date_recvd DESC, s.time_collected DESC limit 200";
 
 
 $resultset_not_collected = query_associative_all($query_string_not_collected, $row_count);
@@ -101,14 +101,22 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             }
                                 else { 
                     ?>
-                <table class="table table-striped table-bordered table-condensed" id="<?php echo $attrib_type; ?>">
+                <table class="table tale-striped table-condensed" id="<?php echo $attrib_type; ?>">
                 <thead>
                     <tr>
+                    	<?php 
+                    	if($_SESSION['sid'] != 0)
+                        {
+                        ?>
+                            <th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
+                        <?php
+                        }?>
+                         	<th>Time Registered</th>
                         <?php
                         if($_SESSION['pid'] != 0)
                         {
                         ?>
-                            <th style='width:75px;'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+                            <th style='width:75px;'><?php echo "Patient ID"; ?></th>
                         <?php
                         }
                         if(false) //Not displaying Lab no
@@ -123,36 +131,21 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></th>
                         <?php
                         }
-                        if($_SESSION['sid'] != 0)
-                        {
-                        ?>
-                            <th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
-                        <?php
-                        }
                         if($_SESSION['s_addl'] != 0)
                         {
                         ?>
                             <th style='width:75px;'><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
                         <?php
                         }
-                        //if($lab_config->hidePatientName == 0)
-                        if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-                        {
+						//Removing Blocking showing patient Name based on user level
+                        //if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
                         ?>
-                            <th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
-                        <?php
-                        }
-                        else
-                        {
-                        ?>
-                        <th style='width:100px;'><?php echo LangUtil::$generalTerms['GENDER']."/".LangUtil::$generalTerms['AGE']; ?></th>
-                        <?php
-                        }
-                        ?>
+                        <th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
-                        <th>Date Registered</th>
-                        <th style='width:100px;'><?php echo "Accept/Reject"; ?></th>
+                        <th style='width:130px;'><?php echo "Status"; ?></th>
+                        <th style='width:130px;'><?php echo "Accept/Reject"; ?></th>
+                        <th> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -170,19 +163,20 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         echo " class='old_pnum_records' style='display:none' ";
                     }
                     ?> id="<?php echo $specimen->specimenId; ?>">
-                        <?php
-                        if($_SESSION['pid'] != 0)
-                        {
-                        ?>
-                            <td style='width:75px;'><?php echo $patient->getPatientID(); ?></td>
-                        <?php
-                        }
-                        if($_SESSION['dnum'] != 0)
+                   	 	<?php if($_SESSION['dnum'] != 0)
                         {
                         ?>
                             <td style='width:100px;'><?php echo $specimen->getLabSection();  ?></td>
                         <?php
-            
+                        }
+                        ?>
+                         <td style='width:100px;'> <?php echo $specimen->dateRecvd." ".$specimen->timeCollected;?></td>
+                        <?php
+                        if($_SESSION['pid'] != 0)
+                        {
+                        ?>
+                            <td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
+                        <?php
                         }
                         if($_SESSION['p_addl'] != 0)
                         {
@@ -205,19 +199,10 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         <?php
                         }
                         //if($lab_config->hidePatientName == 0)
-                        if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-                        {
+                        //if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
+                        //{
                         ?>
-                            <td style='width:200px;'><?php echo $patient->getName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
-                        <?php
-                        }
-                        else
-                        {
-                        ?>
-                            <td style='width:100px;'><?php echo $patient->sex."/".$patient->getAgeNumber(); ?></td>
-                        <?php
-                        }
-                        ?>
+                        <td style='width:200px;'><?php echo $patient->getName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
                         <td style='width:100px;'><?php echo get_specimen_name_by_id($specimen->specimenTypeId); ?></td>
                         <td style='width:100px;'>
                         <?php
@@ -225,26 +210,32 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         $i = 0;
                         foreach($test_list as $test)
                         {
-                            echo get_test_name_by_id($test->testTypeId);
-                            $i++;
-                            if($i != count($test_list))
-                            {
-                                echo "<br>";
-                            }
+                           	$test_type = get_test_type_by_id($test->testTypeId);
+                           	$parent_tt_id = $test_type->parent_test_type_id;
+                           	// $test->
+                           	if ($parent_tt_id==0){
+	                        	echo get_test_name_by_id($test->testTypeId);
+	                            $i++;
+	                            if($i != count($test_list))
+	                            {
+	                                echo "<br>";
+	                            }
+	                        }
                         }
                         ?>
                         </td>
-                        <td style='width:100px;'> 
-                        <?php 
-                        	echo $specimen->dateRecvd." ".$specimen->timeCollected;
-                        ?>
-                        
+                        <td>
+                        <span class="label"> Not Collected</span>
                         </td>
+                        
                         <?php if($attrib_type == 10)
                         {?>
-                        <td style='width:100px;'><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+                        <td style='width:130px;'><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
                         <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
                         </td>
+                        <td style="width:130px;"><a href="javascript:specimen_info(<?php echo $specimen->specimenId; ?>);" title="View test details" class="btn mini">
+							<i class="icon-search"></i> View Details</a>
+						</td>
                         <?php }?>
                     </tr>
                     

@@ -17,12 +17,7 @@ if(!$is_modal){
 }
 LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
-
 include("includes/scripts.php");
-
-$script_elems->enableTokenInput();
-$script_elems->enableDatePicker();
-
 ?>
 <?php if(!$is_modal){?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
