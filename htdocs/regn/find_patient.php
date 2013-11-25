@@ -122,6 +122,8 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
                         ?>
                     </ul>
                 </div>
+                <div id='patients_found' style='position:relative;left:10px;'>
+                </div>
 		</div> 
     </div>
         
