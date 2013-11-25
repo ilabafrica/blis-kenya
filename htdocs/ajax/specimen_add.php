@@ -117,8 +117,7 @@ foreach($tests_list as $test_type_id)
 	$test->userId = $_SESSION['user_id'];
 	$test->result = "";
 	$test->external_lab_no=API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($test_type_id, $_SESSION['lab_config_id']));
-	
-	error_log("\n".$time_stamp.": Exter: ======>".API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($test_type_id, $_SESSION['lab_config_id'])), 3, "/home/royrutto/Desktop/my.error.log");
+
 	add_test($test);
 //Add Two Levels of CHild tests form sanitas	
 	$child_tests = get_child_tests($test_type_id);

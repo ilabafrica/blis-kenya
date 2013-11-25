@@ -887,7 +887,7 @@ class PageElems
 		<div class="portlet-title" style="width: 380px">
         <h4></i>Test Type Information</h4>
         </div>
-		<table class='table table-bordered table-hover' style="width: 400px">
+		<table class='table table-bordered table-hover' style="width: 100%">
 			<tbody>
 				<tr>
 					<td><?php echo LangUtil::$generalTerms['NAME']; ?></td>
@@ -1356,11 +1356,11 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
+		<table id="sample_1" class='table table-striped table-condensed table-bordered table-hover' style="width: 100%;">
 		<thead>
 		<tr>
 		<th>Section Name</th>
-		<th></th>
+		<th>Action(s)</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -1759,7 +1759,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:950px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -1848,7 +1848,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:950px;'>
+		<table class='hor-minimalist-b' style='width:100%'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -1937,7 +1937,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:730px'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -2035,7 +2035,7 @@ class PageElems
 			return;
 		}
 		?>
-		<table class='table table-striped table-condensed table-bordered table-hover' style='width:700px;'>
+		<table class='table table-striped table-condensed table-bordered table-hover' style='width:100%;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -4556,7 +4556,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$tat_list = $lab_config->getGoalTatValues();
 		?>
 		<input type='hidden' name='lid' value='<?php echo $lab_config_id; ?>'></input>
-		<table class='tablesorter' style='width:600px;'>
+		<table class='tablesorter' style='width:100%;'>
 			<thead>
 				<tr>
 					<th><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></th>
@@ -4636,7 +4636,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$lab_config = get_lab_config_by_id($lab_config_id);
 		$tat_list = $lab_config->getGoalTatValues();
 		?>
-		<table class="table table-striped table-bordered table-advance table-hover" style='width:600px;'>
+		<table class="table table-striped table-bordered table-advance table-hover" style='width:100%;'>
 			<thead>
 				<tr valign='top'>
 					<th><i class="icon-table"></i> <?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></th>
@@ -4700,7 +4700,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			return;
 		}
 		?>
-		<table class='table table-hover' style='width:700px;'>
+		<table class='table table-hover' style='width:100%;'>
 			<thead>
 				<tr valign='top'>
 					<th>
@@ -5037,7 +5037,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			$current_specimen_list = get_lab_config_specimen_types($lab_config_id);
 		# For each specimen type, create a check box. Check it if specimen already in lab configuration
 		?>
-		<table class='hor-minimalist-b table table-bordered' style='width:700px;'>
+		<table class='hor-minimalist-b table table-bordered' style='width:100%;'>
 			<tbody>
 			<tr>
 			<?php
@@ -5117,7 +5117,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			$current_test_list = get_lab_config_test_types($lab_config_id)
 		# For each test type, create a check box. Check it if test already in lab configuration
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<tbody>
 			<tr>
 			<?php
@@ -5188,7 +5188,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			$current_test_list = get_lab_config_test_types($lab_config_id)
 		# For each test type, create a check box. Check it if test already in lab configuration
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<tbody>
 			<tr>
 			<?php
@@ -5254,7 +5254,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		//	$current_specimen_list = get_lab_config_specimen_types($lab_config_id);
 		# For each specimen type, create a check box. Check it if specimen already in lab configuration
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<tbody>
 			
                         <tr>
@@ -5423,7 +5423,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$measure_list = get_measures_catalog();
 		# For each measure, create a check box.
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<tbody>
 			<tr>
 			<?php
@@ -5717,7 +5717,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
             $sp_combo = $sp_configArray['test_type_id']; // 1 - registered, 2 - completed, 3 - completed / pending
 
             ?>
-		<div class='pretty_box' style='width:700px;'>
+		<div class='pretty_box' style='width:100%;'>
 		<table class='table table-bordered table-hover'>
                     <tr>
                     <th></th>
@@ -6057,7 +6057,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$site_settings = GlobalInfectionReport::getByKeys($_SESSION['user_id'], 0, 0);
 		?>
 		<input type='hidden' name='user_id' value=<?php echo $_SESSION['user_id']; ?>></input>
-		<div class='pretty_box' style='width:700px;'>
+		<div class='pretty_box' style='width:100%;'>
 		<table cellspacing='5px'>
 			<tbody>
 				<tr valign='top'>
@@ -6243,7 +6243,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			//$this->getNewAggregateReportConfigForm($lab_config);
 		}
 		?>
-		<div class='pretty_box' style='width:700px;'>
+		<div class='pretty_box' style='width:100%;'>
 		<table class='table table-bordered table-hover>
 			<tbody>
 				<tr valign='top'>
@@ -6383,7 +6383,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		# Fetch settings for all tests from dummy record
 		$site_settings = GlobalInfectionReport::getByKeys($_SESSION['user_id'], 0, 0);
 		?>
-		<div class='pretty_box' style='width:700px;'>
+		<div class='pretty_box' style='width:100%;'>
 		<table class='hor-minimalist-b'>
 			<tbody>
 				<tr valign='top'>
@@ -6627,7 +6627,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	</td></tr> <?php }?>
     </table>
     
-		<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 400px;">
+		<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 100%;">
 			<tr valign='top'>
 				<td><b><?php echo LangUtil::$generalTerms['PATIENTS']?></b></td>
 			</tr>
@@ -6745,7 +6745,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			?>
 			</table>
 			
-			<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 400px;">	
+			<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 100%;">	
 			<tr valign='top'<?php
 			if($report_config->reportId == 6)
 				echo " style='display:none;' ";
@@ -6884,7 +6884,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			}
 			?>
 			</table>
-			<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 400px">
+			<table cellspacing='5px' class='table table-bordered table-hover smaller_font' style="width: 100%">
 			<tr valign='top'<?php
 			if($report_config->reportId == 6 || $report_config->reportId == 2)
 				echo " style='display:none;' ";
@@ -8322,7 +8322,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			return;
 		}
 		?>
-		<table class='hor-minimalist-b' style='width:500px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<thead>
 				<tr valign='top'>
 					<th>

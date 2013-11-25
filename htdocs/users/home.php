@@ -44,34 +44,34 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
 												<li class="active"><a href="#tab_1_1" data-toggle="tab">BLIS Launch</a></li>
 												<li><a href="#tab_1_2" data-toggle="tab">Organizational Chart</a></li>
                                                 <li><a href="#tab_1_3" data-toggle="tab">Laboratory Master Calendar</a></li>
-												<li><a href="#tab_1_4" data-toggle="tab">Wall of Fame/Shame</a></li>
+												<li><a href="#tab_1_4" data-toggle="tab">My Lab</a></li>
 											</ul>
 											<div class="tab-content">
 												<div class="tab-pane active" id="tab_1_1">
 													<div class="slider-wrapper theme-default">
             <div id="slider" class="nivoSlider">
-                <img src="nivo/images/kdh/1.JPG" data-thumb="nivo/images/kdh/1.JPG" alt="" title="BLIS Launch photo."/>
-                <img src="nivo/images/kdh/2.JPG" data-thumb="nivo/images/kdh/2.JPG" alt="" title="Specimen ready for test." />
-                <img src="nivo/images/kdh/3.JPG" data-thumb="nivo/images/kdh/3.JPG" alt="" data-transition="slideInLeft" title="Full Haemogram machine - CELLTAC F."/>
-                <img src="nivo/images/kdh/4.JPG" data-thumb="nivo/images/kdh/4.JPG" alt="" title="Laboratory staff during the BLIS Launch." />
-                <img src="nivo/images/kdh/5.JPG" data-thumb="nivo/images/kdh/5.JPG" alt="" title="Specimen in preparation for testing." />
-                <img src="nivo/images/kdh/6.JPG" data-thumb="nivo/images/kdh/6.JPG" alt="" title="Humalyzer 2000 machine at the Laboratory." />
-                <img src="nivo/images/kdh/7.JPG" data-thumb="nivo/images/kdh/7.JPG" alt="" title="BLIS Launch Photoshoot session." />
-                <img src="nivo/images/kdh/8.JPG" data-thumb="nivo/images/kdh/8.JPG" alt="" title="Vincent Tieni processing tests using the Celltac F machine." />
+                <img src="nivo/images/kdh/1.JPG" data-thumb="nivo/images/kdh/1.JPG" alt="" title="Briefing by the Laboratory Manager to the Visitors during the launch."/>
+                <img src="nivo/images/kdh/2.JPG" data-thumb="nivo/images/kdh/2.JPG" alt="" title="The Laboratory Manager and his Deputy consult." />
+                <img src="nivo/images/kdh/3.JPG" data-thumb="nivo/images/kdh/3.JPG" alt="" data-transition="slideInLeft" title="Edwin Ochieng of APHL elaborates on a few areas of BLIS."/>
+                <img src="nivo/images/kdh/4.JPG" data-thumb="nivo/images/kdh/4.JPG" alt="" title="The Deputy Governor - Nandi County, Mr. Dominic Biwott asks for clarification on BLIS." />
+                <img src="nivo/images/kdh/5.JPG" data-thumb="nivo/images/kdh/5.JPG" alt="" title="Edwin Ochieng clarifies the issues raised." />
+                <img src="nivo/images/kdh/6.JPG" data-thumb="nivo/images/kdh/6.JPG" alt="" title="Laboratory staff, in all smiles on the big day." />
+                <img src="nivo/images/kdh/7.JPG" data-thumb="nivo/images/kdh/7.JPG" alt="" title="Laboratory Staff." />
+                <img src="nivo/images/kdh/8.JPG" data-thumb="nivo/images/kdh/8.JPG" alt="" title="" />
                 
-                <img src="nivo/images/kdh/9.JPG" data-thumb="nivo/images/kdh/9.JPG" alt="" title="BLIS Launch photo."/>
-                <img src="nivo/images/kdh/10.JPG" data-thumb="nivo/images/kdh/10.JPG" alt="" title="Specimen ready for test." />
-                <img src="nivo/images/kdh/11.JPG" data-thumb="nivo/images/kdh/11.JPG" alt="" data-transition="slideInLeft" title="Full Haemogram machine - CELLTAC F."/>
-                <img src="nivo/images/kdh/12.JPG" data-thumb="nivo/images/kdh/12.JPG" alt="" title="Laboratory staff during the BLIS Launch." />
-                <img src="nivo/images/kdh/13.JPG" data-thumb="nivo/images/kdh/13.JPG" alt="" title="Specimen in preparation for testing." />
-                <img src="nivo/images/kdh/14.JPG" data-thumb="nivo/images/kdh/14.JPG" alt="" title="Humalyzer 2000 machine at the Laboratory." />
-                <img src="nivo/images/kdh/15.JPG" data-thumb="nivo/images/kdh/15.JPG" alt="" title="BLIS Launch Photoshoot session." />
-                <img src="nivo/images/kdh/16.JPG" data-thumb="nivo/images/kdh/16.JPG" alt="" title="Vincent Tieni processing tests using the Celltac F machine." />
+                <img src="nivo/images/kdh/9.JPG" data-thumb="nivo/images/kdh/9.JPG" alt="" title=""/>
+                <img src="nivo/images/kdh/10.JPG" data-thumb="nivo/images/kdh/10.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/11.JPG" data-thumb="nivo/images/kdh/11.JPG" alt="" data-transition="slideInLeft" title=""/>
+                <img src="nivo/images/kdh/12.JPG" data-thumb="nivo/images/kdh/12.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/13.JPG" data-thumb="nivo/images/kdh/13.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/14.JPG" data-thumb="nivo/images/kdh/14.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/15.JPG" data-thumb="nivo/images/kdh/15.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/16.JPG" data-thumb="nivo/images/kdh/16.JPG" alt="" title="" />
                 
-                <img src="nivo/images/kdh/17.JPG" data-thumb="nivo/images/kdh/17.JPG" alt="" title="Specimen in preparation for testing." />
-                <img src="nivo/images/kdh/18.JPG" data-thumb="nivo/images/kdh/18.JPG" alt="" title="Humalyzer 2000 machine at the Laboratory." />
-                <img src="nivo/images/kdh/19.JPG" data-thumb="nivo/images/kdh/19.JPG" alt="" title="BLIS Launch Photoshoot session." />
-                <img src="nivo/images/kdh/20.JPG" data-thumb="nivo/images/kdh/20.JPG" alt="" title="Vincent Tieni processing tests using the Celltac F machine." />
+                <img src="nivo/images/kdh/17.JPG" data-thumb="nivo/images/kdh/17.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/18.JPG" data-thumb="nivo/images/kdh/18.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/19.JPG" data-thumb="nivo/images/kdh/19.JPG" alt="" title="" />
+                <img src="nivo/images/kdh/20.JPG" data-thumb="nivo/images/kdh/20.JPG" alt="" title="" />
             </div>
         </div>
 												</div>
@@ -88,7 +88,7 @@ $profile_tip = LangUtil::getPageTerm("TIPS_PWD");
                                                 <div class="tab-pane" id="tab_1_4">
 													
 													<p>
-													Laboratory wall of fame/shame...	
+													About my lab...	
 													</p>
 												</div>
 											</div>

@@ -67,11 +67,11 @@ header('Content-Type: text/html; charset=UTF-8');
   <div class="content">
   <center>
    <img src="logos/logo_300.png" alt="" width="90" height="90" /> 
-   <h3> Bungoma District Hospital Laboratory </h3>
+   <h3> Kapsabet District Hospital Laboratory </h3>
    </center>
     <!-- BEGIN LOGIN FORM -->
     <form class="form-vertical login-form" method="POST" action="validate.php" />
-      <h3 class="form-title">Login</h3>
+      <h3 class="form-title" style="display:none;">Login</h3>
       <?php
 					
 					if(isset($_REQUEST['to']))
