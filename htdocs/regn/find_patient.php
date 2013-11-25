@@ -63,21 +63,44 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
             </div>
     </div>
 
-    <div class="portlet-body form" >
-				<div class="span1">
-					Refresh:
-					<span>
-					</span> 
-				</div>
-            	<p style="text-align: right;"><a rel='facebox' href='#Registration'>Page Help</a></p>
-                
+    	<div class="portlet-body form" >
+    			<div class="scroller" data-height="400px" data-always-visible="1">
+                <p>Search existing patients</p>
+                <form>
+                <select name='p_attrib' id='p_attrib' style='font-family:Tahoma;' class='uniform_width m-wrap tooltips'>
+                <?php $page_elems->getPatientSearchAttribSelect(); ?>
+                </select>
+                &nbsp;&nbsp;
+                <input type='text' name='pq' id='pq' style='font-family:Tahoma;' onkeypress="return restrictCharacters(event)" class='uniform_width m-wrap tooltips' />
+                &nbsp;&nbsp;
+                <button id='psearch_button' class="btn blue button-submit" type="button" onclick="javascript:fetch_patients();">
+                <i class='icon-search'></i> <?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?></button>
+                <span id='psearch_progress_spinner'>
+                <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+                </span>
+                </form><div class="span4" id="help_text" style="position: absolute;top: 0px;right: 0px;">
+                        <!-- BEGIN Portlet PORTLET-->
+                        <div class="">
+                                            <div class="well text-info">
+                                            <?php
+                                            echo "<li>";
+                                            echo "Search Patients using the HMIS Number.";
+                                            echo "</li>";
+                                        
+                                            echo "<li>"; 
+                                            echo "If the patient details are not found, then proceed to register the patient using the <a href='javascript:load_patient_reg();'><abbr title='Add New Patient'>Add New Patient </abbr></a> Link as shown.";
+                                            echo "</li>";
+                                        
+                                            ?>
+                                                
+                                                
+                                            </div>
+                                        </div>
+                    </div>
+                <br />
                 <div id='add_anyway_div' >
                     <a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
-                	<a href='javascript:load_all_external_requests();' id="refresh" class="btn blue icn-only">
-                	<i class="icon-refresh m-icon-white"></i>
-					</a>
                 </div>
-               
                 <div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
                     <ul>
                         <?php
@@ -99,11 +122,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
                         ?>
                     </ul>
                 </div>
-           		
-           		<div id="external_labreq" style="height: 400px">
-                   
-               </div> 
-       </div> 
+		</div> 
     </div>
         
 </div>
@@ -233,7 +252,6 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
-	load_all_external_requests();
 	<?php
     if(isset($_REQUEST['show_sc']))
     {
@@ -284,26 +302,6 @@ function restrictCharacters(e) {
 	}
 	else
 		return true;
-}
-
-
-// Function to load all pending lab requests from external lab request table
-
-function load_all_external_requests(){
-        
-    var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-	App.blockUI(el);
-    
-    var url = 'ajax/search_p.php';
-    $("#external_labreq").load(url, 
-        {search_all_external: 1},
-         function(response, status) 
-        {
-            App.unblockUI(el);
-            handlePaginateDataTable('patientListTable');
-            $("#external_labreq").removeAttr('style');
-        }
-     );
 }
 
 function specimen_info(specimen_id)
