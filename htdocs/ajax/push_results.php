@@ -29,6 +29,9 @@ foreach ($lab_numbers as $lab_no){
 	$lab_request_no = $lab_no['labNo'];
 	$system_id  = $lab_no['system_id'];
 	$result_ent = $lab_no['result'];
+	$patient_number = $lab_no['patient_id'];
+	$revisit_number = $lab_no['revisitNumber'];
+	$requestingClinician = $lab_no['requestingClinician'];
 	
 	$test = Test::getByExternalLabno($lab_request_no);
 	$specimen_id = $test->specimenId;

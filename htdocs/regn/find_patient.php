@@ -128,6 +128,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
     </div>
         
 </div>
+    </div>
 <!-- END LAB REQUEST -->
 
 <!-- BEGIN PATIENT REGISTATION -->

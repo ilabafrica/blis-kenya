@@ -120,9 +120,18 @@ $user_id = $_SESSION['user_id'];
 //$ts =date("Y-m-d H:i:s", $unix_ts);
 //-NC3065
 add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue());
-API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
+
 update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
+
+$test_modified = Test::getById($test_id);
+
+$result_to_push = str_replace("<br>","",$test_modified->decodeResult());
+$result_to_push = str_replace("&nbsp;","",$result_to_push);
+$result_to_push = str_replace("<b>","",$result_to_push);
+$result_to_push = str_replace("</b>","",$result_to_push);
+
+API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
 # Show confirmation with details.
 ?>
 <div class="modal-header">
