@@ -7317,7 +7317,7 @@ function add_specimen($specimen)
 		"session_num, time_collected, report_to, doctor, referred_to_name, daily_num, external_lab_no ) VALUES ( $specimen->specimenId, $specimen->patientId, $specimen->specimenTypeId, ". 
 		"'$specimen->dateCollected', '$specimen->dateRecvd', $specimen->userId, $specimen->statusCodeId, $specimen->referredTo, '$specimen->comments', ".
 		"'$specimen->auxId', '$specimen->sessionNum', '$specimen->timeCollected', $specimen->reportTo, '$specimen->doctor', '$specimen->referredToName', '$specimen->dailyNum' , '$specimen->external_lab_no')";
-	echo $query_string;
+	//echo $query_string;
 	$result = query_insert_one($query_string);
 	
 	if($result) {
@@ -7328,10 +7328,7 @@ function add_specimen($specimen)
 		$auditTrail->logSpecimenReg(); 
 		
 	}
-	else{
-		echo '<script type="text/javascript">alert("Fatal Error Occurred!");<script>';
-		die(mysql_error());
-	}
+	
 	return $specimen->specimenId;
 }
 

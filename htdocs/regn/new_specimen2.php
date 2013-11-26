@@ -459,7 +459,7 @@ function add_specimens()
         window.location="specimen_added.php?snum=<?php echo $session_num; ?>";
     }});
     */
-    //window.location="specimen_added.php?snum=<?php echo $session_num; ?>";
+   window.location="specimen_added.php?snum=<?php echo $session_num; ?>";
 }
 
 function add_specimenbox()
