@@ -7328,6 +7328,7 @@ function add_specimen($specimen)
 		$auditTrail->logSpecimenReg(); 
 		
 	}
+	
 	return $specimen->specimenId;
 }
 

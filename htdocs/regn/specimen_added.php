@@ -46,7 +46,8 @@ $specimen_list = get_specimens_by_session($session_num);
         <div class="portlet-body form">
         <!--<p style="text-align: right;"><a rel='facebox' href='#SpecimenAdded'>Page Help</a></p>-->
         <div class="span4" style="position: absolute;top: 180px;right: 30px;">
-						<div class="well text-info">
+						<?php if(count($specimen_list) != 0)
+            					{ ?><div class="well text-info">
 						<?php
 							echo "<li>";
 							echo "This page allows us to view a summary of both patient and the specimens we registered.";
@@ -60,7 +61,7 @@ $specimen_list = get_specimens_by_session($session_num);
 							echo "The specimen number is indicated in in bigger fonts than the other details (e.g. MIC-5210).";
 							echo "</li>";
 							?>
-						</div>				
+						</div><?php } ?>				
 					</div>
             <div id='specimen_added_body'> </div>           
             

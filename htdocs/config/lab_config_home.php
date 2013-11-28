@@ -1273,7 +1273,7 @@ if($lab_config == null)
                                 <!--NC3065-->
 
                             
-				<div class='right_pane' id='users_div' style='display:none;width:inherit ;'>
+				<div class='right_pane' id='users_div' style='display:none;'>
 				<div class="portlet box green">
 					<div class="portlet-title">
 						<h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['MENU_USERS']; ?></h4>
@@ -1295,7 +1295,7 @@ if($lab_config == null)
 					 <?php echo 'Import from HMIS/EMR' ?>
 					 </a>
 					<br><br>
-					<div id='user_acc_msg' class='clean-orange' style='display:none;width:350px;'>
+					<div id='user_acc_msg' class='clean-orange' style='display:none;width:100%;'>
 					</div>
 					<div id='user_list_table'>
 					<?php
