@@ -30,6 +30,8 @@ $count = 0;
 
 foreach($test_type_list as $test_type)
 {
+	if ($test_type->parent_test_type_id==0)
+	{
 	$test_name = $test_type->getName();
 ?>
 	<option value='<?php echo $test_type->testTypeId; ?>'
@@ -43,6 +45,7 @@ foreach($test_type_list as $test_type)
 			 ?>
 	><?php echo $test_type->getName();?></option>
 	<?php 
+	}
 }
 ?>
 </select>
