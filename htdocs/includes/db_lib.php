@@ -6504,8 +6504,9 @@ function search_all_pending_external_requests(){
         DbUtil::switchRestore($saved_db);
             
             $query_string = "SELECT * FROM external_lab_request ".
-            "WHERE test_status ='".Specimen::$STATUS_PENDING.
-            "' GROUP BY patient_id ORDER BY requestDate ASC LIMIT 300";
+            "WHERE test_status ='".Specimen::$STATUS_PENDING."'".
+            "AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL)
+            GROUP BY patient_id ORDER BY requestDate DESC LIMIT 600";
             $saved_db = DbUtil::switchToGlobal();
             $resultset = query_associative_all($query_string, $row_count);
             DbUtil::switchRestore($saved_db);
