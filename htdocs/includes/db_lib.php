@@ -15844,7 +15844,8 @@ class API
     	$query_string = "SELECT 
 						    labNo,
     						system_id, 
-    						result
+    						result,
+    						comments
 						FROM
 							external_lab_request
 						WHERE
