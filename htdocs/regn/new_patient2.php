@@ -201,7 +201,7 @@ $script_elems->enableAutocomplete();
 <script type='text/javascript'>
 $(document).ready(function(){
 	$('#progress_spinner').hide();
-	<?
+	<?php
 	if(isset($_REQUEST['n']))
 	{
 		# Prefill patient name field

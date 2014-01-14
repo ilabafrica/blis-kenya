@@ -192,7 +192,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" ></textarea>
+			<textarea name='comments' id='test_<?php echo $test_type->testTypeId ?>_comments'  class='uniform_width'  ></textarea>
 			</span>
 		</td>
 	</tr>
@@ -379,7 +379,7 @@ $test_type = get_test_type_by_id($test_type_id);
 	
 	function update_remarks1()
 	{
-		var result_elems = $("input[name='result[]']").attr("value");
+		var result_elems = $("input[name='result[]']").val();
 				if(isNaN(result_elems))
 		{	
 			alert("Value expected for result is numeric.");
