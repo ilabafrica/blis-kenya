@@ -102,10 +102,10 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						    <?php 
 						      if($_SESSION['img'] == "" || $_SESSION['img'] == null ) {
-						          echo '<img alt="" src="assets/img/avatar.png" height=30 width=30/>';
+						          echo '<img alt="" src="images/avatar.png" height=30 width=30/>';
 						      }
                               else {
-                                  echo '<img alt="" src="img/'.$_SESSION['img'].'" height=28 width=28/>';
+                                  echo '<img alt="" src="images/'.$_SESSION['img'].'" height=28 width=28/>';
                               }
                             ?>
 						

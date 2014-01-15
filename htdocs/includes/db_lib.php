@@ -3160,7 +3160,7 @@ class Test
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
 		$start_time = new DateTime($specimen->ts_collected);
-		error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
+		//error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
 		return $interval->format('%d days, %H hrs, %I mins, %S secs');
