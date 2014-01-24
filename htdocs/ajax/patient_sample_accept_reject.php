@@ -46,6 +46,7 @@ $query_string_rejected = "";
                     "AND t.result = '' order by s.date_recvd DESC, s.time_collected DESC limit 200";
 
 
+//nc = not collected rj = rejected
 $resultset_not_collected = query_associative_all($query_string_not_collected, $row_count);
 $resultset_rejected = query_associative_all($query_string_rejected, $row_count);
 

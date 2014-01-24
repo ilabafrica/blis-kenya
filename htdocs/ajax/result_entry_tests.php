@@ -168,7 +168,8 @@ else
             if ($status!="all")
             	$query_string.="
                     	 t.status_code_id=$status AND
-            			 s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND ";
+            			 s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND
+            			 t.external_lab_no!='' AND ";
             
             $query_string.="	
                     	(tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')

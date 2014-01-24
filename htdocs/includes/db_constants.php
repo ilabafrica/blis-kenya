@@ -28,7 +28,7 @@ if($SERVER == $ON_ARC)
 
 $DB_HOST = "localhost";
 $DB_USER = "root";
-$GLOBAL_DB_NAME="blis_revamp";
+$GLOBAL_DB_NAME="blis_revamp_prod";
 
 $DB_NAME = $GLOBAL_DB_NAME;	
 
