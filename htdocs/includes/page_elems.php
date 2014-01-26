@@ -3,7 +3,6 @@
 # (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre
 # Contains method calls for commonly used HTML page elements
 #
-
 require_once("db_lib.php");
 
 class PageElems

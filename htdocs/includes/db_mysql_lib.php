@@ -1,4 +1,5 @@
 <?php
+#error_reporting(0);
 #
 # Contains function calls for MySQL DB connection and query execution
 # For e.g., use query_associative_all() instead of mysql_query()

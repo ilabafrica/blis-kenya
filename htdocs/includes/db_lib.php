@@ -2206,6 +2206,14 @@ class Patient
 		else
 			return $this->patient_name;
 	}
+
+	public function getSurrId()
+	{
+		if($this->surrogateId == "")
+			return " - ";
+		else
+			return $this->surrogateId;
+	}
 	
 	public function getAddlId()
 	{

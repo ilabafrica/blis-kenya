@@ -1663,9 +1663,9 @@ else
 
 				<tr valign='top'>
                 
-					<td><strong><?php echo "Patient Number"; ?></strong></td>
+					<td><strong><?php echo "Patient Number(Sanitas)"; ?></strong></td>
 
-					<td><?php echo $patient->getPatientId(); ?></td>
+					<td><?php echo $patient->getSurrId(); ?></td>
 
 				<?php
 
@@ -1766,9 +1766,9 @@ else
 			?>
 			<tr valign='top'>	
 
-					<td><strong><?php echo "Visit Number"; ?></strong></td>
+					<td><strong><?php echo "Lab Number[Serial No.]"; ?></strong></td>
 
-					<td><?php echo $patient->getDailyNum(); ?></td>
+					<td><?php echo $patient->getPatientId().'['.$patient->getDailyNum().']'; ?></td>
 
 
 					<td><strong><?php echo "Requesting Department/Facility"; ?></strong></td>

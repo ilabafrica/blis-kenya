@@ -1910,7 +1910,7 @@ db_get_current();
 					<td>
 						<select name='cat_code' id='cat_code14' class='uniform_width'>
 						<option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
-						<?php $page_elems->getTestCategoryTypesCountrySelect(); ?>
+						<?php //$page_elems->getTestCategoryTypesCountrySelect(); ?>
 						</select>
 					</td>
 				</tr>
