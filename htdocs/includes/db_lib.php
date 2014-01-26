@@ -3160,10 +3160,10 @@ class Test
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
 		$start_time = new DateTime($specimen->ts_collected);
-		error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
+		#error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
-		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+		return $interval->format('%d d %H hrs %I min');
 	}
 	
 	public function getTestTurnaroundTime()
@@ -3172,7 +3172,7 @@ class Test
 		$start_time = new DateTime($this->ts_started);
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
-		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+		return $interval->format('%d d %H hrs %I min');
 	}
     public function getLabSectionByTest()
     {
@@ -6504,16 +6504,12 @@ function search_all_pending_external_requests(){
         DbUtil::switchRestore($saved_db);
             
             $query_string = "SELECT * FROM external_lab_request ".
-<<<<<<< Updated upstream
-            "WHERE test_status ='".Specimen::$STATUS_PENDING."'".
-            "AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL)
-            GROUP BY patient_id ORDER BY requestDate DESC LIMIT 600";
-=======
+
             "WHERE test_status ='".Specimen::$STATUS_PENDING.
             "' AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL)
             AND requestDate >= CURDATE()-14
             GROUP BY patient_id ORDER BY requestDate ASC LIMIT 300";
->>>>>>> Stashed changes
+
             $saved_db = DbUtil::switchToGlobal();
             $resultset = query_associative_all($query_string, $row_count);
             DbUtil::switchRestore($saved_db);
