@@ -1353,7 +1353,7 @@ class TestType
 
 	public static function getIdByName($name)
 	{
-		$query_string = "SELECT test_type_id as id FROM `test_type` WHERE `name` = '$name'";
+		$query_string = "SELECT test_type_id as id FROM `test_type` WHERE `name` = '$name' AND disabled=0;";
 		
 		$saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
 

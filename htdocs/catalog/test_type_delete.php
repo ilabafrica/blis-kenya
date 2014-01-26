@@ -7,8 +7,6 @@
 
 include("../includes/db_lib.php");
 
-$saved_session = SessionUtil::save();
-$saved_db = DbUtil::switchToGlobal();
 
 $test_type_id = $_REQUEST['id'];
 TestType::deleteById($test_type_id);
