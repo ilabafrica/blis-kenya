@@ -1,21 +1,21 @@
 <?php
 #
-# Returns specimen result entry form
+# Returns test editing form
 # Called via ajax from results_entry.php
 #
 
-include("../includes/db_lib.php");
-include("../includes/page_elems.php");
-include("../includes/ajax_lib.php");
-include("../includes/user_lib.php");
-LangUtil::setPageId("results_entry");
-$page_elems = new PageElems();
+require_once("../includes/db_lib.php");
+require_once("../includes/page_elems.php");
+require_once("../includes/ajax_lib.php");
+require_once("../includes/user_lib.php");
 
+$page_elems = new PageElems();
 
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
 	global $form_id_list, $specimen_id, $page_elems;
+	$test = Test::getById($test_id);
 	
 	$curr_form_id = 'test_'.$test_id;
 	$form_id_list[] = $curr_form_id;
@@ -75,18 +75,21 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		$range = $measure->range;
 		$range_type = $measure->getRangeType();
 		$range_values = $measure->getRangeValues($patient);
+		$clean_result = $test->getResultClean();
+		$res_dp = explode(",", $test->result);
+		$res_dropdown = $res_dp[0];
 		
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
 		?>
-			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" required>
+			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
 			<option></option>
 			<?php
 			foreach($range_values as $option)
 			{
 				$option= str_replace('#', '/', $option);
 				?>
-				<option value='<?php echo $option; ?>'><?php echo str_replace('#', '/', $option); ?></option>
+				<option value='<?php echo $option; ?>' <?php if(strcmp($option, $res_dropdown) == 0){ echo "selected"; } ?>  ><?php echo str_replace('#', '/', $option); ?></option>
 				<?php
 			}
 			?>
@@ -98,7 +101,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();"></input>
+			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' value="<?php echo $clean_result ?>" onchange="javascript:update_remarks1();"></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -158,7 +161,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' value='". $clean_result ."'></input>";
                   // echo "</div>";
                                 	
 		}
@@ -175,7 +178,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			?>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<small>
-			<input type='checkbox' required id='<?php echo $curr_form_id; ?>_skip' title='Tick this box if results are not yet available and are to be entered later' onclick="javascript:toggle_form('<?php echo $curr_form_id; ?>', this);">
+			<input type='checkbox' id='<?php echo $curr_form_id; ?>_skip' title='Tick this box if results are not yet available and are to be entered later' onclick="javascript:toggle_form('<?php echo $curr_form_id; ?>', this);">
 			<?php echo LangUtil::$generalTerms['CMD_SKIP']; ?>
 			</input>
 			</small>
@@ -196,21 +199,14 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" ></textarea>
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width' 
+				onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, 
+				<?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, 
+				'<?php echo $patient->sex;?>');" ><?php echo $test->getComments() ?>
+			</textarea>
 			</span>
 		</td>
 	</tr>
-	<!--tr>
-		<td>
-			<label for='<?php echo $curr_form_id; ?>_comments_1'>
-				<?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?> (<?php echo LangUtil::$generalTerms['OPTIONAL']; ?>)
-			</label>
-	
-			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-				<textarea name='comments_1' id='<?php echo $curr_form_id; ?>_comments_1'  class='uniform_width'></textarea>
-			</span>
-		</td>
-	</tr-->
 	</table><?php } ?>
 	</form>
 	
@@ -236,42 +232,6 @@ if($test_id == null)
 	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
 	return;
 }
-// if($specimen->statusCodeId == Specimen::$STATUS_DONE)
-// {
-// 	?>
-	<!-- <div class='sidetip_nopos' style='width:350px;'--> 
-	<?php 
-// 	echo LangUtil::$pageTerms['MSG_ALREADYENTERED']."- ";
-// 	if($_SESSION['sid'] != 0)
-// 	{
-// 		echo "<br>";
-// 		echo LangUtil::$generalTerms['SPECIMEN_ID'].": ";
-// 		echo $specimen->getAuxId();
-// 	}
-// 	echo "<br>";
-// 	echo LangUtil::$generalTerms['SPECIMEN_TYPE'].": ".get_specimen_name_by_id($specimen->specimenTypeId);
-// 	echo "<br>";
-// 	//if($_SESSION['pnamehide'] == 0)
-// 	if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-// 	{
-// 		echo LangUtil::$generalTerms['PATIENT'].": $patient->name ($patient->sex ".$patient->getAgeNumber().") <br>";
-// 	}
-// 	else
-// 	{
-// 		echo LangUtil::$generalTerms['GENDER']."/".LangUtil::$generalTerms['AGE'].": $patient->sex /".$patient->getAgeNumber()."<br>";
-// 	}
-// 	?>
-<!--<br><a href='specimen_info.php?sid=<?php echo $specimen->specimenId; ?>'> <?php echo LangUtil::$generalTerms['DETAILS']; ?> &raquo;</a>
- 	</div> -->
-	<?php
-// 	return;
-// }
-
-# Print HTML results form
-//$test_list = get_tests_by_specimen_id($specimen->specimenId);
-//$patient = get_patient_by_id($specimen->patientId);
-?>
-<?php 
 $test_type = get_test_type_by_id($test_type_id);
 ?>	
 <div class="modal-header">
@@ -281,12 +241,6 @@ $test_type = get_test_type_by_id($test_type_id);
 <div class="modal-body">
 	<div class="row-fluid">
 	<div class="span6 sortable">
-    <div id="ctbutton" style="display: none"> 
-        <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
-        </div>
-        <div id="celltacerror" style="display: none">
-            
-        </div>
 	<?php
 	$parent_test_id = $test_id;
 	get_result_form($test_type, $test_id, 0, $patient, $parent_test_id);	  
@@ -316,13 +270,40 @@ $test_type = get_test_type_by_id($test_type_id);
 	
 	<div class="portlet box grey">
 		<div class="portlet-title">
-			<h4>Patient Test history</h4>
+			<h4>Test Result</h4>
 		</div>		
 	<div class="portlet-body">
 	<div class="scroller" data-height="300px" data-always-visible="1">
-	<?php 		
-	$page_elems->getPatientHistory($patient->patientId, true);
-	?>
+	<table class="table table-striped table-bordered table-advance">
+		<thead><th>Test Name</th>
+		<th>Results</th>
+		<th>Remarks</th>
+		<th>Entered by</th>
+		</thead>
+		<tbody>
+		 <?php $page_elems->getTestInfoRowSmall($test, true);
+		 
+		 $child_tests = get_child_tests($test_type_id);
+		 if (count($child_tests)>0){
+		 	foreach($child_tests as $child_test)
+		 	{
+		 		$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
+		 			
+		 		$page_elems->getTestInfoRowSmall($chid_test_entry, true);
+		 		$child_tests = get_child_tests($child_test['test_type_id']);
+		 		if (count($child_tests)>0){
+		 			foreach($child_tests as $child_test)
+		 			{
+		 				$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
+		 				$page_elems->getTestInfoRowSmall($chid_test_entry, true);
+		 			}
+		 		}
+		 	}
+		 }
+		 ?>
+		 </tbody>
+		 </table>
+
 	</div>
 	</div>
 	</div>

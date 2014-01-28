@@ -697,6 +697,25 @@ function fetch_test_result_form(test_id)
 	);
 }
 
+function fetch_test_edit_form(test_id){
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	
+	var pg=2;
+	$('#fetch_progress_bar').show();
+	var url = 'ajax/test_edit_form.php';
+	$('.result_form_pane').html("");
+	var target_div = "result_form_pane_"+test_id;
+	$("#"+target_div).load(url, 
+		{tid: test_id , page_id:pg}, 
+		function() 
+		{
+			$('#'+target_div).modal('show');
+			App.unblockUI(el);
+		}
+	);
+}
+
 function view_test_result(test_id, status)
 {
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");

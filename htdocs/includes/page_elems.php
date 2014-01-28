@@ -3437,6 +3437,41 @@ class PageElems
 		<?php
 	}
 	
+	public function getTestInfoRowSmall($test, $is_modal=false)
+	{
+		# Returns HTML table row containing test info
+		# Called by test_edit_form.php 
+		
+		$user = get_user_by_id($_SESSION['user_id']);
+		?>
+		
+		<tr valign='top'>
+			<td>
+				<?php echo get_test_name_by_id($test->testTypeId); ?>
+			</td>
+			<td>
+				<?php
+				if($test->isPending())
+					echo LangUtil::$generalTerms['PENDING_RESULTS'];
+				else
+					echo $test->decodeResult();
+				?>
+			</td>
+			<td>
+				<?php echo $test->getComments(); ?>
+			</td>
+			<td>
+				<?php echo get_username_by_id($test->userId); ?>
+			</td>
+			<?php
+			$specimen_object=Specimen::getById($test->specimenId);
+			$pid=$specimen_object->patientId;
+			$sid=$test->specimenId;
+				
+			?>
+		</tr>
+		<?php
+	}
 	
 	public function getTatStatsTable($stat_list)
 	{

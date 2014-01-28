@@ -3273,6 +3273,8 @@ class Test
 			update_specimen_status($specimen_id);
 	}
 	
+	
+	
 	public function getResultWithoutHash()
 	{
 		global $PATIENT_HASH_LENGTH;
@@ -3328,6 +3330,20 @@ class Test
 			return "";
 		$retval = substr($this->result, 0, -1*$PATIENT_HASH_LENGTH);
 		return $retval;
+	}
+	
+	public function getResultClean(){
+		
+		$res = $this->decodeResult();
+		if(trim($res) == ""){
+			return "";
+		}
+		
+		//Strip tags from result
+		$to_replace = array("<br>", "<b>", "&nbsp", "< b> ", ";");
+		$res = str_replace($to_replace, "", $res);
+		
+		return trim($res);	
 	}
         
         public function getHashInResult()

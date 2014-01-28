@@ -358,8 +358,7 @@ else{
 			<th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
 			<th style='width:100px;'><?php echo "Test"; ?></th>
-			<th style='width:50px;'><?php echo "Status";?></th>
-			<?php if ($status == 3) { echo "<th style='width:60px;'>Edit</th>";  } ?> 
+			<th style='width:50px;'><?php echo "Status";?></th>			
 			<th style='width:100px;'></th>
 			<?php if($attrib_type==10){
 			?>
@@ -495,10 +494,11 @@ else{
 				echo 'label-info">Tested';
 				echo '</span></td>';
 				echo '
-			<td style="width:60px;"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Edit results" class="btn blue mini">
-				<i class="icon-edit"></i> Edit </a></td> 
-			<td style="width:130px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn blue mini">
-				<i class="icon-edit"></i> Verify Results</a>
+			<td style="width:150px;">
+			<a href="javascript:fetch_test_edit_form('.$quote.$test->testId.$quote.');" title="Click to Edit results" class="btn blue mini">
+				<i class="icon-edit"></i> Edit</a>
+			<a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn blue mini">
+				<i class="icon-edit"></i> Verify</a> 
 			</td>
 			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>
