@@ -825,7 +825,6 @@ function submit_forms(test_id)
 	$('.result_progress_spinner').show();
 	//var target_div_id = "fetched_specimen";
 	var target_div_id = "result_form_pane_"+test_id;
-	validate_fields(form_id_list);
 	for(var i = 0; i < form_id_list.length; i++)
 	{
 		
