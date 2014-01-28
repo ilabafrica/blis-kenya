@@ -172,7 +172,7 @@ else
             			 t.external_lab_no!='' AND ";
             
             $query_string.="	
-                    	(tt.parent_test_type_id = 0 or t.external_parent_lab_no = '0')
+                    	tt.parent_test_type_id = 0 AND t.external_parent_lab_no = '0'
             			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or tt.name LIKE '%$search_term%' OR tc.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
                     	ORDER BY s.date_recvd DESC, s.ts DESC";
                     	/*LIMIT 0,10 ";

@@ -5,6 +5,8 @@
 #
 include("redirect.php");
 include("includes/header.php");
+
+$script_elems->enableValidation();
 LangUtil::setPageId("results_entry");
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 $test_categories = TestCategory::geAllTestCategories($lab_config_id);
@@ -802,6 +804,19 @@ function toggle_form(form_id, checkbox_obj)
 	}
 }
 
+function validate_fields(myForm){
+		var elems = document.getElementById('myForm');
+	    for(var i=0; i<elems.length; i++) { 
+	        if (elems.elements[i].tagName=='input'&&elems.elements[i].getAttribute('type')=='text'&&elems.elements[i].val()!=''){
+	        	alert("Some fileds are empty.").show();
+	        	return true;
+	        }
+	        else{
+	        	return false;
+	        }
+	    }
+	}
+
 function submit_forms(test_id)
 {
 	var form_id_csv = $('#form_id_list').val();
@@ -810,8 +825,10 @@ function submit_forms(test_id)
 	$('.result_progress_spinner').show();
 	//var target_div_id = "fetched_specimen";
 	var target_div_id = "result_form_pane_"+test_id;
+	validate_fields(form_id_list);
 	for(var i = 0; i < form_id_list.length; i++)
 	{
+		
 		if($('#'+form_id_list[i]+'_skip').is(':checked'))
 		{
 			continue;

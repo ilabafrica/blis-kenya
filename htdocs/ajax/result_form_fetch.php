@@ -11,6 +11,7 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 
+
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
@@ -78,7 +79,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
 		?>
-			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
+			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" required>
 			<option></option>
 			<?php
 			foreach($range_values as $option)
@@ -97,7 +98,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();"></input>
+			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" required></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -157,7 +158,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' required></input>";
                   // echo "</div>";
                                 	
 		}
@@ -174,7 +175,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			?>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<small>
-			<input type='checkbox' id='<?php echo $curr_form_id; ?>_skip' title='Tick this box if results are not yet available and are to be entered later' onclick="javascript:toggle_form('<?php echo $curr_form_id; ?>', this);">
+			<input type='checkbox' required id='<?php echo $curr_form_id; ?>_skip' title='Tick this box if results are not yet available and are to be entered later' onclick="javascript:toggle_form('<?php echo $curr_form_id; ?>', this);">
 			<?php echo LangUtil::$generalTerms['CMD_SKIP']; ?>
 			</input>
 			</small>
