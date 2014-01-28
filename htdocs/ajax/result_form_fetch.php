@@ -16,7 +16,8 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 {
 	#Returns HTML form elements for given test type results
 	global $form_id_list, $specimen_id, $page_elems;
-
+	
+	$test = Test::getById($test_id);
 	$curr_form_id = 'test_'.$test_id;
 	$form_id_list[] = $curr_form_id;
 	?>
@@ -98,7 +99,9 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" required></input>
+
+			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' value='<?php echo $test->decodeResult(); ?>' onchange="javascript:update_remarks1();"></input>
+
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -158,7 +161,9 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' required></input>";
+
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' value='". str_replace('<br>', '', $test->decodeResult()) ."'></input>";
+
                   // echo "</div>";
                                 	
 		}
