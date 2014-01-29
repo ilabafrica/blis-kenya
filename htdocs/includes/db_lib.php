@@ -6546,21 +6546,38 @@ function reverse_birthday( $days ){
     
 }
     
-function search_all_pending_external_requests(){
+function search_all_pending_external_requests($query){
     global $con;
     $saved_db = DbUtil::switchToGlobal();
         
+        $query =  mysql_real_escape_string($query);
         DbUtil::switchRestore($saved_db);
             
-            $query_string = "SELECT * FROM external_lab_request ".
-
+            $query_string = "SELECT id, patient_id, labNo, parentLabNo, requestDate, orderStage, full_name,
+     		investigation, dateOfBirth, age, gender 
+     		FROM external_lab_request ".
             "WHERE test_status ='".Specimen::$STATUS_PENDING.
             "' AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL)
-            AND requestDate >= CURDATE()-14
-            GROUP BY patient_id ORDER BY requestDate ASC LIMIT 300";
-
+            AND requestDate >= CURDATE()-14 GROUP BY patient_id ORDER BY requestDate DESC LIMIT 50";
+			
+			$query_filtered = "SELECT id, patient_id, labNo, parentLabNo, requestDate, orderStage, full_name,
+     		investigation, dateOfBirth, age, gender 
+     		FROM external_lab_request ".
+            "WHERE test_status ='".Specimen::$STATUS_PENDING.
+            "' AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL)
+            AND full_name LIKE '%$query%' OR investigation LIKE '%$query%' OR patient_id = '$query'
+            OR labNo = '$query'
+			GROUP BY patient_id ORDER BY requestDate DESC LIMIT 50";
+			
             $saved_db = DbUtil::switchToGlobal();
-            $resultset = query_associative_all($query_string, $row_count);
+            if($query != ""){
+            	$resultset = query_associative_all($query_filtered, $row_count);
+            }
+			else {
+				$resultset = query_associative_all($query_string, $row_count);	
+			}
+            
+			
             DbUtil::switchRestore($saved_db);
     
             if(count($resultset) > 0)

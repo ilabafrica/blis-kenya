@@ -13,6 +13,7 @@ $script_elems = new ScriptElems();
 $saved_session = SessionUtil::save();
 $q = $_REQUEST['q'];
 $q = strip_tags($q);
+$query = $_REQUEST['query'];
 /*
 $q = addslashes($name);
 $q = mysql_escape_string($name);
@@ -30,7 +31,7 @@ $patient_list = array();
 if(isset($_REQUEST['search_all_external'])){
     
     # Fetch all patients with pending request from external system   
-    $patient_list = search_all_pending_external_requests();
+    $patient_list = search_all_pending_external_requests($query);
 }
 else if(isset($_REQUEST['l']))
 {
@@ -76,15 +77,45 @@ if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient == null
 	<br>
 	<div class='sidetip_nopos'>
 	<?php
-	echo LangUtil::$pageTerms['MSG_NOMATCH']." -";
-	if($a == 0)
-		echo " ".LangUtil::$generalTerms['PATIENT_ID']." ";
-	else if($a == 1)
-		echo " ".LangUtil::$generalTerms['NAME']." ";
-	else if($a == 2)
-		echo " ".LangUtil::$generalTerms['ADDL_ID']." ";
+	echo LangUtil::$pageTerms['MSG_NOMATCH']."";
 	?>
-	<b><?php echo $q; ?></b>
+		
+		<table class='table tale-striped table-condensed' id='patientListTable' name='patientListTable'>
+		<thead>
+			<tr valign='top'>
+				
+				<th>Patient ID</th>
+				<?php
+				if($lab_config->dailyNum >= 11)
+				{
+					?>
+					<th><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></th>
+					<?php
+				}
+				if($lab_config->patientAddl != 0)
+				{
+					?>
+					<th><?php echo LangUtil::$generalTerms['ADDL_ID']; ?></th>
+					<?php
+				}
+				?>
+				<?php  #TODO: Add check if user has patient name/private data access here ?>
+	                        
+				<th><?php echo "Patient Name"; ?> </th>
+	           <?php
+				if(strpos($_SERVER["HTTP_REFERER"], "search.php") !== false)
+				{
+					# Show status of most recently registered specimens
+					echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
+				}
+				?>
+				<th>Test(s) Requested</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+		
 	<?php
 	//if(strpos($_SERVER['HTTP_REFERER'], "find_patient.php") !== false)
 	if(false)

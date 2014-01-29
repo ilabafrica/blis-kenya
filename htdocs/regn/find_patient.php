@@ -73,7 +73,7 @@ $lab_config = get_lab_config_by_id($_SESSION['lab_config_id']);
                 
                 <div id='add_anyway_div' >
                     <a class ="btn" id='add_anyway_link' href='javascript:load_patient_reg()'><i class='icon-plus'></i> <?php echo LangUtil::$pageTerms['ADD_NEW_PATIENT']; ?> &raquo;</a>
-                	<a href='javascript:load_all_external_requests();' id="refresh" class="btn blue icn-only">
+                	<a href='javascript:load_external_requests();' id="refresh" class="btn blue icn-only">
                 	<i class="icon-refresh m-icon-white"></i>
 					</a>
                 </div>
@@ -233,7 +233,8 @@ $(document).ready(function() {
 	$('#p_attrib').change(function() {
 		$('#pq').focus();
 	});
-	load_all_external_requests();
+	load_external_requests();
+	
 	<?php
     if(isset($_REQUEST['show_sc']))
     {
@@ -289,18 +290,28 @@ function restrictCharacters(e) {
 
 // Function to load all pending lab requests from external lab request table
 
-function load_all_external_requests(){
+function load_external_requests(){
         
     var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
     
+    //Search
+    $query = $('#patientListTable_filter input').val();
+    
     var url = 'ajax/search_p.php';
     $("#external_labreq").load(url, 
-        {search_all_external: 1},
+        {search_all_external: 1, query: $query},
          function(response, status) 
         {
             App.unblockUI(el);
-            handlePaginateDataTable('patientListTable');
+            $('#patientListTable').dataTable();
+            $('.dataTables_filter input').unbind('keypress keyup')
+    			.bind('keypress keyup', function(e){
+    				query_length = $('#patientListTable_filter input').val().length;
+					if ((e.which === 13) && (query_length >= 2)){
+						load_external_requests();
+					}
+          });
             $("#external_labreq").removeAttr('style');
         }
      );
