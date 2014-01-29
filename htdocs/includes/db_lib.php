@@ -9663,14 +9663,14 @@ function get_specimen_name_by_id($specimen_type_id)
 	{
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"SELECT name FROM specimen_type ".
-			"WHERE specimen_type_id=$specimen_type_id LIMIT 1";
+			"SELECT st.name as sp_name FROM specimen_type st, specimen s, test t, test_type tt ".
+			"WHERE tt.test_type_id=t.test_type_id AND t.specimen_id=s.specimen_id AND st.specimen_type_id=s.specimen_type_id AND tt.parent_test_type_id=0 AND st.specimen_type_id=$specimen_type_id LIMIT 1";
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
 		if($record == null)
 			return LangUtil::$generalTerms['NOTKNOWN'];
 		else
-			return $record['name'];
+			return $record['sp_name'];
 	}
 }
 
