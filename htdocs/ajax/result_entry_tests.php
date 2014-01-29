@@ -358,6 +358,7 @@ else{
 			<th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
 			<th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
 			<th style='width:100px;'><?php echo "Test"; ?></th>
+			<th style='width:100px;'><?php echo "Order Stage"; ?></th>
 			<th style='width:50px;'><?php echo "Status";?></th>			
 			<th style='width:100px;'></th>
 			<?php if($attrib_type==10){
@@ -433,6 +434,7 @@ else{
 			echo $test_type->getTestName();
 			?>
 			</td>
+			<td style='width:100px;'><?php echo $test->getTestOrderStage($test->external_lab_no); ?></td>
 			<?php 
 			$specimen_status = $specimen->statusCodeId;
 			$test_status = $test->getStatusCode();

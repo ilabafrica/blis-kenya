@@ -3232,7 +3232,7 @@ class Test
     {
         $query_string = "SELECT DISTINCT(tc.name) AS bench, tt.name AS test_name FROM test_category tc, 
         test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
-        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
+        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND tt.parent_test_type_id=0 AND t.test_id=$this->testId";
         $resultset = query_associative_all($query_string, $row_count);
         $retval = "";
         $count = 0;
