@@ -666,17 +666,18 @@ db_get_current();
                 }
                 ?>
                     <tr>
-                        <td>
+                    <?php
+                        /*echo "<td>
                         <select name='p_attrib' id='p_attrib' style='font-family:Tahoma;'>
                             <?php $page_elems->getPatientSearchAttribSelect(); ?>
                         </select>
-                        </td>
+
+                        </td>";*/
+                        ?>
                         <td>
-                            <input type='text' name='patient_id' id='patient_id8' class='uniform_width'></input>
+                            <input type='text' name='patient_id' id='patient_id8' placeholder='Enter Search Value e.g. Wasike or 220412' class='uniform_width'></input>
                         </td>
-                    </tr>
-                    <tr>
-                        <td></td>
+                    
                         <td>
                             <input type='button' class="btn blue" id='submit_button8' name='test_history_button' value='<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>' onclick='search_patient_history();'></input>
                             &nbsp;&nbsp;&nbsp;

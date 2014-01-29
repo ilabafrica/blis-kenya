@@ -1766,9 +1766,9 @@ else
 			?>
 			<tr valign='top'>	
 
-					<td><strong><?php echo "Lab Number[Serial No.]"; ?></strong></td>
+					<td><strong><?php echo "Lab Number [Serial No.]"; ?></strong></td>
 
-					<td><?php echo $patient->getPatientId().'['.$patient->getDailyNum().']'; ?></td>
+					<td><?php echo $patient->getPatientId().' ['.$patient->getDailyNum().']'; ?></td>
 
 
 					<td><strong><?php echo "Requesting Department/Facility"; ?></strong></td>
@@ -1860,8 +1860,8 @@ else
 
 	<br>
 
-	<?php 
-
+	<?php
+	/*
 	if($all_tests_completed === true && count($record_list) != 0) {
 
 		echo LangUtil::$pageTerms['MSG_ALLTESTSCOMPLETED']; 
@@ -1873,7 +1873,8 @@ else
 		echo "<strong>".LangUtil::$generalTerms['SPECIMENS']."</strong>";
 
 	}
-
+	*/
+	echo "<strong>Specimens</strong>";
 	?>
 
 	<?php 
@@ -2018,11 +2019,7 @@ else
 
 				{
 
-					echo "<td>";
-
-					$specimen->getAuxId();
-
-					echo "</td>";
+					echo "<td>".$specimen->specimenId."</td>";
 
 				}
 
@@ -2187,7 +2184,7 @@ else
 
 		</table>
         <!-------------------------------------------------------BEGIN TESTS TABLE------------------------------------------------------>
-        <strong><?php echo "Results";  ?></strong>
+        <strong><?php echo "Test Results";  ?></strong>
         <table class='print_entry_border draggable' id='report_content_table1' style="margin-top:5px;margin-bottom:5px; width:97%;">
 
 					<thead>

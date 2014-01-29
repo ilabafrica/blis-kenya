@@ -2494,7 +2494,7 @@ class Patient
 		
 		return Patient::getBySurrId($external_patient->patientId);
 	}
-	
+
 	public function getSurrogateId()
 	{
 		if($this->surrogateId == null || trim($this->surrogateId) == "")
@@ -3103,6 +3103,31 @@ class Test
 	{
 	return $this->status;
 	}
+
+	public function getTestOrderStage($external_lab_no)
+	{
+		if($external_lab_no==''){
+			return "Out-Patient";
+		}
+		else{
+		global $con;
+		# Get whether patient is Outpatient or Inpatient
+		$query_string = "SELECT orderStage FROM external_lab_request WHERE labNo='$external_lab_no'";
+		$saved_db = DbUtil::switchToGlobal();
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+
+		$retval = "";
+			$retval = $record['orderStage'];
+			if($retval=='op'){
+				return "Out-patient";
+			}
+			else{
+				return "In-patient";
+			}
+		}
+	}
+	
 	
 	public static function getById($test_id)
 	{
@@ -6757,7 +6782,7 @@ function search_patients_by_id_dyn($q, $cap, $counter)
 	$q = mysql_real_escape_string($q, $con);
 	$query_string = 
 		"SELECT * FROM patient ".
-		"WHERE surr_id='$q' ORDER BY ts DESC LIMIT $offset,$cap";
+		"WHERE surr_id LIKE '%$q%' OR patient_id LIKE '%$q%' OR name LIKE '%$q%' ORDER BY ts DESC LIMIT $offset,$cap";
 	$resultset = query_associative_all($query_string, $row_count);
 	$patient_list = array();
 	if(count($resultset) > 0)
@@ -6810,7 +6835,7 @@ function search_patients_by_name_dyn($q, $cap, $counter)
 	$q = mysql_real_escape_string($q, $con);
 	$query_string = 
 		"SELECT * FROM patient ".
-		"WHERE name LIKE '$q%' ORDER BY name ASC LIMIT $offset,$cap";
+		"WHERE surr_id LIKE '%$q%' OR patient_id LIKE '%$q%' OR name LIKE '%$q%' ORDER BY name ASC LIMIT $offset,$cap";
 	$resultset = query_associative_all($query_string, $row_count);
 	$patient_list = array();
 	if(count($resultset) > 0)

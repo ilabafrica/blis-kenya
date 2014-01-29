@@ -144,7 +144,6 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         <th style='width:200px;'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
-                        <th style='width:100px;'><?php echo "Order Stage"; ?></th>
                         <th style='width:130px;'><?php echo "Status"; ?></th>
                         <th style='width:130px;'><?php echo "Accept/Reject"; ?></th>
                         <th> </th>
@@ -226,7 +225,6 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         }
                         ?>
                         </td>
-                        <td style='width:100px;'><?php echo $test->getTestOrderStage($test->external_lab_no); ?></td>
                         <td>
                         <span class="label"> Not Collected</span>
                         </td>
@@ -334,7 +332,6 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         ?>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['SPECIMEN_TYPE']; ?></th>
                         <th style='width:100px;'><?php echo LangUtil::$generalTerms['TESTS']; ?></th>
-                        <th style='width:100px;'><?php echo "Order Stage"; ?></th>
                         <th style='width:100px;'><?php echo "Rejection report"; ?></th>
                     </tr>
                 </thead>
@@ -416,7 +413,6 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         }
                         ?>
                         </td>
-                        <td style='width:100px;'><?php echo $test->getTestOrderStage($test->external_lab_no); ?></td>
                         <?php if($attrib_type == 10)
                         {?>
                         <td style='width:100px;'><a href="#" class="btn mini green"><i class="icon-thumbs-up"></i> View Report</a>
