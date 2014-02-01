@@ -7805,19 +7805,19 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
             if($lab_config->pid != 0)
             {
                ?>
-               <option value='0'><?php echo "Patient Number"; ?></option>
+               #<option value='0'><?php echo "Patient Number"; ?></option>
               <?php
             }
 			if($hide_patient_name === false && $lab_config->pname != 0)
 			{
 				?>
-				<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
+				#<option value='1'><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?></option>
 				<?php
 			}
 			if($lab_config->dailyNum == 1 || $lab_config->dailyNum == 11 || $lab_config->dailyNum == 2 || $lab_config->dailyNum == 12)
 			{
 				?>
-				<!--option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option-->
+				#<!--option value='3'><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></option-->
 				<?php
 			}
 			
@@ -7830,7 +7830,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
                         if($patientBarcodeSearch != 0 && is_country_dir($userrr) != 1 && is_super_admin($userrr) != 1 )
 			{
 				?>
-				<option value='9'><?php echo 'Barcode Search'; ?></option>
+				#<option value='9'><?php echo 'Barcode Search'; ?></option>
 				<?php
 			}
 		}
