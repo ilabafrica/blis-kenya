@@ -29,7 +29,7 @@ foreach ($lab_numbers as $lab_no){
 	$result_ent = $lab_no['result'];
 	$comments = $lab_no['comments'];
 	
-	if($comments==null or $comments==''){
+	if($comments==null or $comments==''  or str_replace(' ', '', $comment)==''){
 		$comments = 'No Comments';
 	}
 	
