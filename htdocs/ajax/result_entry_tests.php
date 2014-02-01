@@ -152,11 +152,12 @@ else
                     "OR status_code_id=".Specimen::$STATUS_REFERRED." ) ".
                     "ORDER BY date_collected DESC LIMIT 0,$rcap";
             
-    } elseif($attrib_type == 10)
+    }  
+    elseif($attrib_type == 10)
     {
             # Get all specimens with pending status
             $query_string = 
-                    "SELECT *, p.name AS patient_name, st.name as specimen_name, tt.name AS test_name, tc.name AS category_name, t.status_code_id AS status
+                    "SELECT *, p.name AS patient_name, st.name as specimen_name, tt.name AS test_name, tc.name AS category_name, t.status_code_id AS status, s.ts AS sorting_time
 						FROM test t
 						LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
 						LEFT JOIN patient p ON s.patient_id = p.patient_id
@@ -165,18 +166,113 @@ else
 						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
             		WHERE";
             
-            if ($status!="all")
-            	$query_string.="
-                    	 t.status_code_id=$status AND
-            			 s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND
-            			 t.external_lab_no!='' AND ";
+	            if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED)
+	  			{
+	            	$query_string.="
+	                    	 t.status_code_id='$status' AND
+	            			 s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND
+	            			 t.external_lab_no!='' AND ";
+	            }else if($status==Specimen::$STATUS_NOT_COLLECTED)
+	            {
+	            	$query_string.=" 
+			            	s.status_code_id = '$status' AND
+			            	t.external_lab_no!='' AND ";
+	            }
             
-            $query_string.="	
+            	$query_string.="	
                     	tt.parent_test_type_id = 0 AND t.external_parent_lab_no = '0'
             			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or tt.name LIKE '%$search_term%' OR tc.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
-                    	ORDER BY s.date_recvd DESC, s.ts DESC";
+                    	";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
+            	$query_string.= "UNION ALL 
+                    		SELECT
+									NULL AS test_id,NULL AS test_type_id,
+									NULL AS result,
+									NULL AS ts_started,
+									NULL AS ts_result_entered,
+									NULL AS comments,
+									NULL AS user_id,
+									NULL AS verified_by,
+									NULL AS ts,
+									NULL AS specimen_id,
+									NULL AS date_verified,
+									NULL AS status_code_id,
+									NULL AS external_lab_no,
+									NULL AS external_parent_lab_no,
+									NULL AS specimen_id,
+									NULL AS patient_id,
+									NULL AS specimen_type_id,
+									NULL AS user_id,
+									NULL AS ts,
+									NULL AS status_code_id,
+									NULL AS referred_to,
+									NULL AS comments,
+									NULL AS aux_id,
+									NULL AS date_collected,
+									requestDate AS date_recvd,
+									NULL AS session_num,
+									NULL AS time_collected,
+									NULL AS report_to,
+									NULL AS doctor,
+									NULL AS date_reported,
+									NULL AS referred_to_name,
+									NULL AS daily_num,
+									NULL AS external_lab_no,
+									NULL AS ts_collected,
+									NULL AS patient_id,
+									NULL AS addl_id,
+									NULL AS name,
+									NULL AS sex,
+									NULL AS age,
+									NULL AS dob,
+									NULL AS created_by,
+									NULL AS ts,
+									NULL AS partial_dob,
+									patient_id AS surr_id,
+									NULL AS hash_value,
+									NULL AS specimen_type_id,
+									NULL AS name,
+									NULL AS description,
+									NULL AS ts,
+									NULL AS disabled,
+									NULL AS test_type_id,
+									NULL AS parent_test_type_id,
+									NULL AS specimen,
+									NULL AS test_name,
+									NULL AS description,
+									NULL AS test_category_id,
+									NULL AS ts,
+									NULL AS is_panel,
+									NULL AS disabled,
+									NULL AS clinical_data,
+									NULL AS hide_patient_name,
+									NULL AS prevalence_threshold,
+									NULL AS target_tat,
+									NULL AS test_category_id,
+									NULL AS name,
+									NULL AS description,
+									NULL AS ts,
+									full_name AS patient_name,
+									NULL AS specimen_name,
+									investigation AS test_name,
+									NULL AS category_name,
+									NULL AS status,
+									requestDate AS sorting_time
+									FROM
+									    blis_revamp_bdh.external_lab_request
+									WHERE
+									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) AND requestDate >= CURDATE() - 14
+									    AND parentLabNo = 0
+                    					AND (patient_id = '$search_term' or full_name LIKE '%$search_term%' or investigation LIKE '%$search_term%')
+									 ";
+		            	if ($status!="all" && $status !='request_pending')
+		            		$query_string.=" AND test_status=99";
+		            		
+		          	$query_string.=	" ORDER BY date_recvd, sorting_time DESC";
+            	//$query_string.= " ORDER BY s.date_recvd DESC, s.ts DESC";
+     			
+            	//error_log("\n".$query_string, 3, "../logs/my.error.log");
     }
     elseif($attrib_type == 11)
     {
@@ -233,7 +329,7 @@ else{
  	$url="javascript:fetch_tests('$status'";
  	$limit=10;
  
- 	$pagination_array = setPagination($query_string, $limit, $page, $url, $num_records);
+ 	$pagination_array = setPagination($query_string, $limit, $page, $url, $num_records, $search_term);
 	$resultset = query_associative_all($pagination_array['query_string'], $row_count);
 }
 
@@ -436,13 +532,12 @@ else{
 			<?php 
 			$specimen_status = $specimen->statusCodeId;
 			$test_status = $test->getStatusCode();
-				
 			
 			echo '<td class="hidden-phone"><span id=span'.$test->testId.' class="label ';
 			
-			if($test_status == Specimen::$STATUS_PENDING){
+			if($test_status == Specimen::$STATUS_PENDING && isset($test_status)){
 				if($specimen_status == Specimen::$STATUS_NOT_COLLECTED){
-					echo 'label">Not Collected';
+					echo 'label-inverse">Not Collected';
 					echo '</span></td>';
 					echo '
 						<td id=actionA'.$test->testId.' style="width:130px;">
@@ -454,7 +549,6 @@ else{
 						</a>
 						</td>';
 				}else{
-					
 						echo 'label-important">Pending';
 						echo '</span></td>';
 						echo '<div id=action'.$test->testId.'>
@@ -558,7 +652,18 @@ else{
 			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>
 			</td>';
-			}else 
+			}else if (!isset($test_status)){
+				echo 'label-default">Not Recieved';
+				echo '</span></td>';
+				echo '
+			<td style="width:130px;"><a href="javascript:load_specimen_reg('.$quote.$test->testId.$quote.','.Specimen::$STATUS_VERIFIED.');" title="Click to add lab request" class="btn mini red-stripe">
+				<i class="icon-sign-up"></i> Receive request</a>
+			</td>
+			<td style="width:130px;">
+			</td>';
+
+			}	
+			else
 			{
 				echo '';
 			}
@@ -590,16 +695,45 @@ if($attrib_type == 3 && $count > 2)
 <script type="text/javascript">
 $("#search_tests").keypress(function(e) {
 	var code = e.keyCode || e.which;
-	var s = 'all';
+	//get value of selected option for status';
+	var s = $('select', $("#status")).val();
+	var status = null;
+	
+	switch(s)
+	{
+	case "All":
+	  status = "all"
+	break;
+	case "Not Received":
+		status = "request_pending"
+	break;
+	case "Not Collected":
+		status = "<?php echo Specimen::$STATUS_NOT_COLLECTED?>"
+	break;
+	case "Pending":
+		status = "<?php echo Specimen::$STATUS_PENDING?>"
+	break;
+	case "Started":
+		status = "<?php echo Specimen::$STATUS_STARTED?>"
+	break;
+	case "Tested":
+		status = "<?php echo Specimen::$STATUS_TOVERIFY?>"
+	break;
+	case "Tested & Verified":
+		status = "<?php echo Specimen::$STATUS_VERIFIED?>"
+	break;
+	default:
+		status = "all"
+	}
 	var search_term= $("#search_tests").val();
     if(code == 13) {
-    	fetch_tests(s,null,search_term);
+    	fetch_tests(status,null,search_term);
     }
 });
 
 
 
 $("#refresh").click(function() {
-	fetch_tests(0,null,null);
+	fetch_tests("all",null,null);
 });
 </script>

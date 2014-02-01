@@ -123,7 +123,7 @@ function handleDataTable(table_id) {
 
     	function fnCreateSelect( aData )
     	{
-    		var r='<select class="chosen" data-placeholder="Select" tabindex="1"><option value=""/>All</option>', i, iLen=aData.length;
+    		var r='<select class="chosen" data-placeholder="Select" tabindex="1">', i, iLen=aData.length;
     		for ( i=0 ; i<iLen ; i++ )
     		{
     			r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
@@ -197,17 +197,27 @@ function handleDataTable(table_id) {
 	} );
 	$("#status").each( function ( i ) {
 		var test_status = new Array();
-		test_status[0] = "Pending";
-		test_status[1] = "Started";
-		test_status[2] = "Tested";
-		test_status[3] = "Tested & Verified";
+		test_status[0] = "All";
+		test_status[1] = "Not Received";
+		test_status[2] = "Not Collected";
+		test_status[3] = "Pending";
+		test_status[4] = "Started";
+		test_status[5] = "Tested";
+		test_status[6] = "Tested & Verified";
 		this.innerHTML = fnCreateSelect( test_status );
 		$('select', this).change( function () {
 			//oTable.fnFilter($(this).val() , 6);
 			var val = $(this).val();
-			if(val=="Pending"){
+
+			if(val=="All"){
+				fetch_tests("all");
+			}else if(val=="Not Received"){
+				fetch_tests("request_pending");
+			}else if(val=="Not Collected"){
+				fetch_tests(<?php echo Specimen::$STATUS_NOT_COLLECTED?>);
+			}else if(val=="Pending"){
 				fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
-			} else if (val=="Started"){
+			}else if (val=="Started"){
 				fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);
 			}else if (val=="Tested"){
 				fetch_tests(<?php echo Specimen::$STATUS_TOVERIFY?>);
@@ -282,7 +292,7 @@ function handlePaginateDataTable(table_id) {
 
     	function fnCreateSelect( aData )
     	{
-    		var r='<select class="chosen" data-placeholder="Select" tabindex="1"><option value=""/>All</option>', i, iLen=aData.length;
+    		var r='<select class="chosen" data-placeholder="Select" tabindex="1">', i, iLen=aData.length;
     		for ( i=0 ; i<iLen ; i++ )
     		{
     			r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';

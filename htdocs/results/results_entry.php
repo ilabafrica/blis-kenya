@@ -480,7 +480,7 @@ function right_load(destn_div)
 		load_unreported_results();
 	}
 	else if(destn_div == "tests"){
-		fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
+		fetch_tests("all");
 		
 	}
 }
@@ -589,14 +589,20 @@ function fetch_tests(status,page,search_term)
 		{
 			handleDataTable(10);
 			enableAdvancedDatePicker(date_from, date_to);
-			if (status==<?php echo Specimen::$STATUS_PENDING;?>){
+			if (status=="all"){
+				$('select', '#status')[0].selectedIndex = 0;
+			}else if (status=="request_pending"){
 				$('select', '#status')[0].selectedIndex = 1;
-			}else if (status==<?php echo Specimen::$STATUS_STARTED;?>){
+			}else if (status==<?php echo Specimen::$STATUS_NOT_COLLECTED;?>){
 				$('select', '#status')[0].selectedIndex = 2;
-			}else if (status==<?php echo Specimen::$STATUS_TOVERIFY;?>){
+			}else if (status==<?php echo Specimen::$STATUS_PENDING;?>){
 				$('select', '#status')[0].selectedIndex = 3;
-			}else if (status==<?php echo Specimen::$STATUS_VERIFIED;?>){
+			}else if (status==<?php echo Specimen::$STATUS_STARTED;?>){
 				$('select', '#status')[0].selectedIndex = 4;
+			}else if (status==<?php echo Specimen::$STATUS_TOVERIFY;?>){
+				$('select', '#status')[0].selectedIndex = 5;
+			}else if (status==<?php echo Specimen::$STATUS_VERIFIED;?>){
+				$('select', '#status')[0].selectedIndex = 6;
 			}
 			$(".chosen").chosen();
 			$("#search_tests").val(search_term);
