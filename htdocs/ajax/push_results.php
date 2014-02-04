@@ -19,7 +19,7 @@ $password = 'kapsabet';
 $error_log_path ="../logs/blis.api.error.log";
 
 #Gets lab requests with results so that results are returned 
-#$lab_numbers = API::getTestLabNoToPush();
+$lab_numbers = API::getTestLabNoToPush();
 
 foreach ($lab_numbers as $lab_no){
 	
@@ -68,7 +68,7 @@ foreach ($lab_numbers as $lab_no){
 			
 		}else if($response!="Test updated"){
 			
-				error_log("\n".$time_stamp.": Response Error: ======>".$json_string, 3, $error_log_path);
+				error_log("\n".$time_stamp.": Response Error: ======>".$response, 3, $error_log_path);
 				
 		}
 	}

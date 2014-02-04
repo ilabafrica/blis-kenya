@@ -157,7 +157,15 @@ else
     {
             # Get all specimens with pending status
             $query_string = 
-                    "SELECT *, p.name AS patient_name, st.name as specimen_name, tt.name AS test_name, tc.name AS category_name, t.status_code_id AS status, s.ts AS sorting_time
+                    "SELECT *, 
+            				p.name AS patient_name, 
+            				st.name as specimen_name, 
+            				tt.name AS test_name, 
+            				tc.name AS category_name,
+            				t.status_code_id AS status, 
+            				s.ts AS sorting_time,
+            				t.patientVisitNumber AS patient_visit_number
+            			
 						FROM test t
 						LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
 						LEFT JOIN patient p ON s.patient_id = p.patient_id
@@ -178,16 +186,21 @@ else
 			            	s.status_code_id = '$status' AND
 			            	t.external_lab_no!='' AND ";
 	            }
-            
             	$query_string.="	
                     	tt.parent_test_type_id = 0 AND t.external_parent_lab_no = '0'
-            			AND (p.surr_id = '$search_term' or p.name LIKE '%$search_term%' or tt.name LIKE '%$search_term%' OR tc.name LIKE '%$search_term%' or s.specimen_id = '$search_term')
+            			AND (p.surr_id = '$search_term' 
+	            			OR p.name LIKE '%$search_term%' 
+	            			OR tt.name LIKE '%$search_term%' 
+	            			OR tc.name LIKE '%$search_term%' 
+	            			OR s.specimen_id = '$search_term'
+							OR t.patientVisitNumber = '$search_term')
                     	";
                     	/*LIMIT 0,10 ";
 						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
             	$query_string.= "UNION ALL 
                     		SELECT
-									NULL AS test_id,NULL AS test_type_id,
+									NULL AS test_id,
+									NULL AS test_type_id,
 									NULL AS result,
 									NULL AS ts_started,
 									NULL AS ts_result_entered,
@@ -198,8 +211,9 @@ else
 									NULL AS specimen_id,
 									NULL AS date_verified,
 									NULL AS status_code_id,
-									NULL AS external_lab_no,
+								    labNo AS external_lab_no,
 									NULL AS external_parent_lab_no,
+									NULL AS patientVisitNumber,
 									NULL AS specimen_id,
 									NULL AS patient_id,
 									NULL AS specimen_type_id,
@@ -218,7 +232,7 @@ else
 									NULL AS date_reported,
 									NULL AS referred_to_name,
 									NULL AS daily_num,
-									NULL AS external_lab_no,
+									labNo AS external_lab_no,
 									NULL AS ts_collected,
 									NULL AS patient_id,
 									NULL AS addl_id,
@@ -258,13 +272,17 @@ else
 									investigation AS test_name,
 									NULL AS category_name,
 									NULL AS status,
-									requestDate AS sorting_time
+									requestDate AS sorting_time,
+									patientVisitNumber AS patient_visit_number
 									FROM
-									    blis_revamp_bdh.external_lab_request
+									    $GLOBAL_DB_NAME.external_lab_request
 									WHERE
 									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) AND requestDate >= CURDATE() - 14
 									    AND parentLabNo = 0
-                    					AND (patient_id = '$search_term' or full_name LIKE '%$search_term%' or investigation LIKE '%$search_term%')
+                    					AND (patient_id = '$search_term' 
+	                    					OR full_name LIKE '%$search_term%' 
+	                    					OR investigation LIKE '%$search_term%'
+											OR patientVisitNumber = '$search_term')
 									 ";
 		            	if ($status!="all" && $status !='request_pending')
 		            		$query_string.=" AND test_status=99";
@@ -295,7 +313,7 @@ else
 	}
 	else if($attrib_type == 13)
 	{
-		#Update specimen to started status code
+		#Update specimen to verified status code
 		$ts = date("Y-m-d H:i:s");
 		$query_string = "UPDATE test SET 
                     		status_code_id = ".Specimen::$STATUS_VERIFIED.",
@@ -535,7 +553,12 @@ else{
 			$specimen_status = $specimen->statusCodeId;
 			$test_status = $test->getStatusCode();
 			
-			echo '<td class="hidden-phone"><span id=span'.$test->testId.' class="label ';
+			if (isset($test->testId))
+			{	
+				echo '<td class="hidden-phone"><span id=span'.$test->testId.' class="label ';
+			}else {
+				echo '<td class="hidden-phone"><span id=span'.$record["external_lab_no"].' class="label ';
+			}
 			
 			if($test_status == Specimen::$STATUS_PENDING && isset($test_status)){
 				if($specimen_status == Specimen::$STATUS_NOT_COLLECTED){
@@ -655,13 +678,13 @@ else{
 				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else if (!isset($test_status)){
-				echo 'label-default">Not Recieved';
+				echo 'label">Not Recieved';
 				echo '</span></td>';
 				echo '
-			<td style="width:130px;"><a href="javascript:load_specimen_reg('.$quote.$test->testId.$quote.','.Specimen::$STATUS_VERIFIED.');" title="Click to add lab request" class="btn mini red-stripe">
+			<td id=actionA'.$record["external_lab_no"].' style="width:130px;"><a href="javascript:load_specimen_reg('.$quote.$patient->surrogateId.$quote.',true, '.$record["external_lab_no"].');" title="Click to add lab request" class="btn mini red-stripe">
 				<i class="icon-sign-up"></i> Receive request</a>
 			</td>
-			<td style="width:130px;">
+			<td id=actionB'.$record["external_lab_no"].' style="width:130px;">
 			</td>';
 
 			}	
@@ -672,9 +695,12 @@ else{
 			
 			?>
 		</tr>
-		
+		<?php if (isset($test->testId))
+			{	?>
 		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-hidden="true" data-backdrop="static">
-	
+		<?php }else{?>
+		<div class='modal container hide fade' id='result_form_pane_<?php echo $record["external_lab_no"]; ?>' role="dialog" aria-hidden="true" data-backdrop="static">			
+		<?php } ?>
 		</div>
 		<?php
 		$count++;

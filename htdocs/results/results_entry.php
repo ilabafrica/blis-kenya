@@ -42,7 +42,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
-				<a href="javascript:fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);" class="reload"></a>
+				<a href="javascript:fetch_tests(all);" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
 			</div>
 		</div>
@@ -57,6 +57,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 						echo $_REQUEST['ajax_response'];
 				?>
 				</div>
+				<div id='specimen_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
 			</div>
 		</div>
 	</div>
@@ -626,6 +627,27 @@ function refresh_date_range(date_from,date_to)
 	);
 }
 
+function load_specimen_reg(patient_id, is_external_patient, labNo)
+{
+
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	$('.reg_subdiv').hide();
+	//Load new_specimen2.php via ajax
+	var url = 'ajax/receive_lab_request.php';
+	$('#specimen_reg_body').load(
+			url, 
+			{pid: patient_id, ex: is_external_patient, labno: labNo},
+			function(result) 
+			{
+
+				$('#specimen_reg_body').modal('show');
+				App.unblockUI(el);
+			}
+	);		
+	//$('#specimen_reg').show();
+}
+
 function accept_specimen(specimen_id,test_id)
 {
 
@@ -640,14 +662,14 @@ function accept_specimen(specimen_id,test_id)
 			$('#span'+test_id).addClass('label-important');
 			$('#span'+test_id).html('Pending');
 			actions = result.split('%');
-			$('#actionA'+test_id).html('<td id=actionA'+test_id+' style="width:100px;">'+
+			$('#actionA'+test_id).html(''+
 					'<a href="javascript:start_test('+test_id+');"'+ 
 					'title="Click to begin testing this Specimen" class="btn red mini">'+
-					'<i class="icon-ok"></i> Start Test</a></td>');
-			$('#actionB'+test_id).html('<td id=actionB'+test_id+' style="width:100px;">'+
+					'<i class="icon-ok"></i> Start Test</a>');
+			$('#actionB'+test_id).html(''+
 					'<a href="javascript:refer_specimen('+test_id+');"'+ 
 					'title="Click to begin testing this Specimen" class="btn inverse mini">'+
-					'<i class="icon-ok"></i>Refer</a></td>');
+					'<i class="icon-ok"></i>Refer</a>');
 			App.unblockUI(el);
 		}
 	);
@@ -868,19 +890,22 @@ function submit_forms(test_id)
 			url: "ajax/result_add.php",
 			data: params,
 			success: function(msg) {
-				//$("#test_"+actual_test_id)[0].reset();
+				$("#test_"+actual_test_id)[0].reset();
 				$("#test_"+actual_test_id).remove();
 				$("#"+target_div_id).html(msg);
-				$("tr#"+test_id).remove();
+				//$("tr#"+test_id).remove();
 
 
 
 				$('#span'+actual_test_id).removeClass('label-warning');
 				$('#span'+actual_test_id).addClass('label-info');
 				$('#span'+actual_test_id).html('Tested');
-				actions = result.split('%');
-				$('#actionA'+test_id).html(actions[0]);
-				$('#actionB'+test_id).html(actions[1]);		
+				
+
+				 $('#actionA'+actual_test_id).html
+				    ('<a href="javascript:fetch_test_edit_form('+test_id+');" title="Click to Edit results" class="btn blue mini"><i class="icon-edit"></i> Edit</a>');
+				$('#actionB'+actual_test_id).html
+					('<a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"><i class="icon-edit"></i> Verify</a>');		
 			}
 		});	
 	}

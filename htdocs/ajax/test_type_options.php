@@ -24,7 +24,7 @@ if(count($test_type_list) == 0)
 	return;
 }
 ?>
-<select data-placeholder="Select Tests" class="chosen span11" name='t_type_list[]' multiple="multiple">
+<select data-placeholder="Select Tests" class="chosen span11" name='t_type_list[]' multiple="multiple" style="width: 226px">
 <?php
 $count = 0;
 

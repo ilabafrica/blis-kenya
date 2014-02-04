@@ -17,6 +17,7 @@ $error_log_path ="/var/www/BLIS/htdocs/logs/blis.api.error.log";
 
 $value_string = '';
 $length = count($_POST);
+
 if (!$length >1 || !$_POST==null){
 	foreach($_POST as $key=>$value)
 	{
@@ -42,6 +43,8 @@ if (!$length >1 || !$_POST==null){
 		 	'"'.$request_data['requestDate'].'",'.
 		 	#orderStage
 		 	'"'.$request_data['orderStage'].'",'.
+		 	#patientVisitNumber
+		 	'"'.$request_data['patientVisitNumber'].'",'.
 		 	#patient_id
 		 	'"'.$request_data['patient']['id'].'",'.
 		 	#full_name
@@ -86,6 +89,8 @@ if (!$length >1 || !$_POST==null){
 		 	if ($request_data['orderStage'] == 'op' && $request_data['receiptNumber']=='')
 		 	{
 		 		//invalid order (not paid)
+		 	}else if ($request_data['receiptType']=='insurance'){
+		 		API::save_external_lab_request($LabRequest);
 		 	}
 		 	else API::save_external_lab_request($LabRequest);
 		 } 
