@@ -3009,6 +3009,7 @@ class Test
 	public $external_parent_lab_no;
 	public $ts_started;
 	public $ts_result_entered;
+	public $patientVisitNumber;
 	
 	public static function getObject($record)
 	{
@@ -3087,6 +3088,11 @@ class Test
 		else
 			$test->external_parent_lab_no = null;
 		
+		if(isset($record['patientVisitNumber']))
+			$test->patientVisitNumber = $record['patientVisitNumber'];
+		else
+			$test->external_parent_lab_no = null;
+		
 		if(isset($record['ts_started']))
 			$test->ts_started = $record['ts_started'];
 		else
@@ -3139,6 +3145,20 @@ class Test
 		global $con;
 		$test_id = mysql_real_escape_string($test_id, $con);
 		$query_string = "SELECT * FROM test WHERE `test_id` = $test_id";
+		$record = query_associative_one($query_string);
+		return Test::getObject($record);
+	}
+	
+	public static function getBySpecimenID($specimen_id)
+	{
+		# Returns a test result entry by test_id field
+		if($specimen_id == null || trim($specimen_id) == "")
+		{
+		return null;
+		}
+		global $con;
+		$specimen_id = mysql_real_escape_string($specimen_id, $con);
+		$query_string = "SELECT * FROM test WHERE `specimen_id` = $specimen_id";
 		$record = query_associative_one($query_string);
 		return Test::getObject($record);
 	}
@@ -4068,6 +4088,7 @@ class Test
 		
 		return TestType::getNameById($id);
 	}
+	
 }
 
 class CustomField
@@ -7421,8 +7442,8 @@ function add_test($test, $testId=null)
 	if( $testId == null)
 		$testId = bcadd(get_max_test_id(),1);
 	$query_string = 
-		"INSERT INTO `test` ( test_id, specimen_id, test_type_id, result, comments, verified_by, user_id, external_lab_no, external_parent_lab_no ) ".
-		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId, '$test->external_lab_no', '$test->external_parent_lab_no' )";
+		"INSERT INTO `test` ( test_id, specimen_id, test_type_id, result, comments, verified_by, user_id, external_lab_no, external_parent_lab_no, patientVisitNumber ) ".
+		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId, '$test->external_lab_no', '$test->external_parent_lab_no', '$test->patientVisitNumber')";
 	$result = query_insert_one($query_string);
 	$last_insert_id = get_last_insert_id();
 	
@@ -15781,6 +15802,7 @@ class API
 			`investigation`,
 			`requestDate`,
 			`orderStage`,
+			`patientVisitNumber`,
 			`patient_id`,
 			`full_name`,
 			`dateOfBirth`,
@@ -15806,12 +15828,18 @@ class API
     	DbUtil::switchRestore($saved_db);
     }
     
-    public static function getExternalLabRequest($patient_id)
+    public static function getExternalLabRequest($patient_id, $labNo=null)
     {
 	    # gets pending lab requests from external_lab_request_table
 	    global $con;
-	   	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
-	    $saved_db = DbUtil::switchToGlobal();
+	   
+	    if($labNo!=null){
+	    	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND labNo = '$labNo' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
+	    }else{
+	    	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
+	    }
+	    
+	   	$saved_db = DbUtil::switchToGlobal();
 	    $tests_ordered = query_associative_all($query_string, $row_count);
 	    DbUtil::switchRestore($saved_db);
 	    return $tests_ordered;
@@ -15923,6 +15951,18 @@ class API
     	$returnarr = query_associative_all($query_string, $row_count);
   		DbUtil::switchRestore($saved_db);
     	return $returnarr;
+    }
+    
+    public static function getpatientVisitNumber($surr_id)
+    {
+    	$query_string =
+    	"SELECT patientVisitNumber FROM external_lab_request
+    		WHERE patient_id = '$surr_id'";
+    	$saved_db = DbUtil::switchToGlobal();
+    	$resultset = query_associative_one($query_string, $row_count);
+    	DbUtil::switchRestore($saved_db);
+    	$retval = $resultset['patientVisitNumber'];
+    	return $retval;
     }
     
     public static function updateExternalLabrequest($patient_id, $lab_no, $result, $comment=null){

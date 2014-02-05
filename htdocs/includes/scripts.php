@@ -8,7 +8,7 @@
 	$script_elems->enableFacebox();
 	$script_elems->enableAutoScrollTop();
 	$script_elems->enableMultiSelect();
-	$script_elems->enablePageloadIndicator();
+	//$script_elems->enablePageloadIndicator();
 	if(strpos($_SERVER['PHP_SELF'], "login.php") === false)
 	{
 		if($AUTO_LOGOUT === true)
