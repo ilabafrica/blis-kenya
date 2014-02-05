@@ -260,7 +260,7 @@ else
 									NULL AS status,
 									requestDate AS sorting_time
 									FROM
-									    blis_revamp_bdh.external_lab_request
+									    blis_revamp_prod.external_lab_request
 									WHERE
 									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) AND requestDate >= CURDATE() - 14
 									    AND parentLabNo = 0
