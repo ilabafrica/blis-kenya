@@ -427,7 +427,6 @@ else{
 	<thead>
 	
 		<tr>
-			<th style='width:100px;'><?php echo "Section";?></th>
 			<?php 
 			if($_SESSION['sid'] != 0)
 			{
@@ -444,6 +443,9 @@ else{
 				<th style='width:75px;'><?php echo "Patient ID"; ?></th>
 			<?php
 			}
+			?>
+			<th style='width:100px;'><?php echo "Visit No";?></th>
+			<?php
 			if(false) //Not displaying Lab no
 			{
 			?>
@@ -502,7 +504,6 @@ else{
 			echo " class='old_pnum_records' style='display:none' ";
 		}
 		?> id="<?php echo $test->testId; ?>">
-			<td style='width:100px;'><?php echo $test_category->getCategoryName(); ?></td>
 			<?php
 			if($_SESSION['sid'] != 0)
 			{
@@ -518,7 +519,10 @@ else{
 			?>
 				<td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
 			<?php
-			}
+			}?>
+			
+				<td style='width:75px;'><?php echo $record['patient_visit_number']; ?></td>
+			<?php
 			if(false) // Stopping displaying the Lab No
 			{
 			?>
