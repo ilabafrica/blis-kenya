@@ -3033,11 +3033,13 @@ class PageElems
 		{
 		?>
 			<div class='sidetip_nopos'>
+			<!--
 			<p>
 				<a href='new_specimen.php?pid=<?php echo $patient_id; ?>' title='Click to Register a New Specimen for this Patient'>
 					<?php echo LangUtil::$pageTerms['MSG_REGNEWSPECIMEN']; ?>
 				</a>
 			</p>
+			-->
 			<?php
 			if(($DISABLE_UPDATE_PATIENT_PROFILE === false)&&(get_level_by_id($_SESSION['user_id']) ==2))
 			{
@@ -3069,7 +3071,7 @@ class PageElems
 				<?php
 			}
 			?>
-			<!--<p><a href='#'>Export as XML</a></p>-->
+			<!--<p><a href='#'>Export as XML</a></p>
 				<?php
 				if (is_billing_enabled($_SESSION['lab_config_id']))
 					{ ?>
@@ -3079,6 +3081,7 @@ class PageElems
 					</a>
 				</p>
 				<?php } ?>
+				-->
 			</div>
 		<?php
 		}
@@ -3277,6 +3280,7 @@ class PageElems
 			?>
 			<p><a href='<?php echo $report_url; ?>' title='Click to Generate Specimen Report' target='_blank'><?php echo LangUtil::$generalTerms['CMD_GETREPORT']; ?></a></p>
 			<p><a href='reports_specimenlog.php?location=<?php echo $_SESSION['lab_config_id']; ?>&specimen_id=<?php echo $specimen_id; ?>' title='Click to View a Log of Actions Performed on this Specimen' target='_blank'><?php echo LangUtil::$generalTerms['CMD_TRACK']; ?></a></p>
+			<!--
 			<?php
 			if($_SESSION['user_level'] != $LIS_CLERK)
 			{
@@ -3299,7 +3303,7 @@ class PageElems
 				}
 			}
 			?>
-
+			-->
 		</div>
 		<?php
 	}
