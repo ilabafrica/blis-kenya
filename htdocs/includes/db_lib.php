@@ -2900,7 +2900,7 @@ class Specimen
 		}
 		return $retval;
 	}
-	
+
 	public function getTestNamesWithCategory()
 	{
 		$query_string = "SELECT test.test_type_id, test_type.test_category_id FROM test, test_type WHERE specimen_id=$this->specimenId";
@@ -3252,7 +3252,7 @@ class Test
     {
         $query_string = "SELECT DISTINCT(tc.name) AS bench, tt.name AS test_name FROM test_category tc, 
         test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
-        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
+        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND tt.parent_test_type_id=0 AND t.test_id=$this->testId GROUP BY tt.parent_test_type_id";
         $resultset = query_associative_all($query_string, $row_count);
         $retval = "";
         $count = 0;
@@ -9684,14 +9684,14 @@ function get_specimen_name_by_id($specimen_type_id)
 	{
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"SELECT name FROM specimen_type ".
-			"WHERE specimen_type_id=$specimen_type_id LIMIT 1";
+			"SELECT st.name as sp_name FROM specimen_type st, specimen s, test t, test_type tt ".
+			"WHERE tt.test_type_id=t.test_type_id AND t.specimen_id=s.specimen_id AND st.specimen_type_id=s.specimen_type_id AND tt.parent_test_type_id=0 AND st.specimen_type_id=$specimen_type_id GROUP BY s.specimen_id LIMIT 1";
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
 		if($record == null)
 			return LangUtil::$generalTerms['NOTKNOWN'];
 		else
-			return $record['name'];
+			return $record['sp_name'];
 	}
 }
 
