@@ -2727,11 +2727,16 @@ class Specimen
 	}
 	public function getSpecimenCollector()
 	{
-		# Get whether patient is New or Referral
+		# Get Specimen Collector
 		$query_string = "SELECT DISTINCT(actualname) AS collector FROM user WHERE user_id=$this->userId;";
+		$saved_db = DbUtil::switchToGlobal();
 		$record = query_associative_one($query_string);		
+		DbUtil::switchRestore($saved_db);
 		$retval = "";
 			$retval = $record['collector'];
+			if($retval=='')
+				return "Empty";
+			else
 		return $retval;
 	}
 	public static function getById($specimen_id)
@@ -3267,6 +3272,17 @@ class Test
                 $retval .= "<br>";
             }
         }
+        return $retval;
+    }
+
+    public function getSpecimenNameByParentTest()
+    {
+        $query_string = "SELECT st.name as sp_name FROM specimen_type st, specimen s, test t, test_type tt
+			WHERE tt.test_type_id=t.test_type_id AND t.specimen_id=s.specimen_id AND st.specimen_type_id=s.specimen_type_id 
+			AND tt.parent_test_type_id=0 AND t.test_id=$this->testId GROUP BY tt.parent_test_type_id";
+        $record = query_associative_one($query_string);
+        $retval = "";
+        $retval = $record['sp_name'];
         return $retval;
     }
 	
