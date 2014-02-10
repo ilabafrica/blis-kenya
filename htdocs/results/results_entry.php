@@ -5,8 +5,6 @@
 #
 include("redirect.php");
 include("includes/header.php");
-
-$script_elems->enableValidation();
 LangUtil::setPageId("results_entry");
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 $test_categories = TestCategory::geAllTestCategories($lab_config_id);
