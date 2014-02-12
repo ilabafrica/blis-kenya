@@ -640,7 +640,6 @@ function load_specimen_reg(patient_id, is_external_patient, labNo)
 			{pid: patient_id, ex: is_external_patient, labno: labNo},
 			function(result) 
 			{
-
 				$('#specimen_reg_body').modal('show');
 				App.unblockUI(el);
 			}

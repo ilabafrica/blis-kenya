@@ -289,7 +289,7 @@ else
 		            	if ($status!="all" && $status !='request_pending')
 		            		$query_string.=" AND test_status=99";
 		            		
-		          	$query_string.=	" ORDER BY date_recvd, sorting_time DESC";
+		          	$query_string.=	" ORDER BY date_recvd DESC, sorting_time DESC";
             	//$query_string.= " ORDER BY s.date_recvd DESC, s.ts DESC";
      			
             	//error_log("\n".$query_string, 3, "../logs/my.error.log");
