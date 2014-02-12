@@ -275,7 +275,9 @@ else
 									requestDate AS sorting_time,
 									patientVisitNumber AS patient_visit_number
 									FROM
+
 									    $GLOBAL_DB_NAME.external_lab_request
+
 									WHERE
 									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) AND requestDate >= CURDATE() - 14
 									    AND parentLabNo = 0

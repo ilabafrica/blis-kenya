@@ -683,6 +683,104 @@ function get_records_to_print($lab_config, $patient_id) {
 
 }
 
+function get_specimen_records_to_print($lab_config, $patient_id) {
+
+	global $date_from, $date_to;
+
+	$retval = array();
+
+	if(isset($_REQUEST['ip']) && $_REQUEST['ip'] == 0) {
+
+		# Do not include pending tests
+
+		$query_string =
+
+			"SELECT t.* FROM test t, specimen sp, test_type tt ".
+
+			"WHERE t.result <> '' ".
+
+			"AND t.specimen_id=sp.specimen_id ".
+
+			"AND t.test_type_id=tt.test_type_id ".
+
+			"AND tt.parent_test_type_id=0 ".
+
+			"AND sp.patient_id=$patient_id ";
+
+		if(isset($_REQUEST['yf']))
+
+			$query_string .= "AND (sp.date_collected BETWEEN '$date_from' AND '$date_to') ";
+
+		$query_string .= "ORDER BY sp.date_collected DESC";
+
+	
+
+	}
+
+	else {
+
+		# Include pending tests
+
+		$query_string =
+
+			"SELECT t.* FROM test t, specimen sp, test_type tt ".
+
+			"WHERE t.specimen_id=sp.specimen_id ".
+
+			"AND t.test_type_id=tt.test_type_id ".
+
+			"AND tt.parent_test_type_id=0 ".
+
+			"AND sp.patient_id=$patient_id ";
+
+		if(isset($_REQUEST['yf']))
+
+			$query_string .= "AND (sp.date_collected BETWEEN '$date_from' AND '$date_to') ";
+
+		$query_string .= "ORDER BY sp.date_collected DESC";		
+
+	
+
+	}
+
+	
+
+	$resultset = query_associative_all($query_string, $row_count);
+
+	
+
+	if(count($resultset) == 0 || $resultset == null)
+
+		return $retval;
+
+	
+
+	foreach($resultset as $record) {
+
+		$test = Test::getObject($record);
+
+		$hide_patient_name = TestType::toHidePatientName($test->testTypeId);
+
+		
+
+		if( $hide_patient_name == 1 )
+
+					$hidePatientName = 1;
+
+		
+
+		$specimen = get_specimen_by_id($test->specimenId);
+
+		$retval[] = array($test, $specimen, $hide_patient_name);		
+
+	}
+
+	
+
+	return $retval;
+
+}
+
 
 
 $lab_config_id = $_REQUEST['location'];
@@ -1490,6 +1588,8 @@ else
 
 	$record_list = get_records_to_print($lab_config, $patient_id); 
 
+	$specimen_record_list = get_specimen_records_to_print($lab_config, $patient_id);
+
 	# If single date supplied, check if-
 
 	# 1. Physician name is the same for all
@@ -1879,7 +1979,7 @@ else
 
 	<?php 
 
-	if(count($record_list) == 0) {
+	if(count($specimen_record_list) == 0) {
 
 		echo LangUtil::$generalTerms['MSG_NOTFOUND'];
 
@@ -1984,15 +2084,15 @@ else
 
 				$value = array($_REQUEST['sid'], $_REQUEST['tid']);
 
-				$record_list = array();
+				$specimen_record_list = array();
 
-				$record_list[] = $value;
+				$specimen_record_list[] = $value;
 
 				$data_list=array();
 
 			}
 
-			foreach($record_list as $record_set) {
+			foreach($specimen_record_list as $record_set) {
 
 				$value = $record_set;
 
@@ -2045,7 +2145,7 @@ else
 
 				{
 
-					echo "<td>".get_specimen_name_by_id($specimen->specimenTypeId)."</td>";
+					echo "<td>".$test->getSpecimenNameByParentTest()."</td>";
 
 				}
 				
