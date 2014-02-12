@@ -6,10 +6,13 @@
 
 include("../includes/db_lib.php");
 include("../includes/page_elems.php");
+include("../includes/script_elems.php");
 include("../includes/ajax_lib.php");
 include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
+$script_elems = new ScriptElems();
+//$script_elems->enableValidation();
 
 
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
@@ -20,11 +23,14 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	$curr_form_id = 'test_'.$test_id;
 	$form_id_list[] = $curr_form_id;
 	?>
-	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method=''>
+	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method='' class="form-horizontal" novalidate='novalidate'>
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
 	<input type='hidden' name='parent_test_id' value='<?php echo $parent_test_id; ?>'></input>   
-	
+	<div class="alert alert-error hide">
+										<button class="close" data-dismiss="alert"></button>
+										You have some form errors. Please check below.
+									</div>
 	<?php
 	# Fetch all measures for this test
 	$measure_list = $test_type->getMeasures();
@@ -78,9 +84,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
-		?>
-			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" required>
-			<option></option>
+		?><select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" data-required='1'><option></option>
 			<?php
 			foreach($range_values as $option)
 			{
@@ -98,7 +102,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();"></input>
+			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" data-required='1'></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -158,7 +162,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' data-required='1'></input>";
                   // echo "</div>";
                                 	
 		}
@@ -175,7 +179,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			?>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<small>
-			<input type='checkbox' required id='<?php echo $curr_form_id; ?>_skip' title='Tick this box if results are not yet available and are to be entered later' onclick="javascript:toggle_form('<?php echo $curr_form_id; ?>', this);">
+			<input type='checkbox' data-required='1' id='<?php echo $curr_form_id; ?>_skip' title='Tick this box if results are not yet available and are to be entered later' onclick="javascript:toggle_form('<?php echo $curr_form_id; ?>', this);">
 			<?php echo LangUtil::$generalTerms['CMD_SKIP']; ?>
 			</input>
 			</small>
@@ -196,7 +200,8 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" ></textarea>
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
+		       data-required='1'></textarea>
 			</span>
 		</td>
 	</tr>

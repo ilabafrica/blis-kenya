@@ -56,6 +56,8 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 				?>
 				</div>
 				<div id='specimen_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+				<div id='ok_specimen_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+				<div id='specimen_rejection_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
 			</div>
 		</div>
 	</div>
@@ -646,31 +648,50 @@ function load_specimen_reg(patient_id, is_external_patient, labNo)
 	//$('#specimen_reg').show();
 }
 
+function load_specimen_rejection(specimen_id)
+{
+
+	//Begin specimen rejection via ajax
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	$('.reg_subdiv').hide();
+	//Load specimen_rejection.php via ajax
+	var url = 'regn/specimen_rejection.php';
+	$('#specimen_rejection_body').load(
+			url, 
+			{sid: specimen_id}, 
+			function(result) 
+			{
+
+				$('#specimen_rejection_body').modal('show');
+				App.unblockUI(el);
+			}
+	);		
+	//$('#specimen_rejection').show();
+	//End ajax specimen rejection
+}
+
 function accept_specimen(specimen_id,test_id)
 {
 
 		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 		App.blockUI(el);
+		$('.reg_subdiv').hide();
 		//Mark specimen as accepted
-  		url = "ajax/specimen_change_status.php";
-  		$.post(url, 
-		{sid: specimen_id}, 
-		function(result) 
-		{
-			$('#span'+test_id).addClass('label-important');
-			$('#span'+test_id).html('Pending');
-			actions = result.split('%');
-			$('#actionA'+test_id).html(''+
-					'<a href="javascript:start_test('+test_id+');"'+ 
-					'title="Click to begin testing this Specimen" class="btn red mini">'+
-					'<i class="icon-ok"></i> Start Test</a>');
-			$('#actionB'+test_id).html(''+
-					'<a href="javascript:refer_specimen('+test_id+');"'+ 
-					'title="Click to begin testing this Specimen" class="btn inverse mini">'+
-					'<i class="icon-ok"></i>Refer</a>');
-			App.unblockUI(el);
-		}
+  		var url = 'regn/specimen_acceptance.php';
+  		$('#ok_specimen_body').load(
+			url, 
+			{sid: specimen_id}, 
+			function(result) 
+			{
+				$('#ok_specimen_body').modal('show');
+				App.unblockUI(el);
+
+				
+			}
 	);
+	//('#ok_specimen').show();
+	//End ajax accept specimen
 		
 }
 function start_test(test_id)
@@ -864,6 +885,7 @@ function validate_fields(myForm){
 
 function submit_forms(test_id)
 {
+
 	var form_id_csv = $('#form_id_list').val();
 	var form_id_list = form_id_csv.split(",");
 	$('.result_cancel_link').hide();
@@ -1095,6 +1117,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		 }
 	 });
 }
+
 </script>
 <?php
 $script_elems->bindEntertoClick("#specimen_id", "#fetch_specimen_button");

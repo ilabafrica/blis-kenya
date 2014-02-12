@@ -501,7 +501,7 @@ function add_specimenbox()
 {
     specimen_count++;
     var doc = $('#doc_row_1_input').val();
-    var title= $('#doc_row_1_title').val();
+    var title = $('#doc_row_1_title').val();
     var dnumInit = "<?php echo $dnum; ?>";
     dnum = dnumInit.toString();
     var url_string = "ajax/specimenbox_add.php?num="+specimen_count+"&pid=<?php echo $pid; ?>"+"&dnum="+dnum+"&doc="+doc+"&title="+title+"&session_num=<?php echo $session_num; ?>";

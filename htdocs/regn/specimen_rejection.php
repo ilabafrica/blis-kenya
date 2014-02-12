@@ -53,6 +53,17 @@ if ( substr($session_num,strpos($session_num, "-")+1 ) )
 */	
 $uiinfo = "sid=".$_REQUEST['sid']."&dnum=".$_REQUEST['dnum'];
 ?>
+<div class="tab-pane " id="tab_2">
+	<div class="portlet box yellow">
+		<div class="portlet-title">
+			<div class="caption"><i class="icon-reorder"></i>Specimen Rejection Form</div>
+			<div class="tools">
+				
+				<a href="javascript:;" class="remove"></a>
+			</div>
+		</div>
+		
+<div class="portlet-body form">
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
 <span class='page_title'><?php echo "Specimen Rejection"; ?></span>
  | <?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
@@ -81,6 +92,8 @@ $main_query = mysql_query(stripslashes("SELECT DISTINCT s.specimen_id as sid, s.
 $main_rs = mysql_fetch_assoc($main_query);
 $patient = get_patient_by_id($main_rs['patient_number']);
 ?>
+
+<!-- BEGIN FORM-->
 <div id="result"></div>
 <form id="reject" method="post" action="accept_reject_specimen.php">
 <table width="95%" border="0" class="table table-striped table-bordered table-advance table-hover">
@@ -122,6 +135,10 @@ $patient = get_patient_by_id($main_rs['patient_number']);
 &nbsp;&nbsp;&nbsp;&nbsp;
 	<a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a></form>
 &nbsp;&nbsp;&nbsp;&nbsp;
+<!-- END FORM-->                
+										</div>
+									</div>
+								</div>
 <div id='NEW_SPECIMEN' class='right_pane' style='display:none;margin-left:10px;'>
 	<ul>
 		<?php
