@@ -122,10 +122,29 @@ foreach($tests_list as $test_type_id)
 	if ($ex =='' || $ex==null) $ex = 0;
 	$test->external_parent_lab_no= $ex;
 
+	#add new test and get test_id
+	$test_id = add_test($test);
 	
-	add_test($test);
+	#Get Test Measures and create Test Measure and insert into new Test_measure table. (new method)
 	
-	//Add two levels of child tests form external system (sanitas)	
+	$test_type = TestType::getById($test_type_id);
+	$measures = $test_type->getMeasures();
+	
+	if ($test_id!=null){
+		foreach ($measures as $measure){
+			$test_measure = new TestMeasure();
+			$test_measure->test_id = $test_id;
+			$test_measure->measure_id = $measure->measureId;
+			$test_measure->lab_no = API::getExternalLabNo($patient->surrogateId, $measure->name);
+			$test_measure->result="";
+			
+			add_test_measure($test_measure);
+			
+		}
+	}
+	
+	
+	//Add two levels of child tests form external system (sanitas) (old method)
 	$child_tests = get_child_tests($test_type_id);
 	if (count($child_tests)>0){
 		foreach($child_tests as $child_test)

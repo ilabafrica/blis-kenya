@@ -1380,6 +1380,29 @@ class TestType
 
 }
 
+class TestMeasure{
+	public $test_measure_id;
+	public $test_id;
+	public $lab_no;
+	public $measure_id;
+	public $result;
+	
+	
+	public static function getObject($record)
+	{
+		# Converts a test_measure record in DB into a TestMeasure object
+		if($record == null)
+			return null;
+		
+		$test_measure = new TestMeasure();
+		$test_measure->test_measure_id = $record['tm_id'];
+		$test_measure->test_id = $record['tm_id'];
+		$test_measure->lab_no = $record['lab_no'];
+		$test_measure->measure_id = $record['measure_id'];
+		$test_measure->result = $record['result'];
+	}
+}
+
 class SpecimenType
 {
 	public $specimenTypeId;
@@ -7455,9 +7478,30 @@ function add_test($test, $testId=null)
 		$auditTrail->logAddTest();	
 	}
 	
-	return $last_insert-id;
+	return $testId;
 }
 
+function add_test_measure($test_measure, $test_measure_id=null)
+{
+	# Adds a new test record in DB
+	if( $test_measure_id == null)
+		$test_measure_id = bcadd(get_max_test_measure_id(),1);
+	$query_string =
+	"INSERT INTO test_measure ( tm_id, test_id, lab_no, measure_id, result) ".
+	"VALUES ( $test_measure_id, $test_measure->test_id, $test_measure->lab_no, $test_measure->measure_id, '$test_measure->result')";
+	$result = query_insert_one($query_string);
+	$last_insert_id = get_last_insert_id();
+	
+	if($result){
+		//Add event to audit trail
+		$auditTrail = new AuditTrail();
+		$auditTrail->tablename = "test_measure";
+		$auditTrail->objectid = $last_insert_id;
+		$auditTrail->logAddTest();
+	}
+
+	return $last_insert_id;
+}
 function add_test_random($test)
 {
 	# Adds a new test record in DB
@@ -10067,6 +10111,13 @@ function get_max_specimen_id()
 function get_max_test_id() {
 	$query_string =
 		"SELECT MAX(test_id) as maxval FROM test";
+	$resultset = query_associative_one($query_string);
+	return $resultset['maxval'];
+}
+
+function get_max_test_measure_id() {
+	$query_string =
+	"SELECT MAX(tm_id) as maxval FROM test_measure";
 	$resultset = query_associative_one($query_string);
 	return $resultset['maxval'];
 }
