@@ -7494,6 +7494,7 @@ function add_test($test, $testId=null)
 		$auditTrail->logAddTest();	
 	}
 	
+	
 	return $testId;
 }
 
@@ -7557,7 +7558,7 @@ function get_test_entry($specimen_id, $test_type_id)
 	return $retval;
 }
 
-function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value)
+function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result)
 {
 	# Adds results for a test entry
 	$curent_ts = "";
@@ -7580,6 +7581,15 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 		"WHERE test_id=$test_id ";
 	
 	query_blind($query_string);
+	
+	//Saving measure to measures table	
+	foreach($measure_result as $ms=>$rs){
+		
+	$update_test_measure = 
+		"update test_measure set result = $rs where test_id = $test_id and measure_id = $ms";
+	query_blind($update_test_measure);
+	}
+	
 	
 	# If specimen ID was passed, update its status
 	if($specimen_id != "")

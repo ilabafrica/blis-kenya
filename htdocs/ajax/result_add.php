@@ -9,7 +9,6 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 
 $test_id = $_REQUEST['test_id'];
-$parent_test_id = $_REQUEST['parent_test_id'];
 $test_name = get_test_name_by_id($test_id);
 $test = Test::getById($test_id);
 $test_type = TestType::getById($test->testTypeId);
@@ -18,9 +17,10 @@ $specimen = Specimen::getById($specimen_id);
 $patient = Patient::getById($specimen->patientId);
 $comment = $_REQUEST['comments'];
 $comment_1=$_REQUEST['comments_1'];
-$dd_to=$_REQUEST['dd_to'];
+
+/*$dd_to=$_REQUEST['dd_to'];
 $mm_to=$_REQUEST['mm_to'];
-$yyyy_to=$_REQUEST['yyyy_to'];
+$yyyy_to=$_REQUEST['yyyy_to'];*/
 
 if($comment!=="" && $comment_1!="")
 {
@@ -40,6 +40,8 @@ $comments=$comment;
 $result_values = $_REQUEST['result'];
 $measure_count = 0;
 $measure_list = $test_type->getMeasures();
+//Holds a key value pair of measureId and result to put in test_measure table the results table.
+$measure_result = array();
 
 $submeasure_list = array();
                 $comb_measure_list = array();
@@ -47,8 +49,8 @@ $submeasure_list = array();
                 
                 foreach($measure_list as $measure)
                 {
-                    
-                    $submeasure_list = $measure->getSubmeasuresAsObj();
+
+	                $submeasure_list = $measure->getSubmeasuresAsObj();
                     //echo "<br>".count($submeasure_list);
                     //print_r($submeasure_list);
                     $submeasure_count = count($submeasure_list);
@@ -89,6 +91,8 @@ foreach($measure_list as $measure)
                 if( substr($value_string, -1) == "_")
                         $value_string = substr($value_string, 0, -1);
 		$result_values[$measure_count] = $value_string;
+		//Stuffing measureId and result in measure_result array
+		$measure_result[$measure[measureId]] = $value_string;
 	}
         else if($range_type == Measure::$RANGE_FREETEXT)
 	{
@@ -96,6 +100,12 @@ foreach($measure_list as $measure)
 		$result_to_push = $result_value ;
 		$result_value = "[\$]".$result_value."[\/\$]";
 		$result_values[$measure_count] = $result_value;
+		//Stuffing measureId and result in measure_result array
+		$measure_result[$measure->measureId] = $result_to_push;
+	}
+	else {
+	$result_value = $result_values[$measure_count];
+	$measure_result[$measure->measureId] = $result_value;
 	}
 	$measure_count++;
 }
@@ -119,7 +129,7 @@ $user_id = $_SESSION['user_id'];
 //$unix_ts = mktime(0,0,0,$mm_to,$dd_to,$yyyy_to);
 //$ts =date("Y-m-d H:i:s", $unix_ts);
 //-NC3065
-add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue());
+add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result);
 
 update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
@@ -223,11 +233,10 @@ else
 	<?php
 }
 ?>
-
 </div>
 </div>
 </div>
 <div class="modal-footer">
 <!-- a href='' class='btn danger'>Edit</a-->
-<a href='javascript:hide_test_result_form_confirmed(<?php echo $parent_test_id ?>);' class='btn success'>Close</a>
+<a href='javascript:hide_test_result_form_confirmed(<?php echo $test_id ?>);' class='btn success'>Close</a>
 </div>

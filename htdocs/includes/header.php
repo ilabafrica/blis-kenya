@@ -257,12 +257,6 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 								<i class='icon-tag'></i> ".LangUtil::$generalTerms['SPECIMEN_TYPES']."
 								</a>
 							</li>
-							<li>
-								<a href='javascript:load_right_pane(".$quote."specimen_rejection_div".$quote.");' class='menu_option' id='specimen_rejection_div_menu'>
-								<i class='icon-thumbs-down'></i> "."Specimen Rejection"."
-								</a>
-							</li>
-							
 						</ul>";
 						
 					break;
