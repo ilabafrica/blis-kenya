@@ -279,7 +279,7 @@ else
 									    $GLOBAL_DB_NAME.external_lab_request
 
 									WHERE
-									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) AND requestDate >= CURDATE() - 14
+									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) 
 									    AND parentLabNo = 0
                     					AND (patient_id = '$search_term' 
 	                    					OR full_name LIKE '%$search_term%' 
