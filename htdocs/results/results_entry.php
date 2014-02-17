@@ -56,8 +56,9 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 				?>
 				</div>
 				<div id='specimen_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
-				<div id='ok_specimen_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
 				<div id='specimen_rejection_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+				<div id='specimen_acceptance_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+				
 			</div>
 		</div>
 	</div>
@@ -670,29 +671,29 @@ function load_specimen_rejection(specimen_id)
 	//End ajax specimen rejection
 }
 
-function accept_specimen(specimen_id,test_id)
+function load_specimen_acceptance(specimen_id, patient_id)
 {
 
-		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-		App.blockUI(el);
-		$('.reg_subdiv').hide();
-		//Mark specimen as accepted
-  		var url = 'regn/specimen_acceptance.php';
-  		$('#ok_specimen_body').load(
+	//Begin specimen rejection via ajax
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	$('.reg_subdiv').hide();
+	//Load specimen_acceptance.php via ajax
+	var url = 'search/specimen_info.php';
+	$('#specimen_acceptance_body').load(
 			url, 
-			{sid: specimen_id}, 
+			{sid: specimen_id, pid: patient_id}, 
 			function(result) 
 			{
-				$('#ok_specimen_body').modal('show');
-				App.unblockUI(el);
 
-				
+				$('#specimen_acceptance_body').modal('show');
+				App.unblockUI(el);
 			}
-	);
-	//('#ok_specimen').show();
-	//End ajax accept specimen
-		
+	);		
+	$('#specimen_acceptance').show();
+	//End ajax specimen rejection
 }
+
 function start_test(test_id)
 {
 	var r=confirm("Start test?");

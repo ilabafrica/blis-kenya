@@ -11,7 +11,7 @@ $reasons_for_rejection = $_REQUEST['reasons'];
 $specimen=$_REQUEST['specimen'];
 $query = mysql_query("UPDATE specimen SET status_code_id=$STATUS_REJECTED, comments='$reasons_for_rejection' WHERE specimen_id = $specimen") or die(mysql_error());
 		if($query){
-			header('Location: find_patient.php?show_sc=1');
+			header('Location: results_entry.php');
 			
 		}
 		else{

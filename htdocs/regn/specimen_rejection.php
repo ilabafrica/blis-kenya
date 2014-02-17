@@ -23,7 +23,7 @@ static $STATUS_REJECTED = 6;
 function check_input()
 {
 	// Validate
-	var reasons = $('#reasons').attr("value");
+	var reasons = $('#reasons').val();
 	if(reasons == "")
 	{
 		alert("<?php echo "Error: Missing reasons for rejection."; ?>");
@@ -62,7 +62,7 @@ $uiinfo = "sid=".$_REQUEST['sid']."&dnum=".$_REQUEST['dnum'];
 				<a href="javascript:;" class="remove"></a>
 			</div>
 		</div>
-		
+
 <div class="portlet-body form">
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
 <span class='page_title'><?php echo "Specimen Rejection"; ?></span>

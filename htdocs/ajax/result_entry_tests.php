@@ -279,7 +279,7 @@ else
 									    $GLOBAL_DB_NAME.external_lab_request
 
 									WHERE
-									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) AND requestDate >= CURDATE() - 14
+									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) 
 									    AND parentLabNo = 0
                     					AND (patient_id = '$search_term' 
 	                    					OR full_name LIKE '%$search_term%' 
@@ -572,7 +572,7 @@ else{
 					echo '</span></td>';
 					echo '
 						<td id=actionA'.$test->testId.' style="width:130px;">
-							<a href="javascript:accept_specimen('.$quote.$specimen->specimenId.$quote.', '.$quote.$test->testId.$quote.');" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+							<a href="javascript:load_specimen_acceptance('.$quote.$specimen->specimenId.$quote.', '.$quote.$patient->patientId.$quote.')" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
 							<a href="javascript:load_specimen_rejection('.$quote.$specimen->specimenId.$quote.')" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
                         </td>
 						<td id=actionB'.$test->testId.' style="width:130px;">
