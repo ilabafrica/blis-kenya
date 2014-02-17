@@ -56,9 +56,11 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 				?>
 				</div>
 				<div id='specimen_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+
 				<div id='specimen_rejection_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
-				<div id='specimen_acceptance_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
-				
+
+				<div id='specimen_registered' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static" > </div>
+
 			</div>
 		</div>
 	</div>
@@ -377,7 +379,6 @@ if($SHOW_REPORT_RESULTS === true)
 $script_elems->enableJQueryForm();
 $script_elems->enableJQueryValidate();
 $script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
 $script_elems->enableTokenInput();
 ?>
 <script type='text/javascript'>
@@ -630,7 +631,7 @@ function refresh_date_range(date_from,date_to)
 
 function load_specimen_reg(patient_id, is_external_patient, labNo)
 {
-
+			
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	$('.reg_subdiv').hide();

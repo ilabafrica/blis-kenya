@@ -2,7 +2,6 @@
 #
 # Main page for registering new specimen(s) in a single session/accession
 #
-include("../redirect.php");
 require_once("../includes/db_lib.php");
 require_once("../includes/page_elems.php");
 require_once("../includes/script_elems.php");
@@ -218,7 +217,6 @@ else {
 </div>
 <?php
 $script_elems->enableDatePicker();
-$script_elems->enableLatencyRecord();
 $script_elems->enableJQueryForm();
 $script_elems->enableAutocomplete();
 ?>
@@ -242,7 +240,6 @@ $(document).ready(function(){
     $("#doc_row_1_input").autocomplete(data);
     
     $('#specimen_id').focus();
-    $('a[rel*=facebox]').facebox()
     <?php
     if(isset($_REQUEST['pid']))
     {
@@ -448,19 +445,20 @@ function add_specimens(labNo)
             break;
     }
     ?>
-    /*
-    var dnum_string= "<?php echo $today; ?>";
-    var url_string = "ajax/daily_num_update.php?dnum="+dnum_string+"&dval="+dnum_val;
-    $.ajax({ url: url_string, async: false, success: function() {}}); 
-    
-    var url_string = "ajax/session_num_update.php?snum=<?php echo date("Ymd"); ?>";
-    $.ajax({ url: url_string, async: false, success: function() {
-        $('#progress_spinner').hide();
-        window.location="specimen_added.php?snum=<?php echo $session_num; ?>";
-    }});
-    */
-   /// window.location="specimen_added.php?snum=<?php echo $session_num; ?>";
+   
    	var session_num = <?php echo $session_num; ?>;
+   	
+   	$('#specimen_reg_body').modal('hide');
+   	
+   	var url = "regn/specimen_added.php?snum=<?php echo $session_num; ?>";
+	$('#specimen_registered').load(
+			url, 
+			function(result) 
+			{
+				$('#specimen_registered').modal('show');
+			}
+	);		
+   	
      $.post(
 			'ajax/get_specimen_details.php',
 			{snum: session_num, labno:labNo }, 
@@ -468,8 +466,6 @@ function add_specimens(labNo)
 			{
 				
 				var test_details = result.split('%');
-			
-
 
 				$('#span'+labNo).addClass('label-inverse');
 				$('#span'+labNo).html('Not Collected');
@@ -484,18 +480,6 @@ function add_specimens(labNo)
 				$('#result_form_pane_'+labNo).attr('id','result_form_pane_'+test_details[1]+'');
 				}
 		);
-   
-    $('#specimen_reg_body').modal('hide');
-  
-
-    
-
-	/*<td id=actionA'.$test->testId.' style="width:130px;"></td>
-	<td id=actionB'.$test->testId.' style="width:130px;"></td>*/
-
-	
-	
-}
 
 function add_specimenbox()
 {
@@ -514,6 +498,7 @@ function add_specimenbox()
             App.init();
         }
     });
+
 }
 
 function get_testbox(testbox_id, stype_id, external_tests)

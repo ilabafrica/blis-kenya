@@ -295,26 +295,6 @@ $test_type = get_test_type_by_id($test_type_id);
 	<?php
 	$parent_test_id = $test_id;
 	get_result_form($test_type, $test_id, 0, $patient, $parent_test_id);	  
-	$child_tests = get_child_tests($test_type_id);
-	if (count($child_tests)>0){
-		foreach($child_tests as $child_test)
-		{
-			$test_type = get_test_type_by_id($child_test['test_type_id']);
-			$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
-			
-			get_result_form($test_type, $chid_test_entry->testId, 0, $patient, $parent_test_id);
-			$child_tests = get_child_tests($child_test['test_type_id']);
-			if (count($child_tests)>0){
-				foreach($child_tests as $child_test)
-				{
-					$test_type = get_test_type_by_id($child_test['test_type_id']);
-					$chid_test_entry = get_test_entry($specimen_id, $child_test['test_type_id']);
-					get_result_form($test_type, $chid_test_entry->testId, 0, $patient, $parent_test_id);
-				}
-			}
-		}
-	}
-	
 	?>
 	</div>
 	<div class="span6 sortable">
