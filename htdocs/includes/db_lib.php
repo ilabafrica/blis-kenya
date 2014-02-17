@@ -7583,19 +7583,19 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	query_blind($query_string);
 	
 	//Saving measure to measures table	
-	foreach($measure_result as $ms=>$rs){
+	foreach($measure_result as $measure=>$result){
 	
 		
 	$update_test_measure = 
-		"update test_measure set result = $rs where test_id = $test_id and measure_id = $ms";
+		"update test_measure set result = '$result' where test_id = $test_id and measure_id = $measure";
 	query_blind($update_test_measure);
 	
 
-	$query_string ="SELECT lab_no FROM test_measure WHERE test_id = $test_id and measure_id = $ms";
+	$query_string ="SELECT lab_no FROM test_measure WHERE test_id = $test_id and measure_id = $measure";
 	$record = query_associative_one($query_string);
 	$lab_no = $record['lab_no'];
 	
-	API::updateExternalLabrequest($surr_id, $lab_no, $rs, $comments);
+	API::updateExternalLabrequest($surr_id, $lab_no, $result, $comments);
 	}
 	
 	
