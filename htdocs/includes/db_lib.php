@@ -7558,7 +7558,7 @@ function get_test_entry($specimen_id, $test_type_id)
 	return $retval;
 }
 
-function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result)
+function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result, $surr_id=null)
 {
 	# Adds results for a test entry
 	$curent_ts = "";
@@ -7584,10 +7584,18 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	
 	//Saving measure to measures table	
 	foreach($measure_result as $ms=>$rs){
+	
 		
 	$update_test_measure = 
 		"update test_measure set result = $rs where test_id = $test_id and measure_id = $ms";
 	query_blind($update_test_measure);
+	
+
+	$query_string ="SELECT lab_no FROM test_measure WHERE test_id = $test_id and measure_id = $ms";
+	$record = query_associative_one($query_string);
+	$lab_no = $record['lab_no'];
+	
+	API::updateExternalLabrequest($surr_id, $lab_no, $rs, $comments);
 	}
 	
 	
