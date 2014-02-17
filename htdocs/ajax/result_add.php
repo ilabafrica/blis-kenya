@@ -129,7 +129,7 @@ $user_id = $_SESSION['user_id'];
 //$unix_ts = mktime(0,0,0,$mm_to,$dd_to,$yyyy_to);
 //$ts =date("Y-m-d H:i:s", $unix_ts);
 //-NC3065
-add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result);
+add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result, $patient->surrogateId);
 
 update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
