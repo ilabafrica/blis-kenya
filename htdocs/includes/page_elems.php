@@ -3383,6 +3383,37 @@ class PageElems
 		</table>
 		<?php
 	}
+
+	public function getSpecimenRejectionDetails($sid, $is_modal=false)
+	{
+		# Displays list of all tests registered for a specimen w/ status/results
+		$specimen = get_specimen_by_id($sid);
+		?>
+		<script type='text/javascript'>
+		$(document).ready(function(){
+			$('#specimen_rejection_table').tablesorter();
+		});
+		
+		</script>
+		<table class='table' id='specimen_rejection_table'>
+			<thead>
+				<tr valign='top'>
+					<th><h5><u><?php echo "Reasons for Rejection"; ?></u></h5></th>
+					<th><h5><u><?php echo "Rejected By"; ?></u></h5></th>
+					<th><h5><u><?php echo "Talked To"; ?></u></h5></th>
+					<th><h5><u><?php echo "Time"; ?></u></h5></th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<td><?php echo $specimen->comments; ?></td>
+				<td><?php echo get_username_by_id($specimen->auxId); ?></td>
+				<td><?php echo $specimen->referredToName; ?></td>
+				<td><?php echo $specimen->ts_collected; ?></td>
+			</tbody>
+		</table>
+		<?php
+	}
 	
 	public function getTestInfoRow($test, $is_modal=false)
 	{

@@ -120,7 +120,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 	</div>
 </div>
 
-<div id="import_results" class='results_subdiv' style='display:none;'>
+<div id='import_results' class='results_subdiv' style='display:none;'>
 	<b>Import Results</b>
 	<br>
 	<br>
@@ -545,7 +545,10 @@ function hide_result_form(test_id)
 		$("#"+target_div_id).html("");
 		$('#specimen_id').attr("value", "");
 }
-
+function hide_specimen_rejection_popup()
+{	
+	$('#result_form_pane_'+test_id).modal('hide');
+}
 function fetch_specimen()
 {
 	var specimen_id = $('#specimen_id').val();
@@ -598,6 +601,8 @@ function fetch_tests(status,page,search_term)
 				$('select', '#status')[0].selectedIndex = 1;
 			}else if (status==<?php echo Specimen::$STATUS_NOT_COLLECTED;?>){
 				$('select', '#status')[0].selectedIndex = 2;
+			}else if (status==<?php echo Specimen::$STATUS_REJECTED;?>){
+				$('select', '#status')[0].selectedIndex = 7;
 			}else if (status==<?php echo Specimen::$STATUS_PENDING;?>){
 				$('select', '#status')[0].selectedIndex = 3;
 			}else if (status==<?php echo Specimen::$STATUS_STARTED;?>){
@@ -672,29 +677,33 @@ function load_specimen_rejection(specimen_id)
 	//End ajax specimen rejection
 }
 
-function load_specimen_acceptance(specimen_id, patient_id)
+function accept_specimen(specimen_id,test_id)
 {
 
-	//Begin specimen rejection via ajax
-	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-	App.blockUI(el);
-	$('.reg_subdiv').hide();
-	//Load specimen_acceptance.php via ajax
-	var url = 'search/specimen_info.php';
-	$('#specimen_acceptance_body').load(
-			url, 
-			{sid: specimen_id, pid: patient_id}, 
-			function(result) 
-			{
-
-				$('#specimen_acceptance_body').modal('show');
-				App.unblockUI(el);
-			}
-	);		
-	$('#specimen_acceptance').show();
-	//End ajax specimen rejection
+		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+		App.blockUI(el);
+		//Mark specimen as accepted
+  		url = "ajax/specimen_change_status.php";
+  		$.post(url, 
+		{sid: specimen_id}, 
+		function(result) 
+		{
+			$('#span'+test_id).addClass('label-important');
+			$('#span'+test_id).html('Pending');
+			actions = result.split('%');
+			$('#actionA'+test_id).html(''+
+					'<a href="javascript:start_test('+test_id+');"'+ 
+					'title="Click to begin testing this Specimen" class="btn red mini">'+
+					'<i class="icon-ok"></i> Start Test</a>');
+			$('#actionB'+test_id).html(''+
+					'<a href="javascript:refer_specimen('+test_id+');"'+ 
+					'title="Click to begin testing this Specimen" class="btn inverse mini">'+
+					'<i class="icon-ok"></i>Refer</a>');
+			App.unblockUI(el);
+		}
+	);
+		
 }
-
 function start_test(test_id)
 {
 	var r=confirm("Start test?");

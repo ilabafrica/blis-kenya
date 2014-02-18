@@ -7649,7 +7649,6 @@ function set_specimen_status_reject($specimen_id, $status_code, $rejectionreason
 	return $result;
 }
 
-
 function set_specimen_status($specimen_id, $status_code, $time_collected=null)
 {
 	global $con;

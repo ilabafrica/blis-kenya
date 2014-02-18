@@ -17,6 +17,7 @@ if(!$is_modal){
 }
 LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
+$status = get_specimen_status($sid);
 include("../includes/scripts.php");
 ?>
 <?php if(!$is_modal){?>
@@ -101,9 +102,19 @@ if($is_modal){?>
                                         </div>
                                 <br>
                                 <hr />
-                                <b><?php echo LangUtil::$pageTerms['REGDTESTS']; ?></b><br>
+                                <b><?php 
+                                if($status != Specimen::$STATUS_REJECTED){
+                                    echo LangUtil::$pageTerms['REGDTESTS']; ?></b><br>
+                                
                                 <?php 
-                                $page_elems->getSpecimenTestsTable($sid); 
+                                    $page_elems->getSpecimenTestsTable($sid); 
+                                }
+                                else{
+                                    echo '<h4>Specimen Rejection Report</h4>'; ?></b><br>
+                                
+                                <?php 
+                                    $page_elems->getSpecimenRejectionDetails($sid);
+                                }
                                 ?>
                           </div>
                   </div>

@@ -204,6 +204,7 @@ function handleDataTable(table_id) {
 		test_status[4] = "Started";
 		test_status[5] = "Tested";
 		test_status[6] = "Tested & Verified";
+		test_status[7] = "Rejected";
 		this.innerHTML = fnCreateSelect( test_status );
 		$('select', this).change( function () {
 			//oTable.fnFilter($(this).val() , 6);
@@ -217,6 +218,8 @@ function handleDataTable(table_id) {
 				fetch_tests(<?php echo Specimen::$STATUS_NOT_COLLECTED?>);
 			}else if(val=="Pending"){
 				fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
+			}else if(val=="Rejected"){
+				fetch_tests(<?php echo Specimen::$STATUS_REJECTED?>);
 			}else if (val=="Started"){
 				fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);
 			}else if (val=="Tested"){
