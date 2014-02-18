@@ -167,42 +167,33 @@ else
                             t.status_code_id AS status, 
                             s.ts AS sorting_time,
                             t.patientVisitNumber AS patient_visit_number
-                        
                         FROM test t
-                        LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
-                        LEFT JOIN patient p ON s.patient_id = p.patient_id
-                        LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
-                        LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
-                        LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-                    WHERE";
-            }
-            
-            if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
-                $query_string.=" 
-                            t.status_code_id='$status' AND
-                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND
-                            t.external_lab_no!='' AND ";
-            }else if($status==Specimen::$STATUS_NOT_COLLECTED){
-                $query_string.=" 
-                        s.status_code_id = '$status' AND
-                        t.external_lab_no!='' AND ";
-            }
-            
-            if ($status!="request_pending"){
-                $query_string.="    
-                        t.external_parent_lab_no = '0'
-                        AND (p.surr_id = '$search_term' 
+                            LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
+                            LEFT JOIN patient p ON s.patient_id = p.patient_id
+                            LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
+                            LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
+                            LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
+                        WHERE t.external_parent_lab_no = '0'
+                            AND (p.surr_id = '$search_term' 
                             OR replace(p.name, ' ', '') LIKE replace('%$search_term%', ' ', '') 
                             OR tt.name LIKE '%$search_term%' 
                             OR tc.name LIKE '%$search_term%' 
                             OR s.specimen_id = '$search_term'
-                            OR t.patientVisitNumber = '$search_term')
-                        ";
+                            OR t.patientVisitNumber = '$search_term') ";
             }
+            
+            if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
+                $query_string.=" AND 
+                            t.status_code_id='$status' AND
+                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") ";
+            }else if($status==Specimen::$STATUS_NOT_COLLECTED){
+                $query_string.=" AND s.status_code_id = '$status' ";
+            }
+            
                         /*LIMIT 0,10 ";
                         /*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
             if ($status=="all"){
-                $query_string.= "UNION ALL ";
+                $query_string.= " UNION ALL ";
             }
             
             if ($status=="all" || $status=="request_pending" ){
@@ -489,7 +480,7 @@ else{
 			<th style='width:100px;'><?php echo "Test"; ?></th>
 			<th style='width:100px;'><?php echo "Order Stage"; ?></th>
 			<th style='width:50px;'><?php echo "Status";?></th>			
-			<th style='width:100px;'></th>
+			<th style='width:100px;' class="test-actions"></th>
 			<?php if($attrib_type==10){
 			?>
 			<th style='width:100px;'></th>
@@ -582,7 +573,7 @@ else{
 					echo 'label-inverse">Not Collected';
 					echo '</span></td>';
 					echo '
-						<td id=actionA'.$test->testId.' style="width:130px;">
+						<td id=actionA'.$test->testId.' style="width:130px;" class="test-actions">
 							<a href="javascript:accept_specimen('.$quote.$specimen->specimenId.$quote.', '.$quote.$test->testId.$quote.');" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
                         </td>
 						<td id=actionB'.$test->testId.' style="width:130px;">
@@ -594,7 +585,7 @@ else{
 						echo 'label-important">Pending';
 						echo '</span></td>';
 						echo '<div id=action'.$test->testId.'>
-					<td id=actionA'.$test->testId.' style="width:130px;"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+					<td id=actionA'.$test->testId.' style="width:130px;" class="test-actions"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 						<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
 					</td>
 					<td id=actionB'.$test->testId.' style="width:130px;">
@@ -602,13 +593,13 @@ else{
 							<i class="icon-search"></i> View Details
 						</a>
 					</td></div>';
-					}
+                                }
 			}else
 			if($test_status == Specimen::$STATUS_DONE){
 				echo 'label-info">Completed';
 				echo '</span></td>';
 				echo '
-			<td style="width:130px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to view results" class="btn blue-stripe mini">
+			<td style="width:130px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to view results" class="btn blue-stripe mini">
 				<i class="icon-edit"></i> View Results</a>
 			</td>
 			<td style="width:130px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn green-stripe mini">
@@ -619,7 +610,7 @@ else{
 				echo 'label-warning">Referred';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
@@ -630,7 +621,7 @@ else{
 				echo 'label-info">Tested';
 				echo '</span></td>';
 				echo '
-			<td style="width:150px;">
+			<td style="width:150px;" class="test-actions">
 			<a href="javascript:fetch_test_edit_form('.$quote.$test->testId.$quote.');" title="Click to Edit results" class="btn blue mini">
 				<i class="icon-edit"></i> Edit</a>
 			<a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn blue mini">
@@ -644,7 +635,7 @@ else{
 				echo 'label-success">Reported';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
@@ -655,7 +646,7 @@ else{
 				echo 'label-info warning">Returned';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
@@ -666,7 +657,7 @@ else{
 				echo 'label-inverse">Rejected';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
+			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
 			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
@@ -677,7 +668,7 @@ else{
 				echo 'label-warning">Started';
 				echo '</span></td>';
 				echo '
-			<td id=action'.$test->testId.' style="width:130px;"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
+			<td id=action'.$test->testId.' style="width:130px;" class="test-actions"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
 				<i class="icon-pencil"></i> Enter Results</a>
 			</td>
 			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
@@ -688,7 +679,7 @@ else{
 				echo 'label-success">Verified';
 				echo '</span></td>';
 				echo '
-			<td style="width:130px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.','.Specimen::$STATUS_VERIFIED.');" title="Click to view results" class="btn green mini">
+			<td style="width:130px;" class="test-actions"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.','.Specimen::$STATUS_VERIFIED.');" title="Click to view results" class="btn green mini">
 				<i class="icon-edit"></i> View Results</a>
 			</td>
 			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
@@ -698,7 +689,7 @@ else{
 				echo 'label">Not Recieved';
 				echo '</span></td>';
 				echo '
-			<td id=actionA'.$record["external_lab_no"].' style="width:130px;"><a href="javascript:load_specimen_reg('.$quote.$patient->surrogateId.$quote.',true, '.$record["external_lab_no"].');" title="Click to add lab request" class="btn mini red-stripe">
+			<td id=actionA'.$record["external_lab_no"].' style="width:130px;" class="test-actions"><a href="javascript:load_specimen_reg('.$quote.$patient->surrogateId.$quote.',true, '.$record["external_lab_no"].');" title="Click to add lab request" class="btn mini red-stripe">
 				<i class="icon-sign-up"></i> Receive request</a>
 			</td>
 			<td id=actionB'.$record["external_lab_no"].' style="width:130px;">
@@ -781,4 +772,5 @@ $("#search_tests").keypress(function(e) {
 $("#refresh").click(function() {
 	fetch_tests("all",null,null);
 });
+
 </script>

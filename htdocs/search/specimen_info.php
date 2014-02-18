@@ -34,9 +34,11 @@ include("../includes/scripts.php");
                 </div>
                 <!-- END PAGE HEADER-->
 <?php }
-if($is_modal){?>
+if($is_modal){
+    $sid_link = "spec_link_$sid";
+?>
 <div class="modal-header">
-	<a href="javascript:remove_modal('specimen_info');" class="close"></a>
+	<a id="<?php echo $sid_link; ?>" href="javascript:close_modal('<?php echo $sid_link; ?>');" class="close"></a>
 	<h4><i class="icon-info-sign"></i> Specimen Details</h4>
 </div>
 <?php }?>

@@ -167,7 +167,7 @@ select:focus {
 
 .mini 
 {
-  height: 13px;
+  min-height: 13px;
   font-size: 11px !important; 
   line-height: 13px;
   padding: 4px 10px;

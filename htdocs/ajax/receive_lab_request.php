@@ -32,10 +32,10 @@ if ( substr($session_num,strpos($session_num, "-")+1 ) )
 	
 $doc_array= getDoctorList();
 $php_array= addslashes(implode("%", $doc_array));
-
+$modal_close_link_id = "m_c_l_id_$session_num";
 ?>
 <div class="modal-header">
-	<a href="javascript:$('#specimen_reg_body').modal('hide');" class="close"></a>
+	<a id="<?php echo $modal_close_link_id; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id; ?>');" class="close"></a>
 	<h4><i class="icon-pencil"></i> <span class='page_title'><?php echo LangUtil::getTitle(); ?> 
 	| Lab No:<?php //echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?></span></h4>
 </div>
@@ -180,7 +180,7 @@ else {
 
 <input type="button" name="add_sched" class="btn green" id="add_button" onclick="add_specimens(<?php echo $labNo?>);" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
 &nbsp;&nbsp;&nbsp;&nbsp;
-<small><a href="javascript:$('#specimen_reg_body').modal('hide')" class="btn red icn-only"> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
+<small><a id="<?php echo $modal_close_link_id; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id; ?>')" class="btn red icn-only"> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a></small>
 <hr />
 </div>
 <div class="span4">
@@ -509,8 +509,7 @@ function show_dialog_box(div_id)
 
 function hide_dialog_box(div_id)
 {
-    var dialog_id = div_id+"_dialog";
-    $('#'+dialog_id).hide();
+    $('#'+div_id).modal('hide');
 }
 
 function remove_specimenbox(box_id)

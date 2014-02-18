@@ -532,7 +532,24 @@ function cancel_show(test_id){
 
 function cancel_hide(){
 
-	$('#cancel').modal('hide'); 
+        $('#cancel').modal('hide'); 
+}
+
+function close_modal(this_element){
+
+    var el = $('#' + this_element).closest('.modal');
+    var elScroll = $('#' + this_element).closest('.modal-scrollable');
+    var elBack = elScroll.next('.modal-backdrop');
+   
+    if(el.length > 0){
+        el.modal('hide');
+        if(el.hasClass('in')){
+            el.hide();
+            $('body').removeClass('modal-open');
+            elScroll.hide();
+            elBack.remove();
+        }
+    }
 }
 
 function hide_result_form(test_id)
@@ -863,8 +880,10 @@ function validate_fields(myForm){
 
 function submit_forms(test_id)
 {
-	var form_id_csv = $('#form_id_list').val();
-	var form_id_list = form_id_csv.split(",");
+// 	var form_id_csv = $('#form_id_list').val();
+// 	var form_id_list = form_id_csv.split(",");
+        var form_id_csv = 'test_'+test_id;
+        var form_id_list = form_id_csv.split(",");
 	$('.result_cancel_link').hide();
 	$('.result_progress_spinner').show();
 	//var target_div_id = "fetched_specimen";

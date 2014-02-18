@@ -1832,8 +1832,17 @@ Custom tables
 }
 
 .table thead tr th {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+}
+
+.table thead tr th.test-actions,
+.table tbody tr td.test-actions {
+    background: none;
+}
+
+.table tbody tr td.test-actions a {
+    margin-bottom: 1px;
 }
 
 .table-advance {

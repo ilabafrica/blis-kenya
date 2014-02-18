@@ -13,7 +13,7 @@ $specimen_list = get_specimens_by_session($session_num);
 ?>                
 
 <div class="modal-header">
-	<a href="javascript:$('#specimen_registered').modal('hide');" class="close"></a>
+	<a href="javascript:hide_dialog_box('specimen_registered');" class="close"></a>
 	<h4><i class="icon-pencil"></i> <span class='page_title'><?php echo LangUtil::getTitle(); ?> 
 </div>
 

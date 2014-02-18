@@ -16,10 +16,11 @@ $test = Test::getById($test_id);
 $test_type_id  = $test->testTypeId;
 $specimen_id = $test->specimenId;
 $test_name = get_test_name_by_id($test_type_id);
+$modal_close_link_id = "m_c_l_id_$test_id";
 
 ?>
 <div class="modal-header">
-	<a href="javascript:remove('<?php echo $test_id; ?>');" class="close"></a>
+	<a id="<?php echo $modal_close_link_id; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id; ?>');" class="close"></a>
 	<h4><i class="icon-pencil"></i> Test Result: <?php echo $test_name; ?></h4>
 </div>
 <div class="modal-body">
@@ -86,7 +87,7 @@ Verified by
 </div>
 </div>
 <div class="modal-footer">
-<a href='javascript:hide_test_result_form_confirmed(<?php echo $test_id ?>);' class='btn success'>Close</a>
+<a id="<?php echo $modal_close_link_id . "_2"; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id . "_2"; ?>');" class='btn success'>Close</a>
 </div>
 <script>
 function verify_result(test_id){

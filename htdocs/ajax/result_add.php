@@ -143,9 +143,10 @@ $result_to_push = str_replace("</b>","",$result_to_push);
 
 API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
 # Show confirmation with details.
+$modal_close_link_id = "m_c_l_id_$test_id";
 ?>
 <div class="modal-header">
-	<a href="javascript:remove('<?php echo $test_id; ?>');" class="close"></a>
+	<a id="<?php echo $modal_close_link_id; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id; ?>');" class="close"></a>
 	<h4><i class="icon-pencil"></i> <?php echo LangUtil::$pageTerms['MSG_RESULTSUBMITTED']; ?></h4>
 </div>
 <div class="modal-body">
@@ -238,5 +239,5 @@ else
 </div>
 <div class="modal-footer">
 <!-- a href='' class='btn danger'>Edit</a-->
-<a href='javascript:hide_test_result_form_confirmed(<?php echo $test_id ?>);' class='btn success'>Close</a>
+<a id="<?php echo $modal_close_link_id ."_2"; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id ."_2"; ?>');" class='btn success'>Close</a>
 </div>

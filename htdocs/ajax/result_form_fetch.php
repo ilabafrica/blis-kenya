@@ -11,7 +11,6 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 
-
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
@@ -273,9 +272,10 @@ if($test_id == null)
 ?>
 <?php 
 $test_type = get_test_type_by_id($test_type_id);
+$modal_link_id = "test_result_link_$test_id";
 ?>	
 <div class="modal-header">
-	<a href="javascript:remove('<?php echo $test_id; ?>');" class="close"></a>
+	<a id="<?php echo $modal_link_id; ?>" href="javascript:close_modal('<?php echo $modal_link_id; ?>');" class="close"></a>
 	<h4><i class="icon-pencil"></i> Results form - <?php echo $test_type->getName(); ?></h4>
 </div>
 <div class="modal-body">
@@ -311,7 +311,7 @@ $test_type = get_test_type_by_id($test_type_id);
 </div>
 <div class="modal-footer">
 	<input type='button' class="btn" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>);'></input>
-	<a href='javascript:hide_test_result_form(<?php echo $test_id ?>);' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+	<a id="<?php echo $modal_link_id.'2'; ?>" href='javascript:close_modal("<?php echo $modal_link_id.'2'; ?>");' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
@@ -321,7 +321,7 @@ $test_type = get_test_type_by_id($test_type_id);
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
-	})
+	});
 	
 	function insertCelltacResults(){
 	     
@@ -370,5 +370,6 @@ $test_type = get_test_type_by_id($test_type_id);
 			return;
 		}
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
-	}
+	}	
+
 	</script>
