@@ -445,9 +445,7 @@ function add_specimens(labNo)
             break;
     }
     ?>
-   
-   	var session_num = <?php echo $session_num; ?>;
-   	
+
    	$('#specimen_reg_body').modal('hide');
    	
    	var url = "regn/specimen_added.php?snum=<?php echo $session_num; ?>";
@@ -461,7 +459,7 @@ function add_specimens(labNo)
    	
      $.post(
 			'ajax/get_specimen_details.php',
-			{snum: session_num, labno:labNo }, 
+			{labno:labNo }, 
 			function(result) 
 			{
 				
@@ -478,9 +476,9 @@ function add_specimens(labNo)
 				$('#actionB'+labNo).attr('id','actionB'+test_details[1]+'');
 				$('#span'+labNo).attr('id','span'+test_details[1]+'');
 				$('#result_form_pane_'+labNo).attr('id','result_form_pane_'+test_details[1]+'');
-				}
+			}
 		);
-
+}
 function add_specimenbox()
 {
     specimen_count++;

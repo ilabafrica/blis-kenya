@@ -116,11 +116,9 @@ foreach($tests_list as $test_type_id)
 	$test->comments = "";
 	$test->userId = $_SESSION['user_id'];
 	$test->result = "";
-	$test->external_lab_no=API::getExternalLabNo($patient->surrogateId, get_test_name_by_id($test_type_id, $_SESSION['lab_config_id']));
+	$test->external_lab_no=$external_lab_no;
 	$ex = API::getExternalParentLabNo($patient->surrogateId,  get_test_name_by_id($test_type_id, $_SESSION['lab_config_id']));
 	$test->patientVisitNumber = API::getpatientVisitNumber($patient->surrogateId);
-	if ($ex =='' || $ex==null) $ex = 0;
-	$test->external_parent_lab_no= $ex;
 
 	#add new test and get test_id
 	$test_id = add_test($test);

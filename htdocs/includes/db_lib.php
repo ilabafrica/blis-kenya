@@ -7449,7 +7449,6 @@ function add_specimen($specimen)
 		"'$specimen->auxId', '$specimen->sessionNum', '$specimen->timeCollected', $specimen->reportTo, '$specimen->doctor', '$specimen->referredToName', '$specimen->dailyNum' , '$specimen->external_lab_no')";
 	//echo $query_string;
 	$result = query_insert_one($query_string);
-	
 	if($result) {
 		//If new specimen added Log this
 		$auditTrail = new AuditTrail();
@@ -7485,6 +7484,7 @@ function add_test($test, $testId=null)
 		"VALUES ( $testId, $test->specimenId, $test->testTypeId, '$test->result', '$test->comments', 0, $test->userId, '$test->external_lab_no', '$test->external_parent_lab_no', '$test->patientVisitNumber')";
 	$result = query_insert_one($query_string);
 	$last_insert_id = get_last_insert_id();
+
 	
 	if($result){
 		//Add event to audit trail
@@ -7500,12 +7500,10 @@ function add_test($test, $testId=null)
 
 function add_test_measure($test_measure, $test_measure_id=null)
 {
-	# Adds a new test record in DB
-	if( $test_measure_id == null)
-		$test_measure_id = bcadd(get_max_test_measure_id(),1);
+
 	$query_string =
-	"INSERT INTO test_measure ( tm_id, test_id, lab_no, measure_id, result) ".
-	"VALUES ( $test_measure_id, $test_measure->test_id, $test_measure->lab_no, $test_measure->measure_id, '$test_measure->result')";
+	"INSERT INTO test_measure ( test_id, lab_no, measure_id, result) ".
+	"VALUES ( $test_measure->test_id, $test_measure->lab_no, $test_measure->measure_id, '$test_measure->result')";
 	$result = query_insert_one($query_string);
 	$last_insert_id = get_last_insert_id();
 	
@@ -7583,19 +7581,19 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	query_blind($query_string);
 	
 	//Saving measure to measures table	
-	foreach($measure_result as $ms=>$rs){
+	foreach($measure_result as $measure=>$result){
 	
 		
 	$update_test_measure = 
-		"update test_measure set result = $rs where test_id = $test_id and measure_id = $ms";
+		"update test_measure set result = '$result' where test_id = $test_id and measure_id = $measure";
 	query_blind($update_test_measure);
 	
 
-	$query_string ="SELECT lab_no FROM test_measure WHERE test_id = $test_id and measure_id = $ms";
+	$query_string ="SELECT lab_no FROM test_measure WHERE test_id = $test_id and measure_id = $measure";
 	$record = query_associative_one($query_string);
 	$lab_no = $record['lab_no'];
 	
-	API::updateExternalLabrequest($surr_id, $lab_no, $rs, $comments);
+	API::updateExternalLabrequest($surr_id, $lab_no, $result, $comments);
 	}
 	
 	

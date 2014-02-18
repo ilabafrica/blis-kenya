@@ -156,23 +156,26 @@ else
     elseif($attrib_type == 10)
     {
             # Get all specimens with pending status
-            $query_string = 
-                    "SELECT *, 
-            				p.name AS patient_name, 
-            				st.name as specimen_name, 
-            				tt.name AS test_name, 
-            				tc.name AS category_name,
-            				t.status_code_id AS status, 
-            				s.ts AS sorting_time,
-            				t.patientVisitNumber AS patient_visit_number
-            			
-						FROM test t
-						LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
-						LEFT JOIN patient p ON s.patient_id = p.patient_id
-						LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
-						LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
-						LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-            		WHERE";
+            $query_string = "";
+            if ($status!="request_pending"){
+                $query_string .= "
+                    SELECT *, 
+                            p.name AS patient_name, 
+                            st.name as specimen_name, 
+                            tt.name AS test_name, 
+                            tc.name AS category_name,
+                            t.status_code_id AS status, 
+                            s.ts AS sorting_time,
+                            t.patientVisitNumber AS patient_visit_number
+                        
+                        FROM test t
+                        LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
+                        LEFT JOIN patient p ON s.patient_id = p.patient_id
+                        LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
+                        LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
+                        LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
+                    WHERE";
+            }
             
 	             if($status!="all" && $status==Specimen::$STATUS_REJECTED)
 	            {
@@ -180,128 +183,134 @@ else
 			            	s.status_code_id = '$status' AND 
 			            	t.external_lab_no!='' AND ";
 	            }
-	            
-	            else if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED)
-	  			{
-	            	$query_string.="
-	                    	 t.status_code_id='$status' AND
-	            			 s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND
-	            			 t.external_lab_no!='' AND ";
-	            }else if($status==Specimen::$STATUS_NOT_COLLECTED)
-	            {
-	            	$query_string.=" 
-			            	s.status_code_id = '$status' AND
-			            	t.external_lab_no!='' AND ";
-	            }
-	            $query_string.="	
-                    	tt.parent_test_type_id = 0 AND t.external_parent_lab_no = '0'
-            			AND (p.surr_id = '$search_term' 
-	            			OR p.name LIKE '%$search_term%' 
-	            			OR tt.name LIKE '%$search_term%' 
-	            			OR tc.name LIKE '%$search_term%' 
-	            			OR s.specimen_id = '$search_term'
-							OR t.patientVisitNumber = '$search_term')
-                    	";
-                    	/*LIMIT 0,10 ";
-						/*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
-            	$query_string.= "UNION ALL 
-                    		SELECT
-									NULL AS test_id,
-									NULL AS test_type_id,
-									NULL AS result,
-									NULL AS ts_started,
-									NULL AS ts_result_entered,
-									NULL AS comments,
-									NULL AS user_id,
-									NULL AS verified_by,
-									NULL AS ts,
-									NULL AS specimen_id,
-									NULL AS date_verified,
-									NULL AS status_code_id,
-								    labNo AS external_lab_no,
-									NULL AS external_parent_lab_no,
-									NULL AS patientVisitNumber,
-									NULL AS specimen_id,
-									NULL AS patient_id,
-									NULL AS specimen_type_id,
-									NULL AS user_id,
-									NULL AS ts,
-									NULL AS status_code_id,
-									NULL AS referred_to,
-									NULL AS comments,
-									NULL AS aux_id,
-									NULL AS date_collected,
-									requestDate AS date_recvd,
-									NULL AS session_num,
-									NULL AS time_collected,
-									NULL AS report_to,
-									NULL AS doctor,
-									NULL AS date_reported,
-									NULL AS referred_to_name,
-									NULL AS daily_num,
-									labNo AS external_lab_no,
-									NULL AS ts_collected,
-									NULL AS patient_id,
-									NULL AS addl_id,
-									NULL AS name,
-									NULL AS sex,
-									NULL AS age,
-									NULL AS dob,
-									NULL AS created_by,
-									NULL AS ts,
-									NULL AS partial_dob,
-									patient_id AS surr_id,
-									NULL AS hash_value,
-									NULL AS specimen_type_id,
-									NULL AS name,
-									NULL AS description,
-									NULL AS ts,
-									NULL AS disabled,
-									NULL AS test_type_id,
-									NULL AS parent_test_type_id,
-									NULL AS specimen,
-									NULL AS test_name,
-									NULL AS description,
-									NULL AS test_category_id,
-									NULL AS ts,
-									NULL AS is_panel,
-									NULL AS disabled,
-									NULL AS clinical_data,
-									NULL AS hide_patient_name,
-									NULL AS prevalence_threshold,
-									NULL AS target_tat,
-									NULL AS test_category_id,
-									NULL AS name,
-									NULL AS description,
-									NULL AS ts,
-									full_name AS patient_name,
-									NULL AS specimen_name,
-									investigation AS test_name,
-									NULL AS category_name,
-									NULL AS status,
-									requestDate AS sorting_time,
-									patientVisitNumber AS patient_visit_number
-									FROM
 
-									    $GLOBAL_DB_NAME.external_lab_request
-
-									WHERE
-									    test_status = 0 AND (labNo != '' OR labNo IS NOT NULL) AND (patient_id != '' OR patient_id IS NOT NULL) 
-									    AND parentLabNo = 0
-                    					AND (patient_id = '$search_term' 
-	                    					OR full_name LIKE '%$search_term%' 
-	                    					OR investigation LIKE '%$search_term%'
-											OR patientVisitNumber = '$search_term')
-									 ";
-		            	if ($status!="all" && $status !='request_pending')
-		            		$query_string.=" AND test_status=99";
-		            		
-		          	$query_string.=	" ORDER BY date_recvd DESC, sorting_time DESC";
-
-		          	//echo $query_string;
-            	//$query_string.= " ORDER BY s.date_recvd DESC, s.ts DESC";
-     			
-            	//error_log("\n".$query_string, 3, "../logs/my.error.log");
+            else if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
+                $query_string.=" 
+                            t.status_code_id='$status' AND
+                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") AND
+                            t.external_lab_no!='' AND ";
+            }else if($status==Specimen::$STATUS_NOT_COLLECTED){
+                $query_string.=" 
+                        s.status_code_id = '$status' AND
+                        t.external_lab_no!='' AND ";
+            }
+            
+            if ($status!="request_pending"){
+                $query_string.="    
+                        t.external_parent_lab_no = '0'
+                        AND (p.surr_id = '$search_term' 
+                            OR replace(p.name, ' ', '') LIKE replace('%$search_term%', ' ', '') 
+                            OR tt.name LIKE '%$search_term%' 
+                            OR tc.name LIKE '%$search_term%' 
+                            OR s.specimen_id = '$search_term'
+                            OR t.patientVisitNumber = '$search_term')
+                        ";
+            }
+                        /*LIMIT 0,10 ";
+                        /*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
+            if ($status=="all"){
+                $query_string.= "UNION ALL ";
+            }
+            
+            if ($status=="all" || $status=="request_pending" ){
+                $query_string.= "
+                            SELECT
+                                    NULL AS test_id,
+                                    NULL AS test_type_id,
+                                    NULL AS result,
+                                    NULL AS ts_started,
+                                    NULL AS ts_result_entered,
+                                    NULL AS comments,
+                                    NULL AS user_id,
+                                    NULL AS verified_by,
+                                    NULL AS ts,
+                                    NULL AS specimen_id,
+                                    NULL AS date_verified,
+                                    NULL AS status_code_id,
+                                    labNo AS external_lab_no,
+                                    NULL AS external_parent_lab_no,
+                                    NULL AS patientVisitNumber,
+                                    NULL AS specimen_id,
+                                    NULL AS patient_id,
+                                    NULL AS specimen_type_id,
+                                    NULL AS user_id,
+                                    NULL AS ts,
+                                    NULL AS status_code_id,
+                                    NULL AS referred_to,
+                                    NULL AS comments,
+                                    NULL AS aux_id,
+                                    NULL AS date_collected,
+                                    requestDate AS date_recvd,
+                                    NULL AS session_num,
+                                    NULL AS time_collected,
+                                    NULL AS report_to,
+                                    NULL AS doctor,
+                                    NULL AS date_reported,
+                                    NULL AS referred_to_name,
+                                    NULL AS daily_num,
+                                    labNo AS external_lab_no,
+                                    NULL AS ts_collected,
+                                    NULL AS patient_id,
+                                    NULL AS addl_id,
+                                    NULL AS name,
+                                    NULL AS sex,
+                                    NULL AS age,
+                                    NULL AS dob,
+                                    NULL AS created_by,
+                                    NULL AS ts,
+                                    NULL AS partial_dob,
+                                    patient_id AS surr_id,
+                                    NULL AS hash_value,
+                                    NULL AS specimen_type_id,
+                                    NULL AS name,
+                                    NULL AS description,
+                                    NULL AS ts,
+                                    NULL AS disabled,
+                                    NULL AS test_type_id,
+                                    NULL AS parent_test_type_id,
+                                    NULL AS specimen,
+                                    NULL AS test_name,
+                                    NULL AS description,
+                                    NULL AS test_category_id,
+                                    NULL AS ts,
+                                    NULL AS is_panel,
+                                    NULL AS disabled,
+                                    NULL AS clinical_data,
+                                    NULL AS hide_patient_name,
+                                    NULL AS prevalence_threshold,
+                                    NULL AS target_tat,
+                                    NULL AS test_category_id,
+                                    NULL AS name,
+                                    NULL AS description,
+                                    NULL AS ts,
+                                    full_name AS patient_name,
+                                    NULL AS specimen_name,
+                                    investigation AS test_name,
+                                    NULL AS category_name,
+                                    NULL AS status,
+                                    requestDate AS sorting_time,
+                                    patientVisitNumber AS patient_visit_number
+                                    FROM
+                                        $GLOBAL_DB_NAME.external_lab_request
+                                    WHERE
+                                        test_status = 0 
+                                        AND (labNo != '' OR labNo IS NOT NULL) 
+                                        AND (patient_id != '' OR patient_id IS NOT NULL) 
+                                        AND requestDate >= CURDATE() - 365
+                                        AND parentLabNo = 0
+                                        AND (patient_id = '$search_term' 
+                                            OR replace(full_name, ' ', '') LIKE replace('%$search_term%', ' ', '') 
+                                            OR investigation LIKE '%$search_term%'
+                                            OR patientVisitNumber = '$search_term')
+                                     ";
+                        }
+//                         if ($status!="all" && $status !='request_pending')
+//                             $query_string.=" AND test_status=99";
+                            
+                      $query_string.=    " ORDER BY date_recvd, sorting_time DESC";
+                //$query_string.= " ORDER BY s.date_recvd DESC, s.ts DESC";
+//                  echo $query_string;
+                //error_log("\n".$query_string, 3, "../logs/my.error.log");
     }
     elseif($attrib_type == 11)
     {
