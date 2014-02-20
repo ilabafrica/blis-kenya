@@ -921,14 +921,8 @@ function submit_forms(test_id)
 	$('.result_progress_spinner').show();
 	//var target_div_id = "fetched_specimen";
 	var target_div_id = "result_form_pane_"+test_id;
-	for(var i = 0; i < form_id_list.length; i++)
-	{
-		
-		if($('#'+form_id_list[i]+'_skip').is(':checked'))
-		{
-			continue;
-		}
-		var params = $('#'+form_id_list[i]).formSerialize();
+
+		var params = $('#test_'+test_id).formSerialize();
 		var string = params.toString();
 		var str1 = string.split("&");
 		var str2 = str1[0].split("=");
@@ -952,12 +946,9 @@ function submit_forms(test_id)
 				
 
 				 $('#actionA'+actual_test_id).html
-				    ('<a href="javascript:fetch_test_edit_form('+test_id+');" title="Click to Edit results" class="btn blue mini"><i class="icon-edit"></i> Edit</a>');
-				$('#actionB'+actual_test_id).html
-					('<a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"><i class="icon-edit"></i> Verify</a>');		
+				    ('<a href="javascript:fetch_test_edit_form('+test_id+');" title="Click to Edit results" class="btn blue mini"><i class="icon-edit"></i> Edit</a> <a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"><i class="icon-edit"></i> Verify</a>');		
 			}
 		});	
-	}
 	push_results_to_external_system();
 }
 

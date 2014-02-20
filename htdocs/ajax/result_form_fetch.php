@@ -14,6 +14,7 @@ $page_elems = new PageElems();
 $script_elems = new ScriptElems();
 //$script_elems->enableValidation();
 
+
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
