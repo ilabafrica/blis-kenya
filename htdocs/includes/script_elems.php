@@ -213,6 +213,20 @@ class ScriptElems
 		}
 	}
 	
+	public function enableValidation()
+	{
+		# Enable the jquery
+
+		if($this->enabledValidation === false)
+		{
+		?>
+			
+
+		<?php
+			$this->enabledValidation = true;
+		}
+	}
+	
 	public function enableNivoSlider()
 	{
 		# Enable the jquery

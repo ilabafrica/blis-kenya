@@ -23,10 +23,15 @@ static $STATUS_REJECTED = 6;
 function check_input()
 {
 	// Validate
-	var reasons = $('#reasons').attr("value");
+	var reasons = $('#reasons').val();
+	var referred_to = $('#referred_to_name').val();
 	if(reasons == "")
 	{
 		alert("<?php echo "Error: Missing reasons for rejection."; ?>");
+		return;
+	}
+	if(referred_to_name == ""){
+		alert("<?php echo "Error: Missing Person talked to."; ?>");
 		return;
 	}
 	// All OK
@@ -53,10 +58,18 @@ if ( substr($session_num,strpos($session_num, "-")+1 ) )
 */	
 $uiinfo = "sid=".$_REQUEST['sid']."&dnum=".$_REQUEST['dnum'];
 ?>
+<div class="tab-pane " id="tab_2">
+	<div class="portlet box yellow">
+		<div class="portlet-title">
+			<div class="caption"><i class="icon-reorder"></i>&nbsp;&nbsp;<h4>Specimen Rejection Form</h4></div>
+			
+		</div>
+
+<div class="portlet-body form">
 <p style="text-align: right;"><a rel='facebox' href='#NEW_SPECIMEN'>Page Help</a></p>
 <span class='page_title'><?php echo "Specimen Rejection"; ?></span>
  | <?php echo LangUtil::$generalTerms['ACCESSION_NUM']; ?> <?php echo $session_num; ?>
- | <a href='javascript:history.go(-1);'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+ | <a href='javascript:history.go(-1);'><?php echo 'Cancel'; ?></a>
 <br>
 <br>
 <?php
@@ -81,27 +94,29 @@ $main_query = mysql_query(stripslashes("SELECT DISTINCT s.specimen_id as sid, s.
 $main_rs = mysql_fetch_assoc($main_query);
 $patient = get_patient_by_id($main_rs['patient_number']);
 ?>
+
+<!-- BEGIN FORM-->
 <div id="result"></div>
 <form id="reject" method="post" action="accept_reject_specimen.php">
 <table width="95%" border="0" class="table table-striped table-bordered table-advance table-hover">
   <tr>
-    <td class="highlight"><strong>Patient ID</strong></td>
+    <td class="highlight"><h4>Patient ID</h4></td>
     <td><?php echo $main_rs['patient_number']; ?></td>
   </tr>
   <tr>
-    <td class="highlight"><strong>Patient Number</strong></td>
+    <td class="highlight"><h4>Patient Number</h4></td>
     <td><?php echo $main_rs['daily_number']; ?></td>
   </tr>
   <tr>
-    <td class="highlight"><strong>Patient Name</strong></td>
+    <td class="highlight"><h4>Patient Name</h4></td>
     <td><?php echo $patient->getName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
   </tr>
   <tr>
-    <td class="highlight"><strong>Specimen Type</strong></td>
+    <td class="highlight"><h4>Specimen Type</h4></td>
     <td><?php echo $main_rs['name']; ?></td>
   </tr>
   <tr>
-    <td class="highlight"><strong>Tests</strong></td>
+    <td class="highlight"><h4>Tests</h4></td>
     <?php $sql_query = mysql_query(stripslashes("SELECT t.test_type_id, tt.name as tests FROM test t, test_type tt WHERE t.test_type_id=tt.test_type_id AND t.specimen_id=".$main_rs['sid'])) or die(mysql_error());
 	 ?>
     <td><?php while($sql_rs = mysql_fetch_assoc($sql_query)){
@@ -109,19 +124,29 @@ $patient = get_patient_by_id($main_rs['patient_number']);
 	}?></td>
   </tr>
   <tr>
-    <td class="highlight"><strong>Reasons for Rejection</strong></td>
+    <td class="highlight"><h4>Reasons for Rejection</h4></td>
     <input name="specimen" id="specimen" type="hidden" value="<?php echo $sid; ?>" />
-    <td>
-                                          <textarea class="large m-wrap" rows="3" id="reasons" name="reasons"></textarea>
-                                       </td>
+    	<td>
+            <textarea class="large m-wrap" rows="3" id="reasons" name="reasons"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="highlight"><h4>Person Talked To</h4></td>
+    	<td>
+            <input type='text' name='referred_to_name' id='referred_to_name' class='span4 m-wrap' />
+        </td>
   </tr>
 </table>
 <br>
 &nbsp;&nbsp;
 <input type="button" class="btn yellow" name="add_button" id="add_button" onclick="check_input();" value="<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>" size="20" />
 &nbsp;&nbsp;&nbsp;&nbsp;
-	<a href='find_patient.php?show_sc'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a></form>
+	<a href='javascript:location.reload(false);'>&laquo; <?php echo LangUtil::$generalTerms['CMD_BACK']; ?></a></form>
 &nbsp;&nbsp;&nbsp;&nbsp;
+<!-- END FORM-->                
+										</div>
+									</div>
+								</div>
 <div id='NEW_SPECIMEN' class='right_pane' style='display:none;margin-left:10px;'>
 	<ul>
 		<?php

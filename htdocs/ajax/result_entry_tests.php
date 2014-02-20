@@ -18,6 +18,7 @@ $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 $uiinfo = "op=".$_REQUEST['t']."&qr=".$_REQUEST['a'];
+$quote='';
 putUILog('result_entry_tests', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 ?>
 <?php
@@ -173,7 +174,7 @@ else
                             LEFT JOIN specimen_type st ON s.specimen_type_id = st.specimen_type_id
                             LEFT JOIN test_type tt ON t.test_type_id = tt.test_type_id
                             LEFT JOIN test_category tc ON tt.test_category_id = tc.test_category_id
-                        WHERE t.external_parent_lab_no = '0'
+                        WHERE (t.external_parent_lab_no = '0' OR t.external_parent_lab_no = '')
                             AND (p.surr_id = '$search_term' 
                             OR replace(p.name, ' ', '') LIKE replace('%$search_term%', ' ', '') 
                             OR tt.name LIKE '%$search_term%' 
@@ -326,6 +327,7 @@ else
                     		verified_by = ".$_SESSION['user_id']."  
                     		WHERE test_id ='$attrib_value'";
 	}
+	
 }
 //RUN QUERY DEPENDING ON PARAMENTERS
 if($attrib_type == 12||$attrib_type == 13)
@@ -574,15 +576,29 @@ else{
 					echo '</span></td>';
 					echo '
 						<td id=actionA'.$test->testId.' style="width:130px;" class="test-actions">
-							<a href="javascript:accept_specimen('.$quote.$specimen->specimenId.$quote.', '.$quote.$test->testId.$quote.');" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
-                        </td>
+							<a href="javascript:accept_specimen('.$quote.$specimen->specimenId.$quote.', '.$quote.$test->testId.$quote.')" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+							<a href="javascript:load_specimen_rejection('.$quote.$specimen->specimenId.$quote.')" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
+                                               </td>
 						<td id=actionB'.$test->testId.' style="width:130px;">
 						<a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
 							<i class="icon-search"></i> View Details
 						</a>
 						</td>';
-				}else{
-						echo 'label-important">Pending';
+				}else
+					if($specimen_status == Specimen::$STATUS_REJECTED){
+						echo 'label">Rejected';
+						echo '</span></td>';
+						echo '
+					
+						<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
+							<i class="icon-search"></i> View Details
+						</a>
+						<td style="width:130px;"><a href="javascript:rejection_report('.$quote.$specimen->specimenId.$quote.');" title="Click to view Specimen Rejection Report" class="btn blue-stripe mini">
+						<i class="icon-print"></i> Print Report</a>
+					</td>
+					</td>';
+					}else{echo 'label-important">Pending';
+						
 						echo '</span></td>';
 						echo '<div id=action'.$test->testId.'>
 					<td id=actionA'.$test->testId.' style="width:130px;" class="test-actions"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
@@ -593,9 +609,10 @@ else{
 							<i class="icon-search"></i> View Details
 						</a>
 					</td></div>';
-                                }
-			}else
-			if($test_status == Specimen::$STATUS_DONE){
+					}
+			}
+			else if($test_status == Specimen::$STATUS_DONE)
+			{
 				echo 'label-info">Completed';
 				echo '</span></td>';
 				echo '
@@ -745,6 +762,9 @@ $("#search_tests").keypress(function(e) {
 	break;
 	case "Not Collected":
 		status = "<?php echo Specimen::$STATUS_NOT_COLLECTED?>"
+	break;
+	case "Rejected":
+		status = "<?php echo Specimen::$STATUS_REJECTED?>"
 	break;
 	case "Pending":
 		status = "<?php echo Specimen::$STATUS_PENDING?>"

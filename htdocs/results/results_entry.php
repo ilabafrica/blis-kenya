@@ -56,7 +56,11 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 				?>
 				</div>
 				<div id='specimen_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+
+				<div id='specimen_rejection_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+
 				<div id='specimen_registered' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static" > </div>
+
 			</div>
 		</div>
 	</div>
@@ -116,7 +120,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 	</div>
 </div>
 
-<div id="import_results" class='results_subdiv' style='display:none;'>
+<div id='import_results' class='results_subdiv' style='display:none;'>
 	<b>Import Results</b>
 	<br>
 	<br>
@@ -558,7 +562,10 @@ function hide_result_form(test_id)
 		$("#"+target_div_id).html("");
 		$('#specimen_id').attr("value", "");
 }
-
+function hide_specimen_rejection_popup()
+{	
+	$('#result_form_pane_'+test_id).modal('hide');
+}
 function fetch_specimen()
 {
 	var specimen_id = $('#specimen_id').val();
@@ -611,6 +618,8 @@ function fetch_tests(status,page,search_term)
 				$('select', '#status')[0].selectedIndex = 1;
 			}else if (status==<?php echo Specimen::$STATUS_NOT_COLLECTED;?>){
 				$('select', '#status')[0].selectedIndex = 2;
+			}else if (status==<?php echo Specimen::$STATUS_REJECTED;?>){
+				$('select', '#status')[0].selectedIndex = 7;
 			}else if (status==<?php echo Specimen::$STATUS_PENDING;?>){
 				$('select', '#status')[0].selectedIndex = 3;
 			}else if (status==<?php echo Specimen::$STATUS_STARTED;?>){
@@ -660,6 +669,29 @@ function load_specimen_reg(patient_id, is_external_patient, labNo)
 			}
 	);		
 	//$('#specimen_reg').show();
+}
+
+function load_specimen_rejection(specimen_id)
+{
+
+	//Begin specimen rejection via ajax
+	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
+	App.blockUI(el);
+	$('.reg_subdiv').hide();
+	//Load specimen_rejection.php via ajax
+	var url = 'regn/specimen_rejection.php';
+	$('#specimen_rejection_body').load(
+			url, 
+			{sid: specimen_id}, 
+			function(result) 
+			{
+
+				$('#specimen_rejection_body').modal('show');
+				App.unblockUI(el);
+			}
+	);		
+	//$('#specimen_rejection').show();
+	//End ajax specimen rejection
 }
 
 function accept_specimen(specimen_id,test_id)
@@ -884,7 +916,8 @@ function submit_forms(test_id)
 // 	var form_id_list = form_id_csv.split(",");
         var form_id_csv = 'test_'+test_id;
         var form_id_list = form_id_csv.split(",");
-	$('.result_cancel_link').hide();
+
+        $('.result_cancel_link').hide();
 	$('.result_progress_spinner').show();
 	//var target_div_id = "fetched_specimen";
 	var target_div_id = "result_form_pane_"+test_id;
@@ -1113,6 +1146,7 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 		 }
 	 });
 }
+
 </script>
 <?php
 $script_elems->bindEntertoClick("#specimen_id", "#fetch_specimen_button");

@@ -3,26 +3,26 @@
 # Main page for showing specimen info
 #
 include("redirect.php");
-include("includes/header.php");
-LangUtil::setPageId("specimen_info");
+require_once("includes/db_lib.php");
+require_once("includes/page_elems.php");
+require_once("includes/script_elems.php");
+include("barcode/barcode_lib.php");
+$page_elems = new PageElems();
+$script_elems = new ScriptElems();
 
+LangUtil::setPageId("specimen_acceptance");
+putUILog('specimen_acceptance', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 $sid = $_REQUEST['sid'];
 $pid = $_REQUEST['pid'];
+$uiinfo = "sid=".$_REQUEST['sid']."&pid=".$_REQUEST['pid'];
 ?>
-<!-- BEGIN PAGE TITLE & BREADCRUMB-->       
-                        <h3>
-                        </h3>
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="icon-download-alt"></i>
-                                <a href="index.php">Home</a> 
-                            </li>
-                        </ul>
-                        <!-- END PAGE TITLE & BREADCRUMB-->
-                    </div>
-                </div>
-                <!-- END PAGE HEADER-->
-                <!-- BEGIN REGISTRATION PORTLETS-->   
+<div class="modal-header">
+    <a href="javascript:$('#specimen_acceptance_body').modal('hide');" class="close"></a>
+    <h4><i class="icon-pencil"></i> <span class='page_title'><?php echo LangUtil::getTitle(); ?></span></h4>
+</div>
+
+<div class="modal-body">
+
                 <div class="row-fluid">
                 <div class="span12 sortable">
         <div class="portlet box green">
@@ -59,7 +59,7 @@ $pid = $_REQUEST['pid'];
                     }
                     
                     ?>
-                    <table>
+                    <table id='result'>
                     	<tr valign='top'>
                     		<td>
                     		<?php $page_elems->getSpecimenInfo($sid); ?>
@@ -85,16 +85,9 @@ $pid = $_REQUEST['pid'];
          </div>
          </div>
 <?php
-include("includes/scripts.php");
-include("barcode/barcode_lib.php");
-
-
-$script_elems->enableJQueryForm();
-$script_elems->enableDatePicker();
-$script_elems->enableJQueryValidate();
-$script_elems->enableTableSorter();
 $script_elems->enableLatencyRecord();
-$script_elems->enableTokenInput();
+$script_elems->enableJQueryForm();
+$script_elems->enableAutocomplete();
 
 $barcodeSettings = get_lab_config_settings_barcode();
 //print_r($barcodeSettings);
@@ -104,7 +97,7 @@ $bar_height = $barcodeSettings['height']; //40;
 $font_size = $barcodeSettings['textsize']; //11;
 
 ?>
-<script type="text/javascript" src="facebox/facebox.js"></script>
+
 <script type='text/javascript'>
 $(document).ready(function(){
     var code = $('#patientID').val();
@@ -156,21 +149,4 @@ function print_patient_barcode()
     Popup($('#patientBarcodeDiv').html());
 }
 
-function Popup(data) 
-    {
-        var mywindow = window.open('', 'my div', 'height=400,width=600');
-        mywindow.document.write('<html><head><title>Barcode</title>');
-        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
-        mywindow.document.write('</head><body >');
-        mywindow.document.write(data);
-        mywindow.document.write('</body></html>');
-
-        mywindow.print();
-        mywindow.close();
-        //mywindow.document.show
-        return true;
-    }
-
 </script>
-
-<?php include("includes/footer.php"); ?>
