@@ -104,24 +104,23 @@ if (!$length >1 || !$_POST==null){
 		 	
 		 	if ($request_data['orderStage'] == 'op' && $request_data['receiptNumber']=='')
 		 	{
-		 		//invalid order (not paid)
+		 		//Lab request not saved for tests withough receipt number except for patients below 5 years age
+		 		$dob = new DateTime($request_data['patient']["dateOfBirth"]);
+		 		$dt = $dob->format('Y-m-d');
+		 		 
+		 		$age = age($dt);
+		 		
+		 		if(intval($age)<=5){
+		 			API::save_external_lab_request($LabRequest);
+		 		}
+		 		
 		 	}else if ($request_data['receiptType']=='insurance'){
 		 		API::save_external_lab_request($LabRequest);
 		 	}
-		 	
-		 	/*else if ((  $request_data['patient']["dateOfBirth"])<-5){
-		 		API::save_external_lab_request($LabRequest);
-		 	}*/
+		 
 		 	else API::save_external_lab_request($LabRequest);
 		 	
-		 	$dob = new DateTime($request_data['patient']["dateOfBirth"]);
-		 	$dt = $dob->format('Y-m-d');
-		 		
-		 	$age = age($dt);
 		 	
-		 	if(intval($age)<=5){
-		 		API::save_external_lab_request($LabRequest);
-		 	}
 		 } 		 
 		}
 }
