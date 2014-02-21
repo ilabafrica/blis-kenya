@@ -183,8 +183,13 @@ else
                             OR t.patientVisitNumber = '$search_term') ";
             }
             
+            if($status!="all" && $status==Specimen::$STATUS_REJECTED)
+            {
+                $query_string.=" AND s.status_code_id = '$status'";
+            }
+            else
             if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
-                $query_string.=" AND 
+                $query_string.=" AND
                             t.status_code_id='$status' AND
                             s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") ";
             }else if($status==Specimen::$STATUS_NOT_COLLECTED){
