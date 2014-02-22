@@ -626,6 +626,19 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 			}
 			?>
 			<tr valign='top'>
+				<td><?php echo "Include existing measures? (Select below)" ?>?</td>
+				<td><input type='checkbox' name='ispanel' id='ispanel'></input></td>
+			</tr>
+			<tr valign='top' class='panel_row'>
+				<td>
+					<?php echo LangUtil::$generalTerms['MEASURES']; ?> <?php $page_elems->getAsterisk(); ?>
+				</td>
+				<td>
+					<?php $page_elems->getMeasureCheckboxes(); ?>
+				</td>
+			</tr>
+			
+			<tr valign='top'>
 				<td><?php echo LangUtil::$generalTerms['COMPATIBLE_SPECIMENS']; ?><?php $page_elems->getAsterisk(); ?>  [<a href='#specimen_help' rel='facebox'>?</a>] </td>
 				<td>
 					<?php $page_elems->getSpecimenTypeCheckboxes($lab_config_id, false,$test_type->testTypeId); ?>

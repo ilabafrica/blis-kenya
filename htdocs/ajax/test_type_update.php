@@ -54,7 +54,7 @@ $oldCostToPatient = $_REQUEST['costToPatient_old'];
 # Update tests measures and ranges
 $is_panel = false;
 $added_measures_list = array();
-if($_REQUEST['ispanel'] == 1)
+if($_REQUEST['ispanel'] == "on")
 {
 	# Panel test. Collect all selected measures
 	$is_panel = true;
@@ -762,8 +762,8 @@ if ($newCostToPatient != $oldCostToPatient) {
     insert_new_cost_of_test_type($newCostToPatient, $updated_entry->testTypeId);
 }
 
-# Add entries for newly listed/measures to 'test_type_measure' map table
-if($_REQUEST['ispanel'] == 1)
+# Add entries for newly listed/measures to 'test_type_measure' map table;
+if($_REQUEST['ispanel'] == "on")
 {
 	for($i = 0; $i < count($added_measures_list); $i += 1)
 	{
