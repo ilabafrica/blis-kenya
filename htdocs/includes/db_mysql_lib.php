@@ -13,7 +13,7 @@ $con = mysql_connect( $DB_HOST, $DB_USER, $DB_PASS );
 if (!$con) {
     die('Could not connect: ' . mysql_error());
 }
-$LOG_QUERIES = true;
+$LOG_QUERIES = false;
 
 mysql_select_db( $DB_NAME, $con );
 
