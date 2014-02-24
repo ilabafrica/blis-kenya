@@ -8,10 +8,10 @@ include("../includes/db_lib.php");
 
 LangUtil::setPageId("new_specimen");
 
-$specimen_type_id = $_REQUEST['stype'];
+$specimen_type_id = get_request_variable('stype');
 $lab_config_id = $_SESSION['lab_config_id'];
 $test_type_list = get_compatible_test_types($lab_config_id, $specimen_type_id);
-$external_test_names = explode(",",$_REQUEST['ext']);
+$external_test_names = explode(",",get_request_variable('ext'));
 
 if(count($test_type_list) == 0)
 {

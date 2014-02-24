@@ -14,7 +14,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 	$saved_db = DbUtil::switchToLabConfig($lab_config->id);
 	$retval = array();
 	
-	if(isset($_REQUEST['p']) && $_REQUEST['p'] ==1)
+	if(get_request_variable('p') ==1)
 		{
 	
 		$query_string =
@@ -27,7 +27,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		}
 	 
 		else
-		if(isset($_REQUEST['ip']) && $_REQUEST['ip'] == 0)
+		if(get_request_variable('ip') == 0)
 	{
 	$query_string =
 		"SELECT * FROM test WHERE test_type_id=$test_type_id ".
@@ -69,11 +69,11 @@ $script_elems->enableJQuery();
 $script_elems->enableTableSorter();
 $script_elems->enableDragTable();
 
-$date_from = $_REQUEST['yf']."-".$_REQUEST['mf']."-".$_REQUEST['df'];
-$date_to = $_REQUEST['yt']."-".$_REQUEST['mt']."-".$_REQUEST['dt'];
-$lab_config_id = $_REQUEST['l'];
-$cat_code = $_REQUEST['c'];
-$ttype = $_REQUEST['t'];
+$date_from = get_request_variable('yf')."-".get_request_variable('mf')."-".get_request_variable('df');
+$date_to = get_request_variable('yt')."-".get_request_variable('mt')."-".get_request_variable('dt');
+$lab_config_id = get_request_variable('l');
+$cat_code = get_request_variable('c');
+$ttype = get_request_variable('t');
 
 $uiinfo = "from=".$date_from."&to=".$date_to."&ct=".$cat_code."&tt=".$ttype;
 putUILog('daily_log_specimens', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
@@ -116,15 +116,15 @@ function export_as_word(div_id)
 }
 
 function report_fetch()
-{ 	var yt= <?php echo $_REQUEST['yt'];?>;
-	var yf=<?php echo $_REQUEST['yf'];?>;
-	var mt=<?php echo $_REQUEST['mt'];?>;
-	var mf=<?php echo $_REQUEST['mf'];?>;
-	var dt=<?php echo $_REQUEST['dt'];?>;
-	var df=<?php echo $_REQUEST['df'];?>;
-	var l=<?php echo $_REQUEST['l'];?>;
-	var cat_code=<?php echo $_REQUEST['c'];?>;
-	var ttype=<?php echo $_REQUEST['t'];?>;
+{ 	var yt= <?php echo get_request_variable('yt');?>;
+	var yf=<?php echo get_request_variable('yf');?>;
+	var mt=<?php echo get_request_variable('mt');?>;
+	var mf=<?php echo get_request_variable('mf');?>;
+	var dt=<?php echo get_request_variable('dt');?>;
+	var df=<?php echo get_request_variable('df');?>;
+	var l=<?php echo get_request_variable('l');?>;
+	var cat_code=<?php echo get_request_variable('c');?>;
+	var ttype=<?php echo get_request_variable('t');?>;
 	var ip = 0;
 	var p=0;
 	if($('#ip').is(":checked"))
@@ -168,10 +168,10 @@ $(document).ready(function(){
 &nbsp;&nbsp;&nbsp;&nbsp;
 <input type='button' onclick="javascript:export_as_word('export_content');" value='<?php echo LangUtil::$generalTerms['CMD_EXPORTWORD']; ?>'></input>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<?php if($_REQUEST['ip']==1){?><input type='checkbox' name='ip' id='ip' checked ></input> <?php echo "All Tests"; ?>
+<?php if(get_request_variable('ip')==1){?><input type='checkbox' name='ip' id='ip' checked ></input> <?php echo "All Tests"; ?>
 <?php } else{?><input type='checkbox' name='ip' id='ip'></input> <?php echo "All Tests"; }?>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<?php if($_REQUEST['p']==1){?><input type='checkbox' name='p' id='p' checked ></input> <?php echo "Only Pending"; ?>
+<?php if(get_request_variable('p')==1){?><input type='checkbox' name='p' id='p' checked ></input> <?php echo "Only Pending"; ?>
 <?php } else{?><input type='checkbox' name='p' id='p'></input> <?php echo "Only Pending"; }?>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <input type='button' onclick="javascript:report_fetch();" value='<?php echo LangUtil::$generalTerms['CMD_VIEW']; ?>'></input>

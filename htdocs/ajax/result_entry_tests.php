@@ -7,30 +7,23 @@ include("../includes/db_lib.php");
 include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 
-$attrib_value = $_REQUEST['a'];
-$attrib_type = $_REQUEST['t'];
-$date_from = $_REQUEST['df'];
-$date_to = $_REQUEST['dt'];
-$status = $_REQUEST['s'];
-$search_term = $_REQUEST['st'];
+$attrib_value = get_request_variable('a');
+$attrib_type = get_request_variable('t');
+$date_from = get_request_variable('df');
+$date_to = get_request_variable('dt');
+$status = get_request_variable('s');
+$search_term = get_request_variable('st');
 $dynamic = 1;
 $search_settings = get_lab_config_settings_search();
 $rcap = $search_settings['results_per_page'];
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
-$uiinfo = "op=".$_REQUEST['t']."&qr=".$_REQUEST['a'];
+$uiinfo = "op=".$attrib_type."&qr=".$attrib_value;
 $quote='';
 putUILog('result_entry_tests', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 ?>
 <?php
-if(!isset($_REQUEST['result_cap']))
-    $result_cap = $rcap;
-else
-    $result_cap = $_REQUEST['result_cap'];
-
-if(!isset($_REQUEST['result_counter']))
-    $result_counter = 1;
-else
-    $result_counter = $_REQUEST['result_counter'];
+$result_cap = get_request_variable('result_cap', $rcap);
+$result_counter = get_request_variable('result_counter', 1);
 
 $query_string = "";
 if($dynamic == 0)

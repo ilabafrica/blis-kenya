@@ -69,7 +69,7 @@ class User
 		$user->phone = $record['phone'];
 		$user->createdBy = $record['created_by'];
 		$user->labConfigId = $record['lab_config_id'];
-        $user->img = $record['img'];
+                $user->img = $record['img'];
 		$user->canverify = $record['verify'];
 		if(isset($record['lang_id']))
 			$user->langId = $record['lang_id'];
@@ -233,7 +233,7 @@ class LabConfig
 		return LabConfig::getObject($record);
 	}
 	
-	public function getUserCountry($lab_config_id) {
+	public static function getUserCountry($lab_config_id) {
 		global $con;
 		$lab_config_id = mysql_real_escape_string($lab_config_id, $con);
 		$saved_db = DbUtil::switchToGlobal();
@@ -906,8 +906,8 @@ class ReportConfig
 		if(strpos($alignment_header, "??")!=-1)
 		{	
 			$split_alignment_header=explode("??",$alignment_header);
-			$report_config->headerText =$split_alignment_header[0];
-			$report_config->alignment_header=$split_alignment_header[1];	
+			$report_config->headerText =count($split_alignment_header)>0?$split_alignment_header[0]:"";
+			$report_config->alignment_header=count($split_alignment_header)>1?$split_alignment_header[1]:"";	
 		}
 		else
 			$report_config->headerText=$alignment_header;
@@ -917,8 +917,8 @@ class ReportConfig
 		if(strpos($footer_designation, "#")!=-1)
 		{
 			$split= explode("#", $footer_designation);
-			$report_config->footerText = $split[0];
-			$report_config->designation =$split[1];
+			$report_config->footerText = count($split)>0?$split[0]:"";
+			$report_config->designation =count($split)>1?$split[1]:"";
 		}
 		else
 		$report_config->footerText = $record['footer'];
@@ -1274,15 +1274,16 @@ class TestType
 		# Returns list of measures included in a test type
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"SELECT measure_id FROM test_type_measure ".
-			"WHERE test_type_id=$this->testTypeId ";
+			"SELECT m.* FROM test_type_measure ttm ".
+			"INNER JOIN measure m ON (ttm.measure_id=m.measure_id)".
+			"WHERE ttm.test_type_id=$this->testTypeId ";
                         //"ORDER BY ts";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = array();
 		if($resultset) {
 			foreach($resultset as $record)
 			{
-				$measure_obj = Measure::getById($record['measure_id']);
+				$measure_obj = Measure::getObject($record);
 				$retval[] = $measure_obj;
 			}
 		}
@@ -1799,9 +1800,9 @@ class Measure
             $submeasureList = array();
              $query_string =
 			"SELECT * FROM measure ";
-		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+// 		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
 		$recordset = query_associative_all($query_string, $row_count);
-                DbUtil::switchRestore($saved_db);
+//                 DbUtil::switchRestore($saved_db);
                 foreach( $recordset as $record ) 
                 {
 				$measureName = $record['name'];
@@ -2129,7 +2130,10 @@ class Patient
 		$patient->sex = $record['sex'];
 		$date_parts = explode(" ", date($record['ts']));
 		$date_parts_1=explode("-",$date_parts[0]);
-		$patient->regDate=$date_parts_1[2]."-".$date_parts_1[1]."-".$date_parts_1[0];
+		if(count($date_parts_1) > 2)
+                    $patient->regDate=$date_parts_1[2]."-".$date_parts_1[1]."-".$date_parts_1[0];
+                else
+                    $patient->regDate="";
 		
 		if(isset($record['partial_dob']))
 			$patient->partialDob = $record['partial_dob'];
@@ -3263,15 +3267,18 @@ class Test
         $resultset = query_associative_all($query_string, $row_count);
         $retval = "";
         $count = 0;
-        foreach($resultset as $record)
+        if(count($resultset) > 0)
         {
-            $count++;
-            $bench = $record['bench'];
-            $specimen_id = $record['specID'];
-            $retval .= $bench."-".$specimen_id;
-            if($count < count($resultset))
+            foreach($resultset as $record)
             {
-                $retval .= "<br>";
+                $count++;
+                $bench = $record['bench'];
+                $specimen_id = $record['specID'];
+                $retval .= $bench."-".$specimen_id;
+                if($count < count($resultset))
+                {
+                    $retval .= "<br>";
+                }
             }
         }
         return $retval;
@@ -4159,11 +4166,8 @@ class CustomField
 		{
 			$name=$record['field_name'];
 			$name_string=explode("^^" , $name);
-			$custom_field->fieldName=$name_string[0];
-			if($name_string[1]!=NULL|| $name_string!="")
-			$custom_field->flag=$name_string[1];
-			else
-			$custom_field->flag=0;
+			$custom_field->fieldName=count($name_string)>0?$name_string[0]:"";
+			$custom_field->flag=count($name_string)>1?$name_string[1]:"0";
 			//$custom_field->fieldName = $record['field_name'];
 		}
 			else
@@ -11105,13 +11109,13 @@ class TestTypeMapping {
 		# Returns list of measures included in a test type
 		$saved_db = DbUtil::switchToGlobal();
 		$query_string = 
-			"SELECT measure_id FROM global_measures ".
+			"SELECT * FROM global_measures ".
 			"WHERE test_id=$this->testId";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = array();
 		foreach($resultset as $record)
 		{
-			$measure_obj = GlobalMeasure::getById($record['measure_id']);
+			$measure_obj = GlobalMeasure::getObject($record);
 			$retval[] = $measure_obj;
 		}
 		DbUtil::switchRestore($saved_db);
@@ -13666,7 +13670,7 @@ function insert_lab_config_settings_search($num)
     $query_string = "SELECT count(*) as val from lab_config_settings WHERE id = $id";
     $recordset = query_associative_one($query_string);        
     
-    if($recordset[val] != 0)
+    if($recordset['val'] != 0)
         return 0;
     $remarks = "Search Settings";
     $query_string = "INSERT INTO lab_config_settings (id, flag1, remarks) ".
@@ -15944,6 +15948,7 @@ class API
     {
     # gets external lab no
     	global $con;
+    	$labNo = 0;
     	$patient_id = mysql_real_escape_string($patient_id, $con);
     	$query_string = "SELECT labNo FROM external_lab_request 
     	WHERE patient_id='$patient_id' AND investigation='$test_name' AND (test_status = 8 or test_status = 0)";
@@ -16820,4 +16825,13 @@ class SpecimenRejectionPhases
 	}
 }
 #####################################End Class SpecimenRejectionPhases###############################################
+
+//Supplementary Functions
+function get_request_variable($requestVar, $notSetValue="")
+{
+    if(!isset($_REQUEST[$requestVar]))
+        return $notSetValue;
+    else
+        return $_REQUEST[$requestVar];
+}
 ?>

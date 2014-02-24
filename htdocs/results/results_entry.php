@@ -7,7 +7,7 @@ include("redirect.php");
 include("includes/header.php");
 LangUtil::setPageId("results_entry");
 $lab_config = LabConfig::getById($_SESSION['lab_config_id']);
-$test_categories = TestCategory::geAllTestCategories($lab_config_id);
+$test_categories = TestCategory::geAllTestCategories($lab_config->id);
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->		
 						<h3>
@@ -662,10 +662,14 @@ function load_specimen_reg(patient_id, is_external_patient, labNo)
 	$('#specimen_reg_body').load(
 			url, 
 			{pid: patient_id, ex: is_external_patient, labno: labNo},
-			function(result) 
+			function(result, status, xhr ) 
 			{
-				$('#specimen_reg_body').modal('show');
-				App.unblockUI(el);
+				if ( status == "error" ) {
+                                    alert( xhr.status + " " + xhr.statusText );
+				}else{
+                                    $('#specimen_reg_body').modal('show');
+                                    App.unblockUI(el);
+				}
 			}
 	);		
 	//$('#specimen_reg').show();

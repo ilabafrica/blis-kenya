@@ -17,7 +17,7 @@
 	?>
 	<script type='text/javascript'>
 	<?php 
-	if($TRACK_LOADTIMEJS)
+	if(isset($TRACK_LOADTIMEJS))
 	{
 		echo "var t = new Date();";
 	}
@@ -350,7 +350,14 @@ function handlePaginateDataTable(table_id) {
 				return true;
 		}
 		//-->
-
+		<?php
+        $date_format_js = "yyyy-mm-dd";
+        $picker_id = rand();
+        $start_date = date($date_format_js);
+        $order_list = array(2,1,0);
+        $id_list = array(2,1,0);
+        ?>
+        
 	Date.format = '<?php echo $date_format_js; ?>';
 	$(function()
 	{

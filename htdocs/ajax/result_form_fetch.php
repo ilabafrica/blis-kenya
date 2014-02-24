@@ -278,6 +278,7 @@ if($test_id == null)
 ?>
 <?php 
 $test_type = get_test_type_by_id($test_type_id);
+$measure_list = $test_type->getMeasures();
 $modal_link_id = "test_result_link_$test_id";
 ?>	
 <div class="modal-header">

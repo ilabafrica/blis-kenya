@@ -42,10 +42,10 @@ LangUtil::setPageId("reports");
               <br>
               <br>              
                     <?php
-                    $lab_config_id = array($_REQUEST['location']);
-                    $summary_type = $_REQUEST['summary_type'];
-                    $date_from = $_REQUEST['yyyy_from']."-".$_REQUEST['mm_from']."-".$_REQUEST['dd_from'];
-                    $date_to = $_REQUEST['yyyy_to']."-".$_REQUEST['mm_to']."-".$_REQUEST['dd_to'];
+                    $lab_config_id = array(get_request_variable('location'));
+                    $summary_type = get_request_variable('summary_type');
+                    $date_from = get_request_variable('yyyy_from')."-".get_request_variable('mm_from')."-".get_request_variable('dd_from');
+                    $date_to = get_request_variable('yyyy_to')."-".get_request_variable('mm_to')."-".get_request_variable('dd_to');
                     
                     $uiinfo = "from=".$date_from."&to=".$date_to;
                     putUILog('reports_infection', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');

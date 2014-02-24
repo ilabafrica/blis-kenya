@@ -10,20 +10,14 @@ $page_elems = new PageElems();
 $script_elems = new ScriptElems();
 
 LangUtil::setPageId("new_specimen");
-$pid = $_REQUEST['pid'];
-$ex = $_REQUEST['ex'];
-$labNo = $_REQUEST['labno'];
+$pid = get_request_variable('pid');
+$ex = get_request_variable('ex');
+$labNo = get_request_variable('labno');
 
 
-if(isset($_REQUEST['dnum']))
-	$dnum = (string)$_REQUEST['dnum'];
-else
-	$dnum = get_daily_number();
+$dnum = (string)get_request_variable('dnum', get_daily_number());
+$session_num = get_request_variable('session_num', get_session_number());
 
-if(isset($_REQUEST['session_num']))
-	$session_num = $_REQUEST['session_num'];
-else
-	$session_num = get_session_number();
 	
 /* check discrepancy between dnum and session number and correct 
 if ( substr($session_num,strpos($session_num, "-")+1 ) )
@@ -42,8 +36,9 @@ $modal_close_link_id = "m_c_l_id_$session_num";
 
 <div class="modal-body">
 <?php
-$patient==null;
+$patient = null;
 $tests_requested = null;
+$is_external_patient=false;
 # Check if Patient ID is valid
 $patient = get_patient_by_id($pid);
 #nullify patient if same id is founf in internal system
@@ -101,9 +96,6 @@ if(is_array($tests_requested) && $tests_requested != null){
 		<tbody>
 			<?php
 			
-			$clinician = array();
-			$clinician['clinician']=$tests_requested['requestingClinician'];
-            
 			//$testspec is an array containing specimenID and testId as the key value pairs respectively
             //$testSpec = array();
             $testNmSpecID = array();
@@ -111,8 +103,8 @@ if(is_array($tests_requested) && $tests_requested != null){
 			foreach ($tests_requested as $test)
 			{	//Filling up the $testspec array for some manipulation down below
 				$test_name = $test['investigation'];
-			    $test_id=TestType::getIdByName($test_name);
-                $specimen_id=TestType::getSpecimenIdByTestName($test_id);
+                                $test_id=TestType::getIdByName($test_name);
+                                $specimen_id=TestType::getSpecimenIdByTestName($test_id);
                 //$testSpec[$specimen_id]  = $test_id;
 				$testNmSpecID[$test_name] =  $specimen_id;   			      
 			?>
@@ -263,8 +255,8 @@ $(document).ready(function(){
       //$specarraycount = 0;
       foreach ($tests_requested as $test)
 				{
-          $testBox = specimenform_.$formcount._testbox;
-          $specType = specimenform_.$formcount._stype;
+          $testBox = "specimenform_.$formcount._testbox";
+          $specType = "specimenform_.$formcount._stype";
 		  $testname = $test['investigation'];
           ?>
         

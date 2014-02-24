@@ -8,15 +8,16 @@ include("../includes/db_lib.php");
 include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 
-$test_id = $_REQUEST['test_id'];
+$test_id = get_request_variable('test_id');
 $test_name = get_test_name_by_id($test_id);
 $test = Test::getById($test_id);
 $test_type = TestType::getById($test->testTypeId);
-$specimen_id = $_REQUEST['specimen_id'];
+$specimen_id = get_request_variable('specimen_id');
 $specimen = Specimen::getById($specimen_id);
 $patient = Patient::getById($specimen->patientId);
-$comment = $_REQUEST['comments'];
-$comment_1=$_REQUEST['comments_1'];
+$comment = get_request_variable('comments');
+$comment_1=get_request_variable('comments_1');
+$comments = "";
 
 /*$dd_to=$_REQUEST['dd_to'];
 $mm_to=$_REQUEST['mm_to'];
@@ -37,7 +38,7 @@ if($comment!=""&& $comment_1=="")
 $comments=$comment;
 }
 
-$result_values = $_REQUEST['result'];
+$result_values = get_request_variable('result');
 $measure_count = 0;
 $measure_list = $test_type->getMeasures();
 //Holds a key value pair of measureId and result to put in test_measure table the results table.
@@ -126,8 +127,9 @@ foreach($result_values as $result_val)
 $result_csv = implode(",", $result_values).",";
 $user_id = $_SESSION['user_id'];
 //NC3065
-//$unix_ts = mktime(0,0,0,$mm_to,$dd_to,$yyyy_to);
-//$ts =date("Y-m-d H:i:s", $unix_ts);
+// $unix_ts = mktime(0,0,0,$mm_to,$dd_to,$yyyy_to);
+// $ts =date("Y-m-d H:i:s", $unix_ts);
+ $ts =date("Y-m-d H:i:s");
 //-NC3065
 add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result, $patient->surrogateId);
 
