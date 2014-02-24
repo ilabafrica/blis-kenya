@@ -141,7 +141,7 @@ $measure_list_objs = $test_type->getMeasures();
 # Display test type info table
 $page_elems->getTestTypeInfo($test_type->name, true);
 ?>
-    <div class="portlet-title" style="width: 380px">
+    <div class="portlet-title" style="width: 98%">
         <h4></i>Edit test</h4>
     </div>
     <form name='edit_ttype_form' id='edit_ttype_form' action='ajax/test_type_update.php' method='post' class='form-horizontal'>
@@ -573,8 +573,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 			}
 			?>
 			<tr valign='top'>
-				<td><?php echo "Include existing measures? (Select below)" ?>?</td>
-				<td><input type='checkbox' name='ispanel' id='ispanel'></input></td>
+				<td colspan="2"><input type='checkbox' name='ispanel' id='ispanel'></input> <?php echo "Include existing measures? (Select below)" ?>?</td>
 			</tr>
 			<tr valign='top' class='panel_row'>
 				<td>

@@ -5112,9 +5112,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 			$current_specimen_list = get_lab_config_specimen_types($lab_config_id);
 		# For each specimen type, create a check box. Check it if specimen already in lab configuration
 		?>
-		<table class='hor-minimalist-b table table-bordered' style='width:700px;'>
+		<table class='hor-minimalist-b table table-bordered' style='width:100%;'>
 			<tbody>
-			<tr>
+			<tr style='background:#E9E9E9;'>
 			<?php
 			$count = 0;
 			$compatible_specimen_types = get_compatible_specimens($test_type_id);
@@ -5150,8 +5150,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				</input></td>
 				
 				<?php
-				if($count % 3 == 0)
-					echo "</tr><tr>";
+				if($count % 4 == 0)
+					echo "</tr><tr".($count%8==0?" style='background:#E9E9E9;'":"").">";
 			}
 			?>
 			</tbody>
@@ -5498,9 +5498,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$measure_list = get_measures_catalog();
 		# For each measure, create a check box.
 		?>
-		<table class='hor-minimalist-b' style='width:700px;'>
+		<table class='hor-minimalist-b' style='width:100%;'>
 			<tbody>
-			<tr>
+			<tr style='background:#E9E9E9;'>
 			<?php
 			$count = 0;
 			foreach($measure_list as $key=>$value)
@@ -5534,8 +5534,8 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				</input></td>
 				
 				<?php
-				if($count % 2 == 0)
-					echo "</tr><tr>";
+				if($count % 4 == 0)
+					echo "</tr><tr".($count%8==0?" style='background:#E9E9E9;'":"").">";
 			}
 			?>
 			</tbody>
