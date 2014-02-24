@@ -173,64 +173,11 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 			</tr>
 		<tr valign='top'>
 		
-		<td>Clinical Data  [<a href='#clinical_help' rel='facebox'>?</a>] </td><td>
 		
-			<?php 
-			$data=$test_type->clinical_data;
-			$text="-";
-			$table="";
-			if(stripos($data,"!#!")===0)
-			{
-			$data=substr($data,3);
-			$data_array=explode("%%%",$data);
-			$text=$data_array[0];
-			$table=$data_array[1];
-			}
-			else if(stripos($data,"%%%")===0)
-			$table=substr($data,3);
-			else if($data!="")
-			$text=$data;
-			else
-			$text="";
-			?>
-		
-		
-			<textarea name='clinical_data' id='clinical_data' class='span6 m-wrap'><?php echo $text;?></textarea>
-			</td></tr>
-			<tr><td>
-			<!--<div id="text" <?php if((stripos($test_type->clinical_data ,"%%%"))===0) { ?> style='display:none' <?php }?> >
-			<input type="button" value="Create Table" onclick="javascript:addTable();" />
-			</div>
-			<div id="extra" style='display:none'>
-			<input type="button" value=" Text" onclick="javascript:addTable();" />
-			</div>-->
-			</td>
-			<td>
-			<div id="tblSample1">
-			<table border="0" id="tblSample" class='table table-bordered' >
-			
-			<tr>
-				
-				<td>
-					<input type="text" name="txtRow11" id="txtRow11" size="40"  />
-				</td>
-				<td>
-					<input type="text" name="txtRow12" id="txtRow12" size="40"  />
-				</td>
-			</tr>
-			</table>
-			<input type="button" class='btn green' value="Add Row" onclick="addRowToTable();" />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<input type="button" class='btn grey' value="Remove Row" onclick="removeRowFromTable();" />
-			</div>
-		</td>
 		
 		</tr>
 			
-			<?php if($table!="")
-			{
-			echo "<script language=javascript>addData('$table')</script>";
-			}
+			<?php 
 
 				
 			# TODO: Add option to manage panel tests or add new measures
@@ -697,7 +644,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 				<td></td>
 				<td>
 					<br><br>
-					<input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:validateRow();'></input>
+					<input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:update_ttype();'></input>
 					&nbsp;&nbsp;&nbsp;
 					<a class="btn" href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 					&nbsp;&nbsp;&nbsp;
@@ -1281,69 +1228,6 @@ function removeRowFromTable()
   if (lastRow > 2) tbl.deleteRow(lastRow - 1);
 }
 
-function validateRow()
-{
-    var tbl = document.getElementById('tblSample');
-        var lastRow = tbl.rows.length - 1;
-    var i=0;
-    var clinical_data;
-    var aLeft= new Array();
-    var aRight=new Array();
-    for (i=1; i<=lastRow; i++) 
-    {
-       aLeft[i-1] = document.getElementById('txtRow' + i+1).value;
-       aRight[i-1] = document.getElementById('txtRow' + i+2).value;
-    }
-    
-        var total="";
-        if(aLeft[0]!="")
-      total='%%%'+aLeft+'###'+aRight;
-      var data= $('#clinical_data').val();
-      if(data!=""&& total!="")
-      {
-      clinical_data="!#!"+data+total;
-      }
-      else if(data!="-" && data!="")
-      {
-     clinical_data=data;
-      }
-      else if(total!="%%%")
-      clinical_data=total;
-      else 
-      clinical_data="";
-    
-    $('#clinical_data').val(clinical_data);
-    update_ttype();
-}
-  
-function addData(list) {
-    var dat=list.split('###');
-    var name=dat[0].split(',');
-    var valu =dat[1].split(',');
-    $('#extra').show();
-    $('#tblSample1').show();
-    for(var i=1; i<name.length+1;i++) {
-        $('#txtRow'+i+'1').attr("value",name[i-1]);
-        $('#txtRow'+i+'2').attr("value",valu[i-1]);
-        addRowToTable();
-    }
-    removeRowFromTable();
-}
-
-function addTable() {
-    field="extra";
-    if($('#'+field).is(":visible")==true) {
-        $('#extra').hide();
-        $('#tblSample1').hide();
-        $('#text').show();
-    }
-    else
-    {
-        $('#extra').show();
-        $('#tblSample1').show();
-        $('#text').hide();
-    }
-}
 
 function toggle_agerange(measure_num, row_num)
 {

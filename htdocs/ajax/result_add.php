@@ -136,12 +136,7 @@ $test_list = get_tests_by_specimen_id($specimen_id);
 
 $test_modified = Test::getById($test_id);
 
-$result_to_push = str_replace("<br>","",$test_modified->decodeResult());
-$result_to_push = str_replace("&nbsp;","",$result_to_push);
-$result_to_push = str_replace("<b>","",$result_to_push);
-$result_to_push = str_replace("</b>","",$result_to_push);
-
-API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
+API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);
 # Show confirmation with details.
 $modal_close_link_id = "m_c_l_id_$test_id";
 ?>

@@ -7499,11 +7499,10 @@ function add_test($test, $testId=null)
 }
 
 function add_test_measure($test_measure, $test_measure_id=null)
-{
-
+{	
 	$query_string =
 	"INSERT INTO test_measure ( test_id, lab_no, measure_id, result) ".
-	"VALUES ( $test_measure->test_id, $test_measure->lab_no, $test_measure->measure_id, '$test_measure->result')";
+	"VALUES ( $test_measure->test_id, '$test_measure->lab_no', $test_measure->measure_id, '$test_measure->result')";
 	$result = query_insert_one($query_string);
 	$last_insert_id = get_last_insert_id();
 	
@@ -7593,7 +7592,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	$record = query_associative_one($query_string);
 	$lab_no = $record['lab_no'];
 	
-	API::updateExternalLabrequest($surr_id, $lab_no, $result, $comments);
+	API::updateExternalLabrequest($surr_id, $lab_no, $result);
 	}
 	
 	
@@ -10338,17 +10337,9 @@ function delete_test_type_measure($test_type_id, $measure_id)
 		"DELETE FROM test_type_measure ".
 		"WHERE test_type_id=$test_type_id AND measure_id=$measure_id";
 	query_delete($query_string);
-	# Check if any other test type uses this measure.
-	# If not, delete entry from 'measure' table
-	$query_string =
-		"SELECT * FROM test_type_measure ".
-		"measure_id=$measure_id";
-	$resultset = query_associative_all($query_string, $row_count);
-	if($resultset == null || count($resultset) == 0)
-	{
-		$query_delete = "DELETE FROM measure WHERE measure_id=$measure_id";
-		query_delete($query_delete);
-	}
+	
+	//Removed functionality for deleting measures since measures are reusable
+	
 	DbUtil::switchRestore($saved_db);
 }
 
@@ -16057,7 +16048,8 @@ class API
     	result = '$result',
     	comments = '$comment',
     	test_status = ".Specimen::$STATUS_TOVERIFY."
-    	WHERE patient_id='$patient_id' AND labNo='$lab_no'";
+    	WHERE patient_id='$patient_id' 
+    	AND labNo='$lab_no'";
     	$saved_db = DbUtil::switchToGlobal();
     	$update = query_update($query_string);
     	DbUtil::switchRestore($saved_db);
