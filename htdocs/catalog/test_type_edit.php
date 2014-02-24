@@ -788,9 +788,7 @@ function update_ttype()
             return;
         }
     }
-    var is_panel = <?php if($test_type->isPanel == true) echo "true"; else echo "false"; ?>;
-    if(is_panel == false)
-    {
+    
         var measure_elems = $("input[name='measure[]']");
         var new_measure_elems = $("input[name='new_measure[]']");
         var range_type_elems = $("select[name='mtype[]']");
@@ -1063,16 +1061,8 @@ function update_ttype()
                 }
             }
         }
-        if(measure_entered == false)
-        {
-            alert("<?php echo LangUtil::$pageTerms['TIPS_MISSING_SELECTEDMEASURES']; ?>");
-            return;
-        }
-    }
-    else
-    {
+        
         //TODO: Panel tests validation
-        /*
         var mtype_entries = $('.m_entry');
         var mtype_selected = false;
         for(var i = 0; i < mtype_entries.length; i++)
@@ -1083,13 +1073,13 @@ function update_ttype()
                 break;
             }
         }
-        if(mtype_selected == false)
+        if(mtype_selected == false && measure_entered == false)
         {
-            alert("Error: No measures selected for panel test");
+            alert("Error: No measures selected");
             return;
         }
-        */
-    }
+    
+    
     var stype_entries = $('.stype_entry');
     var stype_selected = false;
     for(var i = 0; i < stype_entries.length; i++)
