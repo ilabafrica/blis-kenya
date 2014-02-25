@@ -11,7 +11,6 @@ include("includes/random.php");
 include("includes/stats_lib.php");
 LangUtil::setPageId("lab_config_home");
 
-putUILog('lab_config_home', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 $imported_users = null
 ?>
 
@@ -908,54 +907,6 @@ if($lab_config == null)
 
 
 
-<div class="portlet box green right_pane" id="site_info_div" >
-        <div class="portlet-title" >
-                                <h4><i class="icon-reorder"></i>Summary</h4>
-                                <div class="tools">
-                                    <a href="javascript:;" class="collapse"></a>
-                                    <a data-toggle="modal" class="config"></a>
-                                </div>
-        </div>
-        
-        <div class="portlet-body" >
-                <div id='site_info' style='margin-left:10px;'>
-                    <p style="text-align: right;"><a rel='facebox' href='#Summary_config'>Page Help</a></p>
-                        <div id='main_msg' class='clean-orange' style='display:none;width:350px;'>
-                        </div>
-                        
-                        <?php
-                        $page_elems->getLabConfigInfo($lab_config->id);
-                        ?>
-                        <form id='backup_form' name='backup_form' action='data_backup' method='post' target='_blank'>
-                            <input type='hidden' name='id' value='<?php echo $_REQUEST['id']; ?>'></input>
-                        </form>
-                    </div>
-        </div>     
-    </div>    
-    
-    
-    
-    <div id='Summary_config' class='right_pane' style='display:none;margin-left:10px;'>
-    <ul>
-    <?php 
-    if(LangUtil::$pageTerms['TIPS_SUMMARY_1'] != '-') {
-        echo "<li>";
-        echo LangUtil::$pageTerms['TIPS_SUMMARY_1'];
-        echo "</li>";
-    }   
-    if(LangUtil::$pageTerms['TIPS_SUMMARY_2']!="-") {
-        echo "<li>"; 
-        echo LangUtil::$pageTerms['TIPS_SUMMARY_2'];
-        echo "</li>";
-    }
-    if(LangUtil::$pageTerms['TIPS_SUMMARY_3']!="-") {
-        echo "<li>"; 
-        echo LangUtil::$pageTerms['TIPS_SUMMARY_3'];
-        echo "</li>"; 
-    }   
-    ?>  
-    </ul>   
-</div>
 
 <div id='Tests_config' class='right_pane' style='display:none;margin-left:10px;'>
     <h2><u><?php echo LangUtil::$pageTerms['MENU_LABCONFIG']; ?></u></h2>
@@ -1761,7 +1712,7 @@ $(document).ready(function(){
 	{
 		$locale = $_SESSION['locale'];
 		?>
-		right_load(1, 'site_info_div');
+		right_load(1, 'test_div');
 		<?php
 	}
 	
