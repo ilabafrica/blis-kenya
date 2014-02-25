@@ -793,6 +793,8 @@ function update_ttype()
         var range_type_elems = $("select[name='mtype[]']");
         var new_range_type_elems = $("select[name='new_mtype[]']");
         var measure_entered = false;
+        var new_measure_entered = false;
+        
         for(var j = 0; j < measure_elems.length; j++)
         {       
             if(measure_elems[j].value.trim() != "")
@@ -928,7 +930,7 @@ function update_ttype()
         {       
             if(new_measure_elems[j].value.trim() != "")
             {  
-                
+                new_measure_entered = true;
                 if(new_range_type_elems[j].value == <?php echo Measure::$RANGE_NUMERIC; ?>)
                 {
                     // Check numeric ranges
@@ -1072,7 +1074,7 @@ function update_ttype()
                 break;
             }
         }
-        if(mtype_selected == false && measure_entered == false)
+        if(mtype_selected == false && measure_entered == false && new_measure_entered == false;)
         {
             alert("Error: No measures selected");
             return;
