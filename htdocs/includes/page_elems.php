@@ -883,7 +883,7 @@ class PageElems
 		# Returns HTML for displaying test type information
 		$test_type = get_test_type_by_name($test_name);
 		?>
-		<div class="portlet-title" style="width: 380px">
+		<div class="portlet-title" style="width: 98%">
         <h4></i>Test Type Information</h4>
         </div>
 		<table class='table table-bordered table-hover' style="width: 400px">
@@ -918,7 +918,7 @@ class PageElems
 						foreach($measure_id_list as $measure_id)
 						{
 							$measure = get_measure_by_id($measure_id);
-							if($measure==NULL && count($meausre_id_list)==1 )
+							if($measure==NULL && count($measure_id_list)==1 )
 								{	echo "No Measures Found!";
 									break;
 								}
@@ -1037,7 +1037,7 @@ class PageElems
 						foreach($measure_id_list as $measure_id)
 						{
 							$measure = getAggregateMeasureById($measure_id);
-							if($measure==NULL && count($meausre_id_list)==1 ) {	
+							if($measure==NULL && count($measure_id_list)==1 ) {	
 									echo "No Measures Found!";
 									break;
 							}
@@ -4275,8 +4275,9 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 		$ref_out_row_id = 'ref_out_row_'.$form_num;
 		$ref_out_check_id = 'ref_out_'.$form_num;
 		$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
-        $custom_class = 'custom_'.$form_num;
-        $radio_name = 'ref_out_'.$form_num;
+                $custom_class = 'custom_'.$form_num;
+                $radio_name = 'ref_out_'.$form_num;
+                $clinician = "";
 		?>
 		<div id='<?php echo $div_id; ?>'>
 		<div class='pretty_box' style='width:630px;'>
@@ -4448,7 +4449,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 					<label for='doctor' valign='top'><?php echo LangUtil::$generalTerms['DOCTOR']; ?><?php if($_SESSION['doctor'] == 2) $this->getAsterisk(); ?></label></label>
 				</td>
 				<td>
-					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>'  value='<?php echo $clinician; ?>' ></input>
+					<input type='text' name='doctor' id='<?php echo $doc_row_id."_input"; ?>' value='<?php echo $clinician; ?>' ></input>
 				</td>
 			</tr>
 			<tr valign='top'<?php
