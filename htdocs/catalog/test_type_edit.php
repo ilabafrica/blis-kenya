@@ -176,18 +176,6 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 		
 		
 		</tr>
-			
-			<?php 
-
-				
-			# TODO: Add option to manage panel tests or add new measures
-			if($test_type->isPanel == true)
-			{
-				# TODO: Show panel test options
-			}
-			else
-			{
-				?>
 				<tr valign='top'>
 					<td><?php echo LangUtil::$generalTerms['MEASURES']; ?> [<a href='#measures_help' rel='facebox'>?</a>]</td>
 					<td>
@@ -569,9 +557,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 						<a id='new_measure_link' href='javascript:add_new_measure();'><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a>
 					</td>
 				</tr>
-				<?php
-			}
-			?>
+				
 			<tr valign='top'>
 				<td colspan="2"><input type='checkbox' name='ispanel' id='ispanel'></input> <?php echo "Include existing measures? (Select below)" ?>?</td>
 			</tr>
@@ -1074,7 +1060,7 @@ function update_ttype()
                 break;
             }
         }
-        if(mtype_selected == false && measure_entered == false && new_measure_entered == false;)
+        if(mtype_selected == false && measure_entered == false && new_measure_entered == false)
         {
             alert("Error: No measures selected");
             return;
