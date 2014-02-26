@@ -255,8 +255,8 @@ $(document).ready(function(){
       //$specarraycount = 0;
       foreach ($tests_requested as $test)
 				{
-          $testBox = "specimenform_.$formcount._testbox";
-          $specType = "specimenform_.$formcount._stype";
+          $testBox = "specimenform_".$formcount."_testbox";
+          $specType = "specimenform_".$formcount."_stype";
 		  $testname = $test['investigation'];
           ?>
         

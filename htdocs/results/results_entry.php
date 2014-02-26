@@ -662,14 +662,10 @@ function load_specimen_reg(patient_id, is_external_patient, labNo)
 	$('#specimen_reg_body').load(
 			url, 
 			{pid: patient_id, ex: is_external_patient, labno: labNo},
-			function(result, status, xhr ) 
+			function(result) 
 			{
-				if ( status == "error" ) {
-                                    alert( xhr.status + " " + xhr.statusText );
-				}else{
-                                    $('#specimen_reg_body').modal('show');
-                                    App.unblockUI(el);
-				}
+                            $('#specimen_reg_body').modal('show');
+                            App.unblockUI(el);
 			}
 	);		
 	//$('#specimen_reg').show();
