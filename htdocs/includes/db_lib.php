@@ -237,13 +237,13 @@ class LabConfig
 		global $con;
 		$lab_config_id = mysql_real_escape_string($lab_config_id, $con);
 		$saved_db = DbUtil::switchToGlobal();
-		$userId = $_SESSION['user_id'];
+		$userId = get_session_variable('user_id');
 		if( $lab_config_id == 0 ) {
-			$query = "SELECT lab_config_id FROM lab_config_access where user_id = $userId LIMIT 1";
+			$query = "SELECT lab_config_id FROM lab_config_access where user_id = '$userId' LIMIT 1";
 			$record = query_associative_one($query);
 			$lab_config_id = $record['lab_config_id'];
 		}
-		$query = "SELECT country FROM lab_config where lab_config_id = $lab_config_id LIMIT 1";
+		$query = "SELECT country FROM lab_config where lab_config_id = '$lab_config_id' LIMIT 1";
 		$record = query_associative_one($query);
 		DbUtil::switchRestore($saved_db);
 		return $record['country'];
@@ -16827,5 +16827,13 @@ function get_request_variable($requestVar, $notSetValue="")
         return $notSetValue;
     else
         return $_REQUEST[$requestVar];
+}
+
+function get_session_variable($sessionVar, $notSetValue="")
+{
+    if(!isset($_SESSION[$sessionVar]))
+        return $notSetValue;
+    else
+        return $_SESSION[$sessionVar];
 }
 ?>
