@@ -134,19 +134,17 @@ $user_id = $_SESSION['user_id'];
 //-NC3065
 add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result, $patient->surrogateId);
 
+update_specimen_status($specimen_id);
+$test_list = get_tests_by_specimen_id($specimen_id);
+
+$test_modified = Test::getById($test_id);
+
 if(count($measure_list) > 1){
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);	
 }
 else {
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_csv, $comments);
 }
-
-update_specimen_status($specimen_id);
-$test_list = get_tests_by_specimen_id($specimen_id);
-
-$test_modified = Test::getById($test_id);
-
-
 
 # Show confirmation with details.
 $modal_close_link_id = "m_c_l_id_$test_id";

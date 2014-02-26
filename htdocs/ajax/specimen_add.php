@@ -39,16 +39,7 @@ $dnum = preg_replace("/[^a-zA-Z0-9\/\s]/", "", $dnum);
 $prefixed_dnum = date("Ymd")."-".$dnum;
 $addl_id = $_REQUEST['addl_id'];
 $addl_id = preg_replace("/[^a-zA-Z0-9\/\s]/", "", $addl_id);
-$date_recvd = date("Y-m-d");//$_REQUEST['receipt_yyyy']."-".$_REQUEST['receipt_mm']."-".$_REQUEST['receipt_dd']; //now()
-/*
-if(trim($_REQUEST['collect_yyyy']) == "" && trim($_REQUEST['collect_mm']) == "" && trim($_REQUEST['collect_dd']) == "")
-	# date_collected not entered. Copy value from date_received
-	$date_collected = $date_received;
-else
-	$date_collected = $_REQUEST['collect_yyyy']."-".$_REQUEST['collect_mm']."-".$_REQUEST['collect_dd'];
- */
-//$time_collected = $_REQUEST['ctime_hh'].":".$_REQUEST['ctime_mm'];
-$date_collected = $_REQUEST['spec_date'];
+$date_recvd = date("Y-m-d");
 $time_collected = $_REQUEST['spec_time'];
 $patient_id = $_REQUEST['pid'];
 $specimen_type_id = $_REQUEST['stype'];

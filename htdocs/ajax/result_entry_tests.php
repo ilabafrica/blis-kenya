@@ -683,7 +683,7 @@ else{
 				echo 'label-warning">Started';
 				echo '</span></td>';
 				echo '
-			<td id=action'.$test->testId.' style="width:130px;" class="test-actions"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
+			<td id=actionA'.$test->testId.' style="width:130px;" class="test-actions"><a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini">
 				<i class="icon-pencil"></i> Enter Results</a>
 			</td>
 			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
