@@ -10237,7 +10237,9 @@ function get_daily_number()
 {
 	# Generate the next daily number for specimen registration
 	$today = date("Ymd");
-	switch($_SESSION['dnum_reset'])
+	
+	$dNumReset = isset($_SESSION['dnum_reset'])?$_SESSION['dnum_reset']:"";
+	switch($dNumReset)
 	{
 		case LabConfig::$RESET_DAILY:
 			$today = date("Ymd");
