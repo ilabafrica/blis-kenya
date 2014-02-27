@@ -187,9 +187,6 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		echo "<br>";
 		$count++;
 	}
-	if($test_type->testTypeId==$test_type->getIdByName('urine chemistry')){echo 'Urine Chemistry Results';};
-	if($test_type->testTypeId!=$test_type->getIdByName('Urinalysis')&&$test_type->testTypeId!=$test_type->getIdByName('Urine microscopy')&&$test_type->testTypeId!=$test_type->getIdByName('urine chemistry')){
-
 	?>
 	<table>
 	<tr>
@@ -207,7 +204,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</span>
 		</td>
 	</tr>
-	</table><?php } ?>
+	</table>
 	</form>
 	
 	<?php
