@@ -16018,15 +16018,7 @@ class API
     # gets pending lab requests from external_lab_reqeuest_table
     	global $con;
     	
-    	$query_string = "SELECT 
-						    labNo,
-    						system_id, 
-    						result,
-    						comments
-						FROM
-							external_lab_request
-						WHERE
-				   		result_returned = 0 AND result IS NOT NULL";
+    	$query_string = "SELECT labNo, system_id, result, comments FROM external_lab_request WHERE result_returned = 0 AND result IS NOT NULL";
     	$saved_db = DbUtil::switchToGlobal();
     	$returnarr = query_associative_all($query_string, $row_count);
   		DbUtil::switchRestore($saved_db);
