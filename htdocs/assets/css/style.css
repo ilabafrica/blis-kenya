@@ -3394,3 +3394,9 @@ Styler Panel
 .styler-panel .colors .color-light {
   background-color: #fff;
 }
+
+#specimen_info.modal {
+    max-width: 710px;
+    overflow: hidden;
+    width: auto;
+}
