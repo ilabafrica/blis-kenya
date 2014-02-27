@@ -139,12 +139,18 @@ $test_list = get_tests_by_specimen_id($specimen_id);
 
 $test_modified = Test::getById($test_id);
 
-if(count($measure_list) > 1){
-	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);	
+$rubbish= array("<br>" , "&nbsp;", "<b>","</b>", "[$]", ",", "[/$]" );
+$result_to_push = str_replace($rubbish, "", $test_modified->decodeResult());
+
+
+if(strpos($test_modified->decodeResult(), ":" ) == false){
+	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
 }
 else {
-	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_csv, $comments);
+	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);
 }
+
+
 
 # Show confirmation with details.
 $modal_close_link_id = "m_c_l_id_$test_id";

@@ -6,8 +6,8 @@
 include("../includes/db_lib.php");
 
 #Sanitas Server Parameters
-$api_key = "OGLZ4JDBL";
-$sanitas_inbound_url = "http://192.168.1.10:8888/sanitas/bliss/notify?api_key=".$api_key;
+$api_key = "2L1JOGVWP";
+$sanitas_inbound_url = "http://192.168.1.9:8080/sanitas/bliss/notify?api_key=".$api_key;
 
 #MedBoss MSSQL Server Parameters
 //$server = '192.168.184.121:1432';
@@ -45,7 +45,6 @@ foreach ($lab_numbers as $lab_no){
 	if ($system_id == "sanitas")
 	{
 		$json_string ='{"labNo": '.$lab_request_no.',"requestingClinician": '.$emr_user_id.',"result": '.$result_ent.',"verifiedby": '.$emr_user_id.', "techniciancomment": '.$comments.'}';
-		
 		/*
 		 * Send POST request with HttpRequest
 		 */
