@@ -4,6 +4,7 @@
  * Pushes results back to external hmis/emr system
  */
 
+function send_result_to_externalS(){
 #Sanitas Server Parameters
 $api_key = "OGLZ4JDBL";
 $sanitas_inbound_url = "http://192.168.1.10:8888/sanitas/bliss/notify?api_key=".$api_key;
@@ -16,7 +17,6 @@ $password = 'kapsabet';
 
 #Log Path for logging push result errors
 $error_log_path ="../logs/blis.api.error.log";
-function send_result_to_externalS(){
 #Gets lab requests with results so that results are returned 
 $lab_numbers = API::getTestLabNoToPush();
 
