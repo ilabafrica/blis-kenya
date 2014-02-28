@@ -405,8 +405,6 @@ function readTextFile(file)
 
 $(document).ready(function(){
 	
-	push_results_to_external_system();
-	
 	$('#cat_code').change( function() { get_test_types_bycat() });
 	$('#worksheet_test_type').change( function() { reset_worksheet_custom_type() });
 	get_test_types_bycat();
@@ -949,19 +947,6 @@ function submit_forms(test_id)
 				    ('<a href="javascript:fetch_test_edit_form('+test_id+');" title="Click to Edit results" class="btn blue mini"><i class="icon-edit"></i> Edit</a> <a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"><i class="icon-edit"></i> Verify</a>');		
 			}
 		});	
-	push_results_to_external_system();
-}
-
-function push_results_to_external_system(){
-	//push results to sanitas
-	var pushURL ='ajax/push_results.php';
-	$.post(
-		pushURL,
-		{test_id:0},  
-        function(responseText){
-	         
-        }
-	);
 }
 
 function get_batch_form()

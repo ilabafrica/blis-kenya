@@ -3,7 +3,6 @@
  * @iLabAfrica
  * Pushes results back to external hmis/emr system
  */
-include("../includes/db_lib.php");
 
 #Sanitas Server Parameters
 $api_key = "OGLZ4JDBL";
@@ -17,7 +16,7 @@ $password = 'kapsabet';
 
 #Log Path for logging push result errors
 $error_log_path ="../logs/blis.api.error.log";
-
+function send_result_to_externalS(){
 #Gets lab requests with results so that results are returned 
 $lab_numbers = API::getTestLabNoToPush();
 
@@ -104,5 +103,6 @@ foreach ($lab_numbers as $lab_no){
 		}
 		mssql_close($link);
 	}
+}
 }
 ?>

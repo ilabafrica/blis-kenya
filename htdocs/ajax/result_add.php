@@ -6,6 +6,7 @@
 
 include("../includes/db_lib.php");
 include("../includes/user_lib.php");
+include("../ajax/push_results.php");
 LangUtil::setPageId("results_entry");
 
 $test_id = get_request_variable('test_id');
@@ -149,8 +150,8 @@ if(strpos($test_modified->decodeResult(), ":" ) == false){
 else {
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);
 }
-
-
+//Sends results back to Sanitas :ajax/push_results.php
+send_result_to_externalS();
 
 # Show confirmation with details.
 $modal_close_link_id = "m_c_l_id_$test_id";
