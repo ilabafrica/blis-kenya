@@ -28,9 +28,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
 	<input type='hidden' name='parent_test_id' value='<?php echo $parent_test_id; ?>'></input>   
 	<div class="alert alert-error hide">
-										<button class="close" data-dismiss="alert"></button>
-										You have some form errors. Please check below.
-									</div>
+	<button class="close" data-dismiss="alert"></button>You have some form errors. Please check below.</div>
 	<?php
 	# Fetch all measures for this test
 	$measure_list = $test_type->getMeasures();
@@ -321,7 +319,7 @@ $modal_link_id = "test_result_link_$test_id";
 <script type='text/javascript'>
 	$(document).ready(function() {
 	    
-	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
+	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }

@@ -24,7 +24,12 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
 	<input type='hidden' name='parent_test_id' value='<?php echo $parent_test_id; ?>'></input>   
-	
+	 <div id="ctbutton" style="display: none"> 
+        <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
+        </div>
+        <div id="celltacerror" style="display: none">
+            
+        </div>
 	<?php
 	# Fetch all measures for this test
 	$measure_list = $test_type->getMeasures();
@@ -278,7 +283,7 @@ $test_type = get_test_type_by_id($test_type_id);
 <script type='text/javascript'>
 	$(document).ready(function() {
 	    
-	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
+	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
@@ -295,23 +300,23 @@ $test_type = get_test_type_by_id($test_type_id);
                 $RES = data;
                 //Hardcoded the ID's for the full bloud count inputs
                 //to enable dynamic results from celltac
-                $('#measure_181_0').val($RES.WBC);
-                $('#measure_176_0').val($RES.BA);
-                $('#measure_177_0').val($RES.EO);
-                $('#measure_178_0').val($RES.MO);
-                $('#measure_179_0').val($RES.LY);
-                $('#measure_180_0').val($RES.NE);
-                $('#measure_182_0').val($RES.RBC);
-                $('#measure_183_0').val($RES.HGB);
-                $('#measure_184_0').val($RES.HCT);
-                $('#measure_185_0').val($RES.MCV);
-                $('#measure_186_0').val($RES.MCH);
-                $('#measure_187_0').val($RES.MCHC);
-                $('#measure_188_0').val($RES.RDW);
-                $('#measure_189_0').val($RES.PLT);
-                $('#measure_190_0').val($RES.PCT);
-                $('#measure_191_0').val($RES.MPV);
-                $('#measure_192_0').val($RES.PDW);               
+                $('#measure_193_2').val($RES.WBC);
+                $('#measure_193_14').val($RES.BA);
+                $('#measure_193_13').val($RES.EO);
+                $('#measure_193_12').val($RES.MO);
+                $('#measure_193_11').val($RES.LY);
+                $('#measure_193_10').val($RES.NE);
+                $('#measure_193_1').val($RES.RBC);
+                $('#measure_193_3').val($RES.HGB);
+                $('#measure_193_4').val($RES.HCT);
+                $('#measure_193_6').val($RES.MCV);
+                $('#measure_193_7').val($RES.MCH);
+                $('#measure_193_8').val($RES.MCHC);
+                $('#measure_193_13').val($RES.RDW);
+                $('#measure_193_9').val($RES.PLT);
+                $('#measure_193_15').val($RES.PCT);
+                $('#measure_193_16').val($RES.MPV);
+                $('#measure_193_17').val($RES.PDW);               
               $('#celltacerror').hide();
            })
            .fail(function() {

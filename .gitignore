@@ -51,3 +51,5 @@ htdocs/img/
 pms_config.ini
 server/
 export/
+
+htdocs/includes/db_constants.php

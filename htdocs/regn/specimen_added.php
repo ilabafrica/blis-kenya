@@ -68,3 +68,8 @@ $specimen_list = get_specimens_by_session($session_num);
                     </tr>
                 </tbody>
             </table>   
+            
+        <div id="clsbutton"> 
+        <input type="button" value="Close" class="btn" onclick="remove_modal('specimen_registered')"/>    
+        </div>
+

@@ -28,6 +28,9 @@ foreach ($lab_numbers as $lab_no){
 	$result_ent = $lab_no['result'];
 	$comments = $lab_no['comments'];
 	
+	$result_ent = trim(preg_replace('/\s+/', ' ', $result_ent));
+	$comments = trim(preg_replace('/\s+/', ' ', $comments));
+	
 	if($comments==null or $comments==''){
 		$comments = 'No Comments';
 	}
@@ -67,8 +70,8 @@ foreach ($lab_numbers as $lab_no){
 			
 		}else if($response!="Test updated"){
 			
-				error_log("\n".$time_stamp.": Response Error: ======>".$response, 3, $error_log_path);
-				
+				error_log("\n".$time_stamp.": Response Error: ======>".$json_string. "----". $response, 3, $error_log_path);
+				error_log("-------------------------------------------------------------------------------------------------\n\n\n\n", 3, $error_log_path);
 		}
 	}
 	else if ($system_id == "medboss"){

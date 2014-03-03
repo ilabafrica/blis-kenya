@@ -721,12 +721,10 @@ function accept_specimen(specimen_id,test_id)
 }
 function start_test(test_id)
 {
-	var r=confirm("Start test?");
-	if (r==true)
-   	{
+
 		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 		App.blockUI(el);
-		//Mark test as cancelled
+		
   		var url = 'ajax/result_entry_tests.php';
   		$.post(url, 
 		{a: test_id, t: 12}, 
@@ -741,12 +739,6 @@ function start_test(test_id)
 			App.unblockUI(el);
 		}
 	);
-		
-  	}
-	else
-  	{
-  		//Cancel Starting test
-  	}
 }
 
 function fetch_test_result_form(test_id)
