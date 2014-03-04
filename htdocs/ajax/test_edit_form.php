@@ -11,19 +11,18 @@ require_once("../includes/user_lib.php");
 
 $page_elems = new PageElems();
 
-function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
+function get_result_form($test_type, $test, $num_tests, $patient)
 {
 	#Returns HTML form elements for given test type results
-	global $form_id_list, $specimen_id, $page_elems;
-	$test = Test::getById($test_id);
+	global $form_id_list, $specimen_id, $page_elems, $measure_list;
 	
-	$curr_form_id = 'test_'.$test_id;
+	$curr_form_id = 'test_'.$test->testId;
 	$form_id_list[] = $curr_form_id;
 	?>
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method=''>
-	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
+	<input type='hidden' name='test_id' value='<?php echo $test->testId; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
-	<input type='hidden' name='parent_test_id' value='<?php echo $parent_test_id; ?>'></input>   
+	<input type='hidden' name='parent_test_id' value='<?php echo $test->testId; ?>'></input>   
 	 <div id="ctbutton" style="display: none"> 
         <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
         </div>
@@ -63,7 +62,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
     $count = 0;
     foreach($measure_list as $measure)
 	{
-		$input_id = 'measure_'.$test_type->testTypeId."_".$count;
+		$input_id = 'measure_'.$test_type->testTypeId."_".$measure->measureId;
 		$decName = "";
 		if($measure->checkIfSubmeasure() == 1)
 		{
@@ -80,7 +79,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		$range = $measure->range;
 		$range_type = $measure->getRangeType();
 		$range_values = $measure->getRangeValues($patient);
-		$clean_result = $test->getResultClean();
+		$clean_result = get_test_measure_result_value($test->testId, $measure->measureId);
 		$res_dp = explode(",", $test->result);
 		$res_dropdown = $res_dp[0];
 		
@@ -93,9 +92,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			foreach($range_values as $option)
 			{
 				$option= str_replace('#', '/', $option);
-				?>
-				<option value='<?php echo $option; ?>' <?php if(strcmp($option, $res_dropdown) == 0){ echo "selected"; } ?>  ><?php echo str_replace('#', '/', $option); ?></option>
-				<?php
+				echo "<option value='$option' ".((strcmp($option, $clean_result) == 0)?"selected":"").">$option</option>";
 			}
 			?>
 			</select>
@@ -204,7 +201,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width' 
 				onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, 
 				<?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, 
-				'<?php echo $patient->sex;?>');" ><?php echo $test->getComments() ?>
+				'<?php echo $patient->sex;?>');" ><?php echo trim($test->getComments()) ?>
 			</textarea>
 			</span>
 		</td>
@@ -216,37 +213,34 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 }
 
 $form_id_list = array();
-$test_id = $_REQUEST['tid'];
+
+$test_id = get_request_variable('tid');
+if($test_id == "" || $test_id == null)
+{
+        echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
+        return;
+}
+
 $test = Test::getById($test_id);
 $specimen_id = $test->specimenId;
-$specimen = get_specimen_by_id($specimen_id);
+$specimen = Specimen::getById($specimen_id);
 $patient = Patient::getById($specimen->patientId);
-if($test_id == "")
-{
-	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
-	return;
-}
-?>
-<?php
-$test_type_id = get_test_type_id_from_test_id($test_id);
-if($test_id == null)
-{
-	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
-	return;
-}
-$test_type = get_test_type_by_id($test_type_id);
+$test_type = TestType::getById($test->testTypeId);
+
+$measure_list = $test_type->getMeasures(); # Fetch all measures for this test
+
+$modal_link_id = "test_edit_link_$test_id";
+
 ?>	
 <div class="modal-header">
-	<a href="javascript:remove('<?php echo $test_id; ?>');" class="close"></a>
+	<a id="<?php echo $modal_link_id; ?>" href="javascript:close_modal('<?php echo $modal_link_id; ?>');" class="close"></a>
 	<h4><i class="icon-pencil"></i> Results form - <?php echo $test_type->getName(); ?></h4>
 </div>
 <div class="modal-body">
 	<div class="row-fluid">
 	<div class="span6 sortable">
 	<?php
-	$parent_test_id = $test_id;
-	get_result_form($test_type, $test_id, 0, $patient, $parent_test_id);	  
-	
+		get_result_form($test_type, $test, 0, $patient);	  
 	?>
 	</div>
 	<div class="span6 sortable">
@@ -277,7 +271,7 @@ $test_type = get_test_type_by_id($test_type_id);
 </div>
 <div class="modal-footer">
 	<input type='button' class="btn" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>);'></input>
-	<a href='javascript:hide_test_result_form(<?php echo $test_id ?>);' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+	<a id="<?php echo $modal_link_id.'2'; ?>" href='javascript:close_modal("<?php echo $modal_link_id.'2'; ?>");' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>

@@ -18,7 +18,7 @@ $script_elems = new ScriptElems();
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
 {
 	#Returns HTML form elements for given test type results
-	global $form_id_list, $specimen_id, $page_elems;
+	global $form_id_list, $specimen_id, $page_elems, $measure_list;
 	
 	$curr_form_id = 'test_'.$test_id;
 	$form_id_list[] = $curr_form_id;
@@ -30,8 +30,6 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	<div class="alert alert-error hide">
 	<button class="close" data-dismiss="alert"></button>You have some form errors. Please check below.</div>
 	<?php
-	# Fetch all measures for this test
-	$measure_list = $test_type->getMeasures();
     
 	$submeasure_list = array();
     $comb_measure_list = array();
@@ -62,7 +60,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
     $count = 0;
     foreach($measure_list as $measure)
 	{
-		$input_id = 'measure_'.$test_type->testTypeId."_".$count;
+		$input_id = 'measure_'.$test_type->testTypeId."_".$measure->measureId;
 		$decName = "";
 		if($measure->checkIfSubmeasure() == 1)
 		{
@@ -87,9 +85,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			foreach($range_values as $option)
 			{
 				$option= str_replace('#', '/', $option);
-				?>
-				<option value='<?php echo $option; ?>'><?php echo str_replace('#', '/', $option); ?></option>
-				<?php
+				echo "<option value='$option'>$option</option>";
 			}
 			?>
 			</select>
@@ -218,61 +214,19 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 }
 
 $form_id_list = array();
-$test_id = $_REQUEST['tid'];
+$test_id = get_request_variable('tid');
+if($test_id == "" || $test_id == null)
+{
+        echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']." $test_id ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
+        return;
+}
+
 $test = Test::getById($test_id);
 $specimen_id = $test->specimenId;
-$specimen = get_specimen_by_id($specimen_id);
+$specimen = Specimen::getById($specimen_id);
 $patient = Patient::getById($specimen->patientId);
-if($test_id == "")
-{
-	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
-	return;
-}
-?>
-<?php
-$test_type_id = get_test_type_id_from_test_id($test_id);
-if($test_id == null)
-{
-	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
-	return;
-}
-// if($specimen->statusCodeId == Specimen::$STATUS_DONE)
-// {
-// 	?>
-	<!-- <div class='sidetip_nopos' style='width:350px;'--> 
-	<?php 
-// 	echo LangUtil::$pageTerms['MSG_ALREADYENTERED']."- ";
-// 	if($_SESSION['sid'] != 0)
-// 	{
-// 		echo "<br>";
-// 		echo LangUtil::$generalTerms['SPECIMEN_ID'].": ";
-// 		echo $specimen->getAuxId();
-// 	}
-// 	echo "<br>";
-// 	echo LangUtil::$generalTerms['SPECIMEN_TYPE'].": ".get_specimen_name_by_id($specimen->specimenTypeId);
-// 	echo "<br>";
-// 	//if($_SESSION['pnamehide'] == 0)
-// 	if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-// 	{
-// 		echo LangUtil::$generalTerms['PATIENT'].": $patient->name ($patient->sex ".$patient->getAgeNumber().") <br>";
-// 	}
-// 	else
-// 	{
-// 		echo LangUtil::$generalTerms['GENDER']."/".LangUtil::$generalTerms['AGE'].": $patient->sex /".$patient->getAgeNumber()."<br>";
-// 	}
-// 	?>
-<!--<br><a href='specimen_info.php?sid=<?php echo $specimen->specimenId; ?>'> <?php echo LangUtil::$generalTerms['DETAILS']; ?> &raquo;</a>
- 	</div> -->
-	<?php
-// 	return;
-// }
+$test_type = TestType::getById($test->testTypeId);
 
-# Print HTML results form
-//$test_list = get_tests_by_specimen_id($specimen->specimenId);
-//$patient = get_patient_by_id($specimen->patientId);
-?>
-<?php 
-$test_type = get_test_type_by_id($test_type_id);
 $measure_list = $test_type->getMeasures();
 $modal_link_id = "test_result_link_$test_id";
 ?>	

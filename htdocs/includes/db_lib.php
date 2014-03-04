@@ -16828,4 +16828,17 @@ function get_session_variable($sessionVar, $notSetValue="")
     else
         return $_SESSION[$sessionVar];
 }
+
+function get_test_measure_result_value($test_id, $measure_id )
+{
+        # Returns the result of a test measure
+        
+        $query = "SELECT result FROM test_measure WHERE test_id = '$test_id' AND measure_id = '$measure_id' LIMIT 1";
+                
+        $saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+        $record = query_associative_one($query);
+        DbUtil::switchRestore($saved_db);
+
+        return $record['result'];
+}
 ?>
