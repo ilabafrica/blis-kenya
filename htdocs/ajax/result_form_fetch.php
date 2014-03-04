@@ -60,7 +60,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
     $count = 0;
     foreach($measure_list as $measure)
 	{
-		$input_id = 'measure_'.$test_type->testTypeId."_".$measure->measureId;
+		$input_id = 'measure_'.$test_type->testTypeId."_".$count;
 		$decName = "";
 		if($measure->checkIfSubmeasure() == 1)
 		{
@@ -303,7 +303,7 @@ $modal_link_id = "test_result_link_$test_id";
                 $('#measure_176_10').val($RES.NE);
                 $('#measure_176_11').val($RES.PCT);
                 $('#measure_176_12').val($RES.PDW);	
-                $('#measure_176_12').val($RES.PCT);
+                $('#measure_176_13').val($RES.PLT);
                 $('#measure_176_14').val($RES.RBC);
                 $('#measure_176_15').val($RES.RDW );              
               $('#celltacerror').hide();
