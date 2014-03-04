@@ -184,13 +184,11 @@ else
             if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
                 $query_string.=" AND
                             t.status_code_id='$status' AND
-                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.") ";
+                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.",".Specimen::$STATUS_REJECTED.") ";
             }else if($status==Specimen::$STATUS_NOT_COLLECTED){
                 $query_string.=" AND s.status_code_id = '$status' ";
             }
             
-                        /*LIMIT 0,10 ";
-                        /*WHERE s.ts BETWEEN '$date_from' AND '$date_to' ORDER BY s.ts DESC";*/
             if ($status=="all"){
                 $query_string.= " UNION ALL ";
             }

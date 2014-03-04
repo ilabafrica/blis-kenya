@@ -11,17 +11,16 @@ include("../includes/page_elems.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 
-$test_id = $_REQUEST['tid'];
+$test_id = get_request_variable('tid');
 $test = Test::getById($test_id);
-$test_type_id  = $test->testTypeId;
+$test_type = TestType::getById($test->testTypeId);
 $specimen_id = $test->specimenId;
-$test_name = get_test_name_by_id($test_type_id);
 $modal_close_link_id = "m_c_l_id_$test_id";
 
 ?>
 <div class="modal-header">
 	<a id="<?php echo $modal_close_link_id; ?>" href="javascript:close_modal('<?php echo $modal_close_link_id; ?>');" class="close"></a>
-	<h4><i class="icon-pencil"></i> Test Result: <?php echo $test_name; ?></h4>
+	<h4><i class="icon-pencil"></i> Test Result: <?php echo $test_type->getName(); ?></h4>
 </div>
 <div class="modal-body">
 <div class="portlet box grey">
@@ -58,7 +57,7 @@ Verified by
 <tbody>
  <?php $page_elems->getTestInfoRow($test, true);
  
- $child_tests = get_child_tests($test_type_id);
+ $child_tests = get_child_tests($test_type->testTypeId);
  if (count($child_tests)>0){
  	foreach($child_tests as $child_test)
  	{
