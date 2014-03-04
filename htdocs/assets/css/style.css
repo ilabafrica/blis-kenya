@@ -1831,9 +1831,16 @@ Custom tables
   margin-right: 5px;
 }
 
+#fetched_specimens_entry .table thead{
+  color: #ffffff;
+  background: #636363;
+  text-align: center;
+}
+
 .table thead tr th {
   font-size: 13px;
   font-weight: 600;
+  vertical-align: middle;
 }
 
 .table thead tr th.test-actions,

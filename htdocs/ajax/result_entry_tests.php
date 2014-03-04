@@ -288,7 +288,7 @@ else
 //                         if ($status!="all" && $status !='request_pending')
 //                             $query_string.=" AND test_status=99";
                             
-                      $query_string.=    " ORDER BY date_recvd, sorting_time DESC";
+                      $query_string.=    " ORDER BY date_recvd DESC, sorting_time DESC";
                 //$query_string.= " ORDER BY s.date_recvd DESC, s.ts DESC";
 //                  echo $query_string;
                 //error_log("\n".$query_string, 3, "../logs/my.error.log");
@@ -442,16 +442,16 @@ else{
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'><?php echo "Patient ID"; ?></th>
+				<th style='width:75px;'>Patient ID</th>
 			<?php
 			}
 			?>
-			<th style='width:100px;'><?php echo "Visit No";?></th>
+			<th style='width:100px;'>Visit No</th>
 			<?php
 			if(false) //Not displaying Lab no
 			{
 			?>
-				<th style='width:100px;'><?php echo "Lab. No"; ?></th>
+				<th style='width:100px;'>Lab. No</th>
 			<?php
 			}
 			if($_SESSION['p_addl'] != 0)
@@ -481,7 +481,7 @@ else{
 			<th style='width:100px;' class="test-actions"></th>
 			<?php if($attrib_type==10){
 			?>
-			<th style='width:100px;'></th>
+			<th style='width:100px;' class="test-actions"></th>
 			<?php 
 			}?>
 		</tr>
