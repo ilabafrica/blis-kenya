@@ -281,7 +281,7 @@ $modal_link_id = "test_result_link_$test_id";
 	
 	function insertCelltacResults(){
 	     
-       if ( <?php echo '"'.$test_type->getName().'"'; ?> == "PDW" ) {
+       if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
            //Fill results
            var jqxhr = $.getJSON( "http://192.168.1.5/blis/htdocs/ajax/results_celltac_get.php", function(data) {
             })
@@ -290,23 +290,22 @@ $modal_link_id = "test_result_link_$test_id";
                 $RES = data;
                 //Hardcoded the ID's for the full bloud count inputs
                 //to enable dynamic results from celltac
-                $('#measure_181_0').val($RES.WBC);
                 $('#measure_176_0').val($RES.BA);
-                $('#measure_177_0').val($RES.EO);
-                $('#measure_178_0').val($RES.MO);
-                $('#measure_179_0').val($RES.LY);
-                $('#measure_180_0').val($RES.NE);
-                $('#measure_182_0').val($RES.RBC);
-                $('#measure_183_0').val($RES.HGB);
-                $('#measure_184_0').val($RES.HCT);
-                $('#measure_185_0').val($RES.MCV);
-                $('#measure_186_0').val($RES.MCH);
-                $('#measure_187_0').val($RES.MCHC);
-                $('#measure_188_0').val($RES.RDW);
-                $('#measure_189_0').val($RES.PLT);
-                $('#measure_190_0').val($RES.PCT);
-                $('#measure_191_0').val($RES.MPV);
-                $('#measure_192_0').val($RES.PDW);               
+                $('#measure_176_1').val($RES.WBC);
+                $('#measure_176_2').val($RES.EO);
+                $('#measure_176_3').val($RES.HGB);
+                $('#measure_176_4').val($RES.HCT);
+                $('#measure_176_5').val($RES.LY);
+                $('#measure_176_6').val($RES.MCH);
+                $('#measure_176_7').val($RES.MCHC);
+                $('#measure_176_8').val($RES.MCV);
+                $('#measure_176_9').val($RES.MO);
+                $('#measure_176_10').val($RES.NE);
+                $('#measure_176_11').val($RES.PCT);
+                $('#measure_176_12').val($RES.PDW);	
+                $('#measure_176_12').val($RES.PCT);
+                $('#measure_176_14').val($RES.RBC);
+                $('#measure_176_15').val($RES.RDW );              
               $('#celltacerror').hide();
            })
            .fail(function() {
