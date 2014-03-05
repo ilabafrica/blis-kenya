@@ -902,8 +902,6 @@ function validate_fields(myForm){
 
 function submit_forms(test_id)
 {
-// 	var form_id_csv = $('#form_id_list').val();
-// 	var form_id_list = form_id_csv.split(",");
         var form_id_csv = 'test_'+test_id;
         var form_id_list = form_id_csv.split(",");
 

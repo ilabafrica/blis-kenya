@@ -23,6 +23,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 	<input type='hidden' name='test_id' value='<?php echo $test->testId; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
 	<input type='hidden' name='parent_test_id' value='<?php echo $test->testId; ?>'></input>   
+        <input type='hidden' name='edit_test_flag' value='1'></input>
 	 <div id="ctbutton" style="display: none"> 
         <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
         </div>
@@ -30,8 +31,6 @@ function get_result_form($test_type, $test, $num_tests, $patient)
             
         </div>
 	<?php
-	# Fetch all measures for this test
-	$measure_list = $test_type->getMeasures();
     
 	$submeasure_list = array();
     $comb_measure_list = array();

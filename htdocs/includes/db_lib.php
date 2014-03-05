@@ -16841,4 +16841,22 @@ function get_test_measure_result_value($test_id, $measure_id )
 
         return $record['result'];
 }
+
+function resend_test_results($test_id){
+	$query = "SELECT DISTINCT labNo FROM (
+		SELECT external_lab_no labNo FROM blis_301.test WHERE test_id = '$test_id' UNION
+		SELECT lab_no FROM test_measure WHERE test_id = '$test_id') AS labnos WHERE labNo != 0";
+
+        $saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
+        $resultset = query_associative_all($query, $row_count);
+        DbUtil::switchRestore($saved_db);
+        $saved_db = DbUtil::switchToGlobal();
+        foreach($resultset as $record)
+        {
+		$query = "UPDATE external_lab_request SET result_returned = 0 WHERE labNo = '".$record['labNo']."' LIMIT 1";
+		query_blind($query);
+	}
+        $saved_db = DbUtil::switchToGlobal();
+}
+
 ?>

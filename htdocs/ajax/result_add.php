@@ -18,6 +18,7 @@ $specimen = Specimen::getById($specimen_id);
 $patient = Patient::getById($specimen->patientId);
 $comment = get_request_variable('comments');
 $comment_1=get_request_variable('comments_1');
+$edit_test_flag=get_request_variable('edit_test_flag');
 $comments = "";
 
 /*$dd_to=$_REQUEST['dd_to'];
@@ -105,9 +106,10 @@ foreach($measure_list as $measure)
 		//Stuffing measureId and result in measure_result array
 		$measure_result[$measure->measureId] = $result_to_push;
 	}
-	else {
-	$result_value = $result_values[$measure_count];
-	$measure_result[$measure->measureId] = $result_value;
+	else 
+	{
+		$result_value = $result_values[$measure_count];
+		$measure_result[$measure->measureId] = $result_value;
 	}
 	$measure_count++;
 }
@@ -150,6 +152,10 @@ if(strpos($test_modified->decodeResult(), ":" ) == false){
 else {
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);
 }
+
+# If this is an EDIT request then reset the 'result_returned' flag for in external_lab_request
+if($edit_test_flag==1) resend_test_results($test_id);
+
 //Sends results back to Sanitas :ajax/push_results.php
 send_result_to_externalS();
 
