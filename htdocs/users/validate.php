@@ -98,8 +98,8 @@ if($login_correct)
 	$_SESSION['DELAY_RECORDED'] = false;
 	#TODO: Add other session variables here
 	$_SESSION['user_role'] = "garbage";
-	#Redirect to home page
-	header("Location:home.php");
+	#Redirect to test page
+	header("Location:results_entry.php");
 }
 else
 {

@@ -655,7 +655,6 @@ function load_specimen_reg(patient_id, is_external_patient, labNo)
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
 	$('.reg_subdiv').hide();
-	//Load new_specimen2.php via ajax
 	var url = 'ajax/receive_lab_request.php';
 	$('#specimen_reg_body').load(
 			url, 
