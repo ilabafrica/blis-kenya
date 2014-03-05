@@ -109,7 +109,7 @@ foreach($tests_list as $test_type_id)
 	$test->result = "";
 	$test->external_lab_no=$external_lab_no;
 	$ex = API::getExternalParentLabNo($patient->surrogateId,  get_test_name_by_id($test_type_id, $_SESSION['lab_config_id']));
-	$test->patientVisitNumber = API::getpatientVisitNumber($patient->surrogateId);
+	$test->patientVisitNumber = API::getpatientVisitNumber($patient->surrogateId, $external_lab_no);
 
 	#add new test and get test_id
 	$test_id = add_test($test);
