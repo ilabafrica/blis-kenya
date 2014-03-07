@@ -54,10 +54,13 @@ if($patient==null){
 	$patient = Patient::getBySurrId($pid);
 }
 //echo "pid second =>".$patient->surrogateId;
+if ($ex == "true"){
 if ($patient!=null){
 	$tests_requested = API::getExternalLabRequest($patient->surrogateId);
 } else 
 	$tests_requested = API::getExternalLabRequest($pid);
+
+}
 
 if ($patient==null && $tests_requested!=null){
 	$patient = get_patient_by_external_id($pid);
@@ -83,7 +86,7 @@ if($patient == null)
 <div class="row-fluid">
 <div class="span6">
 <?php 
-if(is_array($tests_requested) && $tests_requested != null){
+if($ex == "true") {
 ?>
 	<table class ="table table-striped table-bordered table-advance" style="width:400px">
 		<thead>
@@ -161,7 +164,7 @@ else {
         <tr valign='top'>
             <td>
                 <span id='specimenboxes'>
-                <?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num, $tests_requested); ?>
+                <?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num); ?>
                 </span>
                 <br>
                 <a href='javascript:add_specimenbox();'><?php echo LangUtil::$pageTerms['ADD_ANOTHER_SPECIMEN']; ?> &raquo;</a>

@@ -4187,7 +4187,7 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 	
 	}
 	
-	function getNewSpecimenForm($form_num, $pid, $dnum, $session_num, $external_requests)
+	function getNewSpecimenForm($form_num, $pid, $dnum, $session_num, $external_requests = null)
 	{
 		# Returns HTML for new specimen form
 		LangUtil::setPageId("new_specimen");
