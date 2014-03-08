@@ -230,7 +230,7 @@ else
                                     NULL AS referred_to_name,
                                     NULL AS daily_num,
                                     labNo AS external_lab_no,
-                                    NULL AS ts_collected,
+                                    requestDate AS ts_collected,
                                     NULL AS patient_id,
                                     NULL AS addl_id,
                                     NULL AS name,
@@ -437,12 +437,12 @@ else{
 			<?php
 			}
 			?>
-				<th style='width:100px;'><?php echo "Time Collected";?></th>
+				<th style='width:100px;'><?php echo "Date Ordered";?></th>
 			<?php
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<th style='width:75px;'>Patient ID</th>
+				<th style='width:75px;'>Patient No</th>
 			<?php
 			}
 			?>

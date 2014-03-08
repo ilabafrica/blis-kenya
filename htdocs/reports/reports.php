@@ -1144,7 +1144,7 @@ db_get_current();
 						<input type='button' class="btn blue" id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_doctor_stats();"></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+							<!--<?php // $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>-->
 						</span>
 					</td>
 				</tr>
@@ -1204,7 +1204,7 @@ db_get_current();
 						<input type='button'  class="btn blue" id='tests_done_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();"></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+							<?php // $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
 						</span>
 					</td>
 				</tr>
@@ -1323,7 +1323,7 @@ db_get_current();
 						<input type='button' class="btn blue" id='specimencount_grouped_submit_button' value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick="javascript:get_tests_done_report();" ></input>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<span id='tests_done_progress_spinner' style='display:none'>
-							<?php// $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
+							<?php // $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?>
 						</span>
 					</td>
 				</tr>

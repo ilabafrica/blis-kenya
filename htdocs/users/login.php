@@ -8,6 +8,8 @@ if(isset($_SESSION['user_id']))
 {
 	header("Location: home.php");
 }
+$_SESSION['SESS_TIMER'] = time();
+
 $TRACK_LOADTIME = false;
 $TRACK_LOADTIMEJS = false;
 if($TRACK_LOADTIME)

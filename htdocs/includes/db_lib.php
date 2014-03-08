@@ -7,6 +7,12 @@
 # Start session if not already started
 if(session_id() == "")
 	session_start();
+if(!isset($_SESSION['SESS_TIMER'])){
+        $_SESSION['SESS_TIMER'] = time();
+	echo '<script>parent.window.location.reload(true);</script>';
+	exit;
+}
+$_SESSION['SESS_TIMER'] = time();
 
 
 include("defaults.php");
@@ -12180,7 +12186,7 @@ function getTestTypesCountryLevel() {
 	$saved_db = DbUtil::switchToLabConfigRevamp();
 	$user_id = $_SESSION['user_id'];
 	$retval = array();
-	$query = "SELECT * FROM test_mapping where user_id =".$user_id;
+	$query = "SELECT * FROM test_mapping where user_id ='$user_id'";
 	$resultset = query_associative_all($query, $count);
 	foreach($resultset as $record) {
 		$retval[] = TestTypeMapping::getObject($record);

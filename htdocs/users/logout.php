@@ -1,5 +1,5 @@
 <?php
-include("../includes/db_lib.php");
+require_once("../includes/db_lib.php");
 
 //Logging User logout
 log_access($_SESSION['user_id'], 2, $_SESSION['username']);
