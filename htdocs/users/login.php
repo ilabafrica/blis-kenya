@@ -6,7 +6,7 @@ session_start();
 # If already logged in, redirect to home page
 if(isset($_SESSION['user_id']))
 {
-	header("Location: home.php");
+	header("Location: results_entry.php");
 }
 $_SESSION['SESS_TIMER'] = time();
 

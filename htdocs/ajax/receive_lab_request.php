@@ -239,17 +239,6 @@ $(document).ready(function(){
         echo " patient_exists = true;";
     }
    if(is_array($tests_requested) && $tests_requested != null) {
-		#Get Tests
-		//$length = count($tests_requested);
-		//$test_check="";
-		//$testNames="";
-		//for($i=0; $i<$length; $i++){
-		//	#prevent repeated tests
-		//	if($test_check != $tests_requested[$i]['investigation'])
-		//	$testNames.=$tests_requested[$i]['investigation'];
-		//	$test_check = $tests_requested[$i]['investigation'];
-		//	if ($i!=$length-1)$testNames.=',';
-		//}
 		
       $formcount = 1;
       //$specarraycount = 0;
@@ -439,16 +428,7 @@ function add_specimens(labNo)
     ?>
 
    	$('#specimen_reg_body').modal('hide');
-   	
-   	var url = "regn/specimen_added.php?snum=<?php echo $session_num; ?>";
-	$('#specimen_registered').load(
-			url, 
-			function(result) 
-			{
-				$('#specimen_registered').modal('show');
-			}
-	);		
-   	
+   	   	
      $.post(
 			'ajax/get_specimen_details.php',
 			{labno:labNo }, 
