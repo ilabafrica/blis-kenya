@@ -3506,17 +3506,16 @@ class Test
 		# Converts stored result value(s) for showing on front-end
 		# Get measure, unit pairs for this test
 		$test_type = TestType::getById($this->testTypeId);
-		$measure_list = $test_type->getMeasures();
-                //print_r($measure_list);
+		if(is_object($test_type))$measure_list = $test_type->getMeasures();
+		else $measure_list = array();
+
                 $submeasure_list = array();
                 $comb_measure_list = array();
-               // print_r($measure_list);
+
                 foreach($measure_list as $measure)
                 {
                     
                     $submeasure_list = $measure->getSubmeasuresAsObj();
-                    //echo "<br>".count($submeasure_list);
-                    //print_r($submeasure_list);
                     $submeasure_count = count($submeasure_list);
                     
                     if($measure->checkIfSubmeasure() == 1)
