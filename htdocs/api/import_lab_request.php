@@ -11,9 +11,12 @@
  * 	2. 	Queries the view LabRequestQueryForBliss from Microsoft SQL Server and INSERTS it to the database
  * 		table => external_lab_request
  */
-include("../includes/db_lib.php");
+if(session_id() == "")session_start();
+$_SESSION['SESS_TIMER'] = time();
+
+require_once("../includes/db_lib.php");
 $time_stamp = date("Y-m-d H:i:s");
-$error_log_path ="/var/www/BLIS/htdocs/logs/blis.api.error.log";
+$error_log_path ="../logs/blis.api.error.log";
 
 $value_string = '';
 $length = count($_POST);
