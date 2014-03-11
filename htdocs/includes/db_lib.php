@@ -1282,8 +1282,8 @@ class TestType
 		$query_string = 
 			"SELECT m.* FROM test_type_measure ttm ".
 			"INNER JOIN measure m ON (ttm.measure_id=m.measure_id)".
-			"WHERE ttm.test_type_id=$this->testTypeId ";
-                        //"ORDER BY ts";
+			"WHERE ttm.test_type_id=$this->testTypeId ORDER BY ordering";
+
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = array();
 		if($resultset) {

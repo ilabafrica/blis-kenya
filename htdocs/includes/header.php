@@ -483,7 +483,7 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 						}
 						echo"
 						<li>
-							<a href='export_config?id=".$_REQUEST['id']."' target='_blank'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_EXPORTCONFIG']."</a>
+							<a href='export_config?id=".get_request_variable('id')."' target='_blank'><i class='icon-tag'></i> ".LangUtil::$allTerms['MENU_EXPORTCONFIG']."</a>
 						</li>
                         <div id='old_update_div' style='display:none;'>
 							<li>

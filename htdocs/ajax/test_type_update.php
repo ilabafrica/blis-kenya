@@ -14,19 +14,16 @@ include("../lang/lang_xml2php.php");
 
 putUILog('test_type_update', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
-$test_type_id = $_REQUEST['tid'];
-$cat_code = $_REQUEST['cat_code'];
+$test_type_id = get_request_variable('tid');
+$cat_code = get_request_variable('cat_code');
 $measures_to_delete = array();
 $reference_ranges_list = array();
 $measures_to_retain = array();
-
-//$test_type = get_test_type_by_id($_REQUEST['tid']);
 $added_submeasures_list = array();
 $sub_reference_ranges_list = array();
 
 $us = '_';
 $r = 0;
-
 
 if($_REQUEST['cat_code'] == -1)
 {
@@ -35,21 +32,22 @@ if($_REQUEST['cat_code'] == -1)
 	$new_cat_id = add_test_category($new_cat_name);
 	$cat_code = $new_cat_id;
 }
+
 $updated_entry = new TestType();
-$updated_entry->testTypeId = $_REQUEST['tid'];
-$updated_entry->name = addslashes($_REQUEST['name']);
-$updated_entry->description = $_REQUEST['description'];
-$updated_entry->clinical_data=$_REQUEST['clinical_data'];
-$updated_entry->hide_patient_name=$_REQUEST['hidePatientName'];
-$updated_entry->prevalenceThreshold=$_REQUEST['prevalenceThreshold'];
-$updated_entry->targetTat=$_REQUEST['targetTat'];
+$updated_entry->testTypeId = $test_type_id;
+$updated_entry->name = addslashes(get_request_variable('name'));
+$updated_entry->description = get_request_variable('description');
+$updated_entry->clinical_data=get_request_variable('clinical_data');
+$updated_entry->hide_patient_name=get_request_variable('hidePatientName');
+$updated_entry->prevalenceThreshold=get_request_variable('prevalenceThreshold');
+$updated_entry->targetTat=get_request_variable('targetTat');
 $updated_entry->testCategoryId = $cat_code;
 
-$cost_cents_initial = $_REQUEST['cost_to_patient_cents'];
+$cost_cents_initial = get_request_variable('cost_to_patient_cents');
 $cost_cents = get_cents_from_whole_number($cost_cents_initial);
 
-$newCostToPatient = $_REQUEST['cost_to_patient_dollars'] + $cost_cents;
-$oldCostToPatient = $_REQUEST['costToPatient_old'];
+$newCostToPatient = get_request_variable('cost_to_patient_dollars') + $cost_cents;
+$oldCostToPatient = get_request_variable('costToPatient_old');
 
 # Update tests measures and ranges
 $is_panel = false;
@@ -102,71 +100,71 @@ else
         #debug
         //print_r($measures_to_be_deleted);
         
-        $test_type_obj = get_test_type_by_id($_REQUEST['tid']);
- $result_indices = array();
-$update_timestamp = mktime(0, 0, 0, 7, 3, 2012);
+        $test_type_obj = get_test_type_by_id($test_type_id);
+        $result_indices = array();
+        $update_timestamp = mktime(0, 0, 0, 7, 3, 2012);
 
-$test_records_to_update = getTestRecordsByDate($update_timestamp, $test_type_id);
-$del_tag = "##";
+        $test_records_to_update = getTestRecordsByDate($update_timestamp, $test_type_id);
+        $del_tag = "##";
 
-$measure_list_objs = $test_type_obj->getMeasures();
-                //print_r($measure_listt);
-                $submeasure_list_objs = array();
+        $measure_list_objs = $test_type_obj->getMeasures();
+        
+        //print_r($measure_listt);
+        $submeasure_list_objs = array();
+        $comb_measure_list = array();
+        // print_r($measure_list);
+        
+        foreach($measure_list_objs as $measure)
+        {
+            
+            $submeasure_list_objs = $measure->getSubmeasuresAsObj();
+            //echo "<br>".count($submeasure_list);
+            //print_r($submeasure_list);
+            $submeasure_countt = count($submeasure_list_objs);
+            
+            if($measure->checkIfSubmeasure() == 1)
+            {
+                continue;
+            }
                 
-                $comb_measure_list = array();
-               // print_r($measure_list);
+            if($submeasure_countt == 0)
+            {
+                array_push($comb_measure_list, $measure);
+            }
+            else
+            {
+                array_push($comb_measure_list, $measure);
+                foreach($submeasure_list_objs as $submeasuree)
+                    array_push($comb_measure_list, $submeasuree); 
+            }
+        }
                 
-                foreach($measure_list_objs as $measure)
+        $comb_measure_list_ids = array();
+        
+        foreach($comb_measure_list as $measuree)
+        {
+            array_push($comb_measure_list_ids, $measuree->measureId);
+        }
+                
+        $update_del = 0;
+        for($del = 0; $del < count($comb_measure_list_ids); $del++)
+        {
+            $update_del = 0;
+            $cu = 0;
+            while($cu < count($measures_to_be_deleted))
+            {
+                if($comb_measure_list_ids[$del] == $measures_to_be_deleted[$cu])
                 {
-                    
-                    $submeasure_list_objs = $measure->getSubmeasuresAsObj();
-                    //echo "<br>".count($submeasure_list);
-                    //print_r($submeasure_list);
-                    $submeasure_countt = count($submeasure_list_objs);
-                    
-                    if($measure->checkIfSubmeasure() == 1)
-                    {
-                        continue;
-                    }
-                        
-                    if($submeasure_countt == 0)
-                    {
-                        array_push($comb_measure_list, $measure);
-                    }
-                    else
-                    {
-                        array_push($comb_measure_list, $measure);
-                        foreach($submeasure_list_objs as $submeasuree)
-                           array_push($comb_measure_list, $submeasuree); 
-                    }
+                    $update_del = 1;
                 }
-                
-                $comb_measure_list_ids = array();
-                
-                foreach($comb_measure_list as $measuree)
-                {
-                    array_push($comb_measure_list_ids, $measuree->measureId);
-                }
-                
-                $update_del = 0;
-                for($del = 0; $del < count($comb_measure_list_ids); $del++)
-                {
-                    $update_del = 0;
-                    $cu = 0;
-                    while($cu < count($measures_to_be_deleted))
-                    {
-                        if($comb_measure_list_ids[$del] == $measures_to_be_deleted[$cu])
-                        {
-                            $update_del = 1;
-                        }
-                        $cu++;
-                    }
-                    if($update_del == 1)
-                        $result_indices[$del] = 1;
-                    else
-                        $result_indices[$del] = 0;
-                }
-                $measure_listt = $comb_measure_list;
+                $cu++;
+            }
+            if($update_del == 1)
+                $result_indices[$del] = 1;
+            else
+                $result_indices[$del] = 0;
+        }
+        $measure_listt = $comb_measure_list;
                 
                 
                 foreach($test_records_to_update as $tru)
@@ -402,23 +400,23 @@ $measure_list_objs = $test_type_obj->getMeasures();
 				$upper_range = $ranges_upper[$j];
 				if($lower_range!=$upper_range)
 				{
-				$lower_age = 0;
-				$upper_age = 0;
-				if(isset($_REQUEST["agerange_l_".($i+1)."_".$j]))
-				{
-					# Age range specified for this reference range
-					$lower_age = $_REQUEST["agerange_l_".($i+1)."_".$j];
-					$upper_age = $_REQUEST["agerange_u_".($i+1)."_".$j];
-					$gender_option=$_REQUEST["gender_".($i+1)."_".$j];
-					if($lower_age > $upper_age)
-					{
-						# Swap
-						list($lower_age, $upper_age) = array($upper_age, $lower_age);
-					}
-				}
+                                    $lower_age = 0;
+                                    $upper_age = 0;
+                                    if(isset($_REQUEST["agerange_l_".($i+1)."_".$j]))
+                                    {
+                                            # Age range specified for this reference range
+                                            $lower_age = $_REQUEST["agerange_l_".($i+1)."_".$j];
+                                            $upper_age = $_REQUEST["agerange_u_".($i+1)."_".$j];
+                                            $gender_option=$_REQUEST["gender_".($i+1)."_".$j];
+                                            if($lower_age > $upper_age)
+                                            {
+                                                    # Swap
+                                                    list($lower_age, $upper_age) = array($upper_age, $lower_age);
+                                            }
+                                    }
 					//$gender_option = 'B';
 				$reference_ranges_list[$i][] = array($lower_range, $upper_range, $lower_age, $upper_age, $gender_option);
-			}
+                                }
 			}
 			//	$range_string = trim($ranges_lower[$i]).":".trim($ranges_upper[$i]);
 			$range_string = ":";
@@ -533,24 +531,23 @@ $measure_list_objs = $test_type_obj->getMeasures();
 		$ranges_upper = $_REQUEST['new_range_u_'.($i+1)];
 		$range_string = "";
 		if($measure_types[$i] == Measure::$RANGE_NUMERIC)
-		{ $index=0;
-		$age_upper = $_REQUEST['new_agerange_u_'.($i+1)];
-		$age_lower = $_REQUEST['new_agerange_l_'.($i+1)];
-		$gender = $_REQUEST['new_gender_'.($i+1)];
-			foreach($ranges_lower as $lower)
-			
-			{
-			$upper=$ranges_upper[$index];
-			if($upper!=$lower)
-			{
-			$lower_age = $age_lower[$index];
-			$upper_age = $age_upper[$index];
-			$gender_option=$gender[$index];
-			$reference_ranges_list[$count_ref][] = array($lower, $upper , $lower_age , $upper_age, $gender_option);
-			}
-			$index++;
-			
-			}
+		{ 
+                    $index=0;
+                    $age_upper = $_REQUEST['new_agerange_u_'.($i+1)];
+                    $age_lower = $_REQUEST['new_agerange_l_'.($i+1)];
+                    $gender = $_REQUEST['new_gender_'.($i+1)];
+                    foreach($ranges_lower as $lower)
+                    {
+                        $upper=$ranges_upper[$index];
+                        if($upper!=$lower)
+                        {
+                            $lower_age = $age_lower[$index];
+                            $upper_age = $age_upper[$index];
+                            $gender_option=$gender[$index];
+                            $reference_ranges_list[$count_ref][] = array($lower, $upper , $lower_age , $upper_age, $gender_option);
+                        }
+                        $index++;
+                    }
 			// if($ranges_lower[1]!=$ranges_upper[1])
 			// {
 			// $reference_ranges_list[$count_ref][] = array($ranges_lower[0], $ranges_upper[0],0,0,'M');
