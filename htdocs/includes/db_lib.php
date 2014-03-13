@@ -1269,7 +1269,7 @@ class TestType
 		$test_type_id = mysql_real_escape_string($test_type_id, $con);
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string =
-			"SELECT * FROM test_type WHERE test_type_id=$test_type_id LIMIT 1";
+			"SELECT * FROM test_type WHERE test_type_id='$test_type_id' AND disabled = 0 LIMIT 1";
 		$record = query_associative_one($query_string);
 		DbUtil::switchRestore($saved_db);
 		return TestType::getObject($record);
@@ -3140,7 +3140,7 @@ class Test
 			$test->ts_result_entered = $record['ts_result_entered'];
 		else
 			$test->ts_result_entered = null;
-		
+			
 		return $test;
 	}
 	public function getStatusCode()
@@ -3172,7 +3172,6 @@ class Test
 		}
 	}
 	
-	
 	public static function getById($test_id)
 	{
 		# Returns a test result entry by test_id field
@@ -3200,6 +3199,7 @@ class Test
 		$record = query_associative_one($query_string);
 		return Test::getObject($record);
 	}
+
 	public static function getByExternalLabno($lab_no)
 	{
 		# Returns a test result entry by test_id field
@@ -3247,6 +3247,7 @@ class Test
 			return get_username_by_id($this->userId);
 		}
 	}
+
 	public function getSpecimenTurnaroundTime()
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
@@ -3265,62 +3266,65 @@ class Test
 		$interval = date_diff($start_time, $end_time);
 		return $interval->format('%d d %H hrs %I min');
 	}
-    public function getLabSectionByTest()
-    {
-        $query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench, t.specimen_id as specID FROM test_category tc, 
-        test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
-        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
-        $resultset = query_associative_all($query_string, $row_count);
-        $retval = "";
-        $count = 0;
-        if(count($resultset) > 0)
+
+	public function getLabSectionByTest()
         {
+            $query_string = "SELECT DISTINCT(LEFT(tc.name,3)) AS bench, t.specimen_id as specID FROM test_category tc, 
+            test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+            AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND t.test_id=$this->testId";
+            $resultset = query_associative_all($query_string, $row_count);
+            $retval = "";
+            $count = 0;
+            if(count($resultset) > 0)
+            {
+                foreach($resultset as $record)
+                {
+                    $count++;
+                    $bench = $record['bench'];
+                    $specimen_id = $record['specID'];
+                    $retval .= $bench."-".$specimen_id;
+                    if($count < count($resultset))
+                    {
+                        $retval .= "<br>";
+                    }
+                }
+            }
+            return $retval;
+        }
+        
+
+        public function getFullLabSectionByTest()
+        {
+            $query_string = "SELECT DISTINCT(tc.name) AS bench, tt.name AS test_name FROM test_category tc, 
+            test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+            AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND tt.parent_test_type_id=0 AND t.test_id=$this->testId GROUP BY tt.parent_test_type_id";
+            $resultset = query_associative_all($query_string, $row_count);
+            $retval = "";
+            $count = 0;
             foreach($resultset as $record)
             {
                 $count++;
+                            $test_name = $record['test_name'];
                 $bench = $record['bench'];
-                $specimen_id = $record['specID'];
-                $retval .= $bench."-".$specimen_id;
+                $retval .= $test_name."<strong>(".$bench.")</strong>";
                 if($count < count($resultset))
                 {
                     $retval .= "<br>";
                 }
             }
+            return $retval;
         }
-        return $retval;
-    }
-	public function getFullLabSectionByTest()
-    {
-        $query_string = "SELECT DISTINCT(tc.name) AS bench, tt.name AS test_name FROM test_category tc, 
-        test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
-        AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND tt.parent_test_type_id=0 AND t.test_id=$this->testId GROUP BY tt.parent_test_type_id";
-        $resultset = query_associative_all($query_string, $row_count);
-        $retval = "";
-        $count = 0;
-        foreach($resultset as $record)
-        {
-            $count++;
-			$test_name = $record['test_name'];
-            $bench = $record['bench'];
-            $retval .= $test_name."<strong>(".$bench.")</strong>";
-            if($count < count($resultset))
-            {
-                $retval .= "<br>";
-            }
-        }
-        return $retval;
-    }
 
-    public function getSpecimenNameByParentTest()
-    {
-        $query_string = "SELECT st.name as sp_name FROM specimen_type st, specimen s, test t, test_type tt
-			WHERE tt.test_type_id=t.test_type_id AND t.specimen_id=s.specimen_id AND st.specimen_type_id=s.specimen_type_id 
-			AND tt.parent_test_type_id=0 AND t.test_id=$this->testId GROUP BY tt.parent_test_type_id";
-        $record = query_associative_one($query_string);
-        $retval = "";
-        $retval = $record['sp_name'];
-        return $retval;
-    }
+        public function getSpecimenNameByParentTest()
+        {
+            $query_string = "SELECT st.name as sp_name FROM specimen_type st, specimen s, test t, test_type tt
+                            WHERE tt.test_type_id=t.test_type_id AND t.specimen_id=s.specimen_id AND st.specimen_type_id=s.specimen_type_id 
+                            AND tt.parent_test_type_id=0 AND t.test_id=$this->testId GROUP BY tt.parent_test_type_id";
+            $record = query_associative_one($query_string);
+            $retval = "";
+            $retval = $record['sp_name'];
+            return $retval;
+        }
 	
 	public function getVerifiedBy()
 	{
@@ -3369,9 +3373,7 @@ class Test
 		if($specimen_id != "")
 			update_specimen_status($specimen_id);
 	}
-	
-	
-	
+		
 	public function getResultWithoutHash()
 	{
 		global $PATIENT_HASH_LENGTH;
@@ -3452,7 +3454,9 @@ class Test
 		$retval = substr($this->result, -1*$PATIENT_HASH_LENGTH);
                 return $retval;
         }
-	public function getMeasureList() {
+
+	public function getMeasureList()
+	{
 		$testType = TestType::getById($this->testTypeId);
 		$measure_list = $testType->getMeasures();
                 $submeasure_list = array();
@@ -3487,22 +3491,22 @@ class Test
 		for($i = 0; $i < count($measure_list); $i++) {
 			$curr_measure = $measure_list[$i];
                         if(strpos($curr_measure->name, "\$sub") !== false)
-                                                            {
-                                                                $decName = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$curr_measure->truncateSubmeasureTag();
-                                                                
-                                                            }
-                                                            else
-                                                            {
-                                                                $decName = $curr_measure->name;
-                                                            }
+                        {
+                            $decName = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$curr_measure->truncateSubmeasureTag();
+                            
+                        }
+                        else
+                        {
+                            $decName = $curr_measure->name;
+                        }
                                             
-                        
 			$retval .= "<br>".$decName."<br>";
 		}
 		return $retval;
 	}	
 	
-	public function decodeResult($show_range=false) {
+	public function decodeResult($show_range=false)
+	{
 		# Converts stored result value(s) for showing on front-end
 		# Get measure, unit pairs for this test
 		$test_type = TestType::getById($this->testTypeId);
@@ -3512,9 +3516,9 @@ class Test
                 $submeasure_list = array();
                 $comb_measure_list = array();
 
+                //Add submeasure if these exist
                 foreach($measure_list as $measure)
                 {
-                    
                     $submeasure_list = $measure->getSubmeasuresAsObj();
                     $submeasure_count = count($submeasure_list);
                     
@@ -3535,11 +3539,9 @@ class Test
                     }
                 }
                 $measure_list = $comb_measure_list;
+
 		$result_csv = $this->getResultWithoutHash();
-                //$result_csv = $this->getResultWithoutHash();
-                //echo "<br>";
-                //echo $result_csv;
-                //echo "<br>";
+
                 if(strpos($result_csv, "[$]") === false)
                 {
                     $result_list = explode(",", $result_csv);
@@ -3723,7 +3725,42 @@ class Test
 		//$retval = str_replace("_",",",$retval); # Replace all underscores with a comma
 		return $retval;
 	}
-	
+
+	public function decode2Result($show_range=false)
+        {
+                # Converts stored result value(s) for showing on front-end
+                # Get measure, unit pairs for this test
+                $test_type = TestType::getById($this->testTypeId);
+                if(is_object($test_type))
+                    $measure_list = $test_type->getMeasures();
+                else 
+                    $measure_list = array();
+
+                $retval = "";
+
+                foreach($measure_list as $measure)
+                {
+                        $result = get_test_measure_result_value($this->testId, $measure->measureId);
+
+                        # Pretty print
+                        if(count($measure_list) == 1)
+                        {
+                            $retval .= $result."&nbsp;".$measure->unit;
+                        }
+                        else
+                        {
+                            $retval .= $measure->name.":"."&nbsp;"."<b>".$result."</b>"."&nbsp;".$measure->unit;
+                        }
+                        if($show_range === true)
+                        {
+                                $retval .= "(".$measure->getRangeString().")";
+                        }
+                        $retval .= "<br>";
+                }//end
+
+                return $retval;
+        }
+        	
         public function decodeResultWithoutMeasures($show_range=false) {
             # Converts stored result value(s) for showing on front-end
 		# Get measure, unit pairs for this test
@@ -3920,100 +3957,7 @@ class Test
 		//$retval = str_replace("_",",",$retval); # Replace all underscores with a comma
 		return $retval;
         }
-        
-        /*
-	public function decodeResultWithoutMeasures($show_range=false) {
-		# Converts stored result value(s) for showing on front-end
-		$test_type = TestType::getById($this->testTypeId);
-		$measure_list = $test_type->getMeasures();
-		$result_csv = $this->getResultWithoutHash();
-		$result_list = explode(",", $result_csv);
-		$retval = "";
-		for($i = 0; $i < count($measure_list); $i++) {
-			# Pretty print
-			$curr_measure = $measure_list[$i];
-			if(isset($result_list[$i]))
-			{    
-				# If matching result value exists (e.g. after a new measure was added to this test type)
-				if(count($measure_list) == 1)
-				{
-					# Only one measure: Do not print measure name
-					//$retval .= $curr_measure->name."&nbsp;";
-					if($curr_measure->getRangeType() == Measure::$RANGE_AUTOCOMPLETE) {
-						$result_string = "";
-						$value_list = explode("_", $result_list[$i]);
-						foreach($value_list as $value) {
-							if(trim($value) == "")
-								continue;
-							$result_string .= $value."<br>";
-						}
-						$result_string = substr($result_string, 0, -4);
-						$retval .= "<br>".$result_string."&nbsp;";
-					}
-					else if($curr_measure->getRangeType() == Measure::$RANGE_OPTIONS)
-					{
-						if($result_list[$i] != $curr_measure->unit)
-							$retval .= "<br><b>".$result_list[$i]."</b> &nbsp;";
-						else
-							$retval .= "<br>".$result_list[$i]."&nbsp;";
-					}
-					else
-					{
-						$retval .= "<br>".$result_list[$i]."&nbsp;";
-					}
-				}
-				else
-				{
-					# Print measure name with each result value
-					// $retval .= $curr_measure->name."&nbsp;";
-					if($curr_measure->getRangeType() == Measure::$RANGE_AUTOCOMPLETE)
-					{
-						$result_string = "";
-						$value_list = str_replace("_", ",", $result_list[$i]);
-						//$retval .= ":<br>".$value_list."<br>";
-						$retval .= "<br>".$value_list."<br>";
-					}
-					else if($curr_measure->getRangeType() == Measure::$RANGE_OPTIONS)
-					{
-						if($result_list[$i]!=$curr_measure->unit) {
-							//$retval .= "<b>".$result_list[$i]."</b> &nbsp;";
-							$retval .= "<br><b>".$result_list[$i]."</b> &nbsp;<br>";
-						}
-						else {
-							//$retval .= $result_list[$i]."&nbsp;";
-							$retval .= "<br>".$result_list[$i]."&nbsp;<br>";
-						}
-					}
-					else
-					{
-						//$retval .= $result_list[$i]."&nbsp;";
-						$retval .= "<br>".$result_list[$i]."&nbsp;<br>";
-					}
-				}
-				if($show_range === true)
-				{
-					$retval .= $curr_measure->getRangeString();
-				}
-				if($i != count($measure_list) - 1)
-				{
-					//$retval .= "<br>";
-				}
-			}
-			else
-			{
-				# Matching result value not found: Show "-"
-				if(count($measure_list) == 1)
-				{
-					$retval .= $curr_measure->name."&nbsp;";
-				}
-				$retval .= " - <br>";
-			}
-		}
-		$retval = str_replace("_",",",$retval); # Replace all underscores with a comma
-		return $retval;
-	}
-	*/
-        
+               
 	public function getComments()
 	{
 		if(trim($this->comments) == "" || $this->comments == null)
@@ -4039,8 +3983,7 @@ class Test
 			$retval[] = Test::getObject($record);
 		return $retval;
 	}
-        
-	
+        	
 	public function verifyAndUpdate($hash_value)
 	{
 		# Updates changes to DB after verified/corrected result values are submitted
