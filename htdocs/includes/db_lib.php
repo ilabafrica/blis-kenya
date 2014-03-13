@@ -16793,7 +16793,7 @@ function get_test_measure_result_value($test_id, $measure_id )
 
 function resend_test_results($test_id){
 	$query = "SELECT DISTINCT labNo FROM (
-		SELECT external_lab_no labNo FROM blis_301.test WHERE test_id = '$test_id' UNION
+		SELECT external_lab_no labNo FROM test WHERE test_id = '$test_id' UNION
 		SELECT lab_no FROM test_measure WHERE test_id = '$test_id') AS labnos WHERE labNo != 0";
 
         $saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);
@@ -16806,6 +16806,50 @@ function resend_test_results($test_id){
 		query_blind($query);
 	}
         $saved_db = DbUtil::switchToGlobal();
+}
+
+function get_numeric_range_display_string($measure, $patient){
+
+    $retVal = "";
+    $range_list_array=$measure->getRangeString($patient);
+    $lower=$range_list_array[0];
+    $upper=$range_list_array[1];
+    $unit=$measure->unit;
+
+    if(stripos($unit,",")!=false) 
+    {
+        $retVal .= "(";
+        $units=explode(",",$unit);
+        $lower_parts=explode(".",$lower);
+        $upper_parts=explode(".",$upper);
+
+        if($lower_parts[0]!=0)
+            $retVal .= $lower_parts[0].$units[0];
+
+        if($lower_parts[1]!=0)
+            $retVal .= $lower_parts[1].$units[1];
+
+        $retVal .= " - ";
+
+        if($upper_parts[0]!=0)
+            $retVal .= $upper_parts[0].$units[0];
+                    
+        if($upper_parts[1]!=0)
+            $retVal .= $upper_parts[1].$units[1];
+
+        $retVal .= ")";
+
+    } 
+    else if(stripos($unit,":")!=false) 
+    {
+        $units=explode(":",$unit);
+        $retVal .= "($lower"."<sup>".$units[0]."</sup> - ";
+        $retVal .= "$upper<sup> ".$units[0]." </sup> ".$units[1].")";
+    }
+    else 
+        $retVal .= "($lower-$upper) ".$measure->unit;
+        
+    return $retVal;
 }
 
 ?>
