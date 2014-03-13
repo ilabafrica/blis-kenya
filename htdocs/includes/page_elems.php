@@ -3432,7 +3432,7 @@ class PageElems
 				if($test->isPending())
 					echo LangUtil::$generalTerms['PENDING_RESULTS'];
 				else
-					echo $test->decodeResult();
+					echo $test->decode2Result();
 				?>
 			</td>
 			<td>
@@ -3489,7 +3489,7 @@ class PageElems
 				if($test->isPending())
 					echo LangUtil::$generalTerms['PENDING_RESULTS'];
 				else
-					echo $test->decodeResult();
+					echo $test->decode2Result();
 				?>
 			</td>
 			<td>
