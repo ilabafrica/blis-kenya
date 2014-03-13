@@ -42,6 +42,7 @@ $comments=$comment;
 
 $result_values = get_request_variable('result');
 $measure_count = 0;
+$range_measure = array();
 $measure_list = $test_type->getMeasures();
 //Holds a key value pair of measureId and result to put in test_measure table the results table.
 $measure_result = array();
@@ -106,6 +107,16 @@ foreach($measure_list as $measure)
 		//Stuffing measureId and result in measure_result array
 		$measure_result[$measure->measureId] = $result_to_push;
 	}
+	else if ($range_type == Measure::$RANGE_NUMERIC) {
+
+
+		$range = get_numeric_range_display_string($measure, $patient);
+		$unit = $measure->unit;
+		$range_measure[$measure->measureId] = "$unit $range";
+
+		$result_value = $result_values[$measure_count];
+		$measure_result[$measure->measureId] = $result_value;
+	}
 	else 
 	{
 		$result_value = $result_values[$measure_count];
@@ -135,7 +146,7 @@ $user_id = $_SESSION['user_id'];
 // $ts =date("Y-m-d H:i:s", $unix_ts);
  $ts =date("Y-m-d H:i:s");
 //-NC3065
-add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result, $patient->surrogateId);
+add_test_result($test_id, $result_csv, $comments, "", $user_id, $ts, $patient->getHashValue(), $measure_result, $patient->surrogateId, $range_measure);
 
 update_specimen_status($specimen_id);
 $test_list = get_tests_by_specimen_id($specimen_id);
@@ -145,7 +156,7 @@ $test_modified = Test::getById($test_id);
 $rubbish= array("<br>" , "&nbsp;", "<b>","</b>", "[$]", ",", "[/$]" );
 $result_to_push = str_replace($rubbish, "", $test_modified->decodeResult());
 
-
+//Finding ":" helps us know if test has measures so that we update done for main test
 if(strpos($test_modified->decodeResult(), ":" ) == false){
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
 }

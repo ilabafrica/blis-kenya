@@ -7507,7 +7507,7 @@ function get_test_entry($specimen_id, $test_type_id)
 	return $retval;
 }
 
-function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result, $surr_id=null)
+function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result, $surr_id=null, $range_measure="")
 {
 	# Adds results for a test entry
 	$curent_ts = "";
@@ -7544,7 +7544,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	$record = query_associative_one($query_string);
 	$lab_no = $record['lab_no'];
 	
-	API::updateExternalLabrequest($surr_id, $lab_no, $result);
+	API::updateExternalLabrequest($surr_id, $lab_no, $result.$range_measure[$measure]);
 	}
 	
 	
