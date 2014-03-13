@@ -47,7 +47,7 @@ if (!$length >1 || !$_POST==null){
 		 	$json_request = (string)$value;
 		 	error_log("\n".$time_stamp.": Lab Request Recieved: ======", 3, $error_log_path);
 		 	$request_data = json_decode($json_request, true);
-		 	
+
 		 	$value_string.= '(';
 		 	$value_string.= 
 		 	#labNo
@@ -105,25 +105,12 @@ if (!$length >1 || !$_POST==null){
 		 	
 		 	$LabRequest = $value_string;
 		 	
-		 	if ($request_data['orderStage'] == 'op' && $request_data['receiptNumber']=='')
+		 	//Save all requests except waivers and exemptions
+		 	if ($request_data['receiptType'] != 'exemption' && $request_data['receiptType'] !='waiver')
 		 	{
-		 		//Lab request not saved for tests withough receipt number except for patients below 5 years age
-		 		$dob = new DateTime($request_data['patient']["dateOfBirth"]);
-		 		$dt = $dob->format('Y-m-d');
-		 		 
-		 		$age = age($dt);
-		 		
-		 		if(intval($age)<=5){
 		 			API::save_external_lab_request($LabRequest);
-		 		}
 		 		
-		 	}else if ($request_data['receiptType']=='insurance'){
-		 		API::save_external_lab_request($LabRequest);
 		 	}
-		 
-		 	else API::save_external_lab_request($LabRequest);
-		 	
-		 	
 		 } 		 
 		}
 }

@@ -6187,7 +6187,7 @@ function log_access($userid , $accesstype, $username ){
 	
 	$saved_db = DbUtil::switchToGlobal();
 	$ip_address = $_SERVER['REMOTE_ADDR'];
-	$username = mysql_escape_string($username);
+	$username = mysql_real_escape_string($username);
 	$sessionid = session_id();
 	
 	$query_string = 
@@ -15877,6 +15877,7 @@ class API
     public static function save_external_lab_request($LabRequest)
     {
     	# adds a new lab reqeust from external system
+    	#Edited on 12/3/14 added on duplicate update to prevent duplication
     	$saved_db = DbUtil::switchToGlobal();
     	$query_string=
     	"INSERT INTO `external_lab_request` (
@@ -15905,9 +15906,10 @@ class API
 			`comments`,
 			`provisionalDiagnosis`,
 			`system_id`)
-    	VALUES $LabRequest";
+    	VALUES $LabRequest on duplicate key update receiptNumber = VALUES(receiptNumber), receiptType = VALUES(receiptType)";
     	#insert_external_lab_request
     	query_insert_one($query_string);
+
   
     	DbUtil::switchRestore($saved_db);
     }
