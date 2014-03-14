@@ -2746,13 +2746,13 @@ function add_remarks_row(measure_id, range_type)
     var html_code = "";
     if(range_type == <?php echo Measure::$RANGE_NUMERIC; ?>)
     {
-        html_code = "<tr><td><input type='hidden' name='id_"+measure_id+"[]' value=-2 class='uniform_width_less'></input>";
-        html_code += "<input type='text' name='range_l_"+measure_id+"[]' value='' class='uniform_width_less'></input>";
-        html_code += "-<input type='text' name='range_u_"+measure_id+"[]' value='' class='uniform_width_less'></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        html_code += "<input type='text' name='age_l_"+measure_id+"[]' value='' class='uniform_width_less'></input>";
-        html_code += "-<input type='text' name='age_u_"+measure_id+"[]' value='' class='uniform_width_less'></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        html_code += "<input type='text' name='gender_"+measure_id+"[]' value='' size='1px'></input>";
-        html_code += "<td><input type='text' name='remarks_"+measure_id+"[]' value='' class='uniform_width'></input></td></tr>";
+        html_code = "<tr><td><input type='hidden' name='id_"+measure_id+"[]' value=-2 class='uniform_width_less input-mini'></input>";
+        html_code += "<input type='text' name='range_l_"+measure_id+"[]' value='' class='uniform_width_less input-mini'></input>";
+        html_code += "-<input type='text' name='range_u_"+measure_id+"[]' value='' class='uniform_width_less input-mini'></input></td>";
+        html_code += "<td><input type='text' name='age_l_"+measure_id+"[]' value='' class='uniform_width_less input-mini'></input>";
+        html_code += "-<input type='text' name='age_u_"+measure_id+"[]' value='' class='uniform_width_less input-mini'></input></td>";
+        html_code += "<td><input type='text' name='gender_"+measure_id+"[]' value='' size='1px' class='input-mini'></input></td>";
+        html_code += "<td><input type='text' name='remarks_"+measure_id+"[]' value='' class='uniform_width input-mini'></input></td></tr>";
     }
     var target_table_id = "remarks_table_"+measure_id;
     $('#'+target_table_id).append(html_code);
