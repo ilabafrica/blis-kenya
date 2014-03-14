@@ -349,7 +349,7 @@ if($attrib_type == 12||$attrib_type == 13)
 }
 else{
  	
- 	$num_records = count(query_associative_all($query_string, $row_count));
+ 	$num_records = 1000;
  	//Set Pagination
  	$page = $_REQUEST['p'];
  	$url="javascript:fetch_tests('$status'";
@@ -706,7 +706,7 @@ else{
 			</td>';
 			}else if (!isset($test_status)){
 
-                if($patient->getAgeNumber() >= 5 && $record['orderStage'] == "op" && $record['receiptNumber'] == "" && $record['receiptType'] == ""){
+                if($patient->getAgeNumber() >= 6 && $record['orderStage'] == "op" && $record['receiptNumber'] == "" && $record['receiptType'] == ""){
                     echo 'label">Not Paid';
                     echo '</span></td>';
                     echo '

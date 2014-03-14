@@ -6,37 +6,15 @@
 
 #
 
-/*
-
-$load_time = microtime(); 
-
-$load_time = explode(' ',$load_time); 
-
-$load_time = $load_time[1] + $load_time[0]; 
-
-$page_start = $load_time; 
-
-*/
-
-
 
 include("redirect.php");
-
 include("includes/db_lib.php");
-
 include("includes/script_elems.php");
-
 include("includes/page_elems.php");
-
 include("barcode/barcode_lib.php");
-
 include("includes/user_lib.php");
 
-
-
 LangUtil::setPageId("reports");
-
-
 
 include("../users/accesslist.php");
 
@@ -2389,7 +2367,7 @@ else
                                 $result = get_test_measure_result_value($test->testId, $measure->measureId);
                                 echo "<span>".$measure->name."</span> - $result ".$measure->unit." &nbsp; ";
                                 if($measure->getRangeType() == Measure::$RANGE_NUMERIC){
-                                    echo get_numeric_range_display_string($measure, $patient);
+                                   echo $measure->getNumericRangeString($patient);
                                 }
                                 echo "<br />";
                             }
@@ -2448,7 +2426,7 @@ else
 
                                         if($type==Measure::$RANGE_NUMERIC)
                                         {
-                                            echo get_numeric_range_display_string($measure, $patient);
+                                            echo $measure->getNumericRangeString($patient);
                                         } 
                                         else 
                                         {

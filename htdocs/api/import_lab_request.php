@@ -20,23 +20,6 @@ $error_log_path ="../logs/blis.api.error.log";
 
 $value_string = '';
 $length = count($_POST);
-function age($date){
-	$year_diff = '';
-	$time = strtotime($date);
-		
-	if(FALSE === $time){
-		return '';
-	}
-		
-	$date = date('Y-m-d', $time);
-	list($year,$month,$day) = explode("-",$date);
-	$year_diff = date("Y") - $year;
-	$month_diff = date("m") - $month;
-	$day_diff = date("d") - $day;
-	if ($day_diff < 0 || $month_diff < 0) $year_diff–;
-		
-	return $year_diff;
-}
 if (!$length >1 || !$_POST==null){
 	foreach($_POST as $key=>$value)
 	{

@@ -110,9 +110,9 @@ foreach($measure_list as $measure)
 	else if ($range_type == Measure::$RANGE_NUMERIC) {
 
 
-		$range = get_numeric_range_display_string($measure, $patient);
+		$range = $measure->getNumericRangeString($patient);
 		$unit = $measure->unit;
-		$range_measure[$measure->measureId] = "$unit $range";
+		$range_measure[$measure->measureId] = " $unit $range";
 
 		$result_value = $result_values[$measure_count];
 		$measure_result[$measure->measureId] = $result_value;
@@ -157,10 +157,7 @@ $rubbish= array("<br>" , "&nbsp;", "<b>","</b>", "[$]", ",", "[/$]" );
 $result_to_push = str_replace($rubbish, "", $test_modified->decodeResult());
 
 //Finding ":" helps us know if test has measures so that we update done for main test
-if(strpos($test_modified->decodeResult(), ":" ) == false){
-	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
-}
-else {
+if(strpos($test_modified->decodeResult(), ":" ) == true){
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);
 }
 

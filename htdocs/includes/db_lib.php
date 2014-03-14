@@ -1928,6 +1928,24 @@ class Measure
 		return $range_parts;
                 
 	}
+
+	public function getNumericRangeString($patient=null){
+
+		$retval = "";
+		if($patient != null)
+				$ref_range = ReferenceRange::getByAgeAndSex($patient->getAgeNumber(), $patient->sex, $this->measureId, $_SESSION['lab_config_id']);
+
+		if($ref_range == null)
+				# Fetch from default entry in 'measure' table
+				$range_parts = explode(":", $this->range);
+			else
+				$range_parts = array($ref_range->rangeLower, $ref_range->rangeUpper);
+			$retval .= "(".$range_parts[0]."-".$range_parts[1];
+			if($this->range != null && trim($this->range) != "")
+			$retval .= ")";	
+
+		return 	$retval;
+	}
 	
 	public function getUnits()
 	{
@@ -7544,7 +7562,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	$record = query_associative_one($query_string);
 	$lab_no = $record['lab_no'];
 	
-	API::updateExternalLabrequest($surr_id, $lab_no, $result.$range_measure[$measure]);
+	API::updateExternalLabrequest($surr_id, $lab_no, $result.$range_measure[$measure], $comments);
 	}
 	
 	
@@ -16806,50 +16824,6 @@ function resend_test_results($test_id){
 		query_blind($query);
 	}
         $saved_db = DbUtil::switchToGlobal();
-}
-
-function get_numeric_range_display_string($measure, $patient){
-
-    $retVal = "";
-    $range_list_array=$measure->getRangeString($patient);
-    $lower=$range_list_array[0];
-    $upper=$range_list_array[1];
-    $unit=$measure->unit;
-
-    if(stripos($unit,",")!=false) 
-    {
-        $retVal .= "(";
-        $units=explode(",",$unit);
-        $lower_parts=explode(".",$lower);
-        $upper_parts=explode(".",$upper);
-
-        if($lower_parts[0]!=0)
-            $retVal .= $lower_parts[0].$units[0];
-
-        if($lower_parts[1]!=0)
-            $retVal .= $lower_parts[1].$units[1];
-
-        $retVal .= " - ";
-
-        if($upper_parts[0]!=0)
-            $retVal .= $upper_parts[0].$units[0];
-                    
-        if($upper_parts[1]!=0)
-            $retVal .= $upper_parts[1].$units[1];
-
-        $retVal .= ")";
-
-    } 
-    else if(stripos($unit,":")!=false) 
-    {
-        $units=explode(":",$unit);
-        $retVal .= "($lower"."<sup>".$units[0]."</sup> - ";
-        $retVal .= "$upper<sup> ".$units[0]." </sup> ".$units[1].")";
-    }
-    else 
-        $retVal .= "($lower-$upper) ".$measure->unit;
-        
-    return $retVal;
 }
 
 ?>
