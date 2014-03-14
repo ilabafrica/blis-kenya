@@ -8582,9 +8582,9 @@ function get_test_types_by_site($lab_config_id="")
 		$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
 	$retval = array();
 	if($lab_config_id === "")
-		$query_string = "SELECT * FROM test_type ORDER BY name";
+		$query_string = "SELECT * FROM test_type where disabled = 0 ORDER BY name ";
 	else
-		$query_string = "SELECT * FROM test_type ORDER BY name";
+		$query_string = "SELECT * FROM test_type where disabled = 0 ORDER BY name";
 		/*
 		$query_string = 
 			"SELECT tt.* FROM test_type tt, lab_config_test_type lctt ".
@@ -11293,107 +11293,6 @@ class GlobalMeasure
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
 	}
-	
-	/*
-	public function setInterpretation($inter)
-	{
-		# Updates an existing measure entry in DB
-		$saved_db = DbUtil::switchToLabConfigRevamp();
-		$query_string = 
-			"UPDATE measure SET description='$inter'".
-			"WHERE measure_id=$this->measureId";
-		query_blind($query_string);
-		DbUtil::switchRestore($saved_db);
-	}
-	public function setNumericInterpretation($remarks_list,$id_list, $range_l_list, $range_u_list, $age_u_list, $age_l_list, $gender_list)
-	{
-		# Updates an existing measure entry in DB
-		$saved_db = DbUtil::switchToLabConfigRevamp();
-		$count = 0;
-		if($id_list[0]==-1)
-		{
-		foreach($range_l_list as $range_value)
-				{
-			//insert query
-			$query_string="INSERT INTO NUMERIC_INTERPRETATION (range_u, range_l, age_u, age_l, gender, description, measure_id) ".
-			"VALUES($range_u_list[$count],$range_l_list[$count],$age_u_list[$count],$age_l_list[$count],'$gender_list[$count]','$remarks_list[$count]',$this->measureId)";
-			query_insert_one($query_string);
-			$count++;
-				}
-		}
-		else
-		{
-		foreach($range_l_list as $range_value)
-			{
-				if($id_list[$count]!=-2)
-					{
-						if($remarks_list[$count]=="")
-							{
-						//delete
-						$query_string="DELETE FROM NUMERIC_INTERPRETATION WHERE id=$id_list[$count]";
-						query_delete($query_string);
-						}else
-							{
-							//update
-						$query_string = 
-						"UPDATE numeric_interpretation SET range_u=$range_u_list[$count], range_l=$range_l_list[$count], age_u=$age_u_list[$count], age_l=$age_l_list[$count], gender='$gender_list[$count]' , description='$remarks_list[$count]' ".
-						"WHERE id=$id_list[$count]";
-						query_update($query_string);
-						
-						}
-				}else
-					{
-					$query_string="INSERT INTO numeric_interpretation (range_u, range_l, age_u, age_l, gender, description, measure_id) ".
-			"VALUES($range_u_list[$count],$range_l_list[$count],$age_u_list[$count],$age_l_list[$count],'$gender_list[$count]','$remarks_list[$count]',$this->measureId)";
-			query_insert_one($query_string);
-				}
-		
-		$count++;
-		}
-	}
-	DbUtil::switchRestore($saved_db);
-	}
-	
-	public function getNumericInterpretation()
-	{
-	$saved_db = DbUtil::switchToLabConfigRevamp();
-		$query_string = "SELECT * FROM numeric_interpretation WHERE measure_id=$this->measureId";
-		$resultset = query_associative_all($query_string, $row_count);
-		$retval = array();
-		if($resultset!=NULL)
-			{
-			foreach($resultset as $record)
-			{
-				$range_u=$record['range_u'];
-				$range_l=$record['range_l'];
-				$age_u=$record['age_u'];
-				$age_l=$record['age_l'];
-				$gender=$record['gender'];
-				$id=$record['id'];
-				$description=$record['description'];
-				$measure_id=$record['measure_id'];
-				$retval[] =array($range_l,$range_u,$age_l,$age_u,$gender,$description,$id,$measure_id);
-			}
-			
-		}else
-			{
-		//get interpretation ka loop
-			}
-	DbUtil::switchRestore($saved_db);
-	return $retval;
-	}
-	
-	public function addToDb()
-	{
-		# Updates an existing measure entry in DB
-		$saved_db = DbUtil::switchToLabConfigRevamp();
-		$query_string = 
-			"INSERT INTO measure (name, range, unit) ".
-			"VALUES ('$this->name', '$this->range', '$this->unit')".
-		query_insert_one($query_string);
-		DbUtil::switchRestore($saved_db);
-	}
-	*/
 	
 	public function getReferenceRanges($user_id)
 	{
