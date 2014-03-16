@@ -381,52 +381,6 @@ class LabConfig
 		return $record['target_tat'];
 	}
 	
-	
-	/*
-	public function getGoalTatValue($test_type_id, $timestamp="")
-	{
-		# Returns the goal TAT value for the test on a given timestamp
-		global $DEFAULT_TARGET_TAT;
-		$saved_db = DbUtil::switchToLabConfig($this->id);
-		$query_string = "";
-		if($timestamp == "")
-		{
-			# Fetch latest entry
-			$query_string = 
-				"SELECT target_tat FROM test_type ".
-				"WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
-		}
-		else
-		{
-			# Fetch entry closest before or at the timestamp value
-			$query_string = 
-				"SELECT target_tat FROM test_type ttt ".
-				"WHERE ttt.test_type_id=$test_type_id ".
-				"AND ( ".
-					"((UNIX_TIMESTAMP('$timestamp')-UNIX_TIMESTAMP(ttt.ts)) < (".
-					"SELECT (UNIX_TIMESTAMP('$timestamp')-UNIX_TIMESTAMP(ttt2.ts)) ".
-					"FROM test_type_tat ttt2 ".
-					"WHERE ttt2.test_type_id=$test_type_id ".
-					"AND ttt2.ts <> ttt.ts ".
-					")) ".
-					"OR ( ".
-					"(SELECT COUNT(*) ".
-					"FROM test_type_tat ttt3 ".
-					"WHERE ttt3.test_type_id=$test_type_id ".
-					"AND ttt3.ts <> ttt.ts) = 0 )".
-				")";
-		}
-		$record = query_associative_one($query_string);
-		$retval = 0;
-		if($record == null)
-			$retval = $DEFAULT_TARGET_TAT;
-		else
-			$retval = round($record['tat']/24, 2);
-		DbUtil::switchRestore($saved_db);
-		return $retval;
-	}
-	*/
-	
 	public function updateGoalTatValue($test_type_id, $tat_value)
 	{	
 		# Updates goal TAT value for a single test type
@@ -2425,7 +2379,7 @@ class Patient
 	{
 	$query_string =
 			"SELECT DISTINCT patient_id FROM specimen ".
-			"WHERE date_collected BETWEEN '$date_from' AND '$date_to'";
+			"WHERE date_recvd BETWEEN '$date_from' AND '$date_to'";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = array();
 		$record_p=array();
@@ -2445,7 +2399,7 @@ class Patient
 		$emp="";
 		$query_string =
 				"SELECT DISTINCT patient_id FROM specimen , test ".
-				"WHERE date_collected BETWEEN '$date_from' AND '$date_to' ".
+				"WHERE date_recvd BETWEEN '$date_from' AND '$date_to' ".
 				"AND result!='$emp' ".
 				"AND specimen.specimen_id=test.specimen_id";
 		$resultset = query_associative_all($query_string, $row_count);
@@ -2470,7 +2424,7 @@ class Patient
 		$emp="";
 		$query_string =
 			"SELECT DISTINCT patient_id FROM specimen , test ".
-			"WHERE date_collected BETWEEN '$date_from' AND '$date_to' ".
+			"WHERE date_recvd BETWEEN '$date_from' AND '$date_to' ".
 			"AND result='$emp' ".
 			"AND specimen.specimen_id=test.specimen_id";
 		$resultset = query_associative_all($query_string, $row_count);
@@ -2596,7 +2550,7 @@ class Patient
 			"SELECT s.daily_num FROM specimen s, patient p ".
 			"WHERE s.patient_id=p.patient_id ".
 			"AND p.patient_id=$this->patientId ".
-			"ORDER BY s.date_collected DESC";
+			"ORDER BY s.date_recvd DESC";
 		$record = query_associative_one($query_string);		
 		$retval = "";
 		if($record == null || trim($record['daily_num']) == "")
@@ -4073,13 +4027,13 @@ class Test
 	public function getTestRegDate()
 	{
 		$query_string =
-		"SELECT date_collected FROM specimen ".
+		"SELECT date_recvd FROM specimen ".
 		"WHERE specimen_id = ( ".
 		"SELECT specimen_id FROM test WHERE test_id = $this->testId".
 					")";
 		//"AND result<>''";
 		$resultset = query_associative_one($query_string, $row_count);
-		$retval = $resultset['date_collected'];
+		$retval = $resultset['date_recvd'];
 		return $retval;
 	}
 	
@@ -6965,7 +6919,7 @@ function search_patients_by_dailynum($q)
 	global $con;
 	$q = mysql_real_escape_string($q, $con);
 	# Searches for patients with similar daily number
-	$query_string = "SELECT DISTINCT patient_id FROM specimen WHERE daily_num LIKE '%".$q."' ORDER BY date_collected DESC LIMIT 20";
+	$query_string = "SELECT DISTINCT patient_id FROM specimen WHERE daily_num LIKE '%".$q."' ORDER BY date_recvd DESC LIMIT 20";
 	$resultset = query_associative_all($query_string, $row_count);
 	$patient_list = array();
 	if(count($resultset) > 0)
@@ -6985,7 +6939,7 @@ function search_patients_by_dailynum_dyn($q, $cap, $counter)
         $offset = $cap * ($counter - 1);
 	$q = mysql_real_escape_string($q, $con);
 	$query_string = 
-		"SELECT DISTINCT patient_id FROM specimen WHERE daily_num LIKE '%".$q."' ORDER BY date_collected DESC LIMIT $offset,$cap";
+		"SELECT DISTINCT patient_id FROM specimen WHERE daily_num LIKE '%".$q."' ORDER BY date_recvd DESC LIMIT $offset,$cap";
 	$resultset = query_associative_all($query_string, $row_count);
         $patient_list = array();
 	if(count($resultset) > 0)
@@ -7297,19 +7251,19 @@ function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="")
 		if($test_type_id == 0)
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
+				"AND s.specimen_id=t.specimen_id ORDER BY s.date_recvd";
 		}
 		else
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE s.test_type_id=$test_type_id ".
 				"AND t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
+				"AND s.specimen_id=t.specimen_id ORDER BY s.date_recvd";
 		}
 	}
 	else
@@ -7317,21 +7271,21 @@ function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="")
 		if($test_type_id == 0)
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE t.result <> '' ".
 				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
+				"AND s.date_recvd between '$date_from' AND '$date_to' ORDER BY s.date_recvd";
 		}
 		else
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE t.test_type_id=$test_type_id ".
 				"AND t.result <> '' ".
 				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
+				"AND s.date_recvd between '$date_from' AND '$date_to' ORDER BY s.date_recvd";
 		}
 	}
 	$resultset = query_associative_all($query_string, $row_count);
@@ -7351,19 +7305,19 @@ function get_pendingtat_tests_by_type($test_type_id, $date_from="", $date_to="")
 		if($test_type_id == 0)
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
+				"AND s.specimen_id=t.specimen_id ORDER BY s.date_recvd";
 		}
 		else
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE s.test_type_id=$test_type_id ".
 				"AND t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
+				"AND s.specimen_id=t.specimen_id ORDER BY s.date_recvd";
 		}
 	}
 	else
@@ -7371,21 +7325,21 @@ function get_pendingtat_tests_by_type($test_type_id, $date_from="", $date_to="")
 		if($test_type_id == 0)
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE t.result = '' ".
 				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
+				"AND s.date_recvd between '$date_from' AND '$date_to' ORDER BY s.date_recvd";
 		}
 		else
 		{
 			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_recvd) as date_collected ".
 				"FROM test t, specimen s ".
 				"WHERE t.test_type_id=$test_type_id ".
 				"AND t.result = '' ".
 				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
+				"AND s.date_recvd between '$date_from' AND '$date_to' ORDER BY s.date_recvd";
 		}
 	}
 	$resultset = query_associative_all($query_string, $row_count);
@@ -7399,7 +7353,7 @@ function get_specimens_by_patient_id($patient_id)
 	$patient_id = mysql_real_escape_string($patient_id, $con);
 	# Returns list of specimens registered for the given patient
 	$query_string = 
-		"SELECT * FROM specimen WHERE patient_id=$patient_id ORDER BY date_collected DESC";
+		"SELECT * FROM specimen WHERE patient_id=$patient_id ORDER BY date_recvd DESC";
 	$resultset = query_associative_all($query_string, $row_count);
 	$retval = array();
 	foreach($resultset as $record)
@@ -9405,7 +9359,7 @@ function get_search_fields($lab_config_id=null)
 //NC3065
 function getDoctorNames()
 {
-	$query_string = "SELECT doctor FROM specimen WHERE date_collected >'2010-08-11'";
+	$query_string = "SELECT doctor FROM specimen WHERE date_recvd >'2010-08-11'";
 	$resultset = query_associative_all($query_string, $row_count);
 	$retval = array();
 	foreach($resultset as $record)
@@ -11781,7 +11735,7 @@ class GlobalPatient
 	{
 	$query_string =
 			"SELECT DISTINCT patient_id FROM specimen ".
-			"WHERE date_collected BETWEEN '$date_from' AND '$date_to'";
+			"WHERE date_recvd BETWEEN '$date_from' AND '$date_to'";
 		$resultset = query_associative_all($query_string, $row_count);
 		$retval = array();
 		$record_p=array();
@@ -11801,7 +11755,7 @@ class GlobalPatient
 		$emp="";
 		$query_string =
 				"SELECT DISTINCT patient_id FROM specimen , test ".
-				"WHERE date_collected BETWEEN '$date_from' AND '$date_to' ".
+				"WHERE date_recvd BETWEEN '$date_from' AND '$date_to' ".
 				"AND result!='$emp' ".
 				"AND specimen.specimen_id=test.specimen_id";
 		$resultset = query_associative_all($query_string, $row_count);
@@ -11826,7 +11780,7 @@ class GlobalPatient
 		$emp="";
 		$query_string =
 			"SELECT DISTINCT patient_id FROM specimen , test ".
-			"WHERE date_collected BETWEEN '$date_from' AND '$date_to' ".
+			"WHERE date_recvd BETWEEN '$date_from' AND '$date_to' ".
 			"AND result='$emp' ".
 			"AND specimen.specimen_id=test.specimen_id";
 		$resultset = query_associative_all($query_string, $row_count);
@@ -11867,7 +11821,7 @@ class GlobalPatient
 			"SELECT s.daily_num FROM specimen s, patient p ".
 			"WHERE s.patient_id=p.patient_id ".
 			"AND p.patient_id=$this->patientId ".
-			"ORDER BY s.date_collected DESC";
+			"ORDER BY s.date_recvd DESC";
 		$record = query_associative_one($query_string);		
 		$retval = "";
 		if($record == null || trim($record['daily_num']) == "")
@@ -14249,7 +14203,7 @@ function get_prevalence_data_per_test_per_lab_dir($test_type_id, $lab_config_id,
 						"AND p.patient_id=s.patient_id ".
 						"AND p.sex LIKE '$gender' ".
 						"AND t.specimen_id=s.specimen_id ".
-						"AND (s.date_collected BETWEEN '$date_fromp' AND '$date_top') ".
+						"AND (s.date_recvd BETWEEN '$date_fromp' AND '$date_top') ".
 						"AND  (t.result LIKE 'N,%' OR t.result LIKE 'n�gatif,%' OR t.result LIKE 'negatif,%' OR t.result LIKE 'n,%' OR t.result LIKE 'negative,%')";
 			}
 			else {
@@ -14257,7 +14211,7 @@ function get_prevalence_data_per_test_per_lab_dir($test_type_id, $lab_config_id,
 				"SELECT COUNT(*) AS count_val  FROM test t, specimen s ".
 				"WHERE t.test_type_id=$test_type_id ".
 				"AND t.specimen_id=s.specimen_id ".
-				"AND ( s.date_collected BETWEEN '$date_fromp' AND '$date_top' )".
+				"AND ( s.date_recvd BETWEEN '$date_fromp' AND '$date_top' )".
 				"AND  (result LIKE 'N,%' OR result LIKE 'n�gatif,%' OR result LIKE 'negatif,%' OR result LIKE 'n,%' OR result LIKE 'negative,%')";
 
 				}
@@ -14269,7 +14223,7 @@ function get_prevalence_data_per_test_per_lab_dir($test_type_id, $lab_config_id,
 				"WHERE t.test_type_id=$test_type_id ".
 				"AND t.specimen_id=s.specimen_id ".
 				"AND result!=''".
-				"AND ( s.date_collected BETWEEN '$date_fromp' AND '$date_top' )";
+				"AND ( s.date_recvd BETWEEN '$date_fromp' AND '$date_top' )";
 			$record = query_associative_one($query_string);
 			$count_all = $record['count_val'];
 			/*if($count_all != 0)*/
@@ -14324,7 +14278,7 @@ function get_prevalence_data_per_test_per_lab_dir22($test_type_id, $lab_config_i
 							"SELECT COUNT(*) AS count_val FROM test t, specimen s ".
 							"WHERE t.test_type_id=$test_type_id ".
 							"AND t.specimen_id=s.specimen_id ".
-							"AND ( s.date_collected BETWEEN '$date_from' AND '$date_to' ) ".
+							"AND ( s.date_recvd BETWEEN '$date_from' AND '$date_to' ) ".
 							"AND (result LIKE 'N,%' OR result LIKE 'n�gatif,%' OR result LIKE 'negatif,%' OR result LIKE 'n,%' OR result LIKE 'negative,%')";
 						$record = query_associative_one($query_string);
 						$count_negative = intval($record['count_val']);
@@ -14333,7 +14287,7 @@ function get_prevalence_data_per_test_per_lab_dir22($test_type_id, $lab_config_i
 							"WHERE t.test_type_id=$test_type_id ".
 							"AND t.specimen_id=s.specimen_id ".
 							"AND result!=''".
-							"AND ( s.date_collected BETWEEN '$date_from' AND '$date_to' )";
+							"AND ( s.date_recvd BETWEEN '$date_from' AND '$date_to' )";
 							//echo($query_string);
 						$record = query_associative_one($query_string);
 						$count_all = intval($record['count_val']);
@@ -14381,7 +14335,7 @@ function get_tat_data_per_test_per_lab_dir2($test_type_id, $lab_config_id, $date
 		# For completed tests
 		foreach($resultset as $record)
 		{
-			$date_collected = $record['date_collected'];
+			$date_collected = $record['date_recvd'];
 			$date_collected_parsed = date("Y-m-d", $date_collected);
 			$date_collected_parts = explode("-", $date_collected_parsed);
 			$month_ts = mktime(0, 0, 0, $date_collected_parts[1], 0, $date_collected_parts[0]);
@@ -14770,9 +14724,9 @@ function api_get_patient_records($lab_config, $patient_id, $date_from, $date_to,
 			"AND sp.patient_id=$patient_id ";
 
 
-			$query_string .= "AND (sp.date_collected BETWEEN '$date_from' AND '$date_to') ";
+			$query_string .= "AND (sp.date_recvd BETWEEN '$date_from' AND '$date_to') ";
 
-		$query_string .= "ORDER BY sp.date_collected DESC";
+		$query_string .= "ORDER BY sp.date_recvd DESC";
 
 	
 
@@ -14791,9 +14745,9 @@ function api_get_patient_records($lab_config, $patient_id, $date_from, $date_to,
 			"AND sp.patient_id=$patient_id ";
 
 
-			$query_string .= "AND (sp.date_collected BETWEEN '$date_from' AND '$date_to') ";
+			$query_string .= "AND (sp.date_recvd BETWEEN '$date_from' AND '$date_to') ";
 
-		$query_string .= "ORDER BY sp.date_collected DESC";		
+		$query_string .= "ORDER BY sp.date_recvd DESC";		
 
 	
 

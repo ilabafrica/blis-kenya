@@ -345,7 +345,7 @@ function processWeeklyTrends( $lab_config_id, $test_type_id, $date_from, $date_t
 						"WHERE t.test_type_id=$test_type_id ".
 						"AND t.specimen_id=s.specimen_id ".
 						"AND result!=''".
-						"AND ( s.date_collected BETWEEN '$date_from' AND '$date_to' )";
+						"AND ( s.date_recvd BETWEEN '$date_from' AND '$date_to' )";
 				$record = query_associative_one($query_string);
 				$count_all = intval($record['count_val']);
 				$testCount++;
@@ -398,7 +398,7 @@ function processWeeklyTrends( $lab_config_id, $test_type_id, $date_from, $date_t
 						"WHERE t.test_type_id=$test_type_id ".
 						"AND t.specimen_id=s.specimen_id ".
 						"AND result!=''".
-						"AND ( s.date_collected BETWEEN '$date_from' AND '$date_to' )";
+						"AND ( s.date_recvd BETWEEN '$date_from' AND '$date_to' )";
 				$record = query_associative_one($query_string);
 				$count_all = intval($record['count_val']);
 				$testCount++;

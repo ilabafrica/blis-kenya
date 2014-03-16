@@ -44,8 +44,8 @@ function get_records_to_print($lab_config, $patient_id) {
 			"AND t.specimen_id=sp.specimen_id ".
 			"AND sp.patient_id=$patient_id ";
 		if(isset($_REQUEST['yf']))
-			$query_string .= "AND (sp.date_collected BETWEEN '$date_from' AND '$date_to') ";
-		$query_string .= "ORDER BY sp.date_collected DESC";
+			$query_string .= "AND (sp.date_recvd BETWEEN '$date_from' AND '$date_to') ";
+		$query_string .= "ORDER BY sp.date_recvd DESC";
 	
 	}
 	else {
@@ -55,8 +55,8 @@ function get_records_to_print($lab_config, $patient_id) {
 			"WHERE t.specimen_id=sp.specimen_id ".
 			"AND sp.patient_id=$patient_id ";
 		if(isset($_REQUEST['yf']))
-			$query_string .= "AND (sp.date_collected BETWEEN '$date_from' AND '$date_to') ";
-		$query_string .= "ORDER BY sp.date_collected DESC";		
+			$query_string .= "AND (sp.date_recvd BETWEEN '$date_from' AND '$date_to') ";
+		$query_string .= "ORDER BY sp.date_recvd DESC";		
 	
 	}
 	

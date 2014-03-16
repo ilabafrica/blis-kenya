@@ -22,7 +22,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		"AND result LIKE '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_recvd BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
 	 
@@ -34,7 +34,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		"AND result <> '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_recvd BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
 		else
@@ -45,7 +45,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		//"AND result <> '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_recvd BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
 	$resultset = query_associative_all($query_string, $row_count);
@@ -80,10 +80,8 @@ putUILog('daily_log_specimens', $uiinfo, basename($_SERVER['REQUEST_URI'], ".php
 
 $lab_config = get_lab_config_by_id($lab_config_id);
 $test_types = get_lab_config_test_types($lab_config_id);
-
 $report_id = $REPORT_ID_ARRAY['reports_dailyspecimens.php'];
 $report_config = $lab_config->getReportConfig($report_id);
-
 $margin_list = $report_config->margins;
 for($i = 0; $i < count($margin_list); $i++)
 {
@@ -203,8 +201,10 @@ $(document).ready(function(){
 $record_list = array();
 foreach($test_types as $test_type_id)
 {
+
 	$record_list[] = get_records_to_print($lab_config, $test_type_id, $date_from, $date_to);
 }
+
 $total_tests = 0;
 foreach($record_list as $record)
 {
