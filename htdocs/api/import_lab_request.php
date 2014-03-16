@@ -28,9 +28,8 @@ if (!$length >1 || !$_POST==null){
 		 	$value_string = '';
 		 	
 		 	$json_request = (string)$value;
-		 	error_log("\n".$time_stamp.": Lab Request Recieved: ======", 3, $error_log_path);
 		 	$request_data = json_decode($json_request, true);
-
+		 	error_log("\n".$time_stamp.": Lab Request Recieved: ======".$json_request, 3, $error_log_path);
 		 	$value_string.= '(';
 		 	$value_string.= 
 		 	#labNo
@@ -88,12 +87,8 @@ if (!$length >1 || !$_POST==null){
 		 	
 		 	$LabRequest = $value_string;
 		 	
-		 	//Save all requests except waivers and exemptions
-		 	if ($request_data['receiptType'] != 'exemption' && $request_data['receiptType'] !='waiver')
-		 	{
-		 			API::save_external_lab_request($LabRequest);
-		 		
-		 	}
+		 	//Save all requests 
+		 	API::save_external_lab_request($LabRequest);
 		 } 		 
 		}
 }

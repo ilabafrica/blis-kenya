@@ -553,7 +553,7 @@ else{
 			<?php
 			//if($lab_config->hidePatientName == 0)
 			?>
-			<td style='width:200px;'><?php echo $patient->getPatientName()." (".substr($patient->sex, 0,1)." ".$patient->getAgeNumber().") "; ?></td>
+			<td style='width:200px;'><?php echo $patient->getPatientName()." (".$patient->sex." ".$patient->getAgeNumber().") "; ?></td>
 			<td style='width:100px;'><?php echo $specimen_type->getSpecimenName(); ?></td>
 			<td style='width:100px;'>
 			<?php

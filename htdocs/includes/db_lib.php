@@ -2151,7 +2151,7 @@ class Patient
 		$patient->name = $record['name'];
 		$patient->dob = $record['dob'];
 		$patient->age = $record['age'];
-		$patient->sex = $record['sex'];
+		$patient->sex = substr($record['sex'],0,1);
 		$date_parts = explode(" ", date($record['ts']));
 		$date_parts_1=explode("-",$date_parts[0]);
 		if(count($date_parts_1) > 2)
