@@ -5,12 +5,15 @@
  */
 
 function send_result_to_externalS(){
+
+//Do not commit changes to the configs
+
 #Sanitas Server Parameters
 //Live OGLZ4JDBL
 //Test 2L1JOGVWP	
 $api_key = "";
 
-//Livee http://192.168.1.10:8888/sanitas/bliss/notify?api_key=
+//Live http://192.168.1.10:8888/sanitas/bliss/notify?api_key=
 //Test  http://192.168.1.9:8080/sanitas/bliss/notify?api_key=
 $sanitas_inbound_url = "".$api_key;
 

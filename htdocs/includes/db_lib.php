@@ -7580,7 +7580,8 @@ function set_specimen_status($specimen_id, $status_code, $time_collected=null)
 		$query_string = 
 			"UPDATE `specimen` SET 
 				status_code_id=$status_code,
-				ts_collected='$time_collected'
+				date_collected='$time_collected',
+				ts_collected = '$time_collected'
 			WHERE specimen_id=$specimen_id";
 	}else{
 		$query_string =
