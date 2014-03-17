@@ -232,7 +232,7 @@ $modal_link_id = "test_edit_link_$test_id";
 
 ?>	
 <div class="modal-header">
-	<a id="<?php echo $modal_link_id; ?>" href="javascript:close_modal('<?php echo $modal_link_id; ?>');" class="close"></a>
+	<a id="<?php echo $modal_link_id; ?>" onclick="close_modal('<?php echo $modal_link_id; ?>');"  href="javascript:void(0);" class="close"></a>
 	<h4><i class="icon-pencil"></i> Results form - <?php echo $test_type->getName(); ?></h4>
 </div>
 <div class="modal-body">

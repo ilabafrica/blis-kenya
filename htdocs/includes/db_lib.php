@@ -1928,6 +1928,24 @@ class Measure
 		return $range_parts;
                 
 	}
+
+	public function getNumericRangeString($patient=null){
+
+		$retval = "";
+		if($patient != null)
+				$ref_range = ReferenceRange::getByAgeAndSex($patient->getAgeNumber(), $patient->sex, $this->measureId, $_SESSION['lab_config_id']);
+
+		if($ref_range == null)
+				# Fetch from default entry in 'measure' table
+				$range_parts = explode(":", $this->range);
+			else
+				$range_parts = array($ref_range->rangeLower, $ref_range->rangeUpper);
+			$retval .= "(".$range_parts[0]."-".$range_parts[1];
+			if($this->range != null && trim($this->range) != "")
+			$retval .= ")";	
+
+		return 	$retval;
+	}
 	
 	public function getUnits()
 	{
@@ -2133,7 +2151,7 @@ class Patient
 		$patient->name = $record['name'];
 		$patient->dob = $record['dob'];
 		$patient->age = $record['age'];
-		$patient->sex = $record['sex'];
+		$patient->sex = substr($record['sex'],0,1);
 		$date_parts = explode(" ", date($record['ts']));
 		$date_parts_1=explode("-",$date_parts[0]);
 		if(count($date_parts_1) > 2)
@@ -6130,7 +6148,7 @@ function log_access($userid , $accesstype, $username ){
 	
 	$saved_db = DbUtil::switchToGlobal();
 	$ip_address = $_SERVER['REMOTE_ADDR'];
-	$username = mysql_escape_string($username);
+	$username = mysql_real_escape_string($username);
 	$sessionid = session_id();
 	
 	$query_string = 
@@ -7507,7 +7525,7 @@ function get_test_entry($specimen_id, $test_type_id)
 	return $retval;
 }
 
-function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result, $surr_id=null)
+function add_test_result($test_id, $result_entry, $comments="", $specimen_id="", $user_id=0, $ts="", $hash_value, $measure_result, $surr_id=null, $range_measure="")
 {
 	# Adds results for a test entry
 	$curent_ts = "";
@@ -7544,7 +7562,7 @@ function add_test_result($test_id, $result_entry, $comments="", $specimen_id="",
 	$record = query_associative_one($query_string);
 	$lab_no = $record['lab_no'];
 	
-	API::updateExternalLabrequest($surr_id, $lab_no, $result);
+	API::updateExternalLabrequest($surr_id, $lab_no, $result.$range_measure[$measure], $comments);
 	}
 	
 	
@@ -8564,9 +8582,9 @@ function get_test_types_by_site($lab_config_id="")
 		$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
 	$retval = array();
 	if($lab_config_id === "")
-		$query_string = "SELECT * FROM test_type ORDER BY name";
+		$query_string = "SELECT * FROM test_type where disabled = 0 ORDER BY name ";
 	else
-		$query_string = "SELECT * FROM test_type ORDER BY name";
+		$query_string = "SELECT * FROM test_type where disabled = 0 ORDER BY name";
 		/*
 		$query_string = 
 			"SELECT tt.* FROM test_type tt, lab_config_test_type lctt ".
@@ -11275,107 +11293,6 @@ class GlobalMeasure
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
 	}
-	
-	/*
-	public function setInterpretation($inter)
-	{
-		# Updates an existing measure entry in DB
-		$saved_db = DbUtil::switchToLabConfigRevamp();
-		$query_string = 
-			"UPDATE measure SET description='$inter'".
-			"WHERE measure_id=$this->measureId";
-		query_blind($query_string);
-		DbUtil::switchRestore($saved_db);
-	}
-	public function setNumericInterpretation($remarks_list,$id_list, $range_l_list, $range_u_list, $age_u_list, $age_l_list, $gender_list)
-	{
-		# Updates an existing measure entry in DB
-		$saved_db = DbUtil::switchToLabConfigRevamp();
-		$count = 0;
-		if($id_list[0]==-1)
-		{
-		foreach($range_l_list as $range_value)
-				{
-			//insert query
-			$query_string="INSERT INTO NUMERIC_INTERPRETATION (range_u, range_l, age_u, age_l, gender, description, measure_id) ".
-			"VALUES($range_u_list[$count],$range_l_list[$count],$age_u_list[$count],$age_l_list[$count],'$gender_list[$count]','$remarks_list[$count]',$this->measureId)";
-			query_insert_one($query_string);
-			$count++;
-				}
-		}
-		else
-		{
-		foreach($range_l_list as $range_value)
-			{
-				if($id_list[$count]!=-2)
-					{
-						if($remarks_list[$count]=="")
-							{
-						//delete
-						$query_string="DELETE FROM NUMERIC_INTERPRETATION WHERE id=$id_list[$count]";
-						query_delete($query_string);
-						}else
-							{
-							//update
-						$query_string = 
-						"UPDATE numeric_interpretation SET range_u=$range_u_list[$count], range_l=$range_l_list[$count], age_u=$age_u_list[$count], age_l=$age_l_list[$count], gender='$gender_list[$count]' , description='$remarks_list[$count]' ".
-						"WHERE id=$id_list[$count]";
-						query_update($query_string);
-						
-						}
-				}else
-					{
-					$query_string="INSERT INTO numeric_interpretation (range_u, range_l, age_u, age_l, gender, description, measure_id) ".
-			"VALUES($range_u_list[$count],$range_l_list[$count],$age_u_list[$count],$age_l_list[$count],'$gender_list[$count]','$remarks_list[$count]',$this->measureId)";
-			query_insert_one($query_string);
-				}
-		
-		$count++;
-		}
-	}
-	DbUtil::switchRestore($saved_db);
-	}
-	
-	public function getNumericInterpretation()
-	{
-	$saved_db = DbUtil::switchToLabConfigRevamp();
-		$query_string = "SELECT * FROM numeric_interpretation WHERE measure_id=$this->measureId";
-		$resultset = query_associative_all($query_string, $row_count);
-		$retval = array();
-		if($resultset!=NULL)
-			{
-			foreach($resultset as $record)
-			{
-				$range_u=$record['range_u'];
-				$range_l=$record['range_l'];
-				$age_u=$record['age_u'];
-				$age_l=$record['age_l'];
-				$gender=$record['gender'];
-				$id=$record['id'];
-				$description=$record['description'];
-				$measure_id=$record['measure_id'];
-				$retval[] =array($range_l,$range_u,$age_l,$age_u,$gender,$description,$id,$measure_id);
-			}
-			
-		}else
-			{
-		//get interpretation ka loop
-			}
-	DbUtil::switchRestore($saved_db);
-	return $retval;
-	}
-	
-	public function addToDb()
-	{
-		# Updates an existing measure entry in DB
-		$saved_db = DbUtil::switchToLabConfigRevamp();
-		$query_string = 
-			"INSERT INTO measure (name, range, unit) ".
-			"VALUES ('$this->name', '$this->range', '$this->unit')".
-		query_insert_one($query_string);
-		DbUtil::switchRestore($saved_db);
-	}
-	*/
 	
 	public function getReferenceRanges($user_id)
 	{
@@ -15820,6 +15737,7 @@ class API
     public static function save_external_lab_request($LabRequest)
     {
     	# adds a new lab reqeust from external system
+    	#Edited on 12/3/14 added on duplicate update to prevent duplication
     	$saved_db = DbUtil::switchToGlobal();
     	$query_string=
     	"INSERT INTO `external_lab_request` (
@@ -15848,9 +15766,10 @@ class API
 			`comments`,
 			`provisionalDiagnosis`,
 			`system_id`)
-    	VALUES $LabRequest";
+    	VALUES $LabRequest on duplicate key update receiptNumber = VALUES(receiptNumber), receiptType = VALUES(receiptType)";
     	#insert_external_lab_request
     	query_insert_one($query_string);
+
   
     	DbUtil::switchRestore($saved_db);
     }
@@ -16791,7 +16710,7 @@ function get_test_measure_result_value($test_id, $measure_id )
 
 function resend_test_results($test_id){
 	$query = "SELECT DISTINCT labNo FROM (
-		SELECT external_lab_no labNo FROM blis_301.test WHERE test_id = '$test_id' UNION
+		SELECT external_lab_no labNo FROM test WHERE test_id = '$test_id' UNION
 		SELECT lab_no FROM test_measure WHERE test_id = '$test_id') AS labnos WHERE labNo != 0";
 
         $saved_db = DbUtil::switchToLabConfig($_SESSION['lab_config_id']);

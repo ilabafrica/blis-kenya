@@ -6,37 +6,15 @@
 
 #
 
-/*
-
-$load_time = microtime(); 
-
-$load_time = explode(' ',$load_time); 
-
-$load_time = $load_time[1] + $load_time[0]; 
-
-$page_start = $load_time; 
-
-*/
-
-
 
 include("redirect.php");
-
 include("includes/db_lib.php");
-
 include("includes/script_elems.php");
-
 include("includes/page_elems.php");
-
 include("barcode/barcode_lib.php");
-
 include("includes/user_lib.php");
 
-
-
 LangUtil::setPageId("reports");
-
-
 
 include("../users/accesslist.php");
 
@@ -2286,413 +2264,182 @@ else
         <!-------------------------------------------------------BEGIN TESTS TABLE------------------------------------------------------>
         <strong><?php echo "Test Results";  ?></strong>
         <table class='print_entry_border draggable' id='report_content_table1' style="margin-top:5px;margin-bottom:5px; width:97%;">
-
-					<thead>
-
-						<tr valign='top'>
-
-						<?php 
-
-				if($report_config->useTestName == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['TEST'];
-
-					echo "</th>";
-
-				}
-				echo "<th>"."Date(Time Registered)";
-
-					echo "</th>";
-
-				if($report_config->useComments == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
-
-				}
-
-				if($report_config->useReferredTo == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['REF_TO']."</th>";
-
-				}
-
-				if($report_config->useDoctor == 1 && $physician_same === false) {
-
-					echo "<th>".LangUtil::$generalTerms['DOCTOR']."</th>";
-
-				}
-
-				if($report_config->useMeasures == 1)
-
-					echo "<th>"."Analyte"."</th>";
-
-				if($report_config->useResults == 1)
-
-					echo "<th>".LangUtil::$generalTerms['RESULTS']."/Value"."</th>";
-
-				if($report_config->useRange == 1)
-
-					echo "<th>".LangUtil::$generalTerms['RANGE']."</th>";
-
-				if($report_config->useEntryDate == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['E_DATE']."</th>";
-
-				}
-
-				if($report_config->useRemarks == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['RESULT_COMMENTS']."</th>";
-
-				}
-
-				if($report_config->useEnteredBy == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['ENTERED_BY']."</th>";
-
-				}
-
-				if($report_config->useVerifiedBy == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['VERIFIED_BY']."</th>";
-
-				}
-
-				if($report_config->useStatus == 1 && $all_tests_completed === false) {
-
-					echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
-
-				}
-
-				
-
-				// add visualization title column
-                                if($view_viz == 1)
-                                {
-                                    echo "<th>Visualized Results</th>";
-                                }
-
-				?>
-
-				</tr>
-
-			</thead>
-
-			<tbody>
-
-			<?php
-
-			if(isset($_REQUEST['sid'])) {
-
-				# Called after result entry for a single specimen
-
-				$value = array($_REQUEST['sid'], $_REQUEST['tid']);
-
-				$record_list = array();
-
-				$record_list[] = $value;
-
-				$data_list=array();
-
-			}
-
-			foreach($record_list as $record_set) {
-
-				$value = $record_set;
-
-				$test = $value[0];
-                                
-                                if(in_array($test->specimenId, $rem_specs))
-                                    {
-                                            continue;
-                                    }
-                                
-				$specimen = $value[1];
-
-				$id=$test->testTypeId;
-
-				$clinical_data=get_clinical_data_by_id($test->testTypeId)
-
-				?>
-
-				<tr valign='top'>
-
-				<?php
-
-#				<!------------------------------------------------------->
-				if($report_config->useTestName == 1)
-
-				{
-
-					echo "<td >".get_test_name_by_id($test->testTypeId)."</td>";
-
-				}
-				$timestamp = strtotime($test->timestamp);
-				$time=date("H:i:s", $timestamp);
-				
-				echo "<td >".DateLib::mysqlToString($test->timestamp)."(".$time.")"."</td>";
-
-				if($report_config->useComments == 1)
-
-				{
-
-					echo "<td>";
-
-					echo $specimen->getComments();
-
-					echo "</td>";
-
-				}
-
-				if($report_config->useReferredTo == 1)
-
-				{
-
-					echo "<td>".$specimen->getReferredToName()."</td>";
-
-				}
-
-				if($report_config->useDoctor == 1 && $physician_same === false)
-
-				{
-
-					$doc=$specimen->getDoctor();
-
-					echo "<td>".$doc."</td>";
-
-				}
-
-				if($report_config->useMeasures == 1) {
-
-					echo "<td>";
-
-					echo $test->getMeasureList();
-
-					echo "</td>";
-
-				}
-
-				if($report_config->useResults == 1) {
-
-					echo "<td>";
-
-					if(trim($test->result) == "")
-
-						echo LangUtil::$generalTerms['PENDING_RESULTS'];
-
-					else if($report_config->useMeasures == 1)
-
-						echo $test->decodeResultWithoutMeasures();
-
-					else
-
-						echo $test->decodeResult();
-
-					echo "</td>";
-
-				}
-
-				
-
-				if($report_config->useRange == 1)
-
-				{
-
-					echo "<td>";
-
-					if($test->isPending() === true)
-
-						echo "N/A";
-
-					else
-
-					{
-
-						$test_type = TestType::getById($test->testTypeId);
-
-						$measure_list = $test_type->getMeasures();
-
-						
-
-                                                $submeasure_list = array();
-
-                $comb_measure_list = array();
-
-               // print_r($measure_list);
-
-                
-
-                foreach($measure_list as $measure)
-
-                {
-
-                    
-
-                    $submeasure_list = $measure->getSubmeasuresAsObj();
-
-                    //echo "<br>".count($submeasure_list);
-
-                    //print_r($submeasure_list);
-
-                    $submeasure_count = count($submeasure_list);
-
-                    
-
-                    if($measure->checkIfSubmeasure() == 1)
-
-                    {
-
-                        continue;
-
+                <thead>
+                    <tr valign='top'>
+                    <?php 
+                        if($report_config->useTestName == 1) {
+                            echo "<th>".LangUtil::$generalTerms['TEST']."</th>";
+                        }
+                        echo "<th>"."Date(Time Registered)</th>";
+                        if($report_config->useComments == 1) {
+                                echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
+                        }
+                        if($report_config->useReferredTo == 1) {
+                                echo "<th>".LangUtil::$generalTerms['REF_TO']."</th>";
+                        }
+                        if($report_config->useDoctor == 1 && $physician_same === false) {
+                                echo "<th>".LangUtil::$generalTerms['DOCTOR']."</th>";
+                        }
+                        if($report_config->useMeasures == 1 && $report_config->useResults == 1 && $report_config->useResults == 1){
+                                echo "<th class='test-history-range'>".LangUtil::$generalTerms['RESULTS']."/Value</th>";
+                        }else{
+                            if($report_config->useMeasures == 1)
+                                    echo "<th>"."Analyte"."</th>";
+                            if($report_config->useResults == 1)
+                                    echo "<th>".LangUtil::$generalTerms['RESULTS']."/Value"."</th>";
+                            if($report_config->useRange == 1)
+                                    echo "<th>".LangUtil::$generalTerms['RANGE']."</th>";
+                        }
+                        if($report_config->useEntryDate == 1) {
+                                echo "<th>".LangUtil::$generalTerms['E_DATE']."</th>";
+                        }
+                        if($report_config->useRemarks == 1) {
+                                echo "<th>".LangUtil::$generalTerms['RESULT_COMMENTS']."</th>";
+                        }
+                        if($report_config->useEnteredBy == 1) {
+                                echo "<th>".LangUtil::$generalTerms['ENTERED_BY']."</th>";
+                        }
+                        if($report_config->useVerifiedBy == 1) {
+                                echo "<th>".LangUtil::$generalTerms['VERIFIED_BY']."</th>";
+                        }
+                        if($report_config->useStatus == 1 && $all_tests_completed === false) {
+                                echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
+                        }
+
+                        // add visualization title column
+                        if($view_viz == 1)
+                        {
+                            echo "<th>Visualized Results</th>";
+                        }
+                    ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+
+                    if(isset($_REQUEST['sid'])) {
+                        # Called after result entry for a single specimen
+                        $value = array($_REQUEST['sid'], $_REQUEST['tid']);
+                        $record_list = array();
+                        $record_list[] = $value;
+                        $data_list=array();
                     }
 
+                    foreach($record_list as $record_set) {
+
+                        $value = $record_set;
+                        $test = $value[0];
                         
+                        if(in_array($test->specimenId, $rem_specs)) continue;
 
-                    if($submeasure_count == 0)
+                        $specimen = $value[1];
+                        $id=$test->testTypeId;
+                        $clinical_data=get_clinical_data_by_id($test->testTypeId);
+                    ?>
 
-                    {
-
-                        array_push($comb_measure_list, $measure);
-
-                    }
-
-                    else
-
-                    {
-
-                        array_push($comb_measure_list, $measure);
-
-                        foreach($submeasure_list as $submeasure)
-
-                           array_push($comb_measure_list, $submeasure); 
-
-                    }
-
-                }
-
-                $measure_list = $comb_measure_list;
-
-                                                
-
-						foreach($measure_list as $measure) {
-
-							echo "<br>";
-
-							$type=$measure->getRangeType();
-
-							if($type==Measure::$RANGE_NUMERIC) {
-
-								$range_list_array=$measure->getRangeString($patient);
-
-								$lower=$range_list_array[0];
-
-								$upper=$range_list_array[1];
-
-								$unit=$measure->unit;
-
-								if(stripos($unit,",")!=false) {	
-
-									echo "(";
-
-									$units=explode(",",$unit);
-
-									$lower_parts=explode(".",$lower);
-
-									$upper_parts=explode(".",$upper);
-
+                    <tr valign='top'>
+                    <?php
+#			<!------------------------------------------------------->
+                        if($report_config->useTestName == 1)
+                        {
+                            echo "<td >".get_test_name_by_id($test->testTypeId)."</td>";
+                        }
+                        $timestamp = strtotime($test->timestamp);
+                        $time=date("H:i:s", $timestamp);
 				
+                        echo "<td >".DateLib::mysqlToString($test->timestamp)."(".$time.")"."</td>";
+                        if($report_config->useComments == 1)
+                            echo "<td>".$specimen->getComments()."</td>";
 
-									if($lower_parts[0]!=0) {
+                        if($report_config->useReferredTo == 1)
+                            echo "<td>".$specimen->getReferredToName()."</td>";
 
-										echo $lower_parts[0];
+                        if($report_config->useDoctor == 1 && $physician_same === false)
+                            echo "<td>".$specimen->getDoctor()."</td>";
 
-										echo $units[0];
+                        //
+                        if($report_config->useMeasures == 1 && $report_config->useResults == 1 && $report_config->useResults == 1){
+                            $test_type = TestType::getById($test->testTypeId);
+                            $measure_list = $test_type->getMeasures();
+                            echo "<td class='test-history-range'>";
+                            foreach($measure_list as $measure)
+                            {
+                                $result = get_test_measure_result_value($test->testId, $measure->measureId);
+                                echo "<span>".$measure->name."</span> - $result ".$measure->unit." &nbsp; ";
+                                if($measure->getRangeType() == Measure::$RANGE_NUMERIC){
+                                   echo $measure->getNumericRangeString($patient);
+                                }
+                                echo "<br />";
+                            }
+                            echo "</td>";
+                        }else{
+                            if($report_config->useMeasures == 1) 
+                                echo "<td>".$test->getMeasureList()."</td>";
 
-									}
+                            if($report_config->useResults == 1) 
+                            {
+                                    echo "<td>";
+                                    if(trim($test->result) == "")
+                                            echo LangUtil::$generalTerms['PENDING_RESULTS'];
+                                    else if($report_config->useMeasures == 1)
+                                            echo $test->decodeResultWithoutMeasures();
+                                    else
+                                            echo $test->decodeResult();
+                                    echo "</td>";
+                            }
 
-									
+                            if($report_config->useRange == 1)
+                            {
+                                echo "<td>";
+                                if($test->isPending() === true)
+                                        echo "N/A";
+                                else
+                                {
+                                    $test_type = TestType::getById($test->testTypeId);
+                                    $measure_list = $test_type->getMeasures();
+                                    $submeasure_list = array();
 
-									if($lower_parts[1]!=0) {
+                                    $comb_measure_list = array();
+                                    foreach($measure_list as $measure)
+                                    {
+                                        $submeasure_list = $measure->getSubmeasuresAsObj();
+                                        $submeasure_count = count($submeasure_list);
+                                        if($measure->checkIfSubmeasure() == 1) continue;
+                                            
+                                        if($submeasure_count == 0)
+                                        {
+                                            array_push($comb_measure_list, $measure);
+                                        }
+                                        else
+                                        {
+                                            array_push($comb_measure_list, $measure);
+                                            foreach($submeasure_list as $submeasure)
+                                            array_push($comb_measure_list, $submeasure); 
+                                        }
+                                    }
+                                    $measure_list = $comb_measure_list;
 
-										echo $lower_parts[1];
+                                    foreach($measure_list as $measure) 
+                                    {
+                                        echo "<br>";
+                                        $type=$measure->getRangeType();
 
-										echo $units[1];
-
-									}
-
-									echo " - ";
-
-				
-
-									if($upper_parts[0]!=0) {
-
-										echo $upper_parts[0];
-
-										echo $units[0];
-
-									}
-
-									
-
-									if($upper_parts[1]!=0) {
-
-										echo $upper_parts[1];
-
-										echo $units[1];
-
-									}
-
-									echo ")";
-
-								} else if(stripos($unit,":")!=false) {
-
-									$units=explode(":",$unit);
-
-									echo "(";	
-
-									echo $lower;
-
-									?><sup><?php echo $units[0]; ?></sup> - 
-
-									<?php echo $upper;?> <sup> <?php echo $units[0]; ?> </sup>
-
-									<?php
-
-									echo " ".$units[1].")";
-
-								} else {	
-
-									echo "(";		
-
-									echo $lower; ?>-<?php echo $upper.")"; 
-
-									echo " ".$measure->unit;
-
-								}?>
-
-								&nbsp;&nbsp;	
-
-								<?php
-
-							} else {
-
-								if($measure->unit=="")
-
-									$measure->unit="-";
-
-								echo "&nbsp;&nbsp;&nbsp;". $measure->unit;
-
-							}
-
-							echo "<br>";
-
-						}
-
-					}
-
-					echo "</td>";
-
-				}
+                                        if($type==Measure::$RANGE_NUMERIC)
+                                        {
+                                            echo $measure->getNumericRangeString($patient);
+                                        } 
+                                        else 
+                                        {
+                                            if($measure->unit=="")
+                                                    $measure->unit="-";
+                                            echo "&nbsp;&nbsp;&nbsp;". $measure->unit;
+                                        }
+                                        echo "<br>";
+                                    }
+                                }
+                                echo "</td>";
+                            }
+                        }
 
 				
 

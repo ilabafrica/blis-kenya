@@ -160,7 +160,10 @@ else
                             tc.name AS category_name,
                             t.status_code_id AS status, 
                             s.ts AS sorting_time,
-                            t.patientVisitNumber AS patient_visit_number
+                            t.patientVisitNumber AS patient_visit_number,
+                            NULL AS receiptNumber,
+                            NULL AS receiptType,
+                            NULL as orderStage
                         FROM test t
                             LEFT JOIN specimen s ON t.specimen_id = s.specimen_id
                             LEFT JOIN patient p ON s.patient_id = p.patient_id
@@ -234,9 +237,9 @@ else
                                     NULL AS patient_id,
                                     NULL AS addl_id,
                                     NULL AS name,
-                                    NULL AS sex,
+                                    gender AS sex,
                                     NULL AS age,
-                                    NULL AS dob,
+                                    dateOfBirth AS dob,
                                     NULL AS created_by,
                                     NULL AS ts,
                                     NULL AS partial_dob,
@@ -270,7 +273,10 @@ else
                                     NULL AS category_name,
                                     NULL AS status,
                                     requestDate AS sorting_time,
-                                    patientVisitNumber AS patient_visit_number
+                                    patientVisitNumber AS patient_visit_number,
+                                    receiptNumber AS receiptNumber,
+                                    receiptType AS receiptType,
+                                    orderStage as orderStage
                                     FROM
                                         $GLOBAL_DB_NAME.external_lab_request
                                     WHERE
@@ -343,7 +349,7 @@ if($attrib_type == 12||$attrib_type == 13)
 }
 else{
  	
- 	$num_records = count(query_associative_all($query_string, $row_count));
+ 	$num_records = 1000;
  	//Set Pagination
  	$page = $_REQUEST['p'];
  	$url="javascript:fetch_tests('$status'";
@@ -490,7 +496,7 @@ else{
 <?php
 	$count = 1;
 	foreach($resultset as $record)
-	{
+	{  
 		$specimen = Specimen::getObject($record);
 		$patient = Patient::getObject($record);
 		$specimen_type = SpecimenType::getObject($record);
@@ -699,15 +705,27 @@ else{
 				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else if (!isset($test_status)){
-				echo 'label">Not Recieved';
-				echo '</span></td>';
-				echo '
-			<td id=actionA'.$record["external_lab_no"].' style="width:130px;" class="test-actions"><a href="javascript:load_specimen_reg('.$quote.$patient->surrogateId.$quote.',true, '.$record["external_lab_no"].');" title="Click to add lab request" class="btn mini red-stripe">
-				<i class="icon-sign-up"></i> Receive request</a>
-			</td>
-			<td id=actionB'.$record["external_lab_no"].' style="width:130px;">
-			</td>';
 
+                if($patient->getAgeNumber() >= 6 && $record['orderStage'] == "op" && $record['receiptNumber'] == "" && $record['receiptType'] == ""){
+                    echo 'label">Not Paid';
+                    echo '</span></td>';
+                    echo '
+                <td id=actionA'.$record["external_lab_no"].' style="width:130px;" class="test-actions"> 
+                </td>
+                <td id=actionB'.$record["external_lab_no"].' style="width:130px;">
+                </td>';
+
+                     } 
+                else {       
+    				echo 'label">Not Recieved';
+    				echo '</span></td>';
+    				echo '
+    			<td id=actionA'.$record["external_lab_no"].' style="width:130px;" class="test-actions"><a href="javascript:load_specimen_reg('.$quote.$patient->surrogateId.$quote.',true, '.$record["external_lab_no"].');" title="Click to add lab request" class="btn mini red-stripe">
+    				<i class="icon-sign-up"></i> Receive request</a>
+    			</td>
+    			<td id=actionB'.$record["external_lab_no"].' style="width:130px;">
+    			</td>';
+                    }
 			}	
 			else
 			{

@@ -6,8 +6,8 @@
 
 function send_result_to_externalS(){
 #Sanitas Server Parameters
-$api_key = "OGLZ4JDBL";
-$sanitas_inbound_url = "http://192.168.1.10:8888/sanitas/bliss/notify?api_key=".$api_key;
+$api_key = "";
+$sanitas_inbound_url = "http://192.168.1.9:8080/sanitas/bliss/notify?api_key=".$api_key;
 
 #MedBoss MSSQL Server Parameters
 //$server = '192.168.184.121:1432';

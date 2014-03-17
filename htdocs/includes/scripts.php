@@ -5,7 +5,6 @@
 	<!-- Load javascripts at bottom, this will reduce page load time -->
 	<?php 
 	$script_elems->enableJQuery();
-	$script_elems->enableFacebox();
 	$script_elems->enableAutoScrollTop();
 	$script_elems->enableMultiSelect();
 	//$script_elems->enablePageloadIndicator();

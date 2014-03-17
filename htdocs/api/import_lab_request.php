@@ -20,23 +20,6 @@ $error_log_path ="../logs/blis.api.error.log";
 
 $value_string = '';
 $length = count($_POST);
-function age($date){
-	$year_diff = '';
-	$time = strtotime($date);
-		
-	if(FALSE === $time){
-		return '';
-	}
-		
-	$date = date('Y-m-d', $time);
-	list($year,$month,$day) = explode("-",$date);
-	$year_diff = date("Y") - $year;
-	$month_diff = date("m") - $month;
-	$day_diff = date("d") - $day;
-	if ($day_diff < 0 || $month_diff < 0) $year_diff–;
-		
-	return $year_diff;
-}
 if (!$length >1 || !$_POST==null){
 	foreach($_POST as $key=>$value)
 	{
@@ -45,9 +28,8 @@ if (!$length >1 || !$_POST==null){
 		 	$value_string = '';
 		 	
 		 	$json_request = (string)$value;
-		 	error_log("\n".$time_stamp.": Lab Request Recieved: ======", 3, $error_log_path);
 		 	$request_data = json_decode($json_request, true);
-		 	
+		 	error_log("\n".$time_stamp.": Lab Request Recieved: ======".$json_request, 3, $error_log_path);
 		 	$value_string.= '(';
 		 	$value_string.= 
 		 	#labNo
@@ -105,25 +87,8 @@ if (!$length >1 || !$_POST==null){
 		 	
 		 	$LabRequest = $value_string;
 		 	
-		 	if ($request_data['orderStage'] == 'op' && $request_data['receiptNumber']=='')
-		 	{
-		 		//Lab request not saved for tests withough receipt number except for patients below 5 years age
-		 		$dob = new DateTime($request_data['patient']["dateOfBirth"]);
-		 		$dt = $dob->format('Y-m-d');
-		 		 
-		 		$age = age($dt);
-		 		
-		 		if(intval($age)<=5){
-		 			API::save_external_lab_request($LabRequest);
-		 		}
-		 		
-		 	}else if ($request_data['receiptType']=='insurance'){
-		 		API::save_external_lab_request($LabRequest);
-		 	}
-		 
-		 	else API::save_external_lab_request($LabRequest);
-		 	
-		 	
+		 	//Save all requests 
+		 	API::save_external_lab_request($LabRequest);
 		 } 		 
 		}
 }

@@ -542,16 +542,8 @@ function close_modal(this_element){
     var el = $('#' + this_element).closest('.modal');
     var elScroll = $('#' + this_element).closest('.modal-scrollable');
     var elBack = elScroll.next('.modal-backdrop');
-   
-    if(el.length > 0){
-        el.modal('hide');
-        if(el.hasClass('in')){
-            el.hide();
-            $('body').removeClass('modal-open');
-            elScroll.hide();
-            elBack.remove();
-        }
-    }
+   	el.empty();
+    el.modal('hide');
 }
 
 function hide_result_form(test_id)
@@ -905,9 +897,8 @@ function submit_forms(test_id)
         var form_id_list = form_id_csv.split(",");
 
         $('.result_cancel_link').hide();
-	$('.result_progress_spinner').show();
-	//var target_div_id = "fetched_specimen";
-	var target_div_id = "result_form_pane_"+test_id;
+		$('.result_progress_spinner').show();
+		var target_div_id = "result_form_pane_"+test_id;
 
 		var params = $('#test_'+test_id).formSerialize();
 		var string = params.toString();
@@ -1071,7 +1062,7 @@ function update_numeric_remarks(test_type_id, count, patient_age, patient_sex)
 	 for(var i = 0; i < count; i++)
 	 {
 	 var input_id = "measure_"+test_type_id+"_"+i;
-	 values_csv += $('#'+input_id).val()+"_";
+	 res = $('#'+input_id).val();
 	 }
 	 var url_string = "ajax/fetch_remarks.php";
 	values_csv = encodeURIComponent(values_csv);
@@ -1093,11 +1084,12 @@ function update_remarks(test_type_id, count, patient_age, patient_sex)
 	 <?php # See ajax/specimen_form_fetch.php for field names ?>
 	 var values_csv = "";
 	 var remarks_input_id = "test_"+test_type_id+"_comments";
-	 for(var i = 0; i < count; i++)
-	 {
-	 var input_id = "measure_"+test_type_id+"_"+i;
-	 values_csv += $('#'+input_id).val()+"_";
-	 }
+
+	$('input[name="result[]"]').each(function(index, element) {
+		//Getting the Ids for all results input elements
+		 elementids = $(element).attr('id');  
+		 values_csv += $('#'+elementids).val()+"_";
+	});
 	 var url_string = "ajax/fetch_remarks.php";
 	values_csv = encodeURIComponent(values_csv);
 	var data_string = "lid=<?php echo $_SESSION['lab_config_id']; ?>&ttype="+test_type_id+"&values_csv="+values_csv+"&patient_age="+patient_age+"&patient_sex="+patient_sex;
