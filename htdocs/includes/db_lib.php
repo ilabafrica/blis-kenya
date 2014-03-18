@@ -381,52 +381,6 @@ class LabConfig
 		return $record['target_tat'];
 	}
 	
-	
-	/*
-	public function getGoalTatValue($test_type_id, $timestamp="")
-	{
-		# Returns the goal TAT value for the test on a given timestamp
-		global $DEFAULT_TARGET_TAT;
-		$saved_db = DbUtil::switchToLabConfig($this->id);
-		$query_string = "";
-		if($timestamp == "")
-		{
-			# Fetch latest entry
-			$query_string = 
-				"SELECT target_tat FROM test_type ".
-				"WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
-		}
-		else
-		{
-			# Fetch entry closest before or at the timestamp value
-			$query_string = 
-				"SELECT target_tat FROM test_type ttt ".
-				"WHERE ttt.test_type_id=$test_type_id ".
-				"AND ( ".
-					"((UNIX_TIMESTAMP('$timestamp')-UNIX_TIMESTAMP(ttt.ts)) < (".
-					"SELECT (UNIX_TIMESTAMP('$timestamp')-UNIX_TIMESTAMP(ttt2.ts)) ".
-					"FROM test_type_tat ttt2 ".
-					"WHERE ttt2.test_type_id=$test_type_id ".
-					"AND ttt2.ts <> ttt.ts ".
-					")) ".
-					"OR ( ".
-					"(SELECT COUNT(*) ".
-					"FROM test_type_tat ttt3 ".
-					"WHERE ttt3.test_type_id=$test_type_id ".
-					"AND ttt3.ts <> ttt.ts) = 0 )".
-				")";
-		}
-		$record = query_associative_one($query_string);
-		$retval = 0;
-		if($record == null)
-			$retval = $DEFAULT_TARGET_TAT;
-		else
-			$retval = round($record['tat']/24, 2);
-		DbUtil::switchRestore($saved_db);
-		return $retval;
-	}
-	*/
-	
 	public function updateGoalTatValue($test_type_id, $tat_value)
 	{	
 		# Updates goal TAT value for a single test type
@@ -4079,7 +4033,7 @@ class Test
 					")";
 		//"AND result<>''";
 		$resultset = query_associative_one($query_string, $row_count);
-		$retval = $resultset['date_collected'];
+		$retval = $resultset['date_recvd'];
 		return $retval;
 	}
 	
@@ -7626,7 +7580,8 @@ function set_specimen_status($specimen_id, $status_code, $time_collected=null)
 		$query_string = 
 			"UPDATE `specimen` SET 
 				status_code_id=$status_code,
-				ts_collected='$time_collected'
+				date_collected='$time_collected',
+				ts_collected = '$time_collected'
 			WHERE specimen_id=$specimen_id";
 	}else{
 		$query_string =

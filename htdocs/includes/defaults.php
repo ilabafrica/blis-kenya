@@ -44,12 +44,12 @@ $CATALOG_TRANSLATION = false;
 # Report IDs for daily reports
 $REPORT_ID_ARRAY = array(
 	"reports_testhistory.php" => 1,
-	"reports_specimen.php" => 2,
-	"reports_print.php" => 3,
-	"reports_dailyspecimens.php" => 4,
-	"reports_dailypatients.php" => 6,
+	"reports_specimen.php" => 1,
+	"reports_print.php" => 1,
+	"reports_dailyspecimens.php" => 1,
+	"reports_dailypatients.php" => 1,
 	"worksheet.php" => 5,
-	"reports_billing_specific.php" => 7
+	"reports_billing_specific.php" => 1
 );
 
 # Default max width of the window (in pixels)
