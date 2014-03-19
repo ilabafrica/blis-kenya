@@ -10,66 +10,64 @@ LangUtil::setPageId("results_entry");
 
 $test_id = $_REQUEST['test_id'];
 $parent_test_id = $_REQUEST['parent_test_id'];
-$test_name = get_test_name_by_id($test_id);
-$test = Test::getById($test_id);
-$test_type = TestType::getById($test->testTypeId);
 $specimen_id = $_REQUEST['specimen_id'];
-$specimen = Specimen::getById($specimen_id);
-$patient = Patient::getById($specimen->patientId);
 $comment = $_REQUEST['comments'];
 $comment_1=$_REQUEST['comments_1'];
 $dd_to=$_REQUEST['dd_to'];
 $mm_to=$_REQUEST['mm_to'];
 $yyyy_to=$_REQUEST['yyyy_to'];
 
+$test_name = get_test_name_by_id($test_id);
+$test = Test::getById($test_id);
+$test_type = TestType::getById($test->testTypeId);
+$specimen = Specimen::getById($specimen_id);
+$patient = Patient::getById($specimen->patientId);
+
 if($comment!=="" && $comment_1!="")
 {
-$comments=$comment." , " . $comment_1;
+    $comments=$comment." , " . $comment_1;
 }
-else
-if($comment==""&& $comment_1!="")
+else if($comment==""&& $comment_1!="")
 {
-$comments=$comment_1;
+    $comments=$comment_1;
 }
-else
-if($comment!=""&& $comment_1=="")
+else if($comment!=""&& $comment_1=="")
 {
-$comments=$comment;
+    $comments=$comment;
 }
 
 $result_values = $_REQUEST['result'];
 $measure_count = 0;
 $measure_list = $test_type->getMeasures();
 
-$submeasure_list = array();
-                $comb_measure_list = array();
-               // print_r($measure_list);
-                
-                foreach($measure_list as $measure)
-                {
-                    
-                    $submeasure_list = $measure->getSubmeasuresAsObj();
-                    //echo "<br>".count($submeasure_list);
-                    //print_r($submeasure_list);
-                    $submeasure_count = count($submeasure_list);
-                    
-                    if($measure->checkIfSubmeasure() == 1)
-                    {
-                        continue;
-                    }
-                        
-                    if($submeasure_count == 0)
-                    {
-                        array_push($comb_measure_list, $measure);
-                    }
-                    else
-                    {
-                        array_push($comb_measure_list, $measure);
-                        foreach($submeasure_list as $submeasure)
-                           array_push($comb_measure_list, $submeasure); 
-                    }
-                }
-                $measure_list = $comb_measure_list;
+    $submeasure_list = array();
+    $comb_measure_list = array();
+    
+    foreach($measure_list as $measure)
+    {
+        
+        $submeasure_list = $measure->getSubmeasuresAsObj();
+        //echo "<br>".count($submeasure_list);
+        //print_r($submeasure_list);
+        $submeasure_count = count($submeasure_list);
+        
+        if($measure->checkIfSubmeasure() == 1)
+        {
+            continue;
+        }
+            
+        if($submeasure_count == 0)
+        {
+            array_push($comb_measure_list, $measure);
+        }
+        else
+        {
+            array_push($comb_measure_list, $measure);
+            foreach($submeasure_list as $submeasure)
+                array_push($comb_measure_list, $submeasure); 
+        }
+    }
+    $measure_list = $comb_measure_list;
 
 foreach($measure_list as $measure)
 {
@@ -82,9 +80,8 @@ foreach($measure_list as $measure)
 		$value_string = "";
 		foreach($autocomplete_selected_list as $value)
 		{
-			if(trim($value) == "")
-				continue;
-				$value_string .= $value."_";
+			if(trim($value) == "")continue;
+                        $value_string .= $value."_";
 		}
                 if( substr($value_string, -1) == "_")
                         $value_string = substr($value_string, 0, -1);
@@ -99,6 +96,7 @@ foreach($measure_list as $measure)
 	}
 	$measure_count++;
 }
+
 foreach($result_values as $result_val)
 {
 	if(trim($result_val) == "")
@@ -126,10 +124,8 @@ $test_list = get_tests_by_specimen_id($specimen_id);
 
 $test_modified = Test::getById($test_id);
 
-$result_to_push = str_replace("<br>","",$test_modified->decodeResult());
+$result_to_push = strip_tags($test_modified->decodeResult());
 $result_to_push = str_replace("&nbsp;","",$result_to_push);
-$result_to_push = str_replace("<b>","",$result_to_push);
-$result_to_push = str_replace("</b>","",$result_to_push);
 
 API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, $result_to_push, $comments);
 # Show confirmation with details.
@@ -181,11 +177,7 @@ foreach($test_list as $test)
 # Check if all other tests on the same accession are complete.
 # If yes, show link to patient report
 $session_num = $specimen->sessionNum;
-if(trim($session_num) == "" || $session_num == null)
-{
-	// Do nothing
-}
-else
+if(!(trim($session_num) == "" || $session_num == null))
 {
 	$specimen_list = search_specimens_by_session_exact($session_num);
 	$all_done = true;
@@ -206,7 +198,7 @@ else
 		echo "<br><br>";
 		echo LangUtil::$pageTerms['MSG_RESULTSUBMITTEDALL'];
 		echo "<br>";
-		$original_specimen = Specimen::getById($_REQUEST['specimen_id']);
+		$original_specimen = Specimen::getById($specimen_id);
 		$today = $original_specimen->dateRecvd;
 		$today_parts = explode("-", $today);
 		$url_string = "reports_testhistory.php?patient_id=".$patient->patientId."&location=".$_SESSION['lab_config_id']."&yf=".$today_parts[0]."&mf=".$today_parts[1]."&df=".$today_parts[2]."&yt=".$today_parts[0]."&mt=".$today_parts[1]."&dt=".$today_parts[2]."&ip=0";

@@ -35,18 +35,16 @@ foreach ($lab_numbers as $lab_no){
 	
 	$test = Test::getByExternalLabno($lab_request_no);
 	$specimen_id = $test->specimenId;
-	$specimen = get_specimen_by_id($specimen_id);
-	$patient = get_patient_by_id($specimen->patientId);
+	$specimen = Specimen::getById($specimen_id);
+	$patient = Patient::getById($specimen->patientId);
 	$comments = $test->comments;
 	if($comments==null or $comments==''){
 		$comments = 'No Comments';
 	}
 	
 	#Test Result (Strip unecessary characters)
-	$result = str_replace("<br>","",$test->decodeResult());
+	$result = strip_tags($test->decodeResult());
 	$result = str_replace("&nbsp;","",$result);
-	$result = str_replace("<b>","",$result);
-	$result = str_replace("</b>","",$result);
 	#Time Stamp
 	$time_stamp = date("Y-m-d H:i:s");
 	#user
@@ -86,35 +84,37 @@ foreach ($lab_numbers as $lab_no){
 				
 		}
 	}
-	else if ($system_id == "medboss"){
+	else if ($system_id == "medboss")
+	{
 		
 		$link = mssql_connect($server, $username, $password);
 		
 		if (!$link)
 		{
 			error_log("\n".$time_stamp.": MSSQL Connection Error: ======>".mssql_get_last_message(), 3, $error_log_path);
-		
 		}
 		
 		if (!mssql_select_db('[Kapsabet]', $link)){
-			
 			error_log("\n".$time_stamp.": MSSQL Database Selection Error: ======>".mssql_get_last_message(), 3, $error_log_path);
-		
 		}
 		$lab_request_no = intval($lab_request_no);
-		$query = mssql_query("INSERT INTO 
-				BlissLabResults (RequestID,OfferedBy,DateOffered, TimeOffered, TestResults) 
-				VALUES ('$lab_request_no','$user_name','$time_stamp','$time_stamp','$result_ent')
-				");
-		
-		if (!$query) {
-			
-			error_log("\n".$time_stamp.": MSSQL Query Error: ======>".mssql_get_last_message(), 3, $error_log_path);
-			
-		}else {
-			
-			API::updateExternalLabRequestSentStatus($lab_request_no, 1);
 
+		$edit_query = mssql_query("SELECT RequestID FROM BlissLabResults WHERE RequestID = '$lab_request_no'");
+
+		if($row = mssql_fetch_assoc($edit_query)){
+                    $query = mssql_query("UPDATE BlissLabResults 
+                        SET OfferedBy = '$user_name', DateOffered = '$time_stamp', TimeOffered = '$time_stamp', TestResults = '$result_ent' 
+                        WHERE RequestID = '$lab_request_no'");
+		}else{
+                    $query = mssql_query("INSERT INTO 
+                                BlissLabResults (RequestID, OfferedBy, DateOffered, TimeOffered, TestResults) 
+                                VALUES ('$lab_request_no','$user_name','$time_stamp','$time_stamp','$result_ent')");
+		}
+
+		if (!$query) {
+			error_log("\n".$time_stamp.": MSSQL Query Error: ======>".mssql_get_last_message(), 3, $error_log_path);
+		}else {
+			API::updateExternalLabRequestSentStatus($lab_request_no, 1);
 		}
 		mssql_close($link);
 	}

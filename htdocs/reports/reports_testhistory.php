@@ -1397,7 +1397,7 @@ if(file_exists($logo_path1) === true)
 
 	?>
 
-	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px'></src>
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Kapsabet District Hospital" height='140px'></src>
 
 	<?php
 
@@ -1408,9 +1408,9 @@ else if(file_exists($logo_path) === true)
 {
 
 ?>
-<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:left;' width='140px'></src>
+<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Kapsabet District Hospital" height='140px' style='float:left;' width='140px'></src>
 
-	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right; padding-right:10px;' width='140px'></src>
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Kapsabet District Hospital" height='140px' style='float:right; padding-right:10px;' width='140px'></src>
 
 	<?php
 
@@ -1773,7 +1773,7 @@ else
 
 					<td><strong><?php echo "Requesting Department/Facility"; ?></strong></td>
 
-					<td><?php $patient_type=$patient->getPatientType(); if($patient_type!=null||$patient_type!=""){ echo $patient->getPatientFacility();}else{echo "Bungoma District Hospital";} ?></td>
+					<td><?php $patient_type=$patient->getPatientType(); if($patient_type!=null||$patient_type!=""){ echo $patient->getPatientFacility();}else{echo "Kapsabet District Hospital";} ?></td>
 
 				</tr>
 			<?php
