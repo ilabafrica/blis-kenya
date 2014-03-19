@@ -17,7 +17,6 @@ if(!$is_modal){
 }
 LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
-include("includes/scripts.php");
 ?>
 <?php if(!$is_modal){?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       

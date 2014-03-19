@@ -380,6 +380,21 @@ function continue_fetch_patients()
 	);
 }
 
+function mark_as_pending(sid)
+{
+    url = "ajax/specimen_change_status.php?sid="+sid;
+    $.ajax({
+        type: "POST",
+        url: url, async: false,
+        success: function(data) {
+        	$('#actionw'+sid).addClass('label label-important');
+        	$('#actionw'+sid).html('Pending');
+			$('#actionq'+sid).html('<span class="label label-important">Pending</span>');
+        }
+    });
+}
+
+
 function right_load(destn_div)
 {	
 	$('.reg_subdiv').hide();

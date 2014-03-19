@@ -232,42 +232,6 @@ if($test_id == null)
 	echo "<span class='error_string'>".LangUtil::$generalTerms['SPECIMEN_ID']."  ".$test_id." ".LangUtil::$generalTerms['MSG_NOTFOUND'].".</span>";
 	return;
 }
-// if($specimen->statusCodeId == Specimen::$STATUS_DONE)
-// {
-// 	?>
-	<!-- <div class='sidetip_nopos' style='width:350px;'--> 
-	<?php 
-// 	echo LangUtil::$pageTerms['MSG_ALREADYENTERED']."- ";
-// 	if($_SESSION['sid'] != 0)
-// 	{
-// 		echo "<br>";
-// 		echo LangUtil::$generalTerms['SPECIMEN_ID'].": ";
-// 		echo $specimen->getAuxId();
-// 	}
-// 	echo "<br>";
-// 	echo LangUtil::$generalTerms['SPECIMEN_TYPE'].": ".get_specimen_name_by_id($specimen->specimenTypeId);
-// 	echo "<br>";
-// 	//if($_SESSION['pnamehide'] == 0)
-// 	if($_SESSION['user_level'] == $LIS_TECH_SHOWPNAME)
-// 	{
-// 		echo LangUtil::$generalTerms['PATIENT'].": $patient->name ($patient->sex ".$patient->getAgeNumber().") <br>";
-// 	}
-// 	else
-// 	{
-// 		echo LangUtil::$generalTerms['GENDER']."/".LangUtil::$generalTerms['AGE'].": $patient->sex /".$patient->getAgeNumber()."<br>";
-// 	}
-// 	?>
-<!--<br><a href='specimen_info.php?sid=<?php echo $specimen->specimenId; ?>'> <?php echo LangUtil::$generalTerms['DETAILS']; ?> &raquo;</a>
- 	</div> -->
-	<?php
-// 	return;
-// }
-
-# Print HTML results form
-//$test_list = get_tests_by_specimen_id($specimen->specimenId);
-//$patient = get_patient_by_id($specimen->patientId);
-?>
-<?php 
 $test_type = get_test_type_by_id($test_type_id);
 ?>	
 <div class="modal-header">
@@ -321,7 +285,7 @@ $test_type = get_test_type_by_id($test_type_id);
 </div>
 <div class="modal-footer">
 	<input type='button' class="btn" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>);'></input>
-	<a href='javascript:hide_test_result_form(<?php echo $test_id ?>);' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+	<a href='javascript:remove(<?php echo $test_id ?>);' onclick="" class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>

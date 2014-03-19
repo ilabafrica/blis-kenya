@@ -225,12 +225,12 @@ $specimen_id_list_rj = array_values(array_unique($specimen_id_list_rj));
                         ?>
                         </td>
                         <td>
-                        <span class="label"> Not Collected</span>
+                        <span id="actionw<?php echo $specimen->specimenId; ?>" class="label"> Not Collected</span>
                         </td>
                         
                         <?php if($attrib_type == 10)
                         {?>
-                        <td style='width:130px;'><a href="specimen_acceptance.php?sid=<?php echo $specimen->specimenId; ?>&pid=<?php echo $patient->patientId; ?>" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+                        <td id="actionq<?php echo $specimen->specimenId; ?>" style='width:130px;'><a href="javascript:void(0)" onclick="mark_as_pending(<?php echo $specimen->specimenId; ?>)" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
                         <a href="javascript:load_specimen_rejection(<?php echo $specimen->specimenId; ?>)" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
                         </td>
                         <td style="width:130px;"><a href="javascript:specimen_info(<?php echo $specimen->specimenId; ?>);" title="View test details" class="btn mini">

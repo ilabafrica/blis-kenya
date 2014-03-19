@@ -2640,7 +2640,6 @@ class Specimen
 	public static $STATUS_REPORTED = 4;
 	public static $STATUS_RETURNED = 5;
 	public static $STATUS_REJECTED = 6;
-	public static $STATUS_STARTED = 7;
 	public static $STATUS_NOT_COLLECTED = 8;
 	public static $STATUS_VERIFIED = 9;
 
@@ -2772,9 +2771,6 @@ class Specimen
 				break;
 			case Specimen::$STATUS_NOT_COLLECTED:
 				return LangUtil::$generalTerms['NOT_COLLECTED'];
-				break;
-			case Specimen::$STATUS_STARTED:
-				return LangUtil::$generalTerms['STARTED'];
 				break;
 			case Specimen::$STATUS_TOVERIFY:
 				return LangUtil::$generalTerms['TO_VERIFY'];
@@ -3160,19 +3156,19 @@ class Test
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
 		$start_time = new DateTime($specimen->ts_collected);
-		error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
+		//error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
-		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+		return $interval->format('%d days, %H hrs, %I mins');
 	}
 	
 	public function getTestTurnaroundTime()
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
-		$start_time = new DateTime($this->ts_started);
+		$start_time = new DateTime($specimen->dateRecvd);
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
-		return $interval->format('%d days, %H hrs, %I mins, %S secs');
+		return $interval->format('%d days, %H hrs, %I mins');
 	}
     public function getLabSectionByTest()
     {

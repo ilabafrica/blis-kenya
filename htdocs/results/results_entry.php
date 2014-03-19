@@ -40,12 +40,12 @@ $test_categories = TestCategory::geAllTestCategories($lab_config_id);
 		<div class="portlet-title">
 			<h4><i class="icon-reorder"></i><?php echo "Test Queue - ";?><span class="section-name">All Sections</span></h4>
 			<div class="tools">
-				<a href="javascript:fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);" class="reload"></a>
+				<a href="javascript:void(0)" onclick="javascript:fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);" class="reload"></a>
 				<a href="javascript:;" class="collapse"></a>
 			</div>
 		</div>
 		<div class="portlet-body">
-			<div class="scroller" data-height=900px" data-always-visible="0">
+			<div class="scroller" data-height="900px" data-always-visible="0">
 				<div id='fetched_specimens_entry'>
 				<!--TESTS LOADED IN THIS DIV-->
 				</div>
@@ -373,7 +373,6 @@ if($SHOW_REPORT_RESULTS === true)
 $script_elems->enableJQueryForm();
 $script_elems->enableJQueryValidate();
 $script_elems->enableTableSorter();
-$script_elems->enableLatencyRecord();
 $script_elems->enableTokenInput();
 ?>
 <script type='text/javascript'>
@@ -512,21 +511,10 @@ function hide_worksheet_link()
 	document.getElementById("worksheet_link").innerHTML = "";
 }
 
-function hide_test_result_form(test_id)
-{
-	cancel_show(test_id);
-}
-
 function hide_test_result_form_confirmed(test_id)
 {	
 	cancel_hide();
 	$('#result_form_pane_'+test_id).modal('hide');
-}
-
-function cancel_show(test_id){
-	$('#yes').html('');
-	$('#yes').append( "<button type='button' class='btn btn-primary' onclick='javascript:hide_test_result_form_confirmed("+test_id+")'>Yes</button>");
-	$('#cancel').modal('show');
 }
 
 function cancel_hide(){
@@ -589,12 +577,10 @@ function fetch_tests(status,page,search_term)
 			enableAdvancedDatePicker(date_from, date_to);
 			if (status==<?php echo Specimen::$STATUS_PENDING;?>){
 				$('select', '#status')[0].selectedIndex = 1;
-			}else if (status==<?php echo Specimen::$STATUS_STARTED;?>){
-				$('select', '#status')[0].selectedIndex = 2;
 			}else if (status==<?php echo Specimen::$STATUS_TOVERIFY;?>){
-				$('select', '#status')[0].selectedIndex = 3;
+				$('select', '#status')[0].selectedIndex = 2;
 			}else if (status==<?php echo Specimen::$STATUS_VERIFIED;?>){
-				$('select', '#status')[0].selectedIndex = 4;
+				$('select', '#status')[0].selectedIndex = 3;
 			}
 			$(".chosen").chosen();
 			$("#search_tests").val(search_term);
@@ -629,50 +615,20 @@ function accept_specimen(specimen_id,test_id)
 		{sid: specimen_id}, 
 		function(result) 
 		{
-			$('#span'+test_id).addClass('label-important');
-			$('#span'+test_id).html('Pending');
-			actions = result.split('%');
-			$('#actionA'+test_id).html('<td id=actionA'+test_id+' style="width:100px;">'+
-					'<a href="javascript:start_test('+test_id+');"'+ 
-					'title="Click to begin testing this Specimen" class="btn red mini">'+
-					'<i class="icon-ok"></i> Start Test</a></td>');
-			$('#actionB'+test_id).html('<td id=actionB'+test_id+' style="width:100px;">'+
-					'<a href="javascript:refer_specimen('+test_id+');"'+ 
-					'title="Click to begin testing this Specimen" class="btn inverse mini">'+
-					'<i class="icon-ok"></i>Refer</a></td>');
-			App.unblockUI(el);
-		}
-	);
-		
-}
-function start_test(test_id)
-{
-	var r=confirm("Start test?");
-	if (r==true)
-   	{
-		var el = jQuery('.portlet .tools a.reload').parents(".portlet");
-		App.blockUI(el);
-		//Mark test as cancelled
-  		var url = 'ajax/result_entry_tests.php';
-  		$.post(url, 
-		{a: test_id, t: 12}, 
-		function(result) 
-		{
-			$('#span'+test_id).removeClass('label-important');
 			$('#span'+test_id).addClass('label-warning');
-			$('#span'+test_id).html('Started');
-			actions = result.split('%');
-			$('#actionA'+test_id).html(actions[0]);
-			$('#actionB'+test_id).html(actions[1]);
+			$('#span'+test_id).html('Pending');
+			$('#actionA'+test_id).html('<td id=actionA'+test_id+' style="width:100px;">'+
+					'<a href="javascript:fetch_test_result_form('+test_id+');"'+ 
+					'title="Click to begin testing this Specimen" class="btn red mini">'+
+					'<i class="icon-pencil"></i> Enter results</a></td>');
+			$('#actionB'+test_id).html('<td id=actionB'+test_id+' style="width:100px;">'+
+					'<a href="javascript:specimen_info('+specimen_id+');"'+ 
+					'title="View specimen details" class="btn mini">'+
+					'<i class="icon-search"></i>View Details</a></td>');
 			App.unblockUI(el);
 		}
 	);
 		
-  	}
-	else
-  	{
-  		//Cancel Starting test
-  	}
 }
 
 function fetch_test_result_form(test_id)
@@ -741,7 +697,7 @@ function specimen_info(specimen_id)
 
 function remove(test_id){
 	var target_div = "result_form_pane_"+test_id;
-	$("#test_"+test_id).remove();
+	$('#'+target_div).empty();
 	$('#'+target_div).modal('hide'); 
 	
 }
@@ -808,8 +764,6 @@ function submit_forms(test_id)
 	var form_id_list = form_id_csv.split(",");
 	$('.result_cancel_link').hide();
 	$('.result_progress_spinner').show();
-	//var target_div_id = "fetched_specimen";
-	var target_div_id = "result_form_pane_"+test_id;
 	for(var i = 0; i < form_id_list.length; i++)
 	{
 		if($('#'+form_id_list[i]+'_skip').is(':checked'))
@@ -827,20 +781,13 @@ function submit_forms(test_id)
 			url: "ajax/result_add.php",
 			data: params,
 			success: function(msg) {
-				//$("#test_"+actual_test_id)[0].reset();
-				$("#test_"+actual_test_id).remove();
-				$("#"+target_div_id).html(msg);
-				$("tr#"+test_id).remove();
-
-
-
+				remove(actual_test_id);
 				$('#span'+actual_test_id).removeClass('label-warning');
 				$('#span'+actual_test_id).addClass('label-info');
 				$('#span'+actual_test_id).html('Tested');
-				actions = result.split('%');
-				$('#actionA'+test_id).html(actions[0]);
-				$('#actionB'+test_id).html(actions[1]);		
+				$('#action'+test_id).html('<a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"> <i class="icon-edit"></i> Verify Results</a>');
 			}
+
 		});	
 	}
 	push_results_to_external_system();

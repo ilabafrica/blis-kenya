@@ -114,17 +114,6 @@ $(document).ready(function(){
              barHeight:<?php echo $bar_height; ?>, 
              fontSize:<?php echo $font_size; ?>, output:'bmp'});            
 });
-function mark_as_pending()
-{
-    url = "ajax/specimen_change_status.php?sid=<?php echo $sid?>";
-    $.ajax({
-        type: "POST",
-        url: url, async: false,
-        success: function(data) {
-             console.log("Sent");
-        }
-    });
-}
 function toggle_profile_divs()
 {
     $('#profile_div').toggle();

@@ -3364,7 +3364,7 @@ class PageElems
 					<th><?php echo LangUtil::$generalTerms['RESULT_COMMENTS']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['ENTERED_BY']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['VERIFIED_BY']; ?></th>
-					<th><?php echo "Turnaround time"; ?></th>
+					<th><?php echo "TAT"; ?></th>
 					
 				</tr>
 			</thead>
@@ -3408,15 +3408,12 @@ class PageElems
 				<?php echo get_username_by_id($test->userId); ?>
 			</td>
 			<td>
-				<?php echo $test->getSpecimenTurnaroundTime(); ?>
-			</td>
-			<td>
-				<?php echo $test->getTestTurnaroundTime(); ?>
-			</td>
-			<td>
 				<span id="verifydby<?php echo $test->testId;?>" class="label label-info">
 				<?php echo $test->getVerifiedBy(); ?>
 				</span>
+			</td>
+			<td>
+				<?php echo $test->getTestTurnaroundTime(); ?>
 			</td>
 			<td>
 				<?php if($is_modal &&  $user->canverify == 1 && $test->userId != $user->userId ){?> 

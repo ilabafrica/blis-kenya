@@ -5,7 +5,6 @@
 	<!-- Load javascripts at bottom, this will reduce page load time -->
 	<?php 
 	$script_elems->enableJQuery();
-	$script_elems->enableFacebox();
 	$script_elems->enableAutoScrollTop();
 	$script_elems->enableMultiSelect();
 	$script_elems->enablePageloadIndicator();
@@ -198,18 +197,15 @@ function handleDataTable(table_id) {
 	$("#status").each( function ( i ) {
 		var test_status = new Array();
 		test_status[0] = "Pending";
-		test_status[1] = "Started";
-		test_status[2] = "Tested";
-		test_status[3] = "Tested & Verified";
+		test_status[1] = "Tested";
+		test_status[2] = "Tested & Verified";
 		this.innerHTML = fnCreateSelect( test_status );
 		$('select', this).change( function () {
 			//oTable.fnFilter($(this).val() , 6);
 			var val = $(this).val();
 			if(val=="Pending"){
 				fetch_tests(<?php echo Specimen::$STATUS_PENDING?>);
-			} else if (val=="Started"){
-				fetch_tests(<?php echo Specimen::$STATUS_STARTED?>);
-			}else if (val=="Tested"){
+			} else if (val=="Tested"){
 				fetch_tests(<?php echo Specimen::$STATUS_TOVERIFY?>);
 			}else if (val=="Tested & Verified"){
 				fetch_tests(<?php echo Specimen::$STATUS_VERIFIED?>);
