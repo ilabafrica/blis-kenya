@@ -3398,7 +3398,7 @@ class PageElems
 				if($test->isPending())
 					echo LangUtil::$generalTerms['PENDING_RESULTS'];
 				else
-					echo $test->decodeResult();
+					echo strip_tags($test->decodeResult());
 				?>
 			</td>
 			<td>

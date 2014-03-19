@@ -3385,3 +3385,8 @@ Styler Panel
 .styler-panel .colors .color-light {
   background-color: #fff;
 }
+
+.modal {
+    width:auto;
+    right:100px;
+}

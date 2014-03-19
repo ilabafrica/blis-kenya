@@ -195,7 +195,7 @@ if($attrib_type == 12||$attrib_type == 13)
 	$resultset = query_update($query_string);
 	switch ($attrib_type){
 	case 12:
-		echo '<a href="javascript:fetch_test_result_form('.$quote.$attrib_value.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini"><i class="icon-pencil"></i>Enter Results</a>%
+		echo '<a href="javascript:fetch_test_result_form('.$quote.$attrib_value.$quote.',0);" title="Click to Enter Results for this Specimen" class="btn yellow mini"><i class="icon-pencil"></i>Enter Results</a>%
 	          <a href="javascript:fetch_specimen2('.$quote.$attrib_value.$quote.');" title="View specimen details" class="btn mini"><i class="icon-search"></i> View Details</a>';
 		return;
 	break;
@@ -458,10 +458,13 @@ else{
 				echo 'label-info">Tested';
 				echo '</span></td>';
 				echo '
-			<td style="width:130px;"><a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn blue mini">
-				<i class="icon-edit"></i> Verify Results</a>
+			<td style="width:130px;">
+                            <a href="javascript:view_test_result('.$quote.$test->testId.$quote.');" title="Click to view and verify results of this Specimen" class="btn blue mini">
+                                <i class="icon-edit"></i> Verify Results</a>
+                            <a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.',1);" title="Click to edit test results of this Specimen" class="btn blue mini">
+                                <i class="icon-edit"></i> Edit Results</a>
 			</td>
-			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
+			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$test->testId.$quote.');" title="View specimen details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else

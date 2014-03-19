@@ -631,7 +631,7 @@ function accept_specimen(specimen_id,test_id)
 		
 }
 
-function fetch_test_result_form(test_id)
+function fetch_test_result_form(test_id, edit_flag)
 {
 	var el = jQuery('.portlet .tools a.reload').parents(".portlet");
 	App.blockUI(el);
@@ -642,7 +642,7 @@ function fetch_test_result_form(test_id)
 	$('.result_form_pane').html("");
 	var target_div = "result_form_pane_"+test_id;
 	$("#"+target_div).load(url, 
-		{tid: test_id , page_id:pg}, 
+		{tid: test_id , page_id:pg, ef: edit_flag}, 
 		function() 
 		{
 			$('#'+target_div).modal('show');
