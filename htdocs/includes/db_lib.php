@@ -6065,7 +6065,7 @@ function log_access($userid , $accesstype, $username ){
 	
 	$saved_db = DbUtil::switchToGlobal();
 	$ip_address = $_SERVER['REMOTE_ADDR'];
-	$username = mysql_escape_string($username);
+	$username = mysql_real_escape_string($username);
 	$sessionid = session_id();
 	
 	$query_string = 

@@ -43,13 +43,10 @@ Remarks
 Entered by
 </th>
 <th>
-Specimen TT
-</th>
-<th>
-Test TT
-</th>
-<th>
 Verified by
+</th>
+<th>
+TAT
 </th>
 <th>
 </th>

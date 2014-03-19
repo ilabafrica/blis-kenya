@@ -785,7 +785,7 @@ function submit_forms(test_id)
 				$('#span'+actual_test_id).removeClass('label-warning');
 				$('#span'+actual_test_id).addClass('label-info');
 				$('#span'+actual_test_id).html('Tested');
-				$('#action'+test_id).html('<a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"> <i class="icon-edit"></i> Verify Results</a>');
+				$('#action'+test_id).html('<a href="javascript:void(0);" onclick="view_test_result('+test_id+')" title="Click to view and verify results of this Specimen" class="btn blue mini"> <i class="icon-edit"></i> Verify Results</a> <a href="javascript:void(0)" onclick="fetch_test_result_form('+test_id+',1)" title="Click to edit test results of this Specimen" class="btn blue mini"><i class="icon-edit"></i> Edit Results</a>');
 			}
 
 		});	

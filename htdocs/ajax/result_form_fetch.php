@@ -23,7 +23,6 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 	<input type='hidden' name='test_id' value='<?php echo $test->testId; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
 	<input type='hidden' name='parent_test_id' value='<?php echo $test_type->parent_test_type_id; ?>'></input>   
-	<label>Edit FLAG: <?php echo $edit_flag; ?></label>
 	<?php
 	# Fetch all measures for this test
 	$measure_list = $test_type->getMeasures();
