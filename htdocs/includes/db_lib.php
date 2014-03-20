@@ -15949,7 +15949,7 @@ class API
     public static function getAllLabRequestFromView(){
         #gets lab request from external system view/table
         $retval = array();
-        $server = '192.168.6.4:1433';
+        $server = '192.168.1.101:1433';
         //$server = '192.168.184.121:1432';
         $dbuser = 'kapsabetadmin';
         $dbpass = 'kapsabet';
@@ -15988,7 +15988,7 @@ class API
     public static function getLabRequestFromView($patient_id){
     	#gets lab request from external system view/table
     	$retval = array();
-     	$server = '192.168.6.4:1433';
+     	$server = '192.168.1.101:1433';
     	//$server = '192.168.184.121:1432';
     	$dbuser = 'kapsabetadmin';
     	$dbpass = 'kapsabet';

@@ -464,7 +464,7 @@ else{
                             <a href="javascript:fetch_test_result_form('.$quote.$test->testId.$quote.',1);" title="Click to edit test results of this Specimen" class="btn blue mini">
                                 <i class="icon-edit"></i> Edit Results</a>
 			</td>
-			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$test->testId.$quote.');" title="View specimen details" class="btn mini">
+			<td style="width:130px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
 				<i class="icon-search"></i> View Details</a>
 			</td>';
 			}else

@@ -14,7 +14,7 @@ $sanitas_inbound_url = "http://192.168.1.10:8888/sanitas/bliss/notify?api_key=".
 #MedBoss MSSQL Server Parameters
 
 //$server = '192.168.184.121:1432';
-$server = '192.168.6.4';
+$server = '192.168.1.101';
 $username = 'kapsabetadmin';
 $password = 'kapsabet';
 

@@ -102,9 +102,6 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			}
 			?>
 			</select>
-			<pre>
-			<?php var_dump($arr_out); ?>
-			</pre>
 		<?php
 		}
 		else if($range_type == Measure::$RANGE_NUMERIC)
