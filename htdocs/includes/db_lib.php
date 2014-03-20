@@ -3515,7 +3515,7 @@ class Test
                                                             {
                                                                 $decName = $curr_measure->name;
                                                             }
-                                            $retval .= "<br>".$decName.":"."&nbsp;";
+                                            $retval .= $decName.":"."&nbsp;";
                                         
                                             if($curr_measure->getRangeType() == Measure::$RANGE_AUTOCOMPLETE)
                                             {
@@ -3582,7 +3582,7 @@ class Test
                                                             {
                                                                 $decName = $curr_measure->name;
                                                             }
-                                $retval .= "<br>".$decName.":"."&nbsp;"."<b>".$ft_result."</b>"."&nbsp;";
+                                $retval .= $decName.":"."&nbsp;"."<b>".$ft_result."</b>"."&nbsp;";
                             }
                             if($show_range === true)
                                         {

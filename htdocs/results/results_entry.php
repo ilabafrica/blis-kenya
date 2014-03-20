@@ -771,8 +771,8 @@ function submit_forms(test_id)
 			continue;
 		}
 		var params = $('#'+form_id_list[i]).formSerialize();
-		var string = params.toString();
-		var str1 = string.split("&");
+		var str = params.toString();
+		var str1 = str.split("&");
 		var str2 = str1[0].split("=");
 		var actual_test_id = str2[1];
 	

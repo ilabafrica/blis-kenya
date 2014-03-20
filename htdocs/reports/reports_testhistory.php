@@ -28,28 +28,14 @@ include("includes/script_elems.php");
 
 include("includes/page_elems.php");
 
-include("barcode/barcode_lib.php");
-
 include("includes/user_lib.php");
 
-
-
 LangUtil::setPageId("reports");
-
-
-
 include("../users/accesslist.php");
-
  if(!(isLoggedIn(get_user_by_id($_SESSION['user_id']))))
-
 	header( 'Location: home.php' );
-
-
-
 $date_from = "";
-
 $date_to = "";
-
 $hidePatientName = 0;
 $view_viz = $_REQUEST['viz'];
 $rem_specs = array();
@@ -723,15 +709,11 @@ for($i = 0; $i < count($margin_list); $i++) {
 	$margin_list[$i] = ($SCREEN_WIDTH * $margin_list[$i] / 100);
 
 }
-
 ?>
-
 <html>
 
 <head>
-
-
-
+<title> Patient Report</title>
 <style type="text/css"> 
 
 	.btn {
@@ -775,20 +757,8 @@ $script_elems->enableEditInPlace();
 $page_elems = new PageElems();
 
 ?>
-
-
-
-<script type="text/javascript" src="../js/nicEdit.js"></script>
-<script type="text/javascript" src="../js/jquery-barcode-2.0.2.js"></script>  
-
 <script type='text/javascript'>
-
-
-
 var curr_orientation = 1;
-
-
-
 function export_as_word(div_id) {
 
 	document.getElementById('printhead').innerHTML=" ";
@@ -800,8 +770,6 @@ function export_as_word(div_id) {
 	$('#word_format_form').submit();
 
 }
-
-
 
 function print_content(div_id) {
 
@@ -874,10 +842,6 @@ function fetch_report() {
 
 
 $(document).ready(function() {
-        var code = $('#barcodeCode').val();
-
-        $('#patientBarcode').barcode(code, '<?php echo $code_type; ?>',{barWidth:<?php echo $bar_width; ?>, barHeight:<?php echo $bar_height; ?>, fontSize:<?php echo $font_size; ?>, output:'css'});
-
 	<?php
 
 	if(isset($_REQUEST['ip']) && $_REQUEST['ip'] == 1) {
@@ -930,12 +894,6 @@ $(document).ready(function() {
 
 	});
 
-	var myNicEditor = new nicEditor();
-
-    myNicEditor.setPanel('myNicPanel');
-
-    myNicEditor.addInstance('patient_table');
-
 });
 
 
@@ -969,8 +927,6 @@ function change_orientation() {
 	}
 
 }
-
-
 
 $(document).ready(function(){
 
@@ -2206,17 +2162,8 @@ else
 				echo "<th>"."Date(Time Registered)";
 
 					echo "</th>";
-
-				if($report_config->useComments == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
-
-				}
-
 				if($report_config->useReferredTo == 1) {
-
 					echo "<th>".LangUtil::$generalTerms['REF_TO']."</th>";
-
 				}
 
 				if($report_config->useDoctor == 1 && $physician_same === false) {
@@ -2224,439 +2171,104 @@ else
 					echo "<th>".LangUtil::$generalTerms['DOCTOR']."</th>";
 
 				}
-
-				if($report_config->useMeasures == 1)
-
-					echo "<th>"."Analyte"."</th>";
-
+				if($report_config->useRemarks == 1) {
+					echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
+				}
 				if($report_config->useResults == 1)
-
-					echo "<th>".LangUtil::$generalTerms['RESULTS']."/Value"."</th>";
-
-				if($report_config->useRange == 1)
-
-					echo "<th>".LangUtil::$generalTerms['RANGE']."</th>";
+					echo "<th class='test-history-range'>".LangUtil::$generalTerms['RESULTS']."/Value"."</th>";
 
 				if($report_config->useEntryDate == 1) {
 
 					echo "<th>".LangUtil::$generalTerms['E_DATE']."</th>";
-
 				}
-
-				if($report_config->useRemarks == 1) {
-
-					echo "<th>".LangUtil::$generalTerms['RESULT_COMMENTS']."</th>";
-
-				}
-
 				if($report_config->useEnteredBy == 1) {
 
 					echo "<th>".LangUtil::$generalTerms['ENTERED_BY']."</th>";
 
 				}
-
 				if($report_config->useVerifiedBy == 1) {
-
 					echo "<th>".LangUtil::$generalTerms['VERIFIED_BY']."</th>";
-
 				}
-
 				if($report_config->useStatus == 1 && $all_tests_completed === false) {
 
 					echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
 
 				}
-
-				
-
-				// add visualization title column
-                                if($view_viz == 1)
-                                {
-                                    echo "<th>Visualized Results</th>";
-                                }
-
 				?>
-
 				</tr>
-
 			</thead>
-
 			<tbody>
-
 			<?php
-
 			if(isset($_REQUEST['sid'])) {
-
 				# Called after result entry for a single specimen
-
 				$value = array($_REQUEST['sid'], $_REQUEST['tid']);
-
 				$record_list = array();
-
 				$record_list[] = $value;
-
 				$data_list=array();
-
 			}
-
 			foreach($record_list as $record_set) {
 
 				$value = $record_set;
 
-				$test = $value[0];
-                                
-                                if(in_array($test->specimenId, $rem_specs))
-                                    {
-                                            continue;
-                                    }
-                                
+				$test = $value[0];                           
+                   if(in_array($test->specimenId, $rem_specs))
+                        {
+                                continue;
+                        }
 				$specimen = $value[1];
-
 				$id=$test->testTypeId;
-
-				$clinical_data=get_clinical_data_by_id($test->testTypeId)
-
-				?>
-
+				$clinical_data=get_clinical_data_by_id($test->testTypeId)?>
 				<tr valign='top'>
-
 				<?php
-
 #				<!------------------------------------------------------->
 				if($report_config->useTestName == 1)
-
 				{
-
 					echo "<td >".get_test_name_by_id($test->testTypeId)."</td>";
-
 				}
 				$timestamp = strtotime($test->timestamp);
 				$time=date("H:i:s", $timestamp);
-				
 				echo "<td >".DateLib::mysqlToString($test->timestamp)."(".$time.")"."</td>";
-
-				if($report_config->useComments == 1)
-
-				{
-
-					echo "<td>";
-
-					echo $specimen->getComments();
-
-					echo "</td>";
-
-				}
-
 				if($report_config->useReferredTo == 1)
-
 				{
-
 					echo "<td>".$specimen->getReferredToName()."</td>";
-
 				}
-
 				if($report_config->useDoctor == 1 && $physician_same === false)
 
 				{
-
 					$doc=$specimen->getDoctor();
-
 					echo "<td>".$doc."</td>";
-
 				}
-
-				if($report_config->useMeasures == 1) {
-
-					echo "<td>";
-
-					echo $test->getMeasureList();
-
-					echo "</td>";
-
-				}
-
-				if($report_config->useResults == 1) {
-
-					echo "<td>";
-
-					if(trim($test->result) == "")
-
-						echo LangUtil::$generalTerms['PENDING_RESULTS'];
-
-					else if($report_config->useMeasures == 1)
-
-						echo $test->decodeResultWithoutMeasures();
-
-					else
-
-						echo $test->decodeResult();
-
-					echo "</td>";
-
-				}
-
-				
-
-				if($report_config->useRange == 1)
-
-				{
-
-					echo "<td>";
-
-					if($test->isPending() === true)
-
-						echo "N/A";
-
-					else
-
-					{
-
-						$test_type = TestType::getById($test->testTypeId);
-
-						$measure_list = $test_type->getMeasures();
-
-						
-
-                                                $submeasure_list = array();
-
-                $comb_measure_list = array();
-
-               // print_r($measure_list);
-
-                
-
-                foreach($measure_list as $measure)
-
-                {
-
-                    
-
-                    $submeasure_list = $measure->getSubmeasuresAsObj();
-
-                    //echo "<br>".count($submeasure_list);
-
-                    //print_r($submeasure_list);
-
-                    $submeasure_count = count($submeasure_list);
-
-                    
-
-                    if($measure->checkIfSubmeasure() == 1)
-
-                    {
-
-                        continue;
-
-                    }
-
-                        
-
-                    if($submeasure_count == 0)
-
-                    {
-
-                        array_push($comb_measure_list, $measure);
-
-                    }
-
-                    else
-
-                    {
-
-                        array_push($comb_measure_list, $measure);
-
-                        foreach($submeasure_list as $submeasure)
-
-                           array_push($comb_measure_list, $submeasure); 
-
-                    }
-
-                }
-
-                $measure_list = $comb_measure_list;
-
-                                                
-
-						foreach($measure_list as $measure) {
-
-							echo "<br>";
-
-							$type=$measure->getRangeType();
-
-							if($type==Measure::$RANGE_NUMERIC) {
-
-								$range_list_array=$measure->getRangeString($patient);
-
-								$lower=$range_list_array[0];
-
-								$upper=$range_list_array[1];
-
-								$unit=$measure->unit;
-
-								if(stripos($unit,",")!=false) {	
-
-									echo "(";
-
-									$units=explode(",",$unit);
-
-									$lower_parts=explode(".",$lower);
-
-									$upper_parts=explode(".",$upper);
-
-				
-
-									if($lower_parts[0]!=0) {
-
-										echo $lower_parts[0];
-
-										echo $units[0];
-
-									}
-
-									
-
-									if($lower_parts[1]!=0) {
-
-										echo $lower_parts[1];
-
-										echo $units[1];
-
-									}
-
-									echo " - ";
-
-				
-
-									if($upper_parts[0]!=0) {
-
-										echo $upper_parts[0];
-
-										echo $units[0];
-
-									}
-
-									
-
-									if($upper_parts[1]!=0) {
-
-										echo $upper_parts[1];
-
-										echo $units[1];
-
-									}
-
-									echo ")";
-
-								} else if(stripos($unit,":")!=false) {
-
-									$units=explode(":",$unit);
-
-									echo "(";	
-
-									echo $lower;
-
-									?><sup><?php echo $units[0]; ?></sup> - 
-
-									<?php echo $upper;?> <sup> <?php echo $units[0]; ?> </sup>
-
-									<?php
-
-									echo " ".$units[1].")";
-
-								} else {	
-
-									echo "(";		
-
-									echo $lower; ?>-<?php echo $upper.")"; 
-
-									echo " ".$measure->unit;
-
-								}?>
-
-								&nbsp;&nbsp;	
-
-								<?php
-
-							} else {
-
-								if($measure->unit=="")
-
-									$measure->unit="-";
-
-								echo "&nbsp;&nbsp;&nbsp;". $measure->unit;
-
-							}
-
-							echo "<br>";
-
-						}
-
-					}
-
-					echo "</td>";
-
-				}
-
-				
-
-				if($report_config->useEntryDate == 1)
-
-				{
-
-					echo "<td>";
-
-				
-
-					if(trim($test->result) == "")
-
-						echo "-";
-
-					else {
-
-						$ts_parts = explode(" ", $test->timestamp);
-
-						echo DateLib::mysqlToString($ts_parts[0]);
-
-					}
-
-					echo "</td>";
-
-				}
-
-				
-
 				if($report_config->useRemarks == 1) {
-
 					echo "<td>".$test->getComments()."</td>";
-
 				}
-
-				
-
+				if($report_config->useResults == 1) {
+					echo "<td class='test-history-range'>";
+					if(trim($test->result) == "")
+						echo LangUtil::$generalTerms['PENDING_RESULTS'];
+					else if($report_config->useMeasures == 1)
+						echo $test->decodeResult();
+					echo "</td>";
+				}
+				if($report_config->useEntryDate == 1)
+				{
+					echo "<td>";
+					if(trim($test->result) == "")
+						echo "-";
+					else {
+						$ts_parts = explode(" ", $test->timestamp);
+						echo DateLib::mysqlToString($ts_parts[0]);
+					}
+					echo "</td>";
+				}
 				if($report_config->useEnteredBy == 1) {
-
 					echo "<td>".$test->getEnteredBy()."</td>";
-
 				}
-
-				
-
 				if($report_config->useVerifiedBy == 1) {
-
 					echo "<td>".$test->getVerifiedBy()."</td>";
-
 				}
-
-				
-
 				if($report_config->useStatus == 1 && $all_tests_completed === false) {
-
 					echo "<td>".$test->getStatus()."</td>";
-
 				}
-
-				
-
 				// Add visualization column
                                 if($view_viz == 1)
                                 {
@@ -2665,35 +2277,17 @@ else
                                         $cleaned_result_array = clean_result($test, $report_config);
 
                                         $cleaned_range_array = clean_range($test, $report_config, $patient);
-
-
-
                                         for($i=0; $i<count($cleaned_result_array); $i++){
-
                                                 echo "<br>";
-
-
-
                                                 $parsable_result = is_result_parsable($cleaned_result_array[$i]);
-
-
-
                                                 if($cleaned_result_array[$i]==""){
-
                                                         // pending test
-
                                                         echo "Pending";
-
                                                         echo "<br>";
-
                                                 }else if ($cleaned_range_array[$i]=="" || !$parsable_result){
-
                                                         echo "Result cannot be visualized";
-
                                                         echo "<br>";
-
                                                 }else{
-
                                                         // draw visualization
 
                                                         $visualized_results = draw_visualization($cleaned_result_array[$i], $cleaned_range_array[$i]);
@@ -3423,15 +3017,9 @@ else
 						$table="";
 
 					}
-
-				
-
 					if($text!="")
 
 						echo $text;
-
-			
-
 					if($table!=""&&stripos($value,"%%%")!=0) {
 
 						$contents=explode("###",$table);
@@ -3443,9 +3031,6 @@ else
 						$name=explode(",",$name_array);
 
 						$value=explode(",",$value_array);
-
-						
-
 						?>
 
 						<table>
@@ -3457,47 +3042,23 @@ else
 							if($name[$i]!="") {
 
 								?>
-
 								<tr>
-
-								<td>
-
-								<?php echo $name[$i];?>
-
+								<td><?php echo $name[$i];?>
 								</td>
-
-								<td>
-
-								<?php echo $value[$i];?>
-
-								</td>
-
+								<td><?php echo $value[$i];?></td>
 								</tr>
-
 								<?php 
-
 							}
-
 						}
-
 						?>
-
 						</table> <?php }?>
-
 						<br><br>
-
 						<?php
-
 					}
-
 				}
-
 			}
-
 		}
-
 	}
-
 }
 
 
@@ -3584,22 +3145,6 @@ if(count($record_list) != 0)
 
 ?>
 
-<div class='editable' title='Click to Edit'>
-
-</div>
-
-<div class='editable' title='Click to Edit'>
-
-</div>
-
-<div class='editable' title='Click to Edit'>
-
-</div>
-
-<!--p class="main">
-
-............................................-->
-
 <?php 
 
 $new_footer_part="............................................";
@@ -3613,62 +3158,6 @@ $lab_config_id=$_SESSION['lab_config_id'];
 
 
 ?>
-
-
-
-<table width=100% border="0" class="no_border" ">
-
-<tr>
-
-<?php for($j=0;$j<count($footerText);$j++) {?>
-
-<td <?php if($lab_config_id==234) {?>style="font-size:14pt;"<?php }?> ><?php echo $new_footer_part; ?></td>
-
-<?php }?>
-
-</tr>
-
-<tr>
-
-<?php for($j=0;$j<count($footerText);$j++) {?>
-
-<td align="center" <?php if($lab_config_id==234) {?>style="font-size:14pt;"<?php }?>><?php echo $footerText[$j]; ?></td>
-
-<?php }?>
-
-</tr>
-
-<tr>
-
-<?php for($j=0;$j<count($designation);$j++) {?>
-
-<td align="center"<?php if($lab_config_id==234) {?>style="font-size:14pt;"<?php }?> ><?php echo $designation[$j]; ?></td>
-
-<?php }
-
-/*
-
-$load_time = microtime(); 
-
-$load_time = explode(' ',$load_time); 
-
-$load_time = $load_time[1] + $load_time[0]; 
-
-$page_end = $load_time; 
-
-$final_time = ($page_end - $page_start); 
-
-$page_load_time = number_format($final_time, 4, '.', ''); 
-
-echo("Page generated in " . $page_load_time . " seconds"); 
-
-*/
-
-?>
-
-</tr>
-
-</table>
 
 </div>
 
