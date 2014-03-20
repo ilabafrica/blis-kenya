@@ -3393,12 +3393,12 @@ class PageElems
 			<td>
 				<?php echo get_test_name_by_id($test->testTypeId); ?>
 			</td>
-			<td>
+			<td style="max-width:250px;">
 				<?php
 				if($test->isPending())
 					echo LangUtil::$generalTerms['PENDING_RESULTS'];
 				else
-					echo strip_tags($test->decodeResult());
+					echo strip_tags($test->decodeResult(), "<br>");
 				?>
 			</td>
 			<td>
