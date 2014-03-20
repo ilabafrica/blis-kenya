@@ -14,7 +14,7 @@ $page_elems = new PageElems();
 function get_result_form($test_type, $test, $num_tests, $patient)
 {
 	#Returns HTML form elements for given test type results
-	global $form_id_list, $specimen_id, $page_elems, $edit_flag;
+	global $form_id_list, $specimen_id, $page_elems, $edit_flag, $measure_list;
 
 	$curr_form_id = 'test_'.$test->testId;
 	$form_id_list[] = $curr_form_id;
@@ -24,8 +24,6 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
 	<input type='hidden' name='parent_test_id' value='<?php echo $test_type->parent_test_type_id; ?>'></input>   
 	<?php
-	# Fetch all measures for this test
-	$measure_list = $test_type->getMeasures();
     
 	$submeasure_list = array();
         $comb_measure_list = array();
@@ -53,9 +51,14 @@ function get_result_form($test_type, $test, $num_tests, $patient)
         
         $measure_list = $comb_measure_list;
         
-        if($edit_flag == 1)
-            $results = explode(" ", trim(str_replace("&nbsp;", " ", strip_tags($test->decodeResultWithoutMeasures()))));
-        else
+        if($edit_flag == 1){
+            $tmp_res = str_replace("<br>", "|~|", $test->decodeResultWithoutMeasures());
+            $tmp_res = str_replace("|~||~|", "|~|", $tmp_res);
+            $tmp_res = trim(str_replace("&nbsp;", " ", strip_tags($tmp_res)));
+            $position = strpos($tmp_res, "|~|");
+            if($position !== false && $position == 0) $tmp_res = substr($tmp_res,3);
+            $results = explode("|~|", $tmp_res);
+        }else
             $results = array();
 
         # Create form element for each measure
@@ -79,7 +82,6 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 		$range = $measure->range;
 		$range_type = $measure->getRangeType();
 		$range_values = $measure->getRangeValues($patient);
-		$arr_out = array();
 		
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
@@ -90,12 +92,14 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			foreach($range_values as $option)
 			{
 				$option= str_replace('#', '/', $option);
-				$lev = levenshtein($option, $results[$count]);
-				$arr_out[] = array($option, $results[$count], $lev);
-				if($edit_flag ==1 && $lev <= 1)
-                                    $selected = " selected";
-                                else
-                                    $selected = "";
+                                $selected = "";
+				if($edit_flag == 1){
+                                    $s_opt = str_replace(" ","",strtolower($option));
+                                    $s_res = str_replace(" ", "", strtolower($results[$count]));
+                                    $lev = levenshtein($s_opt, $s_res);
+                                    if($lev == 0)
+                                        $selected = " selected";
+                                }
 				?>
 				<option <?php echo "value='$option' $selected"; ?>><?php echo str_replace('#', '/', $option); ?></option>
 				<?php
@@ -239,6 +243,8 @@ $patient = Patient::getById($specimen->patientId);
 $test_type = TestType::getById($test_type_id);
 
 $edit_flag = $_REQUEST['ef'];
+# Fetch all measures for this test
+$measure_list = $test_type->getMeasures();
 
 # Print HTML results form
 ?>	

@@ -5,7 +5,6 @@
 #
 
 require_once( "db_constants.php" );
-
 include("../includes/debug_lib.php");
 
 $con = mysql_connect( $DB_HOST, $DB_USER, $DB_PASS );
@@ -19,7 +18,7 @@ mysql_select_db( $DB_NAME, $con );
 function query_insert_one($query)
 {
 	# Single insert statement
-	global $con;
+	global $con, $LOG_QUERIES;
 	mysql_query( $query, $con ) or die(mysql_error());
 	if($LOG_QUERIES == true)
         {
@@ -33,7 +32,7 @@ function query_insert_one($query)
 function query_update($query)
 {
 	# Single update statement
-	global $con;
+	global $con, $LOG_QUERIES;
     mysql_query( $query, $con ) or die(mysql_error());
 	if($LOG_QUERIES == true)	
         {
@@ -45,7 +44,7 @@ function query_update($query)
 function query_delete($query)
 {
 	# Single delete from statement
-	global $con;
+	global $con, $LOG_QUERIES;
 	mysql_query( $query, $con ) or die(mysql_error());
 	if($LOG_QUERIES == true)
         {
@@ -57,7 +56,7 @@ function query_delete($query)
 function query_alter($query)
 {
 	# Single ALTER statement
-	global $con;
+	global $con, $LOG_QUERIES;
     mysql_query( $query, $con ) or die(mysql_error());
 	if($LOG_QUERIES == true)
         {
@@ -68,7 +67,7 @@ function query_alter($query)
 
 function query_associative_all( $query, &$row_count ) 
 {
-    global $con;
+    global $con, $LOG_QUERIES;
 	if( !($result = mysql_query( $query, $con ) ) ) 
 	{
         return null;
@@ -86,7 +85,7 @@ function query_associative_all( $query, &$row_count )
 
 function query_associative_one( $query ) 
 {
-    global $con;
+    global $con, $LOG_QUERIES;
 	if( !($result =  mysql_query( $query, $con ) ) ) 
 	{
         return null;
@@ -102,7 +101,7 @@ function query_associative_one( $query )
 
 function query_num_rows( $table_name )
 {
-	global $con;
+	global $con, $LOG_QUERIES;
 	$query_string =
 		"SELECT COUNT(*) AS val FROM $table_name";
 	$record = query_associative_one($query_string);
@@ -117,7 +116,7 @@ function query_num_rows( $table_name )
 function query_empty_table( $table_name )
 {
 	# Empty all data in the given table
-	global $con;
+	global $con, $LOG_QUERIES;
 	$query_string =
 		"DELETE FROM $table_name";
 	query_blind($query_string);
@@ -278,7 +277,7 @@ function get_last_db_error()
 
 function query_blind( $query ) 
 {
-    global $con;
+    global $con, $LOG_QUERIES;
     $result = mysql_query( $query, $con );
 	if($LOG_QUERIES == true)
         {

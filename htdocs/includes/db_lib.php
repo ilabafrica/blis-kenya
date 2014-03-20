@@ -1774,8 +1774,7 @@ class Measure
             $id = $this->measureId;
             $tagID = "\$sub*".$id."/\$";
             $submeasureList = array();
-             $query_string =
-			"SELECT * FROM measure ";
+             $query_string = "SELECT * FROM measure ";
 		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
 		$recordset = query_associative_all($query_string, $row_count);
                 DbUtil::switchRestore($saved_db);
@@ -3597,6 +3596,12 @@ class Test
                         }$c++;
 		}//end
 		//$retval = str_replace("_",",",$retval); # Replace all underscores with a comma
+// 		Remove first instance of <br> if its the first thing
+		$first_br = strpos($retval, "<br>");
+		if($first_br !== false && $first_br == 0) $retval = substr($retval,4);
+// 		Replace double <br> with single <br>
+                $retval = str_replace("<br><br>", "<br>", $retval);
+		
 		return $retval;
 	}
 	

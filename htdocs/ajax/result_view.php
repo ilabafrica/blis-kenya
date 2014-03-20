@@ -33,10 +33,10 @@ $test_name = get_test_name_by_id($test_type_id);
 <th>
 Test Name
 </th>
-<th>
+<th style="max-width:250px;">
 Results
 </th>
-<th>
+<th style="max-width:250px;">
 Remarks
 </th>
 <th>
