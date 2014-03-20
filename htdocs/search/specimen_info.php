@@ -109,57 +109,6 @@ if($is_modal){?>
               </div>
            </div>   
 
-<script type='text/javascript'>
-function submit_forms(specimen_id)
-{
-
-    var form_id_csv = $('#form_id_list').attr("value");
-    var form_id_list = form_id_csv.split(",");
-//result_cancel_link').hide();
-    $('.result_progress_spinner').show();
-    //var target_div_id = "fetched_specimen";
-    
-    var target_div_id = "result_form_pane_"+specimen_id;
-    for(var i = 0; i < form_id_list.length; i++)
-    {
-        if($('#'+form_id_list[i]+'_skip').is(':checked'))
-        {
-            continue;
-        }
-        var params = $('#'+form_id_list[i]).formSerialize();
-        $.ajax({
-            type: "POST",
-            url: "ajax/result_add.php",
-            data: params,
-            success: function(msg) {
-                $("#"+target_div_id).html(msg);
-            }
-        });
-    }
-    $('.result_progress_spinner').hide();
-    }
-
-
-function fetch_specimen2(specimen_id)
-{
-    
-    $('#fetch_progress_bar').show();
-    var pg=1;
-    var url = 'ajax/specimen_form_fetch.php';
-    //var target_div = "fetch_specimen";
-    $('.result_form_pane').html("");
-    var target_div = "result_form_pane_"+specimen_id;
-    $("#"+target_div).load(url, 
-        {sid: specimen_id , page_id:pg}, 
-        function() 
-        {
-            $('#fetch_progress_bar').hide();
-            $("#fetched_specimen").show();
-        }
-    );
-}
-</script>
-
 <?php if(!$is_modal){
 	include("includes/footer.php"); 
 }else if($is_modal){
