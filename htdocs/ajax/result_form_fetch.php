@@ -168,7 +168,9 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			$url_string = "ajax/measure_autocomplete.php?id=".$measure->measureId;
 			$hint_text = "Type to enter results";
 			echo "<div>";
-			$page_elems->getTokenList($count, $input_id, "result[]", $url_string, $hint_text,"");
+			$prepopulate = "";
+			if($edit_flag == 1) $prepopulate = "[{id:\"".$results[$count]."\", name:\"".$results[$count]."\"}]";
+			$page_elems->getTokenList($count, $input_id, "result[]", $url_string, $hint_text, $prepopulate);
 			echo "</div>";
 			
 		}
