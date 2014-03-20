@@ -254,6 +254,7 @@ $.TokenList = function (input, settings) {
         li_data = settings.prePopulate;
         if(li_data && li_data.length) {
             for(var i in li_data) {
+		if(li_data[i].name === "")continue;
                 var this_token = $("<li><p>"+li_data[i].name+"</p> </li>")
                     .addClass(settings.classes.token)
                     .insertBefore(input_token);
