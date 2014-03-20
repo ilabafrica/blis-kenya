@@ -3295,7 +3295,7 @@ class PageElems
 				else
 				{
 					?>
-					<p><a href='javascript:fetch_specimen2(<?php echo $specimen_id;  ?>);' title='Click to Enter result values for this Specimen'><?php echo LangUtil::$generalTerms['ENTER_RESULTS']; ?></a></p>
+					<!--<p><a href='javascript:fetch_specimen2(<?php echo $specimen_id;  ?>);' title='Click to Enter result values for this Specimen'><?php echo LangUtil::$generalTerms['ENTER_RESULTS']; ?></a></p>-->
 					<?php
 				}
 			}
