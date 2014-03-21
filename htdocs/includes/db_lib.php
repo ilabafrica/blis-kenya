@@ -6513,17 +6513,13 @@ function search_all_pending_external_requests(){
     
             if(count($resultset) > 0)
             {
-                
                 foreach($resultset as $record)
                 {
                     $patient_list[] = Patient::getLabRequest($record);
-                    
                 }
-                
             }
            
             else{
-            	if ($_SESSION["lab_config_id"]=='300'){
             /*
              * Search from view and import to local table => external_lab_request
              */
@@ -6535,50 +6531,50 @@ function search_all_pending_external_requests(){
                     $value_string.= '(';
                     $value_string.=
                     #labNo
-                    '"'.$request_data['RequestID'].'",'.
+                    '"'.mysql_real_escape_string($request_data['RequestID']).'",'.
                     #parentLabNo
                     '"'."0".'",'.
                     #requestingClinician
-                    '"'.$request_data['DoctorRequesting'].'",'.
+                    '"'.mysql_real_escape_string($request_data['DoctorRequesting']).'",'.
                     #investigation
-                    '"'.$request_data['Name'].'",'.
+                    '"'.mysql_real_escape_string($request_data['Name']).'",'.
                     #requestDate
                     #TODO convert date to mysql format
                     '"'./*$request_data['DateOfRequest']*/"NULL".'",'.
                     #orderStage
                     '"'.NULL.'",'.
                     #patient_id
-                    '"'.$request_data['PatientNumber'].'",'.
+                    '"'.mysql_real_escape_string($request_data['PatientNumber']).'",'.
                     #full_name
-                    '"'.$request_data['FullNames'].'",'.
+                    '"'.mysql_real_escape_string($request_data['FullNames']).'",'.
                     #dateOfBirth
                     '"'."NULL".'",'.
                     #age
-                    '"'.$request_data['Age'].'",'.
+                    '"'.mysql_real_escape_string($request_data['Age']).'",'.
                     #gender
-                    '"'.$request_data['Sex'].'",'.
+                    '"'.mysql_real_escape_string($request_data['Sex']).'",'.
                     #address
-                    '"'.$request_data['PoBox'].'",'.
+                    '"'.mysql_real_escape_string($request_data['PoBox']).'",'.
                     #postalCode
                     '"'."NULL".'",'.
                     #phoneNumber
-                    '"'.$request_data['Telephone'].'",'.
+                    '"'.mysql_real_escape_string($request_data['Telephone']).'",'.
                     #city
                     '"'."NULL".'",'.
                     #revisitNumber
-                    '"'.$request_data['RevisitNumber'].'",'.
+                    '"'.mysql_real_escape_string($request_data['RevisitNumber']).'",'.
                     #cost
-                    '"'.$request_data['Cost'].'",'.
+                    '"'.mysql_real_escape_string($request_data['Cost']).'",'.
                     #patientContact
-                    '"'.$request_data['PatientsContact'].'",'.
+                    '"'.mysql_real_escape_string($request_data['PatientsContact']).'",'.
                     #receiptNumber
-                    '"'.$request_data['ReceiptNumber'].'",'.
+                    '"'.mysql_real_escape_string($request_data['ReceiptNumber']).'",'.
                     #waiverNo
-                    '"'.$request_data['WaiverNo'].'",'.
+                    '"'.mysql_real_escape_string($request_data['WaiverNo']).'",'.
                     #comments
-                    '"'.$request_data['Comments'].'",'.
+                    '"'.mysql_real_escape_string($request_data['Comments']).'",'.
                     #provisionalDiagnosis
-                    '"'.$request_data['ProvisionalDiagnosis'].'",'.
+                    '"'.mysql_real_escape_string($request_data['ProvisionalDiagnosis']).'",'.
                     #system_id
                     '"'."medboss".'"';
                     $value_string.= ')';
@@ -6596,9 +6592,7 @@ function search_all_pending_external_requests(){
                         $patient_list[] = Patient::getLabRequest($record);
                         $count++;
                     }
-                error_log($count, 3, "log.txt");
         }   else return null;
-    }
    }//end for Kapsabet
     return $patient_list;
 
@@ -6642,7 +6636,6 @@ function search_patients_by_id($q)
 				$patient_list[] = Patient::getLabRequest($record);
 			}
 		}else{
-			if ($_SESSION['lab_config_id']=='300'){
 			/*
 			 * Search from view and import to local table => external_lab_request
 			 */
@@ -6654,11 +6647,11 @@ function search_patients_by_id($q)
 					$value_string.= '(';
 					$value_string.=
 					#labNo
-					'"'.$request_data['RequestID'].'",'.
+					'"'.mysql_real_escape_string($request_data['RequestID']).'",'.
 					#parentLabNo
 					'"'."0".'",'.
 					#requestingClinician
-					'"'.$request_data['DoctorRequesting'].'",'.
+					'"'.mysql_real_escape_string($request_data['DoctorRequesting']).'",'.
 					#investigation
 					'"'.$request_data['Name'].'",'.
 					#requestDate
@@ -6667,39 +6660,39 @@ function search_patients_by_id($q)
 					#orderStage
 					'"'.NULL.'",'.
 					#patient_id
-					'"'.$request_data['PatientNumber'].'",'.
+					'"'.mysql_real_escape_string($request_data['PatientNumber']).'",'.
 					#full_name
-					'"'.$request_data['FullNames'].'",'.
+					'"'.mysql_real_escape_string($request_data['FullNames']).'",'.
 					#dateOfBirth
 					'"'.NULL.'",'.
 					#age
-					'"'.$request_data['Age'].'",'.
+					'"'.mysql_real_escape_string($request_data['Age']).'",'.
 					#gender
-					'"'.$request_data['Sex'].'",'.
+					'"'.mysql_real_escape_string($request_data['Sex']).'",'.
  					#address
- 					'"'.$request_data['PoBox'].'",'.
+ 					'"'.mysql_real_escape_string($request_data['PoBox']).'",'.
 					#postalCode
  					'"'."NULL".'",'.
 					#phoneNumber
- 					'"'.$request_data['Telephone'].'",'.
+ 					'"'.mysql_real_escape_string($request_data['Telephone']).'",'.
 					#city
 					'"'."NULL".'",'.
 					#revisitNumber
-					'"'.$request_data['RevisitNumber'].'",'.
+					'"'.mysql_real_escape_string($request_data['RevisitNumber']).'",'.
 					#cost
 					'"'.$request_data['Cost'].'",'.
 					#patientContact
-					'"'.$request_data['PatientsContact'].'",'.
+					'"'.mysql_real_escape_string($request_data['PatientsContact']).'",'.
 					#receiptNumber
-					'"'.$request_data['ReceiptNumber'].'",'.
+					'"'.mysql_real_escape_string($request_data['ReceiptNumber']).'",'.
 					#receiptType
 					'"'.NULL.'",'.
 					#waiverNo
-					'"'.$request_data['WaiverNo'].'",'.
+					'"'.mysql_real_escape_string($request_data['WaiverNo']).'",'.
 					#comments
-					'"'.$request_data['Comments'].'",'.
+					'"'.mysql_real_escape_string($request_data['Comments']).'",'.
 					#provisionalDiagnosis
-					'"'.$request_data['ProvisionalDiagnosis'].'",'.
+					'"'.mysql_real_escape_string($request_data['ProvisionalDiagnosis']).'",'.
 					#system_id
 					'"'."medboss".'"';
 					$value_string.= ')';
@@ -6716,7 +6709,6 @@ function search_patients_by_id($q)
 						
 				}	
 			}else return null;
-		}
 	}
 	}
 	return $patient_list;
@@ -15738,6 +15730,19 @@ class API
     	DbUtil::switchRestore($saved_db);
     }
     
+    public static function getTestsRequestedFromExternalLabRequest($patient_id){
+
+    	# gets pending lab requests from external_lab_request_table
+	    global $con;
+	   	$query_string = "SELECT * FROM external_lab_request WHERE patient_id='$patient_id' AND test_status=".Specimen::$STATUS_PENDING." AND parentLabNo=0;";
+	    $saved_db = DbUtil::switchToGlobal();
+	    $tests_ordered = query_associative_all($query_string, $row_count);
+	    DbUtil::switchRestore($saved_db);
+	    return $tests_ordered;
+
+    }
+
+
     public static function getExternalLabRequest($patient_id)
     {
 	    # gets pending lab requests from external_lab_request_table
@@ -15763,7 +15768,7 @@ class API
 	    				#parentLabNo
 	    				'"'."0".'",'.
 	    				#requestingClinician
-	    				'"'.$request_data['DoctorRequesting'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['DoctorRequesting']).'",'.
 	    				#investigation
 	    				'"'.$request_data['Name'].'",'.
 	    				#requestDate
@@ -15772,39 +15777,39 @@ class API
 	    				#orderStage
 	    				'"'.NULL.'",'.
 	    				#patient_id
-	    				'"'.$request_data['PatientNumber'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['PatientNumber']).'",'.
 	    				#full_name
-	    				'"'.$request_data['FullNames'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['FullNames']).'",'.
 	    				#dateOfBirth
 	    				'"'.NULL.'",'.
 	    				#age
-	    				'"'.$request_data['Age'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['Age']).'",'.
 	    				#gender
-	    				'"'.$request_data['Sex'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['Sex']).'",'.
 	    				#address
-	    				'"'.$request_data['PoBox'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['PoBox']).'",'.
 	    				#postalCode
 	    				'"'."NULL".'",'.
 	    				#phoneNumber
-	    				'"'.$request_data['Telephone'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['Telephone']).'",'.
 	    				#city
 	    				'"'."NULL".'",'.
 	    				#revisitNumber
-	    				'"'.$request_data['RevisitNumber'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['RevisitNumber']).'",'.
 	    				#cost
-	    				'"'.$request_data['Cost'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['Cost']).'",'.
 	    				#patientContact
-	    				'"'.$request_data['PatientsContact'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['PatientsContact']).'",'.
 	    				#receiptNumber
-	    				'"'.$request_data['ReceiptNumber'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['ReceiptNumber']).'",'.
 	    				#receiptType
 	    				'"'.NULL.'",'.
 	    				#waiverNo
-	    				'"'.$request_data['WaiverNo'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['WaiverNo']).'",'.
 	    				#comments
-	    				'"'.$request_data['Comments'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['Comments']).'",'.
 	    				#provisionalDiagnosis
-	    				'"'.$request_data['ProvisionalDiagnosis'].'",'.
+	    				'"'.mysql_real_escape_string($request_data['ProvisionalDiagnosis']).'",'.
 	    				#system_id
 	    				'"'."medboss".'"';
 	    				$value_string.= ')';

@@ -54,13 +54,10 @@ if($patient==null){
 	$patient = Patient::getBySurrId($pid);
 }
 //echo "pid second =>".$patient->surrogateId;
-if ($ex == "true"){
 if ($patient!=null){
-	$tests_requested = API::getExternalLabRequest($patient->surrogateId);
+	$tests_requested = API::getTestsRequestedFromExternalLabRequest($patient->surrogateId);
 } else 
-	$tests_requested = API::getExternalLabRequest($pid);
-
-}
+	$tests_requested = API::getTestsRequestedFromExternalLabRequest($pid);
 
 if ($patient==null && $tests_requested!=null){
 	$patient = get_patient_by_external_id($pid);
@@ -86,7 +83,7 @@ if($patient == null)
 <div class="row-fluid">
 <div class="span6">
 <?php 
-if($ex == "true") {
+if(is_array($tests_requested) && $tests_requested != null){
 ?>
 	<table class ="table table-striped table-bordered table-advance" style="width:400px">
 		<thead>
@@ -164,7 +161,7 @@ else {
         <tr valign='top'>
             <td>
                 <span id='specimenboxes'>
-                <?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num); ?>
+                <?php echo $page_elems->getNewSpecimenForm(1, $pid, $dnum, $session_num, $tests_requested); ?>
                 </span>
                 <br>
                 <a href='javascript:add_specimenbox();'><?php echo LangUtil::$pageTerms['ADD_ANOTHER_SPECIMEN']; ?> &raquo;</a>
@@ -245,7 +242,6 @@ $(document).ready(function(){
     $("#doc_row_1_input").autocomplete(data);
     
     $('#specimen_id').focus();
-    $('a[rel*=facebox]').facebox()
     <?php
     if(isset($_REQUEST['pid']))
     {
@@ -253,17 +249,6 @@ $(document).ready(function(){
         echo " patient_exists = true;";
     }
    if(is_array($tests_requested) && $tests_requested != null) {
-		#Get Tests
-		//$length = count($tests_requested);
-		//$test_check="";
-		//$testNames="";
-		//for($i=0; $i<$length; $i++){
-		//	#prevent repeated tests
-		//	if($test_check != $tests_requested[$i]['investigation'])
-		//	$testNames.=$tests_requested[$i]['investigation'];
-		//	$test_check = $tests_requested[$i]['investigation'];
-		//	if ($i!=$length-1)$testNames.=',';
-		//}
 		
       $formcount = 1;
       //$specarraycount = 0;

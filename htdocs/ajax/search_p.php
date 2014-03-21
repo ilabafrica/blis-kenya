@@ -232,11 +232,9 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			?>
 			<td>
 			<?php 
-			if (isset($patient->tests_requested)){
-				$tests = $patient->tests_requested;
+			$tests = API::getExternalLabRequest($patient->surrogateId);
 			foreach($tests as $test){
 				echo "-> ".$test['investigation']." - (".$test['requestDate'].")<br>";
-					}
 			}
 			?>
 			
