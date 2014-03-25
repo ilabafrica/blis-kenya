@@ -32,11 +32,11 @@ $GLOBAL_DB_NAME="blis_revamp_prod";
 
 $DB_NAME = $GLOBAL_DB_NAME;	
 
-$DB_PASS = "Admin123";
+$DB_PASS = "";
 
 if($SERVER == $ON_DEV)
 {
-	$DB_PASS = "Admin123";
+	$DB_PASS = "";
 }
 else if($SERVER == $ON_ARC)
 {
