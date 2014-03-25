@@ -6,7 +6,8 @@
 include("../includes/db_lib.php");
 $sid = $_REQUEST['sid'];
 $time_collected = date("Y-m-d H:i:s");
-set_specimen_status($sid, 0,$time_collected);
+$date_collected = date("Y-m-d");
+set_specimen_status($sid, 0,$date_collected,$time_collected);
 
 
 ?>
