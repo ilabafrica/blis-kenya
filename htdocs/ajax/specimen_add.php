@@ -40,6 +40,7 @@ $prefixed_dnum = date("Ymd")."-".$dnum;
 $addl_id = $_REQUEST['addl_id'];
 $addl_id = preg_replace("/[^a-zA-Z0-9\/\s]/", "", $addl_id);
 $date_recvd = date("Y-m-d");
+$date_collected = $_REQUEST['spec_date'];
 $time_collected = $_REQUEST['spec_time'];
 $patient_id = $_REQUEST['pid'];
 $specimen_type_id = $_REQUEST['stype'];
