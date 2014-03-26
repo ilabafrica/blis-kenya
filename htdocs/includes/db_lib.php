@@ -15698,7 +15698,7 @@ class API
     	# adds a new lab reqeust from external system
     	$saved_db = DbUtil::switchToGlobal();
     	$query_string=
-    	"INSERT INTO `external_lab_request` (
+    	"INSERT IGNORE INTO `external_lab_request` (
 			`labNo`,
 			`parentLabNo`,
 			`requestingClinician`,
