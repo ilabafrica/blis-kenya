@@ -13,16 +13,16 @@ LangUtil::setPageId("catalog");
 
 function specimen_list_to_json($specimen_list)
 {
-	$json_params = array('id', 'name');
-	$assoc_list = array();
-	foreach($specimen_list as $specimen_id)
-	{
-		$specimen = get_specimen_type_by_id($specimen_id);
-		$specimen_type_id = $specimen->specimenTypeId;
-		$specimen_name = $specimen->getName();
-		$assoc_list[$specimen_type_id] = $specimen_name;
-	}
-	return list_to_json($assoc_list, $json_params);
+    $json_params = array('id', 'name');
+    $assoc_list = array();
+    foreach($specimen_list as $specimen_id)
+    {
+        $specimen = get_specimen_type_by_id($specimen_id);
+        $specimen_type_id = $specimen->specimenTypeId;
+        $specimen_name = $specimen->getName();
+        $assoc_list[$specimen_type_id] = $specimen_name;
+    }
+    return list_to_json($assoc_list, $json_params);
 }
 ?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
@@ -48,19 +48,19 @@ function specimen_list_to_json($specimen_list)
 ?>
 <div id='test_types_div' class='content_div'>
     <div class="portlet box green">
-		<div class="portlet-title">
-			<h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['EDIT_TEST_TYPE']; ?></h4>
-			<div class="tools">
-				<a href="javascript:;" class="collapse"></a>
-				<a href="javascript:;" class="reload"></a>
-				
-			</div>
-		</div>
-		<div class="portlet-body">
-		<div id='sdel_msg' class='clean-orange' style='display:none;'>
-			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
-		</div>
-		<a href="catalog.php?show_t=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+        <div class="portlet-title">
+            <h4><i class="icon-reorder"></i><?php echo LangUtil::$pageTerms['EDIT_TEST_TYPE']; ?></h4>
+            <div class="tools">
+                <a href="javascript:;" class="collapse"></a>
+                <a href="javascript:;" class="reload"></a>
+                
+            </div>
+        </div>
+        <div class="portlet-body">
+        <div id='sdel_msg' class='clean-orange' style='display:none;'>
+            <?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
+        </div>
+        <a href="catalog.php?show_t=1"><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
 <?php $tips_string="To know more about a particular field select on the [?] next to the field name.";
 $page_elems->getSideTip("Tips", $tips_string);
  ?>
@@ -77,15 +77,15 @@ $cost_to_patient_cents = $costToPatient - $cost_to_patient_dollars;
 if($test_type == null)
 {
 ?>
-	<div class='sidetip_nopos'>
-	<?php echo LangUtil::$generalTerms['MSG_NOTFOUND']; ?>
-	</div>
-	</div>
-	</div>
-	</div>
+    <div class='sidetip_nopos'>
+    <?php echo LangUtil::$generalTerms['MSG_NOTFOUND']; ?>
+    </div>
+    </div>
+    </div>
+    </div>
 <?php
-	include("includes/footer.php");
-	return;
+    include("includes/footer.php");
+    return;
 }
 # Fetch all measures currently on this test type
 //$measure_list = $test_type->getMeasureIds();
@@ -145,324 +145,324 @@ $page_elems->getTestTypeInfo($test_type->name, true);
         <h4></i>Edit test</h4>
     </div>
     <form name='edit_ttype_form' id='edit_ttype_form' action='ajax/test_type_update.php' method='post' class='form-horizontal'>
-	<input type='hidden' name='ispanel' value='<?php if($test_type->isPanel === true) echo "1"; else echo "0"; ?>'></input>
-	<input type='hidden' name='tid' id='tid' value='<?php echo $_REQUEST['tid']; ?>'></input>
-	<table cellspacing='4px' class="table table-bordered table-hover">
-		<tbody>
-			<tr valign='top'>
-				<td><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-				<td><input type='text' name='name' id='name' value='<?php echo $test_type->name; ?>' class='span6 m-wrap'></input></td>
-			</tr>
-			<tr valign='top'>
-				<td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?><?php $page_elems->getAsterisk(); ?></td>
-				<td>
-				<SELECT name='cat_code' id='cat_code' onchange="javascript:check_if_new_category(this);" class='span6 m-wrap'>
-					<?php $page_elems->getTestCategorySelect(); ?>
-					<option value='-1'>--<?php echo LangUtil::$pageTerms['NEW_LAB_SECTION']; ?>--</option>
-				</select>
-				&nbsp;&nbsp;&nbsp;
-				<span id='new_category'>
-					<small><?php echo LangUtil::$generalTerms['NAME']; ?></small>&nbsp;
-					<input type='text' id='new_category_textbox' name='new_category' class='span4 m-wrap' />
-				</span>
-				</td>
-			</tr>
-			<tr valign='top'>
-				<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
-				<td><textarea type='text' name='description' id='description' class='span6 m-wrap'><?php echo trim($test_type->description); ?></textarea></td>
-			</tr>
-		<tr valign='top'>
-		
-		
-		
-		</tr>
-				<tr valign='top'>
-					<td><?php echo LangUtil::$generalTerms['MEASURES']; ?> [<a href='#measures_help' rel='facebox'>?</a>]</td>
-					<td>
-						<table id='new_measure_list' class='smaller_font table table-bordered'>
-							<tr>
-								<td><u>Delete</u></td>
-								<td><u><?php echo LangUtil::$generalTerms['NAME']; ?></u><?php $page_elems->getAsterisk(); ?></td>
-								<td><u><?php echo LangUtil::$generalTerms['TYPE']; ?></u><?php $page_elems->getAsterisk(); ?></td>
-								<td><u><?php echo LangUtil::$generalTerms['VALUES']; ?></u><?php $page_elems->getAsterisk(); ?></td>
-								<td><u><?php echo LangUtil::$generalTerms['UNIT']; ?> /Default Value</u>[<a href='#unit_help' rel='facebox'>?</a>]</td>
-							</tr>
-							<?php
-							$max_num_measures = count($measure_list);
-							for($i = 1; $i <= $max_num_measures; $i += 1)
-							{
-								$curr_measure = Measure::getById($measure_list[$i-1]);
-								if($curr_measure!=NULL)
-								{
-								$ref_ranges = $curr_measure->getReferenceRanges($_SESSION['lab_config_id']);
-								?>
-								<input type='hidden' name='m_id[]' value='<?php echo $measure_list[$i-1]; ?>'></input>
-								<?php
-								echo "<tr valign='top' id='mrow_$i' ";
-								echo ">";
-								echo "<td align='center'>";
-								echo "<input type=checkbox name='delete_".$curr_measure->measureId."'  />";
-								echo "</td><td>";
+    <input type='hidden' name='ispanel' value='<?php if($test_type->isPanel === true) echo "1"; else echo "0"; ?>'></input>
+    <input type='hidden' name='tid' id='tid' value='<?php echo $_REQUEST['tid']; ?>'></input>
+    <table cellspacing='4px' class="table table-bordered table-hover">
+        <tbody>
+            <tr valign='top'>
+                <td><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
+                <td><input type='text' name='name' id='name' value='<?php echo $test_type->name; ?>' class='span6 m-wrap'></input></td>
+            </tr>
+            <tr valign='top'>
+                <td><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?><?php $page_elems->getAsterisk(); ?></td>
+                <td>
+                <SELECT name='cat_code' id='cat_code' onchange="javascript:check_if_new_category(this);" class='span6 m-wrap'>
+                    <?php $page_elems->getTestCategorySelect(); ?>
+                    <option value='-1'>--<?php echo LangUtil::$pageTerms['NEW_LAB_SECTION']; ?>--</option>
+                </select>
+                &nbsp;&nbsp;&nbsp;
+                <span id='new_category'>
+                    <small><?php echo LangUtil::$generalTerms['NAME']; ?></small>&nbsp;
+                    <input type='text' id='new_category_textbox' name='new_category' class='span4 m-wrap' />
+                </span>
+                </td>
+            </tr>
+            <tr valign='top'>
+                <td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
+                <td><textarea type='text' name='description' id='description' class='span6 m-wrap'><?php echo trim($test_type->description); ?></textarea></td>
+            </tr>
+        <tr valign='top'>
+        
+        
+        
+        </tr>
+                <tr valign='top'>
+                    <td><?php echo LangUtil::$generalTerms['MEASURES']; ?> [<a href='#measures_help' rel='facebox'>?</a>]</td>
+                    <td>
+                        <table id='new_measure_list' class='smaller_font table table-bordered'>
+                            <tr>
+                                <td><u>Delete</u></td>
+                                <td><u><?php echo LangUtil::$generalTerms['NAME']; ?></u><?php $page_elems->getAsterisk(); ?></td>
+                                <td><u><?php echo LangUtil::$generalTerms['TYPE']; ?></u><?php $page_elems->getAsterisk(); ?></td>
+                                <td><u><?php echo LangUtil::$generalTerms['VALUES']; ?></u><?php $page_elems->getAsterisk(); ?></td>
+                                <td><u><?php echo LangUtil::$generalTerms['UNIT']; ?> /Default Value</u>[<a href='#unit_help' rel='facebox'>?</a>]</td>
+                            </tr>
+                            <?php
+                            $max_num_measures = count($measure_list);
+                            for($i = 1; $i <= $max_num_measures; $i += 1)
+                            {
+                                $curr_measure = Measure::getById($measure_list[$i-1]);
+                                if($curr_measure!=NULL)
+                                {
+                                $ref_ranges = $curr_measure->getReferenceRanges($_SESSION['lab_config_id']);
+                                ?>
+                                <input type='hidden' name='m_id[]' value='<?php echo $measure_list[$i-1]; ?>'></input>
+                                <?php
+                                echo "<tr valign='top' id='mrow_$i' ";
+                                echo ">";
+                                echo "<td align='center'>";
+                                echo "<input type=checkbox name='delete_".$curr_measure->measureId."'  />";
+                                echo "</td><td>";
                                                                 
                                                                 
-								$encName = $curr_measure->name;
-								$start_tag = "\$sub*";
-								$end_tag = "/\$";
-								if(strpos($encName, $start_tag) !==false)
-								{
-									$subm_end = strpos($encName, $end_tag);
-									$decName = substr($encName, $subm_end + 2);
-									$parent = substr($encName, 5, $end_tag - 5);
-									$parent_int = intval($parent);
+                                $encName = $curr_measure->name;
+                                $start_tag = "\$sub*";
+                                $end_tag = "/\$";
+                                if(strpos($encName, $start_tag) !==false)
+                                {
+                                    $subm_end = strpos($encName, $end_tag);
+                                    $decName = substr($encName, $subm_end + 2);
+                                    $parent = substr($encName, 5, $end_tag - 5);
+                                    $parent_int = intval($parent);
 
-								}
-								else
-								{
-									$decName = $encName;
-									$parent_int = 0;
-								}
-								?>
-									<input type='hidden' name='sm_id[]' value='<?php echo $parent_int; ?>'></input>
-								<?php
-								if(strpos($encName, $start_tag) !==false)
-										echo "Sub:";
+                                }
+                                else
+                                {
+                                    $decName = $encName;
+                                    $parent_int = 0;
+                                }
+                                ?>
+                                    <input type='hidden' name='sm_id[]' value='<?php echo $parent_int; ?>'></input>
+                                <?php
+                                if(strpos($encName, $start_tag) !==false)
+                                        echo "Sub:";
 
-								echo "<input type='text' class='span12 m-wrap' name='measure[]' value='$decName' />";
-								echo "</td>";
-								echo "<td>";
-								$range_string = $curr_measure->range;
-								$range_values = array();
-								$range_type = $curr_measure->getRangeType();
-								switch($range_type)
-								{
-									case Measure::$RANGE_NUMERIC:
-										$range_values = explode(":", $range_string);
-										break;
-									case Measure::$RANGE_OPTIONS:
-										$range_values = explode("/", $range_string);
-										break;
-									case Measure::$RANGE_AUTOCOMPLETE:
-										$range_values = explode("_", $range_string);
-										break;
+                                echo "<input type='text' class='span12 m-wrap' name='measure[]' value='$decName' />";
+                                echo "</td>";
+                                echo "<td>";
+                                $range_string = $curr_measure->range;
+                                $range_values = array();
+                                $range_type = $curr_measure->getRangeType();
+                                switch($range_type)
+                                {
+                                    case Measure::$RANGE_NUMERIC:
+                                        $range_values = explode(":", $range_string);
+                                        break;
+                                    case Measure::$RANGE_OPTIONS:
+                                        $range_values = explode("/", $range_string);
+                                        break;
+                                    case Measure::$RANGE_AUTOCOMPLETE:
+                                        $range_values = explode("_", $range_string);
+                                        break;
                                                                         case Measure::$RANGE_FREETEXT:
-										$range_values = array("","");
-										break;
-								}
-								?>
-								<!--<select class='range_select' id='type_'<?php echo $i; ?>' name='mtype[]' onchange='javascript:add_label(<?php echo $i; ?>);'>-->
-									<select class='range_select' class='span10 m-wrap' id='<?php echo $i; ?>' name='mtype[]'>
-									<option value='<?php echo Measure::$RANGE_NUMERIC; ?>' <?php 
-									if($range_type == Measure::$RANGE_NUMERIC)
-										echo " selected='selected' ";
-									?>><?php echo LangUtil::$generalTerms['RANGE_NUMERIC']; ?></option>
-									
-									<option value='<?php echo Measure::$RANGE_OPTIONS; ?>' <?php 
-									if($range_type == Measure::$RANGE_OPTIONS)
-										echo " selected='selected' ";
-									?>><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
-									<option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>' <?php 
-									if($range_type == Measure::$RANGE_AUTOCOMPLETE)
-										echo " selected='selected' ";
-									?>><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
+                                        $range_values = array("","");
+                                        break;
+                                }
+                                ?>
+                                <!--<select class='range_select' id='type_'<?php echo $i; ?>' name='mtype[]' onchange='javascript:add_label(<?php echo $i; ?>);'>-->
+                                    <select class='range_select' class='span10 m-wrap' id='<?php echo $i; ?>' name='mtype[]'>
+                                    <option value='<?php echo Measure::$RANGE_NUMERIC; ?>' <?php 
+                                    if($range_type == Measure::$RANGE_NUMERIC)
+                                        echo " selected='selected' ";
+                                    ?>><?php echo LangUtil::$generalTerms['RANGE_NUMERIC']; ?></option>
+                                    
+                                    <option value='<?php echo Measure::$RANGE_OPTIONS; ?>' <?php 
+                                    if($range_type == Measure::$RANGE_OPTIONS)
+                                        echo " selected='selected' ";
+                                    ?>><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
+                                    <option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>' <?php 
+                                    if($range_type == Measure::$RANGE_AUTOCOMPLETE)
+                                        echo " selected='selected' ";
+                                    ?>><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
                                                                         <option value='<?php echo Measure::$RANGE_FREETEXT; ?>' <?php 
-									if($range_type == Measure::$RANGE_FREETEXT)
-										echo " selected='selected' ";
-									?>><?php echo "Free Text"; ?></option>
-								</select>
-								<?php
-								
-								echo "</td>";
-								echo "<td>";
-								?>
-								<span id='val_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
-								<?php if($range_type != Measure::$RANGE_NUMERIC) echo " style='display:none' "; ?>
-								>
-									<?php
-									
-									$ref_count = 0;
-									if(count($ref_ranges) == 0 || $ref_ranges == null)
-									{
-										# Reference ranges not configured. 
-										# Fetch default values from 'measure' table
-										$lower_range="";
-										$upper_range="";
-										if($range_type == Measure::$RANGE_NUMERIC)
-										{
-											$lower_range = $range_values[0];
-											$upper_range = $range_values[1];
-										}
-										?>
-										<span id='numeric_<?php echo $i; ?>'>
-											
-											<input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i; ?>[]' value='<?php echo $lower_range; ?>' /> :
-											<input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i; ?>[]' value='<?php echo $upper_range; ?>' />
-											<input type='text' class='range_field span3 m-wrap' name='gender_<?php echo $i; ?>[]' value='B'/>
-											<input type='text' class='range_field span2 m-wrap' name='age_l_<?php echo $i; ?>[]' value='0'/>
-											<input type='text' class='range_field span2 m-wrap' name='age_u_<?php echo $i; ?>[]' value='100'/>
-											<br>
-											
-										</span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age_Range
-							<br>
-									<?php
-									}
-									else
-									{	
-									?>
-									<span id='numeric_<?php echo $i; ?>'>
-									<?php
-									foreach($ref_ranges as $ref_range)
-										{
-											
-										?>
-											<input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeLower; ?>' /> :
-											<input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeUpper; ?>' />
-											<input type='text' class='range_field span3 m-wrap' name='gender_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->sex; ?>'/>
-											<input type='text' class='range_field span2 m-wrap agerange_l_<?php echo $i; ?>' name='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' id='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMin; ?>' /> :
-											<input type='text' class='range_field span2 m-wrap agerange_u_<?php echo $i; ?>' name='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' id='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMax; ?>' />
-											<br><br>
-											<?php
-											$ref_count++;
-												
-										}
-										?>
-										</span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age_Range
-							<br>
-										<?php
-									}
-									?>	<br>						
-									<small><a href="javascript:add_range_field('<?php echo $i; ?>',<?php echo $ref_count+1; ?>);"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
-									<br><br>
-								</span>
-								<span id='alpha_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
-								<?php if($range_type != Measure::$RANGE_OPTIONS) echo " style='display:none' "; ?>
-								>
-									<span id='alpha_list_<?php echo $i; ?>'>
-									<?php
-										$j = 0;
-										foreach($range_values as $range_value)
-										{ $range_value= str_replace("#", "/", $range_value);
-											$j++;
-										?>
-											<input type='text' class='range_field span5 m-wrap' name='alpharange_<?php echo $i; ?>[]' value='<?php if($range_type == Measure::$RANGE_OPTIONS) echo str_replace("#", "/", $range_value); ?>' /> 
-										<?php
-											if($j < count($range_values))
-												echo "/ ";
-										}
-										?>
-									</span>
-									<br>
-									<small><a href="javascript:add_option_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
-								</span>
-								<span id='autocomplete_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
-								<?php if($range_type != Measure::$RANGE_AUTOCOMPLETE) echo " style='display:none' "; ?>
-								>
-									<span id='autocomplete_list_<?php echo $i; ?>'>
-									<?php
-										$j = 0;
-										foreach($range_values as $range_value)
-										{
-											$j++;
-										?>
-											<input type='text' class='uniform_width span6 m-wrap' name='autocomplete_<?php echo $i; ?>[]' value='<?php if($range_type == Measure::$RANGE_AUTOCOMPLETE) echo $range_value; ?>' /> <br>
-										<?php
-										}
-										?>
-									</span>
-									<small><a href="javascript:add_autocomplete_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
-								</span>
+                                    if($range_type == Measure::$RANGE_FREETEXT)
+                                        echo " selected='selected' ";
+                                    ?>><?php echo "Free Text"; ?></option>
+                                </select>
+                                <?php
+                                
+                                echo "</td>";
+                                echo "<td>";
+                                ?>
+                                <span id='val_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
+                                <?php if($range_type != Measure::$RANGE_NUMERIC) echo " style='display:none' "; ?>
+                                >
+                                    <?php
+                                    
+                                    $ref_count = 0;
+                                    if(count($ref_ranges) == 0 || $ref_ranges == null)
+                                    {
+                                        # Reference ranges not configured. 
+                                        # Fetch default values from 'measure' table
+                                        $lower_range="";
+                                        $upper_range="";
+                                        if($range_type == Measure::$RANGE_NUMERIC)
+                                        {
+                                            $lower_range = $range_values[0];
+                                            $upper_range = $range_values[1];
+                                        }
+                                        ?>
+                                        <span id='numeric_<?php echo $i; ?>'>
+                                            
+                                            <input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i; ?>[]' value='<?php echo $lower_range; ?>' /> :
+                                            <input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i; ?>[]' value='<?php echo $upper_range; ?>' />
+                                            <input type='text' class='range_field span3 m-wrap' name='gender_<?php echo $i; ?>[]' value='B'/>
+                                            <input type='text' class='range_field span2 m-wrap' name='age_l_<?php echo $i; ?>[]' value='0'/>
+                                            <input type='text' class='range_field span2 m-wrap' name='age_u_<?php echo $i; ?>[]' value='100'/>
+                                            <br>
+                                            
+                                        </span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age_Range
+                            <br>
+                                    <?php
+                                    }
+                                    else
+                                    {    
+                                    ?>
+                                    <span id='numeric_<?php echo $i; ?>'>
+                                    <?php
+                                    foreach($ref_ranges as $ref_range)
+                                        {
+                                            
+                                        ?>
+                                            <input type='text' class='range_field span2 m-wrap' name='range_l_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeLower; ?>' /> :
+                                            <input type='text' class='range_field span2 m-wrap' name='range_u_<?php echo $i; ?>[]' value='<?php echo $ref_range->rangeUpper; ?>' />
+                                            <input type='text' class='range_field span3 m-wrap' name='gender_<?php echo $i; ?>[]' value='<?php echo $ref_range->sex; ?>'/>
+                                            <input type='text' class='range_field span2 m-wrap agerange_l_<?php echo $i; ?>' name='agerange_l_<?php echo $i; ?>[]' id='agerange_l_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMin; ?>' /> :
+                                            <input type='text' class='range_field span2 m-wrap agerange_u_<?php echo $i; ?>' name='agerange_u_<?php echo $i; ?>[]' id='agerange_u_<?php echo $i; ?>_<?php echo $ref_count; ?>' value='<?php echo $ref_range->ageMax; ?>' />
+                                            <br><br>
+                                            <?php
+                                            $ref_count++;
+                                                
+                                        }
+                                        ?>
+                                        </span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age_Range
+                            <br>
+                                        <?php
+                                    }
+                                    ?>    <br>                        
+                                    <small><a href="javascript:add_range_field('<?php echo $i; ?>',<?php echo $ref_count+1; ?>);"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
+                                    <br><br>
+                                </span>
+                                <span id='alpha_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
+                                <?php if($range_type != Measure::$RANGE_OPTIONS) echo " style='display:none' "; ?>
+                                >
+                                    <span id='alpha_list_<?php echo $i; ?>'>
+                                    <?php
+                                        $j = 0;
+                                        foreach($range_values as $range_value)
+                                        { $range_value= str_replace("#", "/", $range_value);
+                                            $j++;
+                                        ?>
+                                            <input type='text' class='range_field span5 m-wrap' name='alpharange_<?php echo $i; ?>[]' value='<?php if($range_type == Measure::$RANGE_OPTIONS) echo str_replace("#", "/", $range_value); ?>' /> 
+                                        <?php
+                                            if($j < count($range_values))
+                                                echo "/ ";
+                                        }
+                                        ?>
+                                    </span>
+                                    <br>
+                                    <small><a href="javascript:add_option_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
+                                </span>
+                                <span id='autocomplete_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
+                                <?php if($range_type != Measure::$RANGE_AUTOCOMPLETE) echo " style='display:none' "; ?>
+                                >
+                                    <span id='autocomplete_list_<?php echo $i; ?>'>
+                                    <?php
+                                        $j = 0;
+                                        foreach($range_values as $range_value)
+                                        {
+                                            $j++;
+                                        ?>
+                                            <input type='text' class='uniform_width span6 m-wrap' name='autocomplete_<?php echo $i; ?>[]' value='<?php if($range_type == Measure::$RANGE_AUTOCOMPLETE) echo $range_value; ?>' /> <br>
+                                        <?php
+                                        }
+                                        ?>
+                                    </span>
+                                    <small><a href="javascript:add_autocomplete_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
+                                </span>
                                                                 <span id='freetext_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
-								<?php if($range_type != Measure::$RANGE_FREETEXT) echo " style='display:none' "; ?>
-								>
-									<span id='freetext_list_<?php echo $i; ?>'>
-										<?php echo "<small>Will appear as a text box for result entry</small>"?>
-									</span>
-								</span>
-								<?php
-								echo "</td>";
-								echo "<td id='unit_$i'>";
-								echo "<input type='text' name='unit[]' class='span10 m-wrap' value='$curr_measure->unit' />";
-								echo "</td>";
-								echo "</tr>";
-								
-							}
-							}
-							# Space for adding new measures
-							$max_num_measures = 8;
-							for($i = 1; $i <= $max_num_measures; $i += 1)
-							{
-								echo "<tr valign='top' id='new_mrow_$i' ";
-								//if($i != 1)
-								if(true)
-								{
-									# Hide all rows except the first
-									echo " style='display:none;' ";
-								}
-								echo ">";
-								echo "<td align='center'>";
-							//	echo "<input type=checkbox name='delete_".$curr_measure->name."'  />";
-								echo "</td><td>";
-								echo "<input type='text' class='span12 m-wrap' name='new_measure[]' value='' />";
+                                <?php if($range_type != Measure::$RANGE_FREETEXT) echo " style='display:none' "; ?>
+                                >
+                                    <span id='freetext_list_<?php echo $i; ?>'>
+                                        <?php echo "<small>Will appear as a text box for result entry</small>"?>
+                                    </span>
+                                </span>
+                                <?php
+                                echo "</td>";
+                                echo "<td id='unit_$i'>";
+                                echo "<input type='text' name='unit[]' class='span10 m-wrap' value='$curr_measure->unit' />";
+                                echo "</td>";
+                                echo "</tr>";
+                                
+                            }
+                            }
+                            # Space for adding new measures
+                            $max_num_measures = 8;
+                            for($i = 1; $i <= $max_num_measures; $i += 1)
+                            {
+                                echo "<tr valign='top' id='new_mrow_$i' ";
+                                //if($i != 1)
+                                if(true)
+                                {
+                                    # Hide all rows except the first
+                                    echo " style='display:none;' ";
+                                }
+                                echo ">";
+                                echo "<td align='center'>";
+                            //    echo "<input type=checkbox name='delete_".$curr_measure->name."'  />";
+                                echo "</td><td>";
+                                echo "<input type='text' class='span12 m-wrap' name='new_measure[]' value='' />";
                                                                 echo "<br>";
                                         ?>
                                         <small><a id='new_submeasure_link' href='javascript:add_new_submeasure(<?php echo $i; ?>);'><?php echo 'Add Sub Measure'; ?> &raquo;</a></small>
                                         <?php
                                                                 
-								echo "</td>";
-								echo "<td>";
-								?>
-								<select class='new_range_select span10 m-wrap' id='new_<?php echo $i; ?>' name='new_mtype[]'>
-									<option value='<?php echo Measure::$RANGE_NUMERIC; ?>'><?php echo LangUtil::$generalTerms['RANGE_NUMERIC']; ?></option>
-									<option value='<?php echo Measure::$RANGE_OPTIONS; ?>'><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
-									<option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>'><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
+                                echo "</td>";
+                                echo "<td>";
+                                ?>
+                                <select class='new_range_select span10 m-wrap' id='new_<?php echo $i; ?>' name='new_mtype[]'>
+                                    <option value='<?php echo Measure::$RANGE_NUMERIC; ?>'><?php echo LangUtil::$generalTerms['RANGE_NUMERIC']; ?></option>
+                                    <option value='<?php echo Measure::$RANGE_OPTIONS; ?>'><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
+                                    <option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>'><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
                                                                         <option value='<?php echo Measure::$RANGE_FREETEXT; ?>'><?php echo "Free Text"; ?></option>
-								</select>
-								<?php
-								echo "</td>";
-								echo "<td>";
-								?>
-								<span id='new_val_new_<?php echo $i; ?>' class='new_values_section_new_<?php echo $i; ?>'>
-									<div id='numeric_range_<?php echo $i; ?>' name=numeric_range_<?php echo $i; ?>'>
-									<span id='new_num eric_<?php echo $i; ?>'>
-											<input type='text' class='range_field span2 m-wrap' name='new_range_l_<?php echo $i; ?>[]' value='' /> :
-											<input type='text' class='range_field span2 m-wrap' name='new_range_u_<?php echo $i; ?>[]' value='' />
-											<input type='text' class='range_field span2 m-wrap' name='new_gender_<?php echo $i; ?>[]' value='B'/>
-											<input type='text' class='range_field span2 m-wrap agerange_l_<?php echo $i; ?>' name='new_agerange_l_<?php echo $i; ?>[]' id='new_agerange_l_<?php echo $i; ?>[]' value='0' /> :
-											<input type='text' class='range_field span2 m-wrap agerange_u_<?php echo $i; ?>' name='new_agerange_u_<?php echo $i; ?>[]' id='new_agerange_u_<?php echo $i; ?>[]' value='100' />
-																
-											<br>
-								</span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;Age_Range
-								<br>
-											<small><a href="javascript:add_new_range_field('<?php echo $i; ?>', 0);"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
-									<br><br>
-								</div>
-								</span>	
-								
-								<span id='new_alpha_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
-									<span id='new_alpha_list_<?php echo $i; ?>'>
-										<input type='text' class='range_field span2 m-wrap' name='new_alpharange_<?php echo $i; ?>[]' value='' /> /
-										<input type='text' class='range_field span2 m-wrap' name='new_alpharange_<?php echo $i; ?>[]' value='' />
-									</span>
-									<br>
-									<small><a href="javascript:add_new_option_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
-								</span>
-								<span id='new_autocomplete_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
-									<span id='new_autocomplete_list_new_<?php echo $i; ?>'>
-										<input type='text' class='span4 m-wrap' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
-										<input type='text' class='span4 m-wrap' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
-									</span>
-									<small><a href="javascript:add_new_autocomplete_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
-								</span>
+                                </select>
+                                <?php
+                                echo "</td>";
+                                echo "<td>";
+                                ?>
+                                <span id='new_val_new_<?php echo $i; ?>' class='new_values_section_new_<?php echo $i; ?>'>
+                                    <div id='numeric_range_<?php echo $i; ?>' name=numeric_range_<?php echo $i; ?>'>
+                                    <span id='new_num eric_<?php echo $i; ?>'>
+                                            <input type='text' class='range_field span2 m-wrap' name='new_range_l_<?php echo $i; ?>[]' value='' /> :
+                                            <input type='text' class='range_field span2 m-wrap' name='new_range_u_<?php echo $i; ?>[]' value='' />
+                                            <input type='text' class='range_field span2 m-wrap' name='new_gender_<?php echo $i; ?>[]' value='B'/>
+                                            <input type='text' class='range_field span2 m-wrap agerange_l_<?php echo $i; ?>' name='new_agerange_l_<?php echo $i; ?>[]' id='new_agerange_l_<?php echo $i; ?>[]' value='0' /> :
+                                            <input type='text' class='range_field span2 m-wrap agerange_u_<?php echo $i; ?>' name='new_agerange_u_<?php echo $i; ?>[]' id='new_agerange_u_<?php echo $i; ?>[]' value='100' />
+                                                                
+                                            <br>
+                                </span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo LangUtil::$generalTerms['RANGE']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gender &nbsp;&nbsp;Age_Range
+                                <br>
+                                            <small><a href="javascript:add_new_range_field('<?php echo $i; ?>', 0);"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
+                                    <br><br>
+                                </div>
+                                </span>    
+                                
+                                <span id='new_alpha_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
+                                    <span id='new_alpha_list_<?php echo $i; ?>'>
+                                        <input type='text' class='range_field span2 m-wrap' name='new_alpharange_<?php echo $i; ?>[]' value='' /> /
+                                        <input type='text' class='range_field span2 m-wrap' name='new_alpharange_<?php echo $i; ?>[]' value='' />
+                                    </span>
+                                    <br>
+                                    <small><a href="javascript:add_new_option_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
+                                </span>
+                                <span id='new_autocomplete_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
+                                    <span id='new_autocomplete_list_new_<?php echo $i; ?>'>
+                                        <input type='text' class='span4 m-wrap' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
+                                        <input type='text' class='span4 m-wrap' name='new_autocomplete_<?php echo $i; ?>[]' value='' /><br>
+                                    </span>
+                                    <small><a href="javascript:add_new_autocomplete_field('<?php echo $i; ?>');"><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a></small>
+                                </span>
                                                                 <span id='new_freetext_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
-									<span id='new_freetext_list_new_<?php echo $i; ?>'>
-                                                                    		<?php echo "<small>Will appear as a text box for result entry</small>"?>
-									</span>
-								</span>
-								<?php
-								echo "</td>";
-								echo "<td id='unit_$i'>";
-								echo "<input type='text' class='span10 m-wrap' name='new_unit[]' value='' />";
-								echo "</td>";
-								echo "</tr>";
+                                    <span id='new_freetext_list_new_<?php echo $i; ?>'>
+                                                                            <?php echo "<small>Will appear as a text box for result entry</small>"?>
+                                    </span>
+                                </span>
+                                <?php
+                                echo "</td>";
+                                echo "<td id='unit_$i'>";
+                                echo "<input type='text' class='span10 m-wrap' name='new_unit[]' value='' />";
+                                echo "</td>";
+                                echo "</tr>";
                                                                 
                                                                 
                                         # submeasures
@@ -476,8 +476,8 @@ $page_elems->getTestTypeInfo($test_type->name, true);
                                             echo ">";
                                             
                                             echo "<td align='center'>";
-							//	echo "<input type=checkbox name='delete_".$curr_measure->name."'  />";
-								echo "</td>";
+                            //    echo "<input type=checkbox name='delete_".$curr_measure->name."'  />";
+                                echo "</td>";
                                             
                                             echo "<td>";
                                             ?>
@@ -551,95 +551,95 @@ $page_elems->getTestTypeInfo($test_type->name, true);
                                         ?>
                                         
                                       <?php  
-							}// end of new measures
-						?>
-						</table>
-						<a id='new_measure_link' href='javascript:add_new_measure();'><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a>
-					</td>
-				</tr>
-				
-			<tr valign='top'>
-				<td colspan="2"><input type='checkbox' name='ispanel' id='ispanel'></input> <?php echo "Include existing measures? (Select below)" ?>?</td>
-			</tr>
-			<tr valign='top' class='panel_row'>
-				<td>
-					<?php echo LangUtil::$generalTerms['MEASURES']; ?> <?php $page_elems->getAsterisk(); ?>
-				</td>
-				<td>
-					<?php $page_elems->getMeasureCheckboxes(); ?>
-				</td>
-			</tr>
-			
-			<tr valign='top'>
-				<td><?php echo LangUtil::$generalTerms['COMPATIBLE_SPECIMENS']; ?><?php $page_elems->getAsterisk(); ?>  [<a href='#specimen_help' rel='facebox'>?</a>] </td>
-				<td>
-					<?php $page_elems->getSpecimenTypeCheckboxes($lab_config_id, false,$test_type->testTypeId); ?>
-					<br>
-				</td>
-			</tr>
-			
-			<tr valign='top'>
-				<td>Hide Patient Name in Report </td>
-				<td>
-					<select name="hidePatientName" class='span6 m-wrap'>
-						<?php if ( $test_type->hidePatientName == 0 ) { ?>
-							<option value="0" selected>No</option>
-							<option value="1">Yes</option>
-						<?php } else { ?>
-							<option value="0">No</option>
-							<option value="1" selected>Yes</option>
-						<?php } ?>
-					</select>
-				</td>		
-			</tr>
+                            }// end of new measures
+                        ?>
+                        </table>
+                        <a id='new_measure_link' href='javascript:add_new_measure();'><?php echo LangUtil::$generalTerms['ADDANOTHER']; ?> &raquo;</a>
+                    </td>
+                </tr>
+                
+            <tr valign='top'>
+                <td colspan="2"><input type='checkbox' name='ispanel' id='ispanel'></input> <?php echo "Include existing measures? (Select below)" ?>?</td>
+            </tr>
+            <tr valign='top' class='panel_row'>
+                <td>
+                    <?php echo LangUtil::$generalTerms['MEASURES']; ?> <?php $page_elems->getAsterisk(); ?>
+                </td>
+                <td>
+                    <?php $page_elems->getMeasureCheckboxes(); ?>
+                </td>
+            </tr>
+            
+            <tr valign='top'>
+                <td><?php echo LangUtil::$generalTerms['COMPATIBLE_SPECIMENS']; ?><?php $page_elems->getAsterisk(); ?>  [<a href='#specimen_help' rel='facebox'>?</a>] </td>
+                <td>
+                    <?php $page_elems->getSpecimenTypeCheckboxes($lab_config_id, false,$test_type->testTypeId); ?>
+                    <br>
+                </td>
+            </tr>
+            
+            <tr valign='top'>
+                <td>Hide Patient Name in Report </td>
+                <td>
+                    <select name="hidePatientName" class='span6 m-wrap'>
+                        <?php if ( $test_type->hidePatientName == 0 ) { ?>
+                            <option value="0" selected>No</option>
+                            <option value="1">Yes</option>
+                        <?php } else { ?>
+                            <option value="0">No</option>
+                            <option value="1" selected>Yes</option>
+                        <?php } ?>
+                    </select>
+                </td>        
+            </tr>
 
-			<tr valign='top'>
-				<td>Prevalence Threshold </td>
-				<td><input id='prevalenceThreshold' class='span6 m-wrap' name='prevalenceThreshold' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
-				value=<?php if($test_type->prevalenceThreshold==null) {echo 0;} else echo $test_type->prevalenceThreshold; ?> />
-					<span id='prevalenceThresholdError' class='error_string' style='display:none;'>
-						<?php echo "Threshold Value cannot be more than 100"; ?>
-					</span>
-				</td>
-			</tr>
+            <tr valign='top'>
+                <td>Prevalence Threshold </td>
+                <td><input id='prevalenceThreshold' class='span6 m-wrap' name='prevalenceThreshold' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
+                value=<?php if($test_type->prevalenceThreshold==null) {echo 0;} else echo $test_type->prevalenceThreshold; ?> />
+                    <span id='prevalenceThresholdError' class='error_string' style='display:none;'>
+                        <?php echo "Threshold Value cannot be more than 100"; ?>
+                    </span>
+                </td>
+            </tr>
 
-			<tr valign='top'>
-				<td>Target TAT</td>
-				<td><input id='targetTat' name='targetTat' class='span6 m-wrap' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
-				value=<?php if($test_type->targetTat==null) {echo 0;} else echo $test_type->targetTat; ?> />
-				</td>
-			</tr>
+            <tr valign='top'>
+                <td>Target TAT</td>
+                <td><input id='targetTat' name='targetTat' class='span6 m-wrap' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
+                value=<?php if($test_type->targetTat==null) {echo 0;} else echo $test_type->targetTat; ?> />
+                </td>
+            </tr>
 
-			<tr valign='top' <?php is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none;'") ?>>
-				<td>Cost to Patient</td>
+            <tr valign='top' <?php is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none;'") ?>>
+                <td>Cost to Patient</td>
 
-				<input type="hidden" class='span6 m-wrap' name='cost_to_patient_dollars_old' value='<?php echo $cost_to_patient_dollars; ?>' />
-				<input type="hidden" class='span6 m-wrap' name='cost_to_patient_cents_old' value='<?php echo $cost_to_patient_cents; ?>' />
+                <input type="hidden" class='span6 m-wrap' name='cost_to_patient_dollars_old' value='<?php echo $cost_to_patient_dollars; ?>' />
+                <input type="hidden" class='span6 m-wrap' name='cost_to_patient_cents_old' value='<?php echo $cost_to_patient_cents; ?>' />
 
-				<td>
-					<input id='cost_to_patient_dollars' class='span4 m-wrap' name='cost_to_patient_dollars' type='text' size='4' maxLength='4' onkeypress="return isInputNumber(event);" value='<?php echo $cost_to_patient_dollars; ?>' />
-					<?php echo get_currency_delimiter_from_lab_config_settings(); ?>
+                <td>
+                    <input id='cost_to_patient_dollars' class='span4 m-wrap' name='cost_to_patient_dollars' type='text' size='4' maxLength='4' onkeypress="return isInputNumber(event);" value='<?php echo $cost_to_patient_dollars; ?>' />
+                    <?php echo get_currency_delimiter_from_lab_config_settings(); ?>
 
-					<input id='cost_to_patient_dollars' class='span4 m-wrap' name='cost_to_patient_cents' type='text' size='2' maxLength='2' onkeypress="return isInputNumber(event);" value='<?php echo get_cents_as_whole_number($cost_to_patient_cents); ?>' />
-					<?php echo get_currency_type_from_lab_config_settings(); ?>
-				</td>
-			</tr>
+                    <input id='cost_to_patient_dollars' class='span4 m-wrap' name='cost_to_patient_cents' type='text' size='2' maxLength='2' onkeypress="return isInputNumber(event);" value='<?php echo get_cents_as_whole_number($cost_to_patient_cents); ?>' />
+                    <?php echo get_currency_type_from_lab_config_settings(); ?>
+                </td>
+            </tr>
 
-			<tr valign='top'>
-				<td></td>
-				<td>
-					<br><br>
-					<input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:update_ttype();'></input>
-					&nbsp;&nbsp;&nbsp;
-					<a class="btn" href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-					&nbsp;&nbsp;&nbsp;
-					<span id='update_ttype_progress' style='display:none;'>
-						<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
-					</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+            <tr valign='top'>
+                <td></td>
+                <td>
+                    <br><br>
+                    <input type='button' class="btn green" value='<?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:update_ttype();'></input>
+                    &nbsp;&nbsp;&nbsp;
+                    <a class="btn" href='catalog.php?show_t=1'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
+                    &nbsp;&nbsp;&nbsp;
+                    <span id='update_ttype_progress' style='display:none;'>
+                        <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </form>
 </div>
 <div id='measures_help' style='display:none'>
@@ -1153,7 +1153,7 @@ if(num_ranges[mrow_num] == 0)
     var num_row = num_ranges[mrow_num];
     
         var map=map_offset-1;                                   
-    var html_code = "<input type='text' class='range_field span2 m-wrap' name='range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field span2 m-wrap' name='range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field span3 m-wrap' name='gender_"+mrow_num+"_"+map+"' value='B'/> <input type='text' class='range_field span2 m-wrap agerange_l_"+mrow_num+"' name='agerange_l_"+mrow_num+"_"+map+"' id='agerange_l_"+mrow_num+"_"+map+"' value='0' /> : <input type='text' class='range_field span2 m-wrap agerange_u_"+mrow_num+"' name='agerange_u_"+mrow_num+"_"+map+"' id='agerange_u_"+mrow_num+"_"+map+"' value='100' /><br>";
+    var html_code = "<input type='text' class='range_field span2 m-wrap' name='range_l_"+mrow_num+"[]' value='' /> : <input type='text' class='range_field span2 m-wrap' name='range_u_"+mrow_num+"[]' value='' /> <input type='text' class='range_field span3 m-wrap' name='gender_"+mrow_num+"[]' value='B'/> <input type='text' class='range_field span2 m-wrap agerange_l_"+mrow_num+"' name='agerange_l_"+mrow_num+"[]' id='agerange_l_"+mrow_num+"_"+map+"' value='0' /> : <input type='text' class='range_field span2 m-wrap agerange_u_"+mrow_num+"' name='agerange_u_"+mrow_num+"[]' id='agerange_u_"+mrow_num+"_"+map+"' value='100' /><br>";
     $('#numeric_'+mrow_num).append(html_code);
 }   
     function add_new_range_field(mrow_num, map_offset)

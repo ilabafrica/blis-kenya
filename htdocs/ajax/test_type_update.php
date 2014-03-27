@@ -7,11 +7,6 @@
 include("../includes/db_lib.php");
 include("../lang/lang_xml2php.php");
 
-//NC3065
-//$user = get_user_by_id($_SESSION['user_id']);
-//$lab_config_id = $_REQUEST['id'];
-//-NC3065
-
 putUILog('test_type_update', 'X', basename($_SERVER['REQUEST_URI'], ".php"), 'X', 'X', 'X');
 
 $test_type_id = get_request_variable('tid');
@@ -68,18 +63,15 @@ if($_REQUEST['ispanel'] == "on")
 }
 else
 {
-   
-
 	# Non-panel test. Collect all modified measures
 	$measure_ids = $_REQUEST['m_id'];
         $sm_ids = $_REQUEST['sm_id'];
-        //print_r($sm_ids);
 
 	$measure_names = $_REQUEST['measure'];
 	$measure_types = $_REQUEST['mtype'];
 	$units = $_REQUEST['unit'];
-        //$subm_ids = array();
-         # beginning of measure deletion]
+
+	# beginning of measure deletion]
         $measures_to_be_deleted = array();
         for($del = 0; $del < count($measure_names); $del++)
 	{	
@@ -91,14 +83,10 @@ else
                         $subm_ids = getSubmeasureIDs($measure_ids[$del]);
                         for($subid = 0; $subid < count($subm_ids); $subid++)
                         {
-                            #debug
-                            //echo "<br>sub=$subm_ids[$subid]";
                             array_push($measures_to_be_deleted, $subm_ids[$subid]);
                         }
 		}
         }
-        #debug
-        //print_r($measures_to_be_deleted);
         
         $test_type_obj = get_test_type_by_id($test_type_id);
         $result_indices = array();
@@ -118,8 +106,6 @@ else
         {
             
             $submeasure_list_objs = $measure->getSubmeasuresAsObj();
-            //echo "<br>".count($submeasure_list);
-            //print_r($submeasure_list);
             $submeasure_countt = count($submeasure_list_objs);
             
             if($measure->checkIfSubmeasure() == 1)
@@ -384,7 +370,6 @@ else
                 
 		
 		$range_string = "";
-		
 		$reference_ranges_list[$i] = array();
 		if($measure_types[$i] == Measure::$RANGE_NUMERIC)
 		{
@@ -393,30 +378,24 @@ else
 			ReferenceRange::deleteByMeasureId($measure_id, $_SESSION['lab_config_id']);
 			# Check if new reference values and age ranges have been entered properly
 			$ranges_lower = $_REQUEST['range_l_'.($i+1)];
-			$ranges_upper = $_REQUEST['range_u_'.($i+1)];
+                        $ranges_upper = $_REQUEST['range_u_'.($i+1)];
+                        $gender_options = $_REQUEST['gender_'.($i+1)];
+                        $lower_ages = $_REQUEST['agerange_l_'.($i+1)];
+                        $upper_ages = $_REQUEST['agerange_u_'.($i+1)];
 			for($j = 0; $j < count($ranges_lower); $j++)
 			{
 				$lower_range = $ranges_lower[$j];
-				$upper_range = $ranges_upper[$j];
-				if($lower_range!=$upper_range)
-				{
-                                    $lower_age = 0;
-                                    $upper_age = 0;
-                                    if(isset($_REQUEST["agerange_l_".($i+1)."_".$j]))
-                                    {
-                                            # Age range specified for this reference range
-                                            $lower_age = $_REQUEST["agerange_l_".($i+1)."_".$j];
-                                            $upper_age = $_REQUEST["agerange_u_".($i+1)."_".$j];
-                                            $gender_option=$_REQUEST["gender_".($i+1)."_".$j];
-                                            if($lower_age > $upper_age)
-                                            {
-                                                    # Swap
-                                                    list($lower_age, $upper_age) = array($upper_age, $lower_age);
-                                            }
-                                    }
-					//$gender_option = 'B';
-				$reference_ranges_list[$i][] = array($lower_range, $upper_range, $lower_age, $upper_age, $gender_option);
+                                $upper_range = $ranges_upper[$j];
+                                $gender_option = $gender_options[$j];
+                                $lower_age = $lower_ages[$j];
+                                $upper_age = $upper_ages[$j];
+                                if($lower_age > $upper_age){ # Swap them
+                                    $tmp_age = $lower_age;
+                                    $lower_age = $upper_age;
+                                    $upper_age = $tmp_age;
                                 }
+				if($lower_range!=$upper_range)
+				        $reference_ranges_list[$i][] = array($lower_range, $upper_range, $lower_age, $upper_age, $gender_option);
 			}
 			//	$range_string = trim($ranges_lower[$i]).":".trim($ranges_upper[$i]);
 			$range_string = ":";
@@ -506,7 +485,7 @@ else
 	while ($i < $measures_count)
         {
 		if((trim($measure_names[$i]) == "" )||(isset($measure_del[$i])))
-			{
+		{
                         $i++;
                         continue;
                     }
@@ -548,17 +527,6 @@ else
                         }
                         $index++;
                     }
-			// if($ranges_lower[1]!=$ranges_upper[1])
-			// {
-			// $reference_ranges_list[$count_ref][] = array($ranges_lower[0], $ranges_upper[0],0,0,'M');
-			// $reference_ranges_list[$count_ref][] = array($ranges_lower[1], $ranges_upper[1],0,0,'F');
-			
-			// # Numeric range
-			// # Check is range values entered properly
-		
-			// }
-			// else 
-			// $reference_ranges_list[$count_ref][] = array($ranges_lower[0], $ranges_upper[0],0,0,'B');
 	
 			$range_string = ":";
 		}
