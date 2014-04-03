@@ -7579,7 +7579,7 @@ function set_specimen_status_reject($specimen_id, $status_code, $rejectionreason
 	return $result;
 }
 
-function set_specimen_status($specimen_id, $status_code, $time_collected=null)
+function set_specimen_status($specimen_id, $status_code, $date_collected=null, $time_collected=null)
 {
 	global $con;
 	$specimen_id = mysql_real_escape_string($specimen_id, $con);
@@ -7589,7 +7589,8 @@ function set_specimen_status($specimen_id, $status_code, $time_collected=null)
 		$query_string = 
 			"UPDATE `specimen` SET 
 				status_code_id=$status_code,
-				date_collected='$date_collected',
+                                date_collected='$date_collected',
+                                time_collected=SUBSTRING('$time_collected',12,5),
 				ts_collected = '$time_collected'
 			WHERE specimen_id=$specimen_id";
 	}else{
