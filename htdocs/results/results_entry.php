@@ -45,7 +45,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config->id);
 			</div>
 		</div>
 		<div class="portlet-body">
-			<div class="scroller" data-height=900px" data-always-visible="0">
+			<div class="scroller" data-height="900px" data-always-visible="0">
 				<div id='fetched_specimens_entry'>
 				<!--TESTS LOADED IN THIS DIV-->
 				</div>
