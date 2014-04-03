@@ -268,6 +268,10 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 									if($range_type == Measure::$RANGE_FREETEXT)
 										echo " selected='selected' ";
 									?>><?php echo "Free Text"; ?></option>
+									 <option value='<?php echo Measure::$RANGE_TEXTAREA; ?>' <?php 
+									if($range_type == Measure::$RANGE_TEXTAREA)
+										echo " selected='selected' ";
+									?>><?php echo "Text Area"; ?></option>
 								</select>
 								<?php
 								
@@ -377,6 +381,14 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 										<?php echo "<small>Will appear as a text box for result entry</small>"?>
 									</span>
 								</span>
+
+								<span id='textarea_<?php echo $i; ?>' class='values_section_<?php echo $i; ?>'
+								<?php if($range_type != Measure::$RANGE_TEXTAREA) echo " style='display:none' "; ?>
+								>
+									<span id='textarea_list_<?php echo $i; ?>'>
+										<?php echo "<small>Will appear as a text area for result entry</small>"?>
+									</span>
+								</span>
 								<?php
 								echo "</td>";
 								echo "<td id='unit_$i'>";
@@ -415,6 +427,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 									<option value='<?php echo Measure::$RANGE_OPTIONS; ?>'><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
 									<option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>'><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
                                                                         <option value='<?php echo Measure::$RANGE_FREETEXT; ?>'><?php echo "Free Text"; ?></option>
+                                                                        <option value='<?php echo Measure::$RANGE_TEXTAREA; ?>'><?php echo "Text Area"; ?></option>
 								</select>
 								<?php
 								echo "</td>";
@@ -456,7 +469,12 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 									<span id='new_freetext_list_new_<?php echo $i; ?>'>
                                                                     		<?php echo "<small>Will appear as a text box for result entry</small>"?>
 									</span>
+									
 								</span>
+								<span id='new_textarea_new_<?php echo $i; ?>' style='display:none' class='new_values_section_new_<?php echo $i; ?>'>
+									<span id='new_textarea_list_new_<?php echo $i; ?>'>
+                                                                    		<?php echo "<small>Will appear as a text area for result entry</small>"?>
+									</span>
 								<?php
 								echo "</td>";
 								echo "<td id='unit_$i'>";
@@ -491,6 +509,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
                                                     <option value='<?php echo Measure::$RANGE_OPTIONS; ?>'><?php echo LangUtil::$generalTerms['RANGE_ALPHANUM']; ?></option>
                                                     <option value='<?php echo Measure::$RANGE_AUTOCOMPLETE; ?>'><?php echo LangUtil::$generalTerms['RANGE_AUTOCOMPLETE']; ?></option>
                                                     <option value='<?php echo Measure::$RANGE_FREETEXT; ?>'><?php echo "Free Text" ?></option>
+                                                    <option value='<?php echo Measure::$RANGE_TEXTAREA; ?>'><?php echo "Text Area" ?></option>
 
                                             </select>
                                             <?php
@@ -530,6 +549,11 @@ $page_elems->getTestTypeInfo($test_type->name, true);
                                             <span id='freetext_<?php echo $i.$us.$y; ?>' style='display:none' class='values_section_<?php echo $i.$us.$y; ?>'>
                                                     <span id='freeetext_list_<?php echo $i.$us.$y; ?>'>
                                                             <?php echo "<small>Will appear as a text box for result entry</small>"?>
+                                                    </span>
+                                            </span>
+                                            <span id='textarea_<?php echo $i.$us.$y; ?>' style='display:none' class='values_section_<?php echo $i.$us.$y; ?>'>
+                                                    <span id='textarea_list_<?php echo $i.$us.$y; ?>'>
+                                                            <?php echo "<small>Will appear as a text area for result entry</small>"?>
                                                     </span>
                                             </span>
                                             <?php
@@ -727,8 +751,10 @@ function toggle_range_type(select_elem)
         $('#val_'+elem_id).show();
     else if(select_elem.value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
         $('#autocomplete_'+elem_id).show();
-        else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
+    else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
         $('#freetext_'+elem_id).show();
+    else if(select_elem.value == <?php echo Measure::$RANGE_TEXTAREA; ?>)
+        $('#textarea_'+elem_id).show();
 }
 
 
@@ -742,8 +768,10 @@ function toggle_range_type(select_elem)
         $('#new_val_'+elem_id).show();
     else if(select_elem.value == <?php echo Measure::$RANGE_AUTOCOMPLETE; ?>)
         $('#new_autocomplete_'+elem_id).show(); 
-        else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
+    else if(select_elem.value == <?php echo Measure::$RANGE_FREETEXT; ?>)
         $('#new_freetext_'+elem_id).show(); 
+    else if(select_elem.value == <?php echo Measure::$RANGE_TEXTAREA; ?>)
+        $('#new_textarea_'+elem_id).show(); 
 }
 
  function add_option_field(mrow_num)

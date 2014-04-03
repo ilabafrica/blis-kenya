@@ -152,12 +152,19 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			echo "</div>";
 			
 		}
-                else if($range_type == Measure::$RANGE_FREETEXT)
+        else if($range_type == Measure::$RANGE_FREETEXT)
 		{
                         # Text box
                     //echo "<div>";
                         echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' data-required='1'></input>";
                   // echo "</div>";
+                                	
+		}
+		else if($range_type == Measure::$RANGE_TEXTAREA)
+		{
+                        # Text area
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry' data-required='1' style='height:140px;width:275px'></textarea>";
+                  
                                 	
 		}
 		if(stripos($measure->unit,":")!=false)

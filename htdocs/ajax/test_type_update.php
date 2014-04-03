@@ -474,6 +474,11 @@ else
 			# Free Text indentifier
 			$range_string = "\$freetext\$\$";
 		}
+        else if($measure_types[$i] == Measure::$RANGE_TEXTAREA)
+        {
+            # Free Text indentifier
+            $range_string = "\$textarea\$\$";
+        }
 		$unit = $units[$i];
 		# Existing measure
 		# Update measure to DB
@@ -614,6 +619,11 @@ else
 			# Free Text indentifier
 			$range_string = "\$freetext\$\$";
 		}
+        else if($measure_types[$i] == Measure::$RANGE_TEXTAREA)
+        {
+            # Free Text indentifier
+            $range_string = "\$textarea\$\$";
+        }
 		$unit = $units[$i];
 		# Add measure to DB
 		$new_measure_id = add_measure($measure_name, $range_string, $unit);
@@ -714,6 +724,11 @@ else
                     {
                             # Free text measure type
                             $range_string = "\$freetext\$\$";
+                    }
+                    else if($submeasure_types[$i+1][$k] == Measure::$RANGE_TEXTAREA)
+                    {
+                            # Free text measure type
+                            $range_string = "\$textarea\$\$";
                     }
                     $unit = $subunits[$i+1][$k];
                     //# Add measure to DB and track the ID (key)

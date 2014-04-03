@@ -166,6 +166,13 @@ function get_result_form($test_type, $test, $num_tests, $patient)
                   // echo "</div>";
                                 	
 		}
+		else if($range_type == Measure::$RANGE_TEXTAREA)
+		{
+                        # Text area
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry' data-required='1' style='height:140px;width:275px'>". $clean_result ."</textarea>";
+                  
+                                	
+		}
 		if(stripos($measure->unit,":")!=false)
 		{
 		$units=explode(":",$measure->unit);

@@ -1644,6 +1644,7 @@ class Measure
         
         # nc50
         public static $RANGE_SUBTYPE = 6;
+        public static $RANGE_TEXTAREA = 7;
         
 	public static function getObject($record)
 	{
@@ -1707,6 +1708,10 @@ class Measure
 		else if(strpos($this->range, "\$freetext\$") !== false)
                 {
                     return Measure::$RANGE_FREETEXT;
+                }
+        else if(strpos($this->range, "\$textarea\$") !== false)
+                {
+                    return Measure::$RANGE_TEXTAREA;
                 }
 		//-nc40
                 
@@ -1843,6 +1848,9 @@ class Measure
                         case Measure::$RANGE_FREETEXT:
 				$retval = "Free Text Measure Type";
 				break;
+				case Measure::$RANGE_TEXTAREA:
+				$retval = "Text Area Measure Type";
+				break;
 		}
 		return $retval;
 	}
@@ -1856,7 +1864,8 @@ class Measure
 			$this->getRangeType() == Measure::$RANGE_OPTIONS ||
 			$this->getRangeType() == Measure::$RANGE_MULTI ||
 			$this->getRangeType() == Measure::$RANGE_AUTOCOMPLETE ||
-                        $this->getRangeType() == Measure::$RANGE_FREETEXT
+            $this->getRangeType() == Measure::$RANGE_FREETEXT ||
+            $this->getRangeType() == Measure::$RANGE_TEXTAREA
 		)
 		{
 			$range_parts = explode("/", $this->range);
