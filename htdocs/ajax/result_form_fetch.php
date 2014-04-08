@@ -22,6 +22,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	
 	$curr_form_id = 'test_'.$test_id;
 	$form_id_list[] = $curr_form_id;
+
 	?>
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method='' class="form-horizontal" novalidate='novalidate'>
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
@@ -259,12 +260,12 @@ $modal_link_id = "test_result_link_$test_id";
 	
 	<div class="portlet box grey">
 		<div class="portlet-title">
-			<h4>Patient Test history</h4>
+			<h4>Summary</h4>
 		</div>		
 	<div class="portlet-body">
 	<div class="scroller" data-height="300px" data-always-visible="1">
 	<?php 		
-	$page_elems->getPatientHistory($patient->patientId, true);
+	$page_elems->getPatientTestInfo($patient->patientId, $specimen_id, $test_id);
 	?>
 	</div>
 	</div>

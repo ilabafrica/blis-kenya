@@ -94,6 +94,11 @@
   margin-left: -470px;
 }
 
+.modal.container.large {
+  width: 1200px;
+  margin-left: -600px;
+}
+
 /* Modal Overflow */
 
 .modal-overflow.modal {

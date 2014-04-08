@@ -3129,6 +3129,14 @@ class Test
 	return $this->status;
 	}
 
+	public function getpatientVisitNumber()
+	{
+		if ($this->patientVisitNumber == null) {
+			return "N/A";
+		}
+		return $this->patientVisitNumber;
+	}
+
 	public function getTestOrderStage($external_lab_no)
 	{
 		if($external_lab_no==''){

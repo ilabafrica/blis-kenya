@@ -736,9 +736,9 @@ else{
 		</tr>
 		<?php if (isset($test->testId))
 			{	?>
-		<div class='modal container hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-hidden="true" data-backdrop="static">
+		<div class='modal container large hide fade' id='result_form_pane_<?php echo $test->testId; ?>' role="dialog" aria-hidden="true" data-backdrop="static">
 		<?php }else{?>
-		<div class='modal container hide fade' id='result_form_pane_<?php echo $record["external_lab_no"]; ?>' role="dialog" aria-hidden="true" data-backdrop="static">			
+		<div class='modal container large hide fade' id='result_form_pane_<?php echo $record["external_lab_no"]; ?>' role="dialog" aria-hidden="true" data-backdrop="static">			
 		<?php } ?>
 		</div>
 		<?php

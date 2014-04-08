@@ -19,6 +19,9 @@ LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
 $status = get_specimen_status($sid);
 include("../includes/scripts.php");
+$script_elems->enableDatePicker();
+$script_elems->enableTableSorter();
+
 ?>
 <?php if(!$is_modal){?>
 <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
@@ -124,36 +127,6 @@ if($is_modal){
            </div>   
 
 <script type='text/javascript'>
-function submit_forms(specimen_id)
-{
-
-    var form_id_csv = $('#form_id_list').attr("value");
-    var form_id_list = form_id_csv.split(",");
-//result_cancel_link').hide();
-    $('.result_progress_spinner').show();
-    //var target_div_id = "fetched_specimen";
-    
-    var target_div_id = "result_form_pane_"+specimen_id;
-    for(var i = 0; i < form_id_list.length; i++)
-    {
-        if($('#'+form_id_list[i]+'_skip').is(':checked'))
-        {
-            continue;
-        }
-        var params = $('#'+form_id_list[i]).formSerialize();
-        $.ajax({
-            type: "POST",
-            url: "ajax/result_add.php",
-            data: params,
-            success: function(msg) {
-                $("#"+target_div_id).html(msg);
-            }
-        });
-    }
-    $('.result_progress_spinner').hide();
-    }
-
-
 function fetch_specimen2(specimen_id)
 {
     

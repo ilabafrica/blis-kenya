@@ -2396,6 +2396,220 @@ class PageElems
 		<?php
 	}
 	
+	public function getPatientTestInfo($pid, $sid, $tid)
+	{
+		# Returns HTML table displaying specimen info
+		$specimen = get_specimen_by_id($sid);
+		$patient = Patient::getById($pid);
+		$test = Test::getById($tid);
+
+		if($specimen == null)
+		{
+			?>
+			<div class='sidetip_nopos'>
+				<?php echo LangUtil::$generalTerms['ERROR'].": ".LangUtil::$generalTerms['SPECIMEN_ID']." ".LangUtil::$generalTerms['MSG_NOTFOUND']; ?>
+			</div>
+			<?php
+			return;
+		}
+		?>
+		<b>Test details</b>
+		<br/>
+		<table class='table table-condensed table-hover' style="width: 380px">
+			<tbody>
+				<tr>
+					<td><u><?php echo LangUtil::$generalTerms['TYPE']; ?></u></td>
+					<td><?php echo $specimen->getTypeName(); ?></td>
+				</tr>
+				<?php
+				if($_SESSION['s_addl'] != 0)
+				{
+				?>
+				<tr>
+					<td><u><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></u></td>
+					<td><?php $specimen->getAuxId(); ?></td>
+				</tr>
+				<?php
+				}
+				if($_SESSION['dnum'] != 0)
+				{
+				?>
+				<tr>
+					<td><u><?php echo LangUtil::$generalTerms['PATIENT_DAILYNUM']; ?></u></td>
+					<td><div style=" font-weight:bold;"><?php echo $specimen->getLabSection(); ?></div></td>
+				</tr>
+				<?php
+				}
+				?>
+				<tr>
+					<td><u><?php echo LangUtil::$generalTerms['PATIENT']; ?> details</u></td>
+					<td>
+						<?php
+						echo $patient->getName()." (".$patient->sex." ".$patient->getAge().")";
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td> <u> Visit number</u> </td>
+					<td> <?php echo $test->getpatientVisitNumber(); ?></td>
+				</tr>
+				<tr>
+					<td><u><?php echo LangUtil::$generalTerms['R_DATE']; ?></u></td>
+					<td>
+						<?php echo DateLib::mysqlToString($specimen->dateRecvd); ?>
+					</td>
+				</tr>
+				<?php
+				if($_SESSION['comm'] != 0)
+				{
+				?>
+				<tr>
+					<td><u><?php echo LangUtil::$generalTerms['COMMENTS']; ?></u></td>
+					<td><?php echo $specimen->getComments(); ?></td>
+				</tr>
+				<?php
+				}
+				?>
+				<tr valign='top'>
+					<td><u><?php echo LangUtil::$generalTerms['TESTS']; ?></u></td>
+					<td><?php echo $specimen->getTestNames(); ?></td>
+				</tr>
+				<?php
+				if($_SESSION['doctor'] != 0)
+				{
+					?>
+					<tr>
+						<td><u><?php echo LangUtil::$generalTerms['DOCTOR']; ?></u></td>
+						<td>
+						<?php
+						if(trim($specimen->doctor) == "")
+						{
+							echo "-";
+						}
+						else
+						{
+							echo  $specimen->doctor;
+						}
+						?>
+						</td>
+					</tr>
+					<?php
+				}
+				?>
+				<?php
+				# Custom fields here
+				$custom_data_list = get_custom_data_specimen($specimen->specimenId);
+				foreach($custom_data_list as $custom_data)
+				{
+					$field_name = get_custom_field_name_specimen($custom_data->fieldId);
+					if(stripos($field_name ,"^^")==NULL)
+					{
+					$field_value = $custom_data->fieldValue;
+					?>
+					<tr>
+						<td><u><?php echo $field_name; ?></u></td>
+						<td><?php echo $custom_data->getFieldValueString($_SESSION['lab_config_id'], 1); ?></td>
+					</tr>
+					<?php
+					}
+				}
+				if($_SESSION['refout'] != 0)
+				{
+				# Show referred-out hospital name if specimen was referred out and/or returned back
+				if
+				(
+					$specimen->statusCodeId == Specimen::$STATUS_REFERRED ||
+					$specimen->statusCodeId == Specimen::$STATUS_RETURNED
+				)
+				{
+					?>
+					<tr>
+						<td><u><?php echo LangUtil::$generalTerms['REF_TO']; ?></u></td>
+						<td>
+						<?php
+						if(trim($specimen->referredToName) == "")
+						{
+							echo "Not Known";
+						}
+						else
+						{
+							echo $specimen->referredToName;
+						}
+						?>
+						</td>
+					</tr>
+					<?php
+				}
+				}
+				?>				
+			</tbody>
+		</table>
+		<?php
+		# Returns HTML table displaying patient test history
+                $admin = 0;
+                if(is_admin(get_user_by_id($_SESSION['user_id']))) {
+                    $admin = 1;}
+                $rem_recs = get_removed_specimens($_SESSION['lab_config_id']);
+                $rem_specs = array();
+                $rem_remarks = array();
+                foreach($rem_recs as $rem_rec)
+                {
+                    $rem_specs[] = $rem_rec['r_id'];
+                    $rem_remarks[] = $rem_rec['remarks'];
+                }
+
+		$specimen_list = get_specimens_by_patient_id($pid);
+		if(count($specimen_list) == 0)
+		{
+			?>
+			<br>
+			<div class='sidetip_nopos'><?php echo LangUtil::$generalTerms['TESTS']." - ".LangUtil::$generalTerms['MSG_NOTFOUND']; ?></div>
+			<?php
+			return;
+		}
+		?>
+		<b>Previous tests</b>
+		<br/>
+		<table class="table table-condensed table-bordered table-advance" id='test_history_table'>
+			<thead>
+				<tr valign='top'>
+					<?php
+					if($_SESSION['s_addl'] != 0)
+					{
+					?>
+					<th><?php echo LangUtil::$generalTerms['SPECIMEN_ID']; ?></th>
+					<?php
+					}
+					?>
+					<th><?php echo LangUtil::$generalTerms['TYPE']; ?></th>
+					<th><?php echo LangUtil::$generalTerms['R_DATE']; ?></th>
+					<th><?php echo LangUtil::$generalTerms['SP_STATUS']; ?></th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			$specimen_list = array_splice($specimen_list, 0, 5);
+			foreach($specimen_list as $specimen)
+			{
+                            if($admin == 0)
+                            {
+                                if(in_array($specimen->specimenId, $rem_specs))
+                                    continue;
+                            }
+				$this->getSpecimenInfoRow($specimen, $rem_specs, $admin, true);
+			}
+			?>
+			</tbody>
+		</table>
+
+		<?php
+	}
+
+
+
 	public function getPatientInfo($pid, $width="", $is_external_patient =false)
 	{
 		# Returns HTML table displaying patient info
