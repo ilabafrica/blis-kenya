@@ -2413,7 +2413,7 @@ class PageElems
 			return;
 		}
 		?>
-		<b>Test details</b>
+		<b>Specimen details</b>
 		<br/>
 		<table class='table table-condensed table-hover' style="width: 380px">
 			<tbody>
@@ -2584,8 +2584,6 @@ class PageElems
 					<th><?php echo LangUtil::$generalTerms['TYPE']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['R_DATE']; ?></th>
 					<th><?php echo LangUtil::$generalTerms['SP_STATUS']; ?></th>
-					<th></th>
-					<th></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -2972,7 +2970,7 @@ class PageElems
 			}
 			?>
 			<td>
-				<?php echo get_specimen_name_by_id($specimen->specimenTypeId); ?>
+				<?php echo $specimen->getTestNames(); ?>
 			</td>
 			<td>
 				<?php echo DateLib::mysqlToString($specimen->dateRecvd); ?>
@@ -3690,10 +3688,22 @@ class PageElems
 	{
 		# Returns HTML table row containing test info
 		# Called by test_edit_form.php 
-		
+		$specimen_object=Specimen::getById($test->specimenId);
+		$pid=$specimen_object->patientId;
+		$sid=$test->specimenId;
+		$this->getPatientTestInfo($pid, $sid, $test->testId);
+
 		$user = get_user_by_id($_SESSION['user_id']);
 		?>
-		
+		<b> Test results</b>
+		<br />
+		<table class="table table-striped table-bordered table-advance">
+		<thead><th>Test Name</th>
+		<th>Results</th>
+		<th>Remarks</th>
+		<th>Entered by</th>
+		</thead>
+		<tbody>
 		<tr valign='top'>
 			<td>
 				<?php echo get_test_name_by_id($test->testTypeId); ?>
@@ -3712,13 +3722,9 @@ class PageElems
 			<td>
 				<?php echo get_username_by_id($test->userId); ?>
 			</td>
-			<?php
-			$specimen_object=Specimen::getById($test->specimenId);
-			$pid=$specimen_object->patientId;
-			$sid=$test->specimenId;
-				
-			?>
 		</tr>
+		 </tbody>
+		 </table>
 		<?php
 	}
 	

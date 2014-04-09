@@ -253,21 +253,14 @@ $modal_link_id = "test_edit_link_$test_id";
 	
 	<div class="portlet box grey">
 		<div class="portlet-title">
-			<h4>Test Result</h4>
+			<h4>Summary</h4>
 		</div>		
 	<div class="portlet-body">
 	<div class="scroller" data-height="300px" data-always-visible="1">
-	<table class="table table-striped table-bordered table-advance">
-		<thead><th>Test Name</th>
-		<th>Results</th>
-		<th>Remarks</th>
-		<th>Entered by</th>
-		</thead>
-		<tbody>
+	
 		 <?php $page_elems->getTestInfoRowSmall($test, true);
 		 ?>
-		 </tbody>
-		 </table>
+		
 
 	</div>
 	</div>
