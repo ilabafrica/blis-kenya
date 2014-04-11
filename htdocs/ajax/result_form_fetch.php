@@ -335,4 +335,16 @@ $modal_link_id = "test_result_link_$test_id";
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
 	}	
 
+	$(".uniform_width").keydown(function(keydata){
+			if (keydata.ctrlKey == true) 
+			{
+				keyVal = this.value;
+				words = keyVal.split(" ");
+				abbreviation = words[words.length-1];
+
+				//To do: Send this data to server and return appropriate word
+
+			};
+		});	
+
 	</script>
