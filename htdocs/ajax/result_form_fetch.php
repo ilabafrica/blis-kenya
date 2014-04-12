@@ -338,12 +338,24 @@ $modal_link_id = "test_result_link_$test_id";
 	$(".uniform_width").keydown(function(keydata){
 			if (keydata.ctrlKey == true) 
 			{
-				keyVal = this.value;
-				words = keyVal.split(" ");
+				currentdiv = this;
+				typedWords = this.value;
+				words = typedWords.split(" ");
 				abbreviation = words[words.length-1];
 
-				//To do: Send this data to server and return appropriate word
+				//Take abbreviation and replace it with whatever we get from server
+				//To do: Validate server side input and user input. Check for blanks
 
+				abbUrl = "ajax/getFullWord.php";
+				$.getJSON(
+					abbUrl, 
+					{abb : abbreviation}, 
+					function(data, status)
+					{
+						console.log(data);
+						ct = typedWords.replace(abbreviation, data.abb);
+						currentdiv.value = ct; 
+					});
 			};
 		});	
 
