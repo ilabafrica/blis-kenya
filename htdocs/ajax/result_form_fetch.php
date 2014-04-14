@@ -157,14 +157,14 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry' data-required='1'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation' data-required='1'></input>";
                   // echo "</div>";
                                 	
 		}
 		else if($range_type == Measure::$RANGE_TEXTAREA)
 		{
                         # Text area
-                   echo "<textarea name='result[]' id='$input_id'  class='results_entry' data-required='1' style='height:140px;width:275px'></textarea>";
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation' data-required='1' style='height:140px;width:275px'></textarea>";
                   
                                 	
 		}
@@ -199,7 +199,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
 		       data-required='1'></textarea>
 			</span>
 		</td>
@@ -335,26 +335,40 @@ $modal_link_id = "test_result_link_$test_id";
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
 	}	
 
-	$(".uniform_width").keydown(function(keydata){
+	/**
+	 * Binds any input element with class .abbreviation to the keydown event and gets
+	 * the last word typed[abbreviation] and sends it to the server.
+	 * The return is the full words. 
+	 * @param  {string}  Name of the class. 
+	 * @return {Void}
+	 * 
+	 * @todo Move this code into a function 
+	 */
+
+	$(".abbreviation").keydown(function(keydata){
 			if (keydata.ctrlKey == true) 
 			{
 				currentdiv = this;
 				typedWords = this.value;
 				words = typedWords.split(" ");
-				abbreviation = words[words.length-1];
+				abbrv = words[words.length-1];
 
-				//Take abbreviation and replace it with whatever we get from server
-				//To do: Validate server side input and user input. Check for blanks
+				if(abbrv == ""){
+					return;
+				}
 
 				abbUrl = "ajax/getFullWord.php";
 				$.getJSON(
 					abbUrl, 
-					{abb : abbreviation}, 
-					function(data, status)
+					{abb : abbrv}, 
+					function(data)
 					{
-						console.log(data);
-						ct = typedWords.replace(abbreviation, data.abb);
-						currentdiv.value = ct; 
+						if (data == null)
+						{
+							return;
+						}
+						replacedAbbString = typedWords.replace(abbrv, data.word);
+						currentdiv.value = replacedAbbString; 
 					});
 			};
 		});	
