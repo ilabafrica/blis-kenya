@@ -8,6 +8,7 @@ include("redirect.php");
 include("includes/new_image.php");
 include("includes/header.php");
 include("includes/random.php");
+include("includes/libdata.php");
 include("includes/stats_lib.php");
 LangUtil::setPageId("lab_config_home");
 
@@ -247,7 +248,7 @@ if($lab_config == null)
         </div>
         <div class="portlet-body">
 
-            <div  id='search' style='margin-left:10px;'>
+            <div id='search' style='margin-left:10px;'>
                     <p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
                         <div id='searchfield_msg' class='clean-orange' style='display:none;width:350px;'>
                         </div>
@@ -264,6 +265,46 @@ if($lab_config == null)
                             <?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SUBMITTING']); ?>
                         </span>
                         </form>
+            </div>
+        </div>
+       </div>
+
+       <div class="portlet box green right_pane" id="abbreviations_div" style="display: none">
+        <div class="portlet-title" >
+                                <h4><i class="icon-reorder"></i>Abbreviations</h4>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse"></a>
+                                    <a data-toggle="modal" class="config"></a>
+                                </div>
+        </div>
+        <div class="portlet-body">
+            <div id='abbreviation' style='margin-left:10px;height:500px'>
+                        
+                        <p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
+                        <h4>List of abbreviations and their full words</h4>
+                        <a href="javascript:void(0)" class="btn blue-stripe" onclick="addAbbreviationRow()">Add new abbreviation</a>
+                        <p></p>
+
+                        <table id="abbrev_table" class="table table-striped table-bordered table-hover" style="width:600px">
+                        <tr>
+                            <th> Abbreviation </th>
+                            <th> Full word </th>
+                            <th> Edit </th>
+                            <th> Delete </th>
+                        </tr>
+                        <?php 
+                        $abbwords = Abbreviations::getAllAbbreviations();
+                        foreach ($abbwords as $abbword) { ?>
+                        <tr id="row_<?php echo $abbword->id ?>">
+                            <td id="abb_<?php echo $abbword->id ?>"><?php echo $abbword->abbreviation ?></td>
+                            <td id="word_<?php echo $abbword->id ?>"><?php echo $abbword->word ?></td>
+                            <td><a class="btn mini" href="javascript:void(0)" id="edit_<?php echo $abbword->id ?>" onclick="makeRowEditable(<?php echo $abbword->id .", '". $abbword->abbreviation ."', '". $abbword->word ."'"?> )">Edit</a></td>
+                            <td><a href="#" class="btn mini">Delete</a></td>
+                        </tr>
+                        <?php } ?>
+                        </table>
+                        
+                            
             </div>
         </div>
        </div>
@@ -1935,6 +1976,69 @@ $(document).ready(function(){
 	stype_toggle();
 });
 
+/**
+ * Takes content of the cell and puts it in a input tag, for editing
+ * @param  {int} id   Id of the record
+ * @param  {String} abb  Abbreviation 
+ * @param  {String} word Word for the abbreviation
+ * @return {void}     no return 
+ */
+function makeRowEditable(id, abb, word)
+        {
+            var abbId = 'abb_'+id;
+            var wordId = 'word_'+id;
+            var editId = 'edit_'+id;
+            $('#'+abbId).html("<input value='"+abb+"' id='"+abbId+"_ct'></input>");
+            $('#'+wordId).html("<input value='"+word+"' id='"+wordId+"_ct'></input>");
+
+            $('#'+editId).attr("onclick","updateRow('"+id+"', 'update')");
+            $('#'+editId).html("Update");
+        }
+/**
+ * Function for manipulating abbreviations. Add edit delete.
+ * Sends data to ajax/manipulateAbbreviations for handlinf
+ * @param  {int} id  Id of the row being manipulated
+ * @param  {String} action The type of action add update delete
+ * @return {void}    No return
+ */
+function updateRow(id, action)
+        {
+            var abbId = 'abb_'+id+'_ct';
+            var wordId = 'word_'+id+'_ct';
+            var editId = 'edit_'+id;
+
+            var abbIdTd = 'abb_'+id;
+            var wordIdTd = 'word_'+id;
+
+            abbrv = $('#'+abbId).val();
+            wrd = $('#'+wordId).val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'ajax/manipulateAbbreviations.php',
+                data: {id: id, abb: abbrv, word: wrd, action: action},
+                success : function(data){
+
+                    $('#'+abbIdTd).html(abbrv);
+                    $('#'+wordIdTd).html(wrd);
+
+                    $('#'+editId).attr("onclick","makeRowEditable('"+id+"','"+abbrv+"','"+wrd+"') ");
+                    $('#'+editId).html("Edit");
+                }
+            });
+        }
+
+function addAbbreviationRow() {
+        
+        abbrevRow = "<tr>"
+            +"<td id=''> <input value='' id='abb'></input> </td>"
+            +"<td id=''> <input value='' id='word'></input> </td>"
+            +"<td><a class='btn mini' href='javascript:void(0)' onclick='updateRow(0, add)'>Add </a></td>"
+            +"<td><p  class='btn mini'>Delete</p></td>"
+        +"</tr>";
+        $("#abbrev_table").append(abbrevRow);
+}
+
 function performDbUpdate() {
 	$.ajax({
 		type : 'POST',
@@ -2825,5 +2929,5 @@ function import_users(){
 }
 
 </script>
-
 <?php include("includes/footer.php"); ?>
+
