@@ -78,7 +78,8 @@ class Abbreviations {
 	{
 		global $con;
 		$query_string = "INSERT INTO abbreviations (abbreviation, word) values('$abb', '$word') ";
-		$record = query_insert_one($query_string);
+		$result = query_insert_one($query_string);
+		return get_last_insert_id();	
 	}
 
 	public static function updateAbbreviation($id, $abb, $word)

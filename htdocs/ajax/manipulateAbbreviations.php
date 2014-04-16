@@ -20,14 +20,7 @@ else if ($action == "delete") {
 	Abbreviations::removeAbbreviation($id);
 }
 else if ($action == "add") {
-	Abbreviations::addabbreviation($abb, $word);
+	$lastInsertId = Abbreviations::addabbreviation($abb, $word);
+	echo $lastInsertId;
 }
-else {
-	// Do nothing
-	return false;
-}
-
-
-
-
 ?>

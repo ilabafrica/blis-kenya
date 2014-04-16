@@ -278,20 +278,21 @@ if($lab_config == null)
                                 </div>
         </div>
         <div class="portlet-body">
-            <div id='abbreviation' style='margin-left:10px;height:500px'>
+            <div id='abbreviation' style='margin-left:10px;'>
                         
                         <p style="text-align: right;"><a rel='facebox' href='#search_config'>Page Help</a></p>
                         <h4>List of abbreviations and their full words</h4>
-                        <a href="javascript:void(0)" class="btn blue-stripe" onclick="addAbbreviationRow()">Add new abbreviation</a>
+                        <a href="javascript:void(0)" id="addNewAbbrevRow" class="btn blue-stripe" onclick="addAbbreviationRow()">Add new abbreviation</a>
                         <p></p>
 
                         <table id="abbrev_table" class="table table-striped table-bordered table-hover" style="width:600px">
-                        <tr>
+                        <thead>
                             <th> Abbreviation </th>
                             <th> Full word </th>
                             <th> Edit </th>
                             <th> Delete </th>
-                        </tr>
+                        </thead>
+                        <tbody id="tbody">
                         <?php 
                         $abbwords = Abbreviations::getAllAbbreviations();
                         foreach ($abbwords as $abbword) { ?>
@@ -299,9 +300,10 @@ if($lab_config == null)
                             <td id="abb_<?php echo $abbword->id ?>"><?php echo $abbword->abbreviation ?></td>
                             <td id="word_<?php echo $abbword->id ?>"><?php echo $abbword->word ?></td>
                             <td><a class="btn mini" href="javascript:void(0)" id="edit_<?php echo $abbword->id ?>" onclick="makeRowEditable(<?php echo $abbword->id .", '". $abbword->abbreviation ."', '". $abbword->word ."'"?> )">Edit</a></td>
-                            <td><a href="#" class="btn mini">Delete</a></td>
+                            <td id="deleteCell_<?php echo $abbword->id ?>"><a href="javascript:void(0)" id="delete_<?php echo $abbword->id ?>" onclick="confirm(<?php echo $abbword->id ?>)" class="btn mini">Delete</a></td>
                         </tr>
                         <?php } ?>
+                        <tbody>
                         </table>
                         
                             
@@ -2003,40 +2005,79 @@ function makeRowEditable(id, abb, word)
  */
 function updateRow(id, action)
         {
-            var abbId = 'abb_'+id+'_ct';
-            var wordId = 'word_'+id+'_ct';
-            var editId = 'edit_'+id;
+            var abbInputId = 'abb_'+id+'_ct';
+            var wordInputId = 'word_'+id+'_ct';
+            var editLinkId = 'edit_'+id;
 
-            var abbIdTd = 'abb_'+id;
-            var wordIdTd = 'word_'+id;
-
-            abbrv = $('#'+abbId).val();
-            wrd = $('#'+wordId).val();
-
+            var abbCellId = 'abb_'+id;
+            var wordCellId = 'word_'+id;
+            if (action == "update")
+                {
+                    abbrv = $('#'+abbInputId).val();
+                    wrd = $('#'+wordInputId).val();           
+                }
+            else if (action == "add") 
+            {
+                  abbrv = $('#abb').val(); 
+                  wrd = $('#word').val();
+            }
+             else 
+            {
+                  abbrv = ''; 
+                  wrd = '';
+            }
+            
             $.ajax({
                 type: 'POST',
                 url: 'ajax/manipulateAbbreviations.php',
                 data: {id: id, abb: abbrv, word: wrd, action: action},
                 success : function(data){
-
-                    $('#'+abbIdTd).html(abbrv);
-                    $('#'+wordIdTd).html(wrd);
-
-                    $('#'+editId).attr("onclick","makeRowEditable('"+id+"','"+abbrv+"','"+wrd+"') ");
-                    $('#'+editId).html("Edit");
+                if (action == "update") {
+                    $('#'+abbCellId).html(abbrv);
+                    $('#'+wordCellId).html(wrd);
+                    $('#'+editLinkId).attr("onclick","makeRowEditable('"+id+"','"+abbrv+"','"+wrd+"') ");
+                    $('#'+editLinkId).html("Edit");
+                }
+                else if (action == "add"){
+                    abbrevRow = "<tr id='row_"+data+"'>"
+                        +"<td id='abb_"+data+"'>"+abbrv+"</td>"
+                        +"<td id='word_"+data+"'>"+wrd+"</td>"
+                        +"<td><a id='edit_"+data+"' class='btn mini' href='javascript:void(0)' onclick='makeRowEditable(&quot;"+data+"&quot;,&quot;"+abbrv+"&quot;,&quot;"+wrd+"&quot;)'>Edit </a></td>"
+                        +"<td id='deleteCell_"+data+"'><a id='delete_"+data+"' href='javascript:void(0)' onclick='confirm("+data+")' class='btn mini' >Delete</a></td>"
+                        +"</tr>";
+                    $("#new_row").replaceWith(abbrevRow);    
+                } 
+                else if(action == "delete"){
+                     row = "row_"+id;
+                     $('#'+row).remove();        
+                }   
+                    $("#addNewAbbrevRow").attr("onclick", "addAbbreviationRow()");
                 }
             });
         }
 
+function confirm(id){
+        
+        cellDelete = "<a href='javascript:void(0)' class='btn mini' onclick='updateRow("+id+", &apos;delete&apos;)'>"
+        +"Are you Sure</a> <a href='javascript:void(0)' class='btn mini' onclick='cancelDelete("+id+")'> Cancel</a>" ;
+        $('#delete_'+id).replaceWith(cellDelete);
+}
+
+function cancelDelete(id){
+        $('#deleteCell_'+id).html("<a href='javascript:void(0)' id='delete_"+id+"' class='btn mini' onclick='confirm("+id+")'>delete</a>");
+}
+
 function addAbbreviationRow() {
         
-        abbrevRow = "<tr>"
-            +"<td id=''> <input value='' id='abb'></input> </td>"
-            +"<td id=''> <input value='' id='word'></input> </td>"
-            +"<td><a class='btn mini' href='javascript:void(0)' onclick='updateRow(0, add)'>Add </a></td>"
-            +"<td><p  class='btn mini'>Delete</p></td>"
+        abbrevRow = "<tr id='new_row'>"
+            +"<td id='abb_new'> <input value='' id='abb'></input> </td>"
+            +"<td id='word_new'> <input value='' id='word'></input> </td>"
+            +"<td><a id='edit_new' class='btn mini' href='javascript:void(0)' onclick='updateRow(0, &quot;add&quot;)'>Add </a></td>"
+            +"<td><p id='delete_new' class='btn mini disabled'>Delete</p></td>"
         +"</tr>";
-        $("#abbrev_table").append(abbrevRow);
+        $("#tbody").prepend(abbrevRow);
+        $("#addNewAbbrevRow").attr("onclick", "javascript:void(0)");
+
 }
 
 function performDbUpdate() {
