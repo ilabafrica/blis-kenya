@@ -16698,4 +16698,94 @@ function resend_test_results($test_id){
         $saved_db = DbUtil::switchToGlobal();
 }
 
+class Culture
+{
+
+	public $id;
+	public $userId;
+	public $testId;
+	public $observation;
+	public $time_stamp;
+
+	private $table = "culture_worksheet";
+
+	public function getObject($record){
+
+		$cultureData = new Culture();
+
+		if (isset($record['id'])) {
+			$cultureData->id = $record['id']; 
+		}
+		else {
+			$cultureData->id = null;
+		}
+		if (isset($record['userId'])) {
+			$cultureData->userId = $record['userId']; 
+		}
+		else {
+			$cultureData->userId = null;
+		}
+		if (isset($record['testId'])) {
+			$cultureData->testId = $record['testId']; 
+		}
+		else {
+			$cultureData->testId = null;
+		}
+		if (isset($record['observation'])) {
+			$cultureData->observation = $record['observation']; 
+		}
+		else {
+			$cultureData->observation = null;
+		}
+		if (isset($record['time_stamp'])) {
+			$cultureData->time_stamp = $record['time_stamp']; 
+		}
+		else {
+			$cultureData->time_stamp = null;
+		}
+	}	
+
+	public static function addObservation($userId, $testId, $observation){
+		global $con;
+		$query_string = "INSERT INTO $table (userID, testID, observation, time_stamp) values($userId, $testId, '$observation', NOW()) ";
+		$result = query_insert_one($query_string);
+		return get_last_insert_id();
+	}
+	
+	// public static function editObservation($id, $obs ){
+	// 	//To do
+	// }
+	
+	public static function deleteObservation(){
+		//To do
+	}
+	
+	public static function getById($id){
+
+		global $con;
+		$query_string = "SELECT * FROM $table WHERE id = $id";
+		$record = query_associative_one($query_string);
+		return Culture::getObject($record);
+
+	}
+
+	public static function getAllObservations($testId){
+
+		global $con;
+		$query_string = "SELECT * FROM $table where testId = $testId order by time_stamp DESC";
+		$record = query_associative_all($query_string, $count);
+		$retval = array();
+
+		foreach($record as $obj)
+		{
+			$retval[] = Culture::getObject($obj);
+		}
+	
+		return $retval;
+
+	}
+
+
+}
+
 ?>

@@ -217,6 +217,33 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	</tr-->
 	</table>
 	</form>
+	<br />
+	<h5>CULTURE OBSERVATION AND WORKUP</h5>
+	<table class="table table-bordered table-advanced table-condensed">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Initials</th>
+					<th>Observations and work-up</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php 
+			//$obsv = getObservations();
+			//foreach ($obsv as  $Observations) { ?>
+				<tr>
+				<td><?php echo date("d/m/Y"); ?></td>
+				<td><?php echo $_SESSION['username']; ?></td>
+				<td><textarea id="txt" style="width:390px"></textarea></td>
+				<td><a class="btn mini" href="javascript:void(0)" onclick="func()">Save</a> </td>
+				</tr>
+				<?php //}
+			 ?>
+				
+			</tbody>
+	</table>
+
 	
 	<?php
 }
@@ -244,19 +271,17 @@ $modal_link_id = "test_result_link_$test_id";
 </div>
 <div class="modal-body">
 	<div class="row-fluid">
-	<div class="span6 sortable">
-    <div id="ctbutton" style="display: none"> 
-        <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
-        </div>
-        <div id="celltacerror" style="display: none">
-            
-        </div>
+	<div class="span7 sortable">
+	    <div id="ctbutton" style="display: none"> 
+	        <input type="button" value="Read results" class="btn" onclick="insertCelltacResults()"/>    
+	    </div>
+        <div id="celltacerror" style="display: none"></div>
 	<?php
 	$parent_test_id = $test_id;
 	get_result_form($test_type, $test_id, 0, $patient, $parent_test_id);	  
 	?>
 	</div>
-	<div class="span6 sortable">
+	<div class="span5 sortable">
 	
 	<div class="portlet box grey">
 		<div class="portlet-title">
