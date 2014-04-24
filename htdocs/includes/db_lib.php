@@ -1118,6 +1118,7 @@ class TestType
 	public $targetTat;
 	public $test_name;
 	public $parent_test_type_id;
+	public $showCultureWorkSheet;
 	
 	public static function getObject($record)
 	{
@@ -1133,6 +1134,14 @@ class TestType
 		$test_type->hidePatientName = $record['hide_patient_name'];
 		$test_type->prevalenceThreshold = $record['prevalence_threshold'];
 		$test_type->targetTat = $record['target_tat'];
+
+		if($record['showCultureWorkSheet'] == null){
+			$test_type->showCultureWorkSheet = false;	
+		}
+		else {
+			$test_type->showCultureWorkSheet = true;
+		}
+		
 		if($record['is_panel'] != null && $record['is_panel'] == 1)
 		{
 			$test_type->isPanel = true;
@@ -8875,9 +8884,11 @@ function update_test_type($updated_entry, $new_specimen_list,$lab_config_id)
 		"test_category_id='$updated_entry->testCategoryId', ".
 		"hide_patient_name='$updated_entry->hide_patient_name', ".
 		"prevalence_threshold=$updated_entry->prevalenceThreshold, ".
-		"target_tat=$updated_entry->targetTat ".
+		"target_tat=$updated_entry->targetTat, ".
+		"showCultureWorkSheet='$updated_entry->showCultureWorkSheet' ".
 		"WHERE test_type_id=$updated_entry->testTypeId";
 	}
+	echo $query_string;
 	query_blind($query_string);
 	# Delete entries for removed compatible specimens
 	$existing_list = get_compatible_specimens($updated_entry->testTypeId);
@@ -16698,6 +16709,35 @@ function resend_test_results($test_id){
         $saved_db = DbUtil::switchToGlobal();
 }
 
+function time_elapsed_pretty($datetime = null, $full = false) {
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+}
+
 class Culture
 {
 
@@ -16707,7 +16747,6 @@ class Culture
 	public $observation;
 	public $time_stamp;
 
-	private $table = "culture_worksheet";
 
 	public function getObject($record){
 
@@ -16743,15 +16782,32 @@ class Culture
 		else {
 			$cultureData->time_stamp = null;
 		}
+
+		return $cultureData;
 	}	
 
 	public static function addObservation($userId, $testId, $observation){
 		global $con;
-		$query_string = "INSERT INTO $table (userID, testID, observation, time_stamp) values($userId, $testId, '$observation', NOW()) ";
+		$query_string = "INSERT INTO culture_worksheet (userID, testID, observation, time_stamp) values($userId, $testId, '$observation', NOW()) ";
 		$result = query_insert_one($query_string);
 		return get_last_insert_id();
 	}
+
+	public static function getAllObservations($testId){
+
+		global $con;
+		$query_string = "SELECT * FROM culture_worksheet where testId = $testId order by time_stamp ASC";
+		$record = query_associative_all($query_string, $count);
+		$retval = array();
+		foreach($record as $obj)
+		{
+			$retval[] = Culture::getObject($obj);
+		}
 	
+		return $retval;
+
+	}
+
 	// public static function editObservation($id, $obs ){
 	// 	//To do
 	// }
@@ -16763,28 +16819,11 @@ class Culture
 	public static function getById($id){
 
 		global $con;
-		$query_string = "SELECT * FROM $table WHERE id = $id";
+		$query_string = "SELECT * FROM culture_worksheet WHERE id = $id";
 		$record = query_associative_one($query_string);
 		return Culture::getObject($record);
 
 	}
-
-	public static function getAllObservations($testId){
-
-		global $con;
-		$query_string = "SELECT * FROM $table where testId = $testId order by time_stamp DESC";
-		$record = query_associative_all($query_string, $count);
-		$retval = array();
-
-		foreach($record as $obj)
-		{
-			$retval[] = Culture::getObject($obj);
-		}
-	
-		return $retval;
-
-	}
-
 
 }
 

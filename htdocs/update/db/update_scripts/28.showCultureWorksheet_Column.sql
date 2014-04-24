@@ -1,0 +1,1 @@
+ALTER TABLE `test_type` ADD COLUMN `showCultureWorkSheet` VARCHAR(45) NULL DEFAULT NULL 

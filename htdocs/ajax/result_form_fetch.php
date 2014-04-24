@@ -217,6 +217,8 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	</tr-->
 	</table>
 	</form>
+	<!-- Show worksheet conditionally-->
+	<?php if ($test_type->showCultureWorkSheet) {?>
 	<br />
 	<h5>CULTURE OBSERVATION AND WORKUP</h5>
 	<table class="table table-bordered table-advanced table-condensed">
@@ -228,24 +230,40 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 					<th>Action</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="tbbody_<?php echo $test_id ?>">
 			<?php 
-			//$obsv = getObservations();
-			//foreach ($obsv as  $Observations) { ?>
-				<tr>
-				<td><?php echo date("d/m/Y"); ?></td>
-				<td><?php echo $_SESSION['username']; ?></td>
-				<td><textarea id="txt" style="width:390px"></textarea></td>
-				<td><a class="btn mini" href="javascript:void(0)" onclick="func()">Save</a> </td>
-				</tr>
-				<?php //}
-			 ?>
-				
+				$obsv = Culture::getAllObservations($test_id);
+				if($obsv != null){
+				foreach ($obsv as  $Observation) { ?>
+					<tr>
+					<td><?php echo time_elapsed_pretty($Observation->time_stamp); ?></td>
+					<td><?php echo get_username_by_id($Observation->userId) ?></td>
+					<td><?php echo $Observation->observation ?></td>
+					<td></td>
+					</tr>
+					<?php } ?>
+					<tr>
+					<td><?php echo time_elapsed_pretty() ?></td>
+					<td><?php echo $_SESSION['username'] ?></td>
+					<td><textarea id="txtObsv_<?php echo $test_id ?>" style="width:390px"></textarea></td>
+					<td><a class="btn mini" href="javascript:void(0)" onclick="saveObservation(<?php echo $test_id ?>, <?php echo "'".$_SESSION['username']."'" ?>)">Save</a> </td>
+					</tr>
+				<?php
+				}
+				else { ?>
+					<tr>
+					<td><?php echo time_elapsed_pretty() ?></td>
+					<td><?php echo $_SESSION['username'] ?></td>
+					<td><textarea id="txtObsv_<?php echo $test_id ?>" style="width:390px"></textarea></td>
+					<td><a class="btn mini" href="javascript:void(0)" onclick="saveObservation(<?php echo $test_id ?>, <?php echo "'".$_SESSION['username']."'" ?>)">Save</a> </td>
+					</tr>
+					<?php
+				}
+				?>			
 			</tbody>
 	</table>
-
-	
 	<?php
+	} //End Show worksheet conditionally
 }
 
 $form_id_list = array();
@@ -305,7 +323,6 @@ $modal_link_id = "test_result_link_$test_id";
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
 	$(document).ready(function() {
-	    
 	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
@@ -359,6 +376,50 @@ $modal_link_id = "test_result_link_$test_id";
 		}
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
 	}	
+
+	function saveObservation(tid, username){
+		txtarea = "txtObsv_"+tid;
+		observation = $("#"+txtarea).val();
+
+		$.ajax({
+			type: 'POST',
+			url:  'ajax/culture_worksheet.php',
+			data: {obs: observation, testId: tid, action: "add"},
+			success: function(){
+				drawCultureWorksheet(tid , username);
+			}
+		});
+	}
+
+	/**
+	 * Request a json string from the server containing contents of the culture_worksheet table for this test
+	 * and then draws a table based on this data.
+	 * @param  {int} tid      Test Id of the test
+	 * @param  {string} username Current user
+	 * @return {void}          No return
+	 */
+	function drawCultureWorksheet(tid, username){
+		$.getJSON('ajax/culture_worksheet.php', { testId: tid, action: "draw"}, 
+			function(data){
+				var tableBody ="";
+				$.each(data, function(index, elem){
+					tableBody += "<tr>"
+					+" <td>"+elem.time_stamp+" </td>"
+					+" <td>"+elem.userId+"</td>"
+					+" <td>"+elem.observation+"</td>"
+					+" <td> </td>"
+					+"</tr>";
+				});
+				tableBody += "<tr>"
+					+"<td>Just now</td>"
+					+"<td>"+username+"</td>"
+					+"<td><textarea id='txtObsv_"+tid+"' style='width:390px'></textarea></td>"
+					+"<td><a class='btn mini' href='javascript:void(0)' onclick='saveObservation("+tid+", &quot;"+username+"&quot;)'>Save</a></td>"
+					+"</tr>";
+				$("#tbbody_"+tid).html(tableBody);
+			}
+		);
+	}
 
 	/**
 	 * Binds any input element with class .abbreviation to the keydown event and gets

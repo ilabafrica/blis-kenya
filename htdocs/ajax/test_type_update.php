@@ -37,12 +37,14 @@ $updated_entry->hide_patient_name=get_request_variable('hidePatientName');
 $updated_entry->prevalenceThreshold=get_request_variable('prevalenceThreshold');
 $updated_entry->targetTat=get_request_variable('targetTat');
 $updated_entry->testCategoryId = $cat_code;
-
+$updated_entry->showCultureWorkSheet = get_request_variable('cultWork', null);
+print_r($updated_entry);
 $cost_cents_initial = get_request_variable('cost_to_patient_cents');
 $cost_cents = get_cents_from_whole_number($cost_cents_initial);
 
 $newCostToPatient = get_request_variable('cost_to_patient_dollars') + $cost_cents;
 $oldCostToPatient = get_request_variable('costToPatient_old');
+
 
 # Update tests measures and ranges
 $is_panel = false;

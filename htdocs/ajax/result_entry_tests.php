@@ -263,6 +263,7 @@ else
                                     NULL AS hide_patient_name,
                                     NULL AS prevalence_threshold,
                                     NULL AS target_tat,
+                                    NULL as showCultureWorkSheet,
                                     NULL AS test_category_id,
                                     NULL AS name,
                                     NULL AS description,

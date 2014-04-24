@@ -436,7 +436,7 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 								echo "<td>";
 								?>
 								<span id='new_val_new_<?php echo $i; ?>' class='new_values_section_new_<?php echo $i; ?>'>
-									<div id='numeric_range_<?php echo $i; ?>' name=numeric_range_<?php echo $i; ?>'>
+									<div id='numeric_range_<?php echo $i; ?>' name='numeric_range_<?php echo $i; ?>'>
 									<span id='new_num eric_<?php echo $i; ?>'>
 											<input type='text' class='range_field span2 m-wrap' name='new_range_l_<?php echo $i; ?>[]' value='' /> :
 											<input type='text' class='range_field span2 m-wrap' name='new_range_u_<?php echo $i; ?>[]' value='' />
@@ -634,6 +634,11 @@ $page_elems->getTestTypeInfo($test_type->name, true);
                 <td><input id='targetTat' name='targetTat' class='span6 m-wrap' type='text' size='3' maxLength='3' onkeypress="return isInputNumber(event);" 
                 value=<?php if($test_type->targetTat==null) {echo 0;} else echo $test_type->targetTat; ?> />
                 </td>
+            </tr>
+
+            <tr valign='top'>
+                <td>Show culture worksheet?</td>
+                <td><input id='cultureWorksheet' name='cultWork' class='span6 m-wrap' type='checkbox' <?php if($test_type->showCultureWorkSheet) echo 'checked' ?> > </td>
             </tr>
 
             <tr valign='top' <?php is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none;'") ?>>

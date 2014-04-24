@@ -8,12 +8,23 @@
 
 require_once("../includes/db_lib.php");
 
-$testId = $_POST['testId'];
-$observation = $_POST['observation'];
+	$testId = $_REQUEST['testId'];
+	$observation = $_REQUEST['obs'];
+	$action = $_REQUEST['action'];
 
-$userId = $_SESSION['user_id'];
+	$userId = $_SESSION['user_id'];
 
-Culture::addObservation($userId, $testId, $observation);
+	if($action == 'add'){
+	Culture::addObservation($userId, $testId, $observation);
+ 	}
 
+ 	if ($action == "draw"){
+	$obsv = Culture::getAllObservations($testId);
 
+	foreach ($obsv as $observation) {
+		$observation->userId = get_username_by_id($observation->userId);
+		$observation->time_stamp = time_elapsed_pretty($observation->time_stamp);
+	}
+	echo json_encode($obsv);
+	}
 ?>
