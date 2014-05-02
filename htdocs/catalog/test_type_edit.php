@@ -9,7 +9,7 @@ include("includes/ajax_lib.php");
 LangUtil::setPageId("catalog");
 
 
-# Helper function
+# Helper functions
 
 function specimen_list_to_json($specimen_list)
 {
@@ -21,6 +21,20 @@ function specimen_list_to_json($specimen_list)
         $specimen_type_id = $specimen->specimenTypeId;
         $specimen_name = $specimen->getName();
         $assoc_list[$specimen_type_id] = $specimen_name;
+    }
+    return list_to_json($assoc_list, $json_params);
+}
+
+function drugs_list_to_json($drugs_list)
+{
+    $json_params = array('id', 'name');
+    $assoc_list = array();
+    foreach($drugs_list as $drug_id)
+    {
+        $drug = get_drug_type_by_id($drug_id);
+        $drug_type_id = $drug->drugTypeId;
+        $drug_name = $drug->getName();
+        $assoc_list[$drug_type_id] = $drug_name;
     }
     return list_to_json($assoc_list, $json_params);
 }
@@ -638,8 +652,18 @@ $page_elems->getTestTypeInfo($test_type->name, true);
 
             <tr valign='top'>
                 <td>Show culture worksheet?</td>
-                <td><input id='cultureWorksheet' name='cultWork' class='span6 m-wrap' type='checkbox' <?php if($test_type->showCultureWorkSheet) echo 'checked' ?> > </td>
+                <td><input id='cultureWorksheet' name='cultWork' class='span6 m-wrap' onclick="toggle('.drugsClass', this)" type='checkbox' <?php if($test_type->showCultureWorkSheet) echo 'checked' ?> > </td>
             </tr>
+
+            <!-- Show Drug Checkboxes -->
+            <tr valign='top' class='drugsClass' <?php if(!$test_type->showCultureWorkSheet){ ?>style="display:none;"<?php };?>>
+                <td><?php echo LangUtil::$generalTerms['COMPATIBLE_DRUGS']; ?><?php $page_elems->getAsterisk(); ?>  [<a href='#drugs_help' rel='facebox'>?</a>] </td>
+                <td>
+                    <?php $page_elems->getDrugsCheckboxes($lab_config_id, false,$test_type->testTypeId); ?>
+                    <br>
+                </td>
+            </tr>
+            <!-- End Drug Checkboxes -->
 
             <tr valign='top' <?php is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none;'") ?>>
                 <td>Cost to Patient</td>
@@ -1282,6 +1306,13 @@ function isInputCurrency(evt) {
 
         return true;
 }
+/*Function to toggle compatible drugs*/
+function toggle(className, obj) {
+    var $input = $(obj);
+    if ($input.prop('checked')) $(className).show();
+    else $(className).hide();
+}
+/*End toggle function*/
 </script>
 
 

@@ -504,6 +504,21 @@ LangUtil::setPageId("catalog");
 				</td>
 			</tr>
 
+			<tr valign='top'>
+                <td>Show culture worksheet?</td>
+                <td><input id='cultureWorksheet' name='cultWork' class='span6 m-wrap' onclick="toggle('.drugsClass', this)" type='checkbox' <?php if($test_type->showCultureWorkSheet) echo 'checked' ?> > </td>
+            </tr>
+
+            <!-- Show Drug Checkboxes -->
+            <tr valign='top' class='drugsClass' style="display:none;">
+                <td><?php echo LangUtil::$generalTerms['COMPATIBLE_DRUGS']; ?><?php $page_elems->getAsterisk(); ?>  [<a href='#drugs_help' rel='facebox'>?</a>] </td>
+                <td>
+                    <?php $page_elems->getDrugsCheckboxes($lab_config_id, false,$test_type->testTypeId); ?>
+                    <br>
+                </td>
+            </tr>
+            <!-- End Drug Checkboxes -->
+
 			<tr valign='top' <?php is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none;'") ?>>
 				<td>Cost to Patient</td>
 
@@ -975,6 +990,12 @@ function toggle_agerange(measure_num, row_num)
 	}	
 }
 
+function toggle(className, obj) {
+    var $input = $(obj);
+    if ($input.prop('checked')) $(className).show();
+    else $(className).hide();
+}
+
 function isInputNumber(evt) {
 	var characterCode = (evt.which) ? evt.which : event.keyCode
 
@@ -983,5 +1004,6 @@ function isInputNumber(evt) {
 
 	return true;
 }
+
 </script>
 <?php include("includes/footer.php"); ?>

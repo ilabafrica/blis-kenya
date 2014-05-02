@@ -287,13 +287,31 @@ foreach($catalog_specimen_list as $specimen_typeid=>$specimen_name)
 	}
 }
 
+# Fetch compatible drug types
+$drugs_list = array();
+$reff = 1;
+$catalog_drugs_list = get_drug_types_catalog($lab_config_id, $reff);
+foreach($catalog_drugs_list as $drugs_typeid=>$drug_name)
+{
+    if(isset($_REQUEST['d_type_'.$drugs_typeid]))
+    {
+        $drugs_list[] = $drugs_typeid;
+    }
+}
+
 # Add test type record
 //function add_test_type($test_name, $test_descr, $clinical_data, $cat_code, $is_panel, $specimen_list=array(), $lab_config_id, $hide_patient_name)
 $test_type_id = "";
 if(count($specimen_list) != 0)
 {
+    if(count($drugs_list) != 0)
+    {
+        $test_type_id = add_test_type($test_name, $test_descr, $test_clinical_data, $cat_code, $is_panel, $lab_config_id, $hide_patient_name, $prevalenceThreshold, $targetTat, $specimen_list, $drugs_list);
+    }
+    else{
 	# Add entries to 'specimen_test' map table
 	  $test_type_id = add_test_type($test_name, $test_descr, $test_clinical_data, $cat_code, $is_panel, $lab_config_id, $hide_patient_name, $prevalenceThreshold, $targetTat, $specimen_list);
+    }
 }
 else
 {

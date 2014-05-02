@@ -13,7 +13,5 @@ LangUtil::setPageId("catalog");
 <?php 
 $test_category = get_test_category_by_id($_REQUEST['tcid']);
 $page_elems->getTestCategoryInfo($test_category->name); 
-echo $_REQUEST['tcid'];
-echo $test_category->name;
 include("includes/footer.php");
 ?>

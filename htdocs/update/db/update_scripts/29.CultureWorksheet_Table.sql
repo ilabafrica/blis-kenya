@@ -5,4 +5,4 @@ CREATE TABLE `culture_worksheet` (
   `observation` varchar(1000) NOT NULL,
   `time_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+);

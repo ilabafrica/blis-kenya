@@ -1154,6 +1154,40 @@ class PageElems
 		</table>
 		<?php
 	}
+
+	public function getDrugTypeInfo($drug_name, $show_db_name=false)
+	{
+		# Returns HTML for displaying drug type information
+		# Fetch specimen type record
+		$drug_type = get_drug_type_by_name($drug_name);
+		?>
+		<table class='hor-minimalist-b'>
+			<tbody>
+				<tr valign='top'>
+					<td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?></td>
+					<td>
+						<?php
+						if($show_db_name === true)
+						{
+							# Show original name stored in DB
+							echo $drug_type->name;
+						}
+						else
+						{
+							# Show name store din locale string
+							echo $drug_type->getName();
+						}
+						?>
+					</td>
+				</tr>
+				<tr valign='top'>
+					<td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
+					<td><?php echo $drug_type->getDrugDescription(); ?></td>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
 	
 	public function getSpecimenTypeInfo($specimen_name, $show_db_name=false)
 	{
@@ -1277,6 +1311,66 @@ class PageElems
 			?>
 			<td>
 				<a href='test_type_delete.php?id=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i>  <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+			</td>
+			<?php
+			}
+			?>
+			</tr>
+			<?php
+			$count++;
+		}
+		?>
+		</tbody>
+		</table>
+		<?php
+	}
+
+	public function getDrugTypesTable($lab_config_id)
+	{
+		# Returns HTML table listing all drugs in catalog
+		?>
+		<?php
+		$drugs = get_drug_types_catalog($lab_config_id);
+		if(count($drugs) == 0)
+		{
+			echo "<div class='sidetip_nopos'>".LangUtil::$pageTerms['TIPS_DRUGSNOTFOUND']."</div>";
+			return;
+		}
+		?>
+
+		<table id="sample_1" class='table table-striped table-condensed table-bordered table-hover dataTable' style="width: 100%;">
+			<thead>
+					<th>#</th>
+					<th><?php echo LangUtil::$generalTerms['DRUG']; ?></th>
+					<th><?php echo "Action(s)"; ?></th>
+					<th></th>
+			</thead>
+		<tbody>
+		<?php
+		$count = 1;
+		foreach($drugs as $key => $value)
+		{
+			$drug_type = get_drug_type_by_id($key);
+			$drug_name = get_drug_type_name_by_id($drug_type->drugTypeId);
+			?>
+			<tr>
+			<td>
+				<?php echo $count; ?>.
+			</td>
+			<td>
+				<?php echo $value; ?>
+			</td>
+			<td>
+				<a href='drug_type_edit.php?did=<?php echo $key; ?>' class="btn mini green-stripe" title='Click to Edit Drug Info'><i class='icon-pencil'></i>  <?php echo LangUtil::$generalTerms['CMD_EDIT']; ?></a>
+
+			</td>
+			<?php
+			$user = get_user_by_id($_SESSION['user_id']);
+			if(is_country_dir($user) || is_super_admin($user)|| is_admin($user))
+			{
+			?>
+			<td>
+				<a href='drug_type_delete.php?did=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i>  <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}
@@ -5367,6 +5461,74 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				}
 				else
 					echo ">$specimen_name";
+				?>
+				</input></td>
+				
+				<?php
+				if($count % 4 == 0)
+					echo "</tr><tr".($count%8==0?" style='background:#E9E9E9;'":"").">";
+			}
+			?>
+			</tbody>
+		</table>
+		<?php
+	}
+
+	public function getDrugsCheckboxes($lab_config_id=null, $allCompatibleCheckingOn=true, $test_type_id=null)
+	{
+		# Returns a set of checkboxes with existing drug types checked if allCompatibleCheckingOn is set to true,
+		# else only returns checkboxes with available Drug names
+		$lab_config = get_lab_config_by_id($lab_config_id);
+		if($lab_config == null && $lab_config_id != "")
+		{
+			?>
+			<div class='sidetip_nopos'>
+			ERROR: Lab configuration not found
+			</div>
+			<?php
+			return;
+		}
+		# Fetch all drug types
+		$drugs_list = get_drug_types_catalog($_SESSION['lab_config_id']);
+		$current_drug_list = array();
+		/*if($lab_config_id != "")
+			$current_specimen_list = get_lab_config_drug_types($lab_config_id);*/
+		# For each specimen type, create a check box. Check it if specimen already in lab configuration
+		?>
+		<table class='hor-minimalist-b table table-bordered' style='width:100%;'>
+			<tbody>
+			<tr style='background:#E9E9E9;'>
+			<?php
+			$count = 0;
+			$compatible_drug_types = get_compatible_drugs($test_type_id);
+			foreach($drugs_list as $key=>$value)
+			{
+				$drug_id = $key;
+				$drug_name = $value;
+				$count++;
+				$checked = false;
+				foreach($compatible_drug_types as $compatible_drug_type_id){
+		
+				 if ($compatible_drug_type_id==$drug_id)
+				 	$checked =true;
+				}
+				?>
+				
+				<td><input type='checkbox' class='dtype_entry' name='d_type_<?php echo $key; ?>' id='d_type_<?php echo $key; ?>' value='<?php echo $key; ?>'
+				<?php
+				if ($checked) echo "checked";
+				
+				if($allCompatibleCheckingOn==true) {
+					if(in_array($drug_id, $current_drug_list))
+					{
+						echo " checked ><span class='clean-ok'>$drug_name</span>";
+
+					}
+					else
+						echo ">$drug_name";
+				}
+				else
+					echo ">$drug_name";
 				?>
 				</input></td>
 				

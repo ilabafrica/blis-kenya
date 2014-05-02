@@ -257,6 +257,11 @@ if(strpos($_SERVER['PHP_SELF'], 'login.php') === false)
 								<i class='icon-tag'></i> ".LangUtil::$generalTerms['SPECIMEN_TYPES']."
 								</a>
 							</li>
+							<li>
+								<a href='javascript:load_right_pane(".$quote."drug_types_div".$quote.");' class='menu_option' id='drug_types_div_menu'>
+								<i class='icon-tag'></i> ".LangUtil::$generalTerms['DRUG_TYPES']."
+								</a>
+							</li>
 						</ul>";
 						
 					break;

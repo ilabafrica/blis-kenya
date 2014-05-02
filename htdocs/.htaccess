@@ -113,6 +113,13 @@ RewriteRule ^test_category_edit\.php$ catalog/test_category_edit.php
 RewriteRule ^test_category_updated\.php$ catalog/test_category_updated.php
 RewriteRule ^test_category_delete\.php$ catalog/test_category_delete.php
 
+RewriteRule ^drug_type_new\.php$ catalog/drug_type_new.php
+RewriteRule ^drug_type_add\.php$ catalog/drug_type_add.php
+RewriteRule ^drug_type_added\.php$ catalog/drug_type_added.php
+RewriteRule ^drug_type_edit\.php$ catalog/drug_type_edit.php
+RewriteRule ^drug_type_updated\.php$ catalog/drug_type_updated.php
+RewriteRule ^drug_type_delete\.php$ catalog/drug_type_delete.php
+
 RewriteRule ^country_catalog\.php$ catalog/country_catalog.php
 RewriteRule ^test_type_edit_agg\.php$ catalog/test_type_edit_agg.php
 RewriteRule ^test_type_edit_dir\.php$ catalog/test_type_edit_dir.php

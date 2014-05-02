@@ -40,6 +40,7 @@ $LANG_ARRAY = array (
 		"CMD_SEARCHING" => "Searching", 
 		"CMD_FETCH" => "Fetch", 
 		"CMD_FETCHING" => "Fetching", 
+		"DRUG_TYPES" => "Drug Types", 
 		"MSG_DELETED" => "Deleted", 
 		"MSG_RESET" => "Reset", 
 		"SELECT_ONE" => "Select one", 

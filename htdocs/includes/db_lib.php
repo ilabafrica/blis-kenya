@@ -14,7 +14,6 @@ if(!isset($_SESSION['SESS_TIMER'])){
 }
 $_SESSION['SESS_TIMER'] = time();
 
-
 include("defaults.php");
 require_once("db_mysql_lib.php");
 
@@ -1276,7 +1275,7 @@ class TestType
 		DbUtil::switchRestore($saved_db);
 		return $retval;
 	}
-	
+
 	public static function deleteById($test_type_id)
 	{
 		# Deletes test type from database
@@ -1631,6 +1630,235 @@ class TestCategory
 		return $retval;
 	}
 }
+
+class DrugType
+{
+	public $drugTypeId;
+	public $name;
+	public $description;
+	
+	public static function getObject($record)
+	{
+		if($record == null)
+			return null;
+			
+		$drug_type = new DrugType();
+		
+		if(isset($record['drug_id']))
+			$drug_type->drugTypeId = $record['drug_id'];
+		else
+			$drug_type->drugTypeId = null;
+		
+		if(isset($record['name']))
+			$drug_type->name = $record['name'];
+		else
+			$drug_type->name = null;
+			
+		if(isset($record['description']))
+			$drug_type->description = $record['description'];
+		else
+			$drug_type->description = null;
+			
+		return $drug_type;
+	}
+	
+	public function getName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return LangUtil::getDrugName($this->drugTypeId);
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public function getDrugName()
+	{
+		global $CATALOG_TRANSLATION;
+		if($CATALOG_TRANSLATION === true)
+		{
+			return $this->name;
+		}
+		else
+		{
+			return $this->name;
+		}
+	}
+	
+	public function getDrugDescription()
+	{
+		if(trim($this->description) == "" || $this->description == null)
+			return "-";
+		else 
+			return trim($this->description);
+	}
+	
+	public static function getById($drug_id)
+	{
+		# Returns a drug entry fetch by ID
+		global $con;
+		$drug_id = mysql_real_escape_string($drug_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT * FROM drugs ".
+			"WHERE drug_id=$drug_id";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return DrugType::getObject($record);
+	}
+	
+	public static function deleteById($drug_id)
+	{
+		# Deletes test category from database
+		# 1. Delete entries in lab_config_test_category
+		global $con;
+		$drug_id = mysql_real_escape_string($drug_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string =
+			"UPDATE durgs SET disabled=1 WHERE drug_id=$drug_id";
+		query_blind($query_string);
+		DbUtil::switchRestore($saved_db);
+	}
+	
+	public static function geAllDrugs($lab_config_id)
+	{
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+		$query_string =
+		"SELECT drug_id, name FROM drugs";
+	
+		$retval = array();
+		$drug_details =  array();
+		$resultset = query_associative_all($query_string, $row_count);
+		foreach($resultset as $record)
+		{
+			$drug_details['drug_id'] = $record['drug_id'];
+			$drug_details['name'] = $record['name'];
+			array_push($retval, $drug_details);
+		}
+		DbUtil::switchRestore($saved_db);
+		return $retval;
+	}
+}
+/* Begin Class for drug susceptibility functionality */
+class DrugSusceptibility
+{
+	public $id;
+	public $userId;
+	public $testId;
+	public $drugId;
+	public $zone;
+	public $interpretation;
+	public $ts;
+
+
+	public function getObject($record){
+
+		$drugSusceptibility = new DrugSusceptibility();
+
+		if (isset($record['id'])) {
+			$drugSusceptibility->id = $record['id']; 
+		}
+		else {
+			$drugSusceptibility->id = null;
+		}
+		if (isset($record['userId'])) {
+			$drugSusceptibility->userId = $record['userId']; 
+		}
+		else {
+			$drugSusceptibility->userId = null;
+		}
+		if (isset($record['testId'])) {
+			$drugSusceptibility->testId = $record['testId']; 
+		}
+		else {
+			$drugSusceptibility->testId = null;
+		}
+		if (isset($record['drugId'])) {
+			$drugSusceptibility->drugId = $record['drugId']; 
+		}
+		else {
+			$drugSusceptibility->drugId = null;
+		}
+		if (isset($record['zone'])) {
+			$drugSusceptibility->zone = $record['zone']; 
+		}
+		else {
+			$drugSusceptibility->zone = null;
+		}
+		if (isset($record['interpretation'])) {
+			$drugSusceptibility->interpretation = $record['interpretation']; 
+		}
+		else {
+			$drugSusceptibility->interpretation = null;
+		}
+		if (isset($record['ts'])) {
+			$drugSusceptibility->ts = $record['ts']; 
+		}
+		else {
+			$drugSusceptibility->ts = null;
+		}
+
+		return $drugSusceptibility;
+	}	
+
+	public static function addResult($userId, $testId, $drugId, $zone, $interpretation){
+		global $con;
+		$query_string = "INSERT INTO drug_susceptibility (userId, testId, drugId, zone, interpretation, ts) values($userId, $testId, $drugId, $zone, '$interpretation', NOW()) ";
+		$result = query_insert_one($query_string);
+		return get_last_insert_id();
+	}
+
+	public static function getAllResults($testId){
+
+		global $con;
+		$query_string = "SELECT * FROM drug_susceptibility where testId = $testId order by ts ASC";
+		$record = query_associative_all($query_string, $count);
+		$retval = array();
+		foreach($record as $obj)
+		{
+			$retval[] = DrugSusceptibility::getObject($obj);
+		}
+	
+		return $retval;
+
+	}
+	public static function getDrugsByTestType($testTypeId){
+
+		global $con;
+		$query_string = "SELECT drug_id FROM drug_test where test_type_id = $testTypeId;";
+		$record = query_associative_all($query_string, $count);
+		$retval = array();
+		foreach($record as $obj)
+		{
+			$retval[] = DrugSusceptibility::getObject($obj);
+		}
+	
+		return $retval;
+
+	}
+
+	// public static function editzone($id, $obs ){
+	// 	//To do
+	// }
+	
+	public static function deletezone(){
+		//To do
+	}
+	
+	public static function getById($id){
+
+		global $con;
+		$query_string = "SELECT * FROM drug_susceptibility WHERE id = $id";
+		$record = query_associative_one($query_string);
+		return DrugSusceptibility::getObject($record);
+
+	}
+
+}
+/* End Class for drug susceptibility functionality */
 
 class Measure
 {
@@ -8800,7 +9028,7 @@ function update_specimen_type($updated_entry, $new_test_list)
 	DbUtil::switchRestore($saved_db);
 }
 
-function add_test_type($test_name, $test_descr, $clinical_data, $cat_code, $is_panel, $lab_config_id, $hide_patient_name, $prevalenceThreshold, $targetTat, $specimen_list = array())
+function add_test_type($test_name, $test_descr, $clinical_data, $cat_code, $is_panel, $lab_config_id, $hide_patient_name, $prevalenceThreshold, $targetTat, $specimen_list = array(), $drugs_list = array())
 {
 	global $con;
 	$test_name = mysql_real_escape_string($test_name, $con);
@@ -8845,12 +9073,20 @@ function add_test_type($test_name, $test_descr, $clinical_data, $cat_code, $is_p
 			add_specimen_test($specimen_type_id, $test_type_id);
 		}
 	}
+	if(count($drugs_list) != 0)
+	{
+		# For each compatible test type, add a new entry in 'drug_test' map table
+		foreach($drugs_list as $drug_id)
+		{
+			add_drug_test($drug_id, $test_type_id);
+		}
+	}
 	# Return primary key of the record just inserted
 	DbUtil::switchRestore($saved_db);
 	return get_max_test_type_id();
 }
 
-function update_test_type($updated_entry, $new_specimen_list,$lab_config_id)
+function update_test_type($updated_entry, $new_specimen_list, $new_drugs_list,$lab_config_id)
 {
 	global $con;
 	$lab_config_id = mysql_real_escape_string($lab_config_id, $con);
@@ -8926,6 +9162,42 @@ function update_test_type($updated_entry, $new_specimen_list,$lab_config_id)
 			query_blind($query_ins);
 		}
 	}
+	# Delete entries for removed compatible drugs
+	$existing_drugs = get_compatible_drugs($updated_entry->testTypeId);
+	foreach($existing_drugs as $drugs_type_id)
+	{
+		if(in_array($drugs_type_id, $new_drugs_list))
+		{
+			# Compatible drugs not removed
+			# Do nothing
+		}
+		else
+		{
+			# Remove entry from mapping table
+			$query_del = 
+				"DELETE from drug_test ".
+				"WHERE test_type_id=$updated_entry->testTypeId ".
+				"AND drug_id=$drugs_type_id";
+			query_blind($query_del);
+		}
+	}
+	# Add entries for new compatible drugs
+	foreach($new_drugs_list as $drugs_type_id)
+	{
+		if(in_array($drugs_type_id, $existing_drugs))
+		{
+			# Entry already exists
+			# Do nothing
+		}
+		else
+		{
+			# Add entry in mapping table
+			$query_ins = 
+				"INSERT INTO drug_test (drug_id, test_type_id) ".
+				"VALUES ($drugs_type_id, $updated_entry->testTypeId)";
+			query_blind($query_ins);
+		}
+	}
 	DbUtil::switchRestore($saved_db);
 }
 
@@ -8943,6 +9215,22 @@ function add_test_category($cat_name, $cat_descr="")
 	# Return primary key of the record just inserted
 	DbUtil::switchRestore($saved_db);
 	return get_max_test_cat_id();
+}
+
+function add_drug_type($drug_name, $drug_descr="")
+{
+	global $con;
+	$drug_name = mysql_real_escape_string($drug_name, $con);
+	$drug_descr = mysql_real_escape_string($drug_descr, $con);
+	# Adds a new drug to catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string = 
+		"INSERT INTO drugs(name, description) ".
+		"VALUES ('$drug_name', '$drug_descr')";
+	query_insert_one($query_string);
+	# Return primary key of the record just inserted
+	DbUtil::switchRestore($saved_db);
+	return get_max_drug_type_id();
 }
 
 function add_rejection_phase($phase_name, $phase_descr)
@@ -8991,6 +9279,28 @@ function add_quality_control_category($qcc_description)
 	DbUtil::switchRestore($saved_db);
 	return get_max_qcc_id();
 }
+
+////////////function to update drug types//////////////////
+function update_drug_type($updated_entry)
+{
+	# Updates drug type info in DB catalog
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$existing_entry = get_drug_type_by_id($updated_entry->drugTypeId);
+	if($existing_entry == null)
+	{
+		# No record found
+		DbUtil::switchRestore($saved_db);
+		return;
+	}
+	$query_string =
+		"UPDATE drug ".
+		"SET name='$updated_entry->name', ".
+		"description='$updated_entry->description', ".
+		"WHERE drug_id=$updated_entry->drugTypeId";
+	query_blind($query_string);
+	DbUtil::switchRestore($saved_db);
+}
+///////////////////////////////////////////////////////////////////////////
 
 ////////////function to test categories//////////////////
 function update_test_category($updated_entry)
@@ -9136,6 +9446,39 @@ function get_test_types_catalog($lab_config_id=null, $reff=null)
 				$retval[$record['test_type_id']] = LangUtil::getTestName($record['test_type_id']);
 			else
 				$retval[$record['test_type_id']] = $record['name'];
+		}
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}
+
+function get_drug_types_catalog($lab_config_id=null, $reff=null)
+{
+	# Returns a list of all test types available in catalog
+	global $CATALOG_TRANSLATION;
+        //NC3065
+               // global $LIS_ADMIN, $LIS_SUPERADMIN, $LIS_COUNTRYDIR;
+        if($reff == 1 && $reff != 2)
+        {
+            $user = get_user_by_id($_SESSION['user_id']);
+            $lab_config_id = $user->labConfigId;
+        }
+        //-NC3065
+	if($lab_config_id == null)
+		return;
+	//else
+		$saved_db = DbUtil::switchToLabConfig($lab_config_id);
+	$query_ttypes =
+		"SELECT drug_id, name FROM drugs WHERE disabled=0 ORDER BY name";
+	$resultset = query_associative_all($query_ttypes, $row_count);
+	$retval = array();
+	if($resultset) {
+		foreach($resultset as $record)
+		{
+			if($CATALOG_TRANSLATION === true)
+				$retval[$record['drug_id']] = LangUtil::getDrugName($record['drug_id']);
+			else
+				$retval[$record['drug_id']] = $record['name'];
 		}
 	}
 	DbUtil::switchRestore($saved_db);
@@ -9510,6 +9853,37 @@ function get_test_category_name_by_id($cat_id)
 	}
 }
 
+function get_drug_type_name_by_id($drug_id)
+{
+	global $con;
+	$cat_id = mysql_real_escape_string($drug_id, $con);
+	# Returns test category name as string
+	global $CATALOG_TRANSLATION;
+	if($CATALOG_TRANSLATION === true)
+	{
+		$saved_db = DbUtil::switchToLabConfig();
+		$query_string = 
+			"SELECT * FROM drugs ".
+			"WHERE drug_id=$drug_id LIMIT 1";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return LangUtil::getDrugName($record['drug_id']);
+	}
+	else
+	{
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT name FROM drugs ".
+			"WHERE drug_id=$drug_id LIMIT 1";
+		$record = query_associative_one($query_string);
+		$retval = LangUtil::$generalTerms['NOTKNOWN'];
+		if($record != null)
+			$retval = $record['name'];
+		DbUtil::switchRestore($saved_db);
+		return $retval;
+	}
+}
+
 function get_test_types_wcat_catalog()
 {
 	# Returns a list of all test types available in catalog, with category name appended
@@ -9636,6 +10010,22 @@ function get_test_category_by_name($test_category_name)
 	$record = query_associative_one($query_string);
 	DbUtil::switchRestore($saved_db);
 	return TestCategory::getObject($record);
+}
+
+//get drug by name
+function get_drug_type_by_name($drug_type_name)
+{
+	global $con;
+	$drug_type_name = mysql_real_escape_string($drug_type_name, $con);
+	# Returns drug type record in DB
+	$user = get_user_by_id($_SESSION['user_id']);
+	$lab_config_id = $user->labConfigId;
+	$saved_db = DbUtil::switchToLabConfigRevamp($lab_config_id);
+	$query_string = 
+		"SELECT * FROM drugs WHERE name='$drug_type_name' LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return DrugType::getObject($record);
 }
 
 //get rejection phase by name
@@ -9832,6 +10222,19 @@ function get_test_category_by_id($test_category_id)
 	return TestCategory::getObject($record);
 }
 
+function get_drug_type_by_id($drug_id)
+{
+	global $con;
+	$drug_id = mysql_real_escape_string($drug_id, $con);
+	# Returns drug type record in DB
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string =
+		"SELECT * FROM drugs WHERE drug_id=$drug_id LIMIT 1";
+	$record = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return DrugType::getObject($record);
+}
+
 function get_rejection_phase_by_id($rejection_phase_id)
 {
 	global $con;
@@ -10017,6 +10420,16 @@ function get_max_test_cat_id()
 	$saved_db = DbUtil::switchToLabConfigRevamp();
 	$query_string =
 		"SELECT MAX(test_category_id) as maxval FROM test_category";
+	$resultset = query_associative_one($query_string);
+	DbUtil::switchRestore($saved_db);
+	return $resultset['maxval'];
+}
+function get_max_drug_type_id()
+{
+	# Returns the largest drug type ID
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string =
+		"SELECT MAX(drug_id) as maxval FROM drugs";
 	$resultset = query_associative_one($query_string);
 	DbUtil::switchRestore($saved_db);
 	return $resultset['maxval'];
@@ -10324,6 +10737,31 @@ function add_specimen_test($specimen_type_id, $test_type_id)
 	DbUtil::switchRestore($saved_db);
 }
 
+function add_drug_test($drug_id, $test_type_id)
+{
+	global $con;
+	$test_type_id = mysql_real_escape_string($test_type_id, $con);
+	$drug_id = mysql_real_escape_string($drug_id, $con);
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	# Adds a new entry to drug_type->test_type map table
+	$query_check = 
+		"SELECT * FROM drug_test ".
+		"WHERE test_type_id=$test_type_id AND drug_id=$drug_id";
+	$flag_exists = query_associative_one($query_check);
+	if($flag_exists != null)
+	{
+		# Mapping already exists
+		# TODO: Add error handling?
+		DbUtil::switchRestore($saved_db);
+		return;
+	}
+	$query_add =
+		"INSERT INTO drug_test(drug_id, test_type_id) ".
+		"VALUES ($drug_id, $test_type_id)";
+	query_insert_one($query_add);
+	DbUtil::switchRestore($saved_db);
+}
+
 function add_lab_config_test_type($lab_config_id, $test_type_id)
 {
 	# Adds a new entry to lab_config->test_type map table
@@ -10440,6 +10878,27 @@ function get_compatible_specimens($test_type_id)
 	return $retval;
 }
 
+function get_compatible_drugs($test_type_id)
+{
+	# Returns a list of compatible drugs for a given test type in catalog
+	global $con;
+	$test_type_id = mysql_real_escape_string($test_type_id, $con);
+	$saved_db = DbUtil::switchToLabConfigRevamp();
+	$query_string = 
+		"SELECT drug_id FROM drug_test WHERE test_type_id=$test_type_id";
+	$resultset = query_associative_all($query_string, $row_count);
+	$retval = array();
+	if($resultset == null)
+		return $retval;
+	foreach($resultset as $record)
+	{
+		$retval[] = $record['drug_id'];
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}
+
+
 function get_compatible_test_types($lab_config_id, $specimen_type_id)
 {
 	# Returns a list of compatible tests for a given specimen type in lab configuration
@@ -10495,6 +10954,29 @@ function get_lab_config_specimen_types($lab_config_id, $to_global=false)
 	DbUtil::switchRestore($saved_db);
 	return $retval;
 }
+/* Get drugs by lab config */
+/*function get_lab_config_drug_types($lab_config_id, $to_global=false)
+{
+	global $con;
+	$lab_config_id = mysql_real_escape_string($lab_config_id, $con);
+	# Returns a list of all specimen types added to the lab configuration
+	if($to_global == false)
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+	else
+		$saved_db = DbUtil::switchToGlobal();
+	$query_string = 
+		"SELECT drug_id FROM lab_config_specimen_type ".
+		"WHERE lab_config_id=$lab_config_id";
+	$resultset = query_associative_all($query_string, $row_count);
+	$retval = array();
+	foreach($resultset as $record)
+	{
+		$retval[] = $record['specimen_type_id'];
+	}
+	DbUtil::switchRestore($saved_db);
+	return $retval;
+}*/
+/*End get drugs by lab config*/
 
 function get_test_type_measures($test_type_id)
 {
@@ -16716,7 +17198,6 @@ function time_elapsed_pretty($datetime = null, $full = false) {
 
     $diff->w = floor($diff->d / 7);
     $diff->d -= $diff->w * 7;
-
     $string = array(
         'y' => 'year',
         'm' => 'month',
@@ -16803,7 +17284,7 @@ class Culture
 		{
 			$retval[] = Culture::getObject($obj);
 		}
-	
+
 		return $retval;
 
 	}
@@ -16811,11 +17292,11 @@ class Culture
 	// public static function editObservation($id, $obs ){
 	// 	//To do
 	// }
-	
+
 	public static function deleteObservation(){
 		//To do
 	}
-	
+
 	public static function getById($id){
 
 		global $con;

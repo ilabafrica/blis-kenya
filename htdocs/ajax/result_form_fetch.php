@@ -262,6 +262,62 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 				?>			
 			</tbody>
 	</table>
+
+	<br />
+	<div class="portlet box yellow ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-reorder"></i> <h5>Susceptibility Test Results</h5>
+							</div>
+							
+						</div>
+						<div class="portlet-body form">
+							<form role="form">
+								<div class="form-body">
+									<table class="table table-bordered table-advanced table-condensed">
+										<thead>
+											<tr>
+												<th>Drug</th>
+												<th>Zone (mm)</th>
+												<th>Interpretation (S,I,R)</th>
+											</tr>
+										</thead>
+										<tbody>
+										<?php 
+											$test_type_id = get_test_type_id_from_test_id($test_id);
+											$drug = get_compatible_drugs($test_type_id);
+											if($drug != null){
+											foreach ($drug as  $drugs) { $drugs_value = DrugType::getById($drugs);?>
+												<tr>
+												<input type="hidden" name="drugs[]" id="drugs[]"> value="<?php echo $drugs; ?>">
+												<td><?php echo $drugs_value->name; ?></td>
+												<td><input type="text" name="zone" id="zone" class="span6 m-wrap"></td>
+												<td><select class="span4 m-wrap" id="interpretation" name="interpretation">
+							                                    <option value="S" selected="selected">S</option>
+							                                    
+							                                    <option value="I">I</option>
+							                                    <option value="R">R</option>
+															</select></td>
+												</tr>
+												<?php } 
+												}
+												else{
+												?>
+												<tr>
+												<td colspan="4"><?php echo "No Drugs linked to this test. Please consult the Lab In-Charge." ?></td>
+												</tr>
+												<?php } ?>			
+										</tbody>
+										
+								</table>
+								</div>
+								<div class="form-actions right">
+									<button type="submit" class="btn green">Submit Results</button>
+								</div>
+							</form>
+						</div>
+					</div>
+	
 	<?php
 	} //End Show worksheet conditionally
 }
@@ -375,8 +431,23 @@ $modal_link_id = "test_result_link_$test_id";
 			return;
 		}
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
-	}	
+	}
 
+	/*Begin save drug susceptibility*/	
+	/*function saveDrugSusceptibility(drug[], zone[], interpretation[]){
+		txtarea = "txtObsv_"+tid;
+		observation = $("#"+txtarea).val();
+
+		$.ajax({
+			type: 'POST',
+			url:  'ajax/drug_susceptibility.php',
+			data: {obs: observation, testId: tid, action: "add"},
+			success: function(){
+				drawCultureWorksheet(tid , username);
+			}
+		});
+	}*/
+	/*End save drug susceptibility*/
 	function saveObservation(tid, username){
 		txtarea = "txtObsv_"+tid;
 		observation = $("#"+txtarea).val();
