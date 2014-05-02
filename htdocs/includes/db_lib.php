@@ -14,10 +14,7 @@ if(!isset($_SESSION['SESS_TIMER'])){
 }
 $_SESSION['SESS_TIMER'] = time();
 
-<<<<<<< HEAD
-=======
 date_default_timezone_set('Africa/Nairobi');
->>>>>>> 037a4a6433c90d4987faa195142761a1941fc8b6
 include("defaults.php");
 require_once("db_mysql_lib.php");
 
@@ -1808,11 +1805,11 @@ class DrugSusceptibility
 		return $drugSusceptibility;
 	}	
 
-	public static function addResult($userId, $testId, $drugId, $zone, $interpretation){
+	public static function addSusceptibility($userId, $testId, $drugId, $zone, $interpretation){
 		global $con;
 		$query_string = "INSERT INTO drug_susceptibility (userId, testId, drugId, zone, interpretation, ts) values($userId, $testId, $drugId, $zone, '$interpretation', NOW()) ";
 		$result = query_insert_one($query_string);
-		return get_last_insert_id();
+		//return get_last_insert_id();
 	}
 
 	public static function getAllResults($testId){

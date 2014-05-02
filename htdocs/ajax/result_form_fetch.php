@@ -272,7 +272,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 							
 						</div>
 						<div class="portlet-body form">
-							<form role="form">
+							<form role="form" id="drugs_susceptibility">
 								<div class="form-body">
 									<table class="table table-bordered table-advanced table-condensed">
 										<thead>
@@ -289,10 +289,11 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 											if($drug != null){
 											foreach ($drug as  $drugs) { $drugs_value = DrugType::getById($drugs);?>
 												<tr>
-												<input type="hidden" name="drugs[]" id="drugs[]"> value="<?php echo $drugs; ?>">
+												<input type="hidden" name="test[]" id="test[]" value="<?php echo $test_id; ?>">
+												<input type="hidden" name="drug[]" id="drug[]" value="<?php echo $drugs; ?>">
 												<td><?php echo $drugs_value->name; ?></td>
-												<td><input type="text" name="zone" id="zone" class="span6 m-wrap"></td>
-												<td><select class="span4 m-wrap" id="interpretation" name="interpretation">
+												<td><input type="text" name="zone[]" id="zone[]" class="span6 m-wrap"></td>
+												<td><select class="span4 m-wrap" id="interpretation[]" name="interpretation[]">
 							                                    <option value="S" selected="selected">S</option>
 							                                    
 							                                    <option value="I">I</option>
@@ -312,7 +313,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 								</table>
 								</div>
 								<div class="form-actions right">
-									<button type="submit" class="btn green">Submit Results</button>
+									<button type="submit" class="btn green" onclick="saveDrugSusceptibility(<?php echo $test_id ?>)">Submit Results</button>
 								</div>
 							</form>
 						</div>
@@ -434,19 +435,30 @@ $modal_link_id = "test_result_link_$test_id";
 	}
 
 	/*Begin save drug susceptibility*/	
-	/*function saveDrugSusceptibility(drug[], zone[], interpretation[]){
-		txtarea = "txtObsv_"+tid;
-		observation = $("#"+txtarea).val();
+	function saveDrugSusceptibility(tid){
+		event.preventDefault();
+		/*Get the form variables*/
+		/*var testId = tid;
+		var drugs = $("input#drug[]").val();
+		var zones = $("input#zone[]").val();
+		var interpretations = $("input#interpretation[]").val();
 
+		/*Data string*/
+		/*var dataString = '&testId=' + tid + '&drugs=' + drugs + '&zones=' + zones + '&interpretations=' + interpretations;
+		$.each(dataString, function(key, object) { alert($(this).val());
+		});*/
+		var dataString = $("#drugs_susceptibility").serialize();
+		//alert(dataString);
+		
 		$.ajax({
 			type: 'POST',
 			url:  'ajax/drug_susceptibility.php',
-			data: {obs: observation, testId: tid, action: "add"},
-			success: function(){
-				drawCultureWorksheet(tid , username);
+			data: dataString,
+			success: function(d){
+				alert(d);
 			}
 		});
-	}*/
+	}
 	/*End save drug susceptibility*/
 	function saveObservation(tid, username){
 		txtarea = "txtObsv_"+tid;
