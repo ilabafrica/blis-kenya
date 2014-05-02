@@ -14,6 +14,10 @@ if(!isset($_SESSION['SESS_TIMER'])){
 }
 $_SESSION['SESS_TIMER'] = time();
 
+<<<<<<< HEAD
+=======
+date_default_timezone_set('Africa/Nairobi');
+>>>>>>> 037a4a6433c90d4987faa195142761a1941fc8b6
 include("defaults.php");
 require_once("db_mysql_lib.php");
 
