@@ -1826,6 +1826,14 @@ class DrugSusceptibility
 		//return get_last_insert_id();
 	}
 
+	public static function updateSusceptibility($userId, $testId, $drugId, $zone, $interpretation){
+		global $con;
+		$query_string = "UPDATE drug_susceptibility SET userId = $userId, zone = $zone, interpretation = '$interpretation', ts = NOW() WHERE testId = $testId AND drugId = $drugId;";
+		//echo $query_string;
+		$result = query_blind($query_string);
+		//return get_last_insert_id();
+	}
+
 	public static function getDrugSuceptibilityResults($testId){
 
 		global $con;
@@ -1869,6 +1877,21 @@ class DrugSusceptibility
 		$query_string = "SELECT * FROM drug_susceptibility WHERE id = $id";
 		$record = query_associative_one($query_string);
 		return DrugSusceptibility::getObject($record);
+
+	}
+	public static function getDrugSusceptibility($testId, $drugId){
+
+		global $con;
+		$query_string = "SELECT zone, interpretation FROM drug_susceptibility where testId = $testId AND drugId = $drugId;";
+		$record = query_associative_all($query_string, $count);
+		$retval = array();
+		foreach($record as $obj)
+		{
+			$retval['zone'] = $obj['zone'];
+			$retval['interpretation'] = $obj['interpretation'];
+		}
+	
+		return $retval;
 
 	}
 
