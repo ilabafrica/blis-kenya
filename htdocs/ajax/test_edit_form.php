@@ -215,7 +215,54 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 	</table>
 	</form>
 	
+	<!-- Show worksheet conditionally-->
+	<?php if ($test_type->showCultureWorkSheet) {?>
+	<br />
+	<h5>CULTURE OBSERVATION AND WORKUP</h5>
+	<table class="table table-bordered table-advanced table-condensed">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Initials</th>
+					<th>Observations and work-up</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody id="tbbody_<?php echo $test->testId ?>">
+			<?php 
+				$obsv = Culture::getAllObservations($test->testId);
+				if($obsv != null){
+				foreach ($obsv as  $Observation) { ?>
+					<tr>
+					<td><?php echo time_elapsed_pretty($Observation->time_stamp); ?></td>
+					<td><?php echo get_username_by_id($Observation->userId) ?></td>
+					<td><?php echo $Observation->observation ?></td>
+					<td></td>
+					</tr>
+					<?php } ?>
+					<tr>
+					<td><?php echo time_elapsed_pretty() ?></td>
+					<td><?php echo $_SESSION['username'] ?></td>
+					<td><textarea id="txtObsv_<?php echo $test->testId ?>" style="width:390px"></textarea></td>
+					<td><a class="btn mini" href="javascript:void(0)" onclick="saveObservation(<?php echo $test->testId ?>, <?php echo "'".$_SESSION['username']."'" ?>)">Save</a> </td>
+					</tr>
+				<?php
+				}
+				else { ?>
+					<tr>
+					<td><?php echo time_elapsed_pretty() ?></td>
+					<td><?php echo $_SESSION['username'] ?></td>
+					<td><textarea id="txtObsv_<?php echo $test->testId ?>" style="width:390px"></textarea></td>
+					<td><a class="btn mini" href="javascript:void(0)" onclick="saveObservation(<?php echo $test->testId ?>, <?php echo "'".$_SESSION['username']."'" ?>)">Save</a> </td>
+					</tr>
+					<?php
+				}
+				?>			
+			</tbody>
+	</table>
+
 	<?php
+	} //End Show worksheet conditionally
 }
 
 $form_id_list = array();
@@ -244,12 +291,12 @@ $modal_link_id = "test_edit_link_$test_id";
 </div>
 <div class="modal-body">
 	<div class="row-fluid">
-	<div class="span6 sortable">
+	<div class="span7 sortable">
 	<?php
 		get_result_form($test_type, $test, 0, $patient);	  
 	?>
 	</div>
-	<div class="span6 sortable">
+	<div class="span5 sortable">
 	
 	<div class="portlet box grey">
 		<div class="portlet-title">
@@ -328,6 +375,76 @@ $modal_link_id = "test_edit_link_$test_id";
 			return;
 		}
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
+	}
+
+	/*Begin save drug susceptibility*/	
+	function saveDrugSusceptibility(tid){
+		event.preventDefault();
+		/*Get the form variables*/
+		/*var testId = tid;
+		var drugs = $("input#drug[]").val();
+		var zones = $("input#zone[]").val();
+		var interpretations = $("input#interpretation[]").val();
+
+		/*Data string*/
+		/*var dataString = '&testId=' + tid + '&drugs=' + drugs + '&zones=' + zones + '&interpretations=' + interpretations;
+		$.each(dataString, function(key, object) { alert($(this).val());
+		});*/
+		var dataString = $("#drugs_susceptibility").serialize();
+		//alert(dataString);
+		
+		$.ajax({
+			type: 'POST',
+			url:  'ajax/drug_susceptibility.php',
+			data: dataString,
+			success: function(d){
+				alert(d);
+			}
+		});
+	}
+	/*End save drug susceptibility*/
+	function saveObservation(tid, username){
+		txtarea = "txtObsv_"+tid;
+		observation = $("#"+txtarea).val();
+
+		$.ajax({
+			type: 'POST',
+			url:  'ajax/culture_worksheet.php',
+			data: {obs: observation, testId: tid, action: "add"},
+			success: function(){
+				drawCultureWorksheet(tid , username);
+			}
+		});
+	}
+
+	/**
+	 * Request a json string from the server containing contents of the culture_worksheet table for this test
+	 * and then draws a table based on this data.
+	 * @param  {int} tid      Test Id of the test
+	 * @param  {string} username Current user
+	 * @return {void}          No return
+	 */
+	function drawCultureWorksheet(tid, username){
+		$.getJSON('ajax/culture_worksheet.php', { testId: tid, action: "draw"}, 
+			function(data){
+				var tableBody ="";
+				$.each(data, function(index, elem){
+					tableBody += "<tr>"
+					+" <td>"+elem.time_stamp+" </td>"
+					+" <td>"+elem.userId+"</td>"
+					+" <td>"+elem.observation+"</td>"
+					+" <td> </td>"
+					+"</tr>";
+				});
+				tableBody += "<tr>"
+					+"<td>Just now</td>"
+					+"<td>"+username+"</td>"
+					+"<td><textarea id='txtObsv_"+tid+"' style='width:390px'></textarea></td>"
+					+"<td><a class='btn mini' href='javascript:void(0)' onclick='saveObservation("+tid+", &quot;"+username+"&quot;)'>Save</a></td>"
+					+"</tr>";
+				$("#tbbody_"+tid).html(tableBody);
+			}
+		);
 	}
 
 	/**
