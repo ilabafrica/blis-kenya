@@ -77,6 +77,8 @@ class Abbreviations {
 	public static function addAbbreviation($abb, $word)
 	{
 		global $con;
+		$abb = mysql_real_escape_string($abb);
+		$word = mysql_real_escape_string($word);
 		$query_string = "INSERT INTO abbreviations (abbreviation, word) values('$abb', '$word') ";
 		$result = query_insert_one($query_string);
 		return get_last_insert_id();	

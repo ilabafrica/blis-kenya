@@ -17284,6 +17284,7 @@ class Culture
 
 	public static function addObservation($userId, $testId, $observation){
 		global $con;
+		$observation =  mysql_real_escape_string($observation);
 		$query_string = "INSERT INTO culture_worksheet (userID, testID, observation, time_stamp) values($userId, $testId, '$observation', NOW()) ";
 		$result = query_insert_one($query_string);
 		return get_last_insert_id();
