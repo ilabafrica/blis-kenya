@@ -1710,6 +1710,20 @@ class DrugType
 		DbUtil::switchRestore($saved_db);
 		return DrugType::getObject($record);
 	}
+
+	public static function getDrugNameById($drug_id)
+	{
+		# Returns a drug name fetch by ID
+		global $con;
+		$drug_id = mysql_real_escape_string($drug_id, $con);
+		$saved_db = DbUtil::switchToLabConfigRevamp();
+		$query_string = 
+			"SELECT name FROM drugs ".
+			"WHERE drug_id=$drug_id";
+		$record = query_associative_one($query_string);
+		DbUtil::switchRestore($saved_db);
+		return $record['name'];
+	}
 	
 	public static function deleteById($drug_id)
 	{
@@ -1812,7 +1826,7 @@ class DrugSusceptibility
 		//return get_last_insert_id();
 	}
 
-	public static function getAllResults($testId){
+	public static function getDrugSuceptibilityResults($testId){
 
 		global $con;
 		$query_string = "SELECT * FROM drug_susceptibility where testId = $testId order by ts ASC";

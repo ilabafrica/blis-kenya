@@ -13,6 +13,8 @@ $test = $_POST['test'];
 $drug = $_POST['drug'];
 $zone = $_POST['zone'];
 $interpretation = $_POST['interpretation'];
+$action = $_REQUEST['action'];
+$testId = $_REQUEST['testId'];
 
 /*Get user ID*/
 $userId = $_SESSION['user_id'];
@@ -20,6 +22,14 @@ $userId = $_SESSION['user_id'];
 for($i=0; $i<count($test); $i++){
 	DrugSusceptibility::addSusceptibility($userId,$test[$i],$drug[$i],$zone[$i],$interpretation[$i]);
 }
-	echo "Successfully saved!"
+if ($action == "results"){
+	$susceptibility = DrugSusceptibility::getDrugSuceptibilityResults($testId);
+	foreach ($susceptibility as $drugSusceptibility) {
+		$drugSusceptibility->drugName = DrugType::getDrugNameById($drugSusceptibility->drugId);
+	}
+
+	echo json_encode($susceptibility);
+	}
+	//echo "Successfully saved!"
 
 ?>

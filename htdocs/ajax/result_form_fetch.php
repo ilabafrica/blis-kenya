@@ -282,7 +282,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 												<th>Interpretation (S,I,R)</th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody id="enteredResults">
 										<?php 
 											$test_type_id = get_test_type_id_from_test_id($test_id);
 											$drug = get_compatible_drugs($test_type_id);
@@ -312,7 +312,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 										
 								</table>
 								</div>
-								<div class="form-actions right">
+								<div class="form-actions right" id="submit_drug_susceptibility">
 									<button type="submit" class="btn green" onclick="saveDrugSusceptibility(<?php echo $test_id ?>)">Submit Results</button>
 								</div>
 							</form>
@@ -454,8 +454,8 @@ $modal_link_id = "test_result_link_$test_id";
 			type: 'POST',
 			url:  'ajax/drug_susceptibility.php',
 			data: dataString,
-			success: function(d){
-				alert(d);
+			success: function(){
+				renderDrugSusceptibility(tid);
 			}
 		});
 	}
@@ -513,6 +513,26 @@ $modal_link_id = "test_result_link_$test_id";
 	 * 
 	 * @todo Move this code into a function 
 	 */
+	 /*Function to render drug susceptibility table after successfully saving the results*/
+	 function renderDrugSusceptibility(tid){
+		$.getJSON('ajax/drug_susceptibility.php', { testId: tid, action: "results"}, 
+			function(data){
+				var tableRow ="";
+				var tableBody ="";
+				$.each(data, function(index, elem){
+					tableRow += "<tr>"
+					+" <td>"+elem.drugName+" </td>"
+					+" <td>"+elem.zone+"</td>"
+					+" <td>"+elem.interpretation+"</td>"
+					+"</tr>";
+				});
+				//tableBody +="<tbody>"+tableRow+"</tbody>";
+				$( "#enteredResults" ).html(tableRow);
+				$("#submit_drug_susceptibility").hide();
+			}
+		);
+	}
+	/*End drug susceptibility table rendering script*/
 
 	$(".abbreviation").keydown(function(keydata){
 			if (keydata.ctrlKey == true) 
