@@ -261,6 +261,66 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			</tbody>
 	</table>
 
+	<!-- Begin Drug Susceptibility Tests table -->
+	<br />
+	<div class="portlet box yellow ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-reorder"></i> <h5>Susceptibility Test Results</h5>
+							</div>
+							
+						</div>
+						<div class="portlet-body form">
+							<form role="form" id="drugs_susceptibility">
+								<div class="form-body">
+									<table class="table table-bordered table-advanced table-condensed">
+										<thead>
+											<tr>
+												<th>Drug</th>
+												<th>Zone (mm)</th>
+												<th>Interpretation (S,I,R)</th>
+											</tr>
+										</thead>
+										<tbody id="enteredResults">
+										<?php 
+											$test_type_id = get_test_type_id_from_test_id($test->testId);
+											$drug = get_compatible_drugs($test_type_id);
+											if($drug != null){
+												foreach ($drug as  $drugs) { $drugs_value = DrugType::getById($drugs);
+												$sensitivity = DrugSusceptibility::getDrugSusceptibility($test->testId,$drugs);
+												?>
+												<tr>
+												<input type="hidden" name="test[]" id="test[]" value="<?php echo $test->testId; ?>">
+												<input type="hidden" name="drug[]" id="drug[]" value="<?php echo $drugs; ?>">
+												<td><?php echo $drugs_value->name; ?></td>
+												<td><input type="text" name="zone[]" id="zone[]" class="span6 m-wrap" value="<?php if($sensitivity!=null){echo $sensitivity['zone'];} ?>"></td>
+												<td><select class="span4 m-wrap" id="interpretation[]" name="interpretation[]">
+												                <option value="S" <?php if($sensitivity['interpretation']=='S'){ ?>selected="selected"<?php } ?>>S</option>
+							                                    
+							                                    <option value="I" <?php if($sensitivity['interpretation']=='I'){ ?>selected="selected"<?php } ?>>I</option>
+							                                    <option value="R" <?php if($sensitivity['interpretation']=='R'){ ?>selected="selected"<?php } ?>>R</option>
+															</select></td>
+												</tr>
+												<?php } 
+												}
+												else{
+												?>
+												<tr>
+												<td colspan="4"><?php echo "No Drugs linked to this test. Please consult the Lab In-Charge." ?></td>
+												</tr>
+												<?php } ?>			
+										</tbody>
+										
+								</table>
+								</div>
+								<div class="form-actions right" id="submit_drug_susceptibility">
+									<button type="submit" class="btn green" onclick="updateDrugSusceptibility(<?php echo $test->testId ?>)">Save Changes</button>
+								</div>
+							</form>
+						</div>
+					</div>
+	<!-- End Drug Susceptibility Tests table -->
+
 	<?php
 	} //End Show worksheet conditionally
 }
@@ -377,8 +437,8 @@ $modal_link_id = "test_edit_link_$test_id";
 		update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');
 	}
 
-	/*Begin save drug susceptibility*/	
-	function saveDrugSusceptibility(tid){
+	/*Begin update drug susceptibility*/	
+	function updateDrugSusceptibility(tid){
 		event.preventDefault();
 		/*Get the form variables*/
 		/*var testId = tid;
@@ -395,10 +455,10 @@ $modal_link_id = "test_edit_link_$test_id";
 		
 		$.ajax({
 			type: 'POST',
-			url:  'ajax/drug_susceptibility.php',
+			url:  'ajax/update_susceptibility.php',
 			data: dataString,
-			success: function(d){
-				alert(d);
+			success: function(){
+				renderDrugSusceptibility(tid);
 			}
 		});
 	}
@@ -456,6 +516,26 @@ $modal_link_id = "test_edit_link_$test_id";
 	 * 
 	 * @todo Move this code into a function 
 	 */
+	 /*Function to render drug susceptibility table after successfully saving the results*/
+	 function renderDrugSusceptibility(tid){
+		$.getJSON('ajax/drug_susceptibility.php', { testId: tid, action: "results"}, 
+			function(data){
+				var tableRow ="";
+				var tableBody ="";
+				$.each(data, function(index, elem){
+					tableRow += "<tr>"
+					+" <td>"+elem.drugName+" </td>"
+					+" <td>"+elem.zone+"</td>"
+					+" <td>"+elem.interpretation+"</td>"
+					+"</tr>";
+				});
+				//tableBody +="<tbody>"+tableRow+"</tbody>";
+				$( "#enteredResults" ).html(tableRow);
+				$("#submit_drug_susceptibility").hide();
+			}
+		);
+	}
+	/*End drug susceptibility table rendering script*/
 	$(".abbreviation").keydown(function(keydata){
 			if (keydata.ctrlKey == true) 
 			{
