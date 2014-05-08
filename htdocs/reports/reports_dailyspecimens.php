@@ -22,21 +22,30 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		"AND result LIKE '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to' AND time_collected >='00:59' AND time_collected <='23:59') ".
 		")";
 		}
 	 
 		else
 		if(get_request_variable('ip') == 0)
-	{
-	$query_string =
+		{
+		$query_string =
 		"SELECT * FROM test WHERE test_type_id=$test_type_id ".
 		"AND result <> '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_collected LIKE '$date_from%' OR date_collected LIKE '$date_to%' OR date_collected BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
+		/*else if($date_from==$date_to){
+			$query_string =
+			"SELECT * FROM test WHERE test_type_id=$test_type_id ".
+			"AND result LIKE '' ".
+			"AND specimen_id IN ( ".
+				"SELECT specimen_id FROM specimen ".
+				"WHERE (date_collected BETWEEN '$date_from' AND '$date_to' AND time_collected >='00:59' AND time_collected <='23:59') ".
+			")";
+		}*/
 		else
 		{
 		
