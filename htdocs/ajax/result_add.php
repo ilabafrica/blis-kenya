@@ -96,7 +96,7 @@ foreach($measure_list as $measure)
                         $value_string = substr($value_string, 0, -1);
 		$result_values[$measure_count] = $value_string;
 		//Stuffing measureId and result in measure_result array
-		$measure_result[$measure[measureId]] = $value_string;
+		$measure_result[$measure->measureId] = $value_string;
 	}
         else if($range_type == Measure::$RANGE_FREETEXT)
 	{
