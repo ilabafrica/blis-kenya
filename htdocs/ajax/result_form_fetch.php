@@ -12,7 +12,7 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 $script_elems = new ScriptElems();
-$script_elems->enableValidation();
+//$script_elems->enableValidation();
 
 
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
@@ -221,7 +221,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	<?php if ($test_type->showCultureWorkSheet) {?>
 	<br />
 	<h5>CULTURE OBSERVATION AND WORKUP</h5>
-	<table class="table table-bordered table-advanced table-condensed" id="culture">
+	<table class="table table-bordered table-advanced table-condensed">
 			<thead>
 				<tr>
 					<th>Date</th>
@@ -292,10 +292,10 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 												<input type="hidden" name="test[]" id="test[]" value="<?php echo $test_id; ?>">
 												<input type="hidden" name="drug[]" id="drug[]" value="<?php echo $drugs; ?>">
 												<td><?php echo $drugs_value->name; ?></td>
-												<td><input type="text" name="zone[]" id="zone[]" class="span6 m-wrap validate[required,custom[onlyNumberSp]]"></td>
-												<td><select class="span4 m-wrap validate[required]" id="interpretation[]" name="interpretation[]">
-																<option value="" selected="selected">Interpretation</option>
-							                                    <option value="S">S</option>
+												<td><input type="text" name="zone[]" id="zone[]" class="span6 m-wrap"></td>
+												<td><select class="span4 m-wrap" id="interpretation[]" name="interpretation[]">
+							                                    <option value="S" selected="selected">S</option>
+							                                    
 							                                    <option value="I">I</option>
 							                                    <option value="R">R</option>
 															</select></td>
@@ -384,10 +384,6 @@ $modal_link_id = "test_result_link_$test_id";
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
-
-       /*Fields Validation*/
-        jQuery("#drugs_susceptibility").validationEngine();
-       /*End Validation*/
 	});
 	
 	function insertCelltacResults(){

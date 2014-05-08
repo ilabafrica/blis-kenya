@@ -6,13 +6,10 @@
 
 require_once("../includes/db_lib.php");
 require_once("../includes/page_elems.php");
-require_once("../includes/script_elems.php");
 require_once("../includes/ajax_lib.php");
 require_once("../includes/user_lib.php");
 
 $page_elems = new PageElems();
-$script_elems = new ScriptElems();
-$script_elems->enableValidation();
 
 function get_result_form($test_type, $test, $num_tests, $patient)
 {
@@ -296,9 +293,8 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 												<input type="hidden" name="test[]" id="test[]" value="<?php echo $test->testId; ?>">
 												<input type="hidden" name="drug[]" id="drug[]" value="<?php echo $drugs; ?>">
 												<td><?php echo $drugs_value->name; ?></td>
-												<td><input type="text" name="zone[]" id="zone[]" class="span6 m-wrap validate[required,custom[onlyNumberSp]]" value="<?php if($sensitivity!=null){echo $sensitivity['zone'];} ?>"></td>
-												<td><select class="span4 m-wrap validate[required]" id="interpretation[]" name="interpretation[]">
-																<option value="" selected="selected">Interpretation</option>
+												<td><input type="text" name="zone[]" id="zone[]" class="span6 m-wrap" value="<?php if($sensitivity!=null){echo $sensitivity['zone'];} ?>"></td>
+												<td><select class="span4 m-wrap" id="interpretation[]" name="interpretation[]">
 												                <option value="S" <?php if($sensitivity['interpretation']=='S'){ ?>selected="selected"<?php } ?>>S</option>
 							                                    
 							                                    <option value="I" <?php if($sensitivity['interpretation']=='I'){ ?>selected="selected"<?php } ?>>I</option>
@@ -386,8 +382,6 @@ $modal_link_id = "test_edit_link_$test_id";
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
 	$(document).ready(function() {
-
-		jQuery("#drugs_susceptibility").validationEngine();
 	    
 	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );

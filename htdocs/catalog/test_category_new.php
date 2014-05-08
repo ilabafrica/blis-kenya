@@ -7,7 +7,6 @@ include("../includes/page_elems.php");
 require_once("includes/script_elems.php");
 $script_elems = new ScriptElems();
 $page_elems = new PageElems();
-$script_elems->enableValidation();
 
 LangUtil::setPageId("catalog");
 ?>
@@ -35,7 +34,7 @@ function check_input()
 <table class='smaller_font'>
 <tr>
 <td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='category_name' id='category_name' class='span4 m-wrap validate[required,custom[onlyLetterSp]]' /></td>
+<td><input type='text' name='category_name' id='category_name' class='span4 m-wrap' /></td>
 </tr>
 <tr valign='top'>
 <td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
@@ -53,12 +52,5 @@ function check_input()
 Use Ctrl+F to search easily through the list. Ctrl+F will prompt a box where you can enter the test category you are looking for.
 </small>
 </div>
-<script type='text/javascript'>
-	$(document).ready(function() {
-	/*Form validation*/
-	jQuery("#new_test_category_form").validationEngine();
-	/*End Form validation*/
-	});
-</script>
 <?php //include("includes/footer.php"); ?>
 
