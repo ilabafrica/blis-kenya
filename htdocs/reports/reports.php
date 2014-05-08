@@ -768,7 +768,7 @@ db_get_current();
                     <td>
                         <div class="controls">
                         <label class="radio">
-                            <span><input type="radio"  name='rectype13' value='1' checked> <?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?></span>
+                            <span><input type='radio'  name='rectype13' id="testRec" value='1' checked> <?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?></span>
                             </label>
                         </div>
                         <div class="controls">
@@ -1669,7 +1669,7 @@ db_get_current();
 				<tr valign='top'>
 					<td><?php echo LangUtil::$generalTerms['RECORDS']; ?> &nbsp;&nbsp;&nbsp;</td>
 					<td>
-						<input type='radio' name='rectype13' value='1' checked>
+						<input type='radio' name='rectype13' value='1' >
 							<?php echo LangUtil::$generalTerms['RECORDS_TEST']; ?>
 						</input>
 						<br>
@@ -2125,8 +2125,15 @@ $(document).ready(function(){
 	$("#location10").change(function () { get_test_types_withall('location10', 't_type10') });
 	$("#location11").change(function () { get_usernames('location11', 'username11') });
 	$("input[name='rectype13']").change( function() {
-		$('#cat_row13').toggle();
-		$('#ttype_row13').toggle();
+        if($('#testRec').is(':checked')) { 
+            $('#cat_row13').show();
+            $('#ttype_row13').show();
+        }
+        else{
+             $('#cat_row13').hide();
+            $('#ttype_row13').hide();
+        }
+		
 	});
 	$('#cat_code13').change( function() { get_test_types_bycat() });
 	$("#reportTypeSelect").change( function() {
