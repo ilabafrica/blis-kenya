@@ -22,7 +22,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		"AND result LIKE '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_collected LIKE '$date_from%' OR date_collected LIKE '$date_to%' OR date_collected BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
 	 
@@ -34,7 +34,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		"AND result <> '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_collected LIKE '$date_from%' OR date_collected LIKE '$date_to%' OR date_collected BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
 		else
@@ -45,7 +45,7 @@ function get_records_to_print($lab_config, $test_type_id, $date_from, $date_to)
 		//"AND result <> '' ".
 		"AND specimen_id IN ( ".
 			"SELECT specimen_id FROM specimen ".
-			"WHERE (date_collected BETWEEN '$date_from' AND '$date_to') ".
+			"WHERE (date_collected LIKE '$date_from%' OR date_collected LIKE '$date_to%' OR date_collected BETWEEN '$date_from' AND '$date_to') ".
 		")";
 		}
 	$resultset = query_associative_all($query_string, $row_count);
