@@ -12,7 +12,7 @@ include("../includes/user_lib.php");
 LangUtil::setPageId("results_entry");
 $page_elems = new PageElems();
 $script_elems = new ScriptElems();
-//$script_elems->enableValidation();
+$script_elems->enableValidation();
 
 
 function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_test_id=null)
@@ -24,6 +24,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	$form_id_list[] = $curr_form_id;
 
 	?>
+	<div id="results_form">
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method='' class="form-horizontal" novalidate='novalidate'>
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
@@ -97,7 +98,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" data-required='1'></input>
+			<input class='uniform_width validate[required]' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" data-required='1'></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -157,14 +158,14 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation' data-required='1'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation validate[required]' data-required='1'></input>";
                   // echo "</div>";
                                 	
 		}
 		else if($range_type == Measure::$RANGE_TEXTAREA)
 		{
                         # Text area
-                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation' data-required='1' style='height:140px;width:275px'></textarea>";
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation validate[required]' data-required='1' style='height:140px;width:275px'></textarea>";
                   
                                 	
 		}
@@ -199,7 +200,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation validate[required]'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
 		       data-required='1'></textarea>
 			</span>
 		</td>
@@ -217,6 +218,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	</tr-->
 	</table>
 	</form>
+	</div>
 	<!-- Show worksheet conditionally-->
 	<?php if ($test_type->showCultureWorkSheet) {?>
 	<br />
@@ -384,6 +386,9 @@ $modal_link_id = "test_result_link_$test_id";
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
+       /*Begin Validation*/
+       jQuery("#results_form").validationEngine();
+       /*End Validation*/
 	});
 	
 	function insertCelltacResults(){
