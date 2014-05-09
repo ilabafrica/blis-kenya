@@ -18,6 +18,7 @@ $specimen = Specimen::getById($specimen_id);
 $patient = Patient::getById($specimen->patientId);
 $comment = get_request_variable('comments');
 $comment_1=get_request_variable('comments_1');
+$action = get_request_variable('action');
 $edit_test_flag=get_request_variable('edit_test_flag');
 $comments = "";
 
@@ -156,16 +157,20 @@ $test_modified = Test::getById($test_id);
 $rubbish= array("<br>" , "&nbsp;", "<b>","</b>", "[$]", ",", "[/$]" );
 $result_to_push = str_replace($rubbish, "", $test_modified->decodeResult());
 
+if($action == "send"){
 //Finding ":" helps us know if test has measures so that we update done for main test
 if(strpos($test_modified->decodeResult(), ":" ) == true){
 	API::updateExternalLabrequest($patient->surrogateId, $test->external_lab_no, "Done", $comments);
+}
 }
 
 # If this is an EDIT request then reset the 'result_returned' flag for in external_lab_request
 if($edit_test_flag==1) resend_test_results($test_id);
 
+if($action == "send"){
 //Sends results back to Sanitas :ajax/push_results.php
 send_result_to_externalS();
+}
 
 # Show confirmation with details.
 $modal_close_link_id = "m_c_l_id_$test_id";

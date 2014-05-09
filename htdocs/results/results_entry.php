@@ -892,7 +892,7 @@ function validate_fields(myForm){
 	    }
 	}
 
-function submit_forms(test_id)
+function submit_forms(test_id, action)
 {
         var form_id_csv = 'test_'+test_id;
         var form_id_list = form_id_csv.split(",");
@@ -902,6 +902,14 @@ function submit_forms(test_id)
 		var target_div_id = "result_form_pane_"+test_id;
 
 		var params = $('#test_'+test_id).formSerialize();
+
+		if(action == 'send'){
+			params = params + "&action=send";
+		}
+		else if(action == 'save'){
+			params = params + "&action=save";
+		}
+
 		var string = params.toString();
 		var str1 = string.split("&");
 		var str2 = str1[0].split("=");
