@@ -6,10 +6,13 @@
 
 require_once("../includes/db_lib.php");
 require_once("../includes/page_elems.php");
+require_once("../includes/script_elems.php");
 require_once("../includes/ajax_lib.php");
 require_once("../includes/user_lib.php");
 
 $page_elems = new PageElems();
+$script_elems = new ScriptElems();
+$script_elems->enableValidation();
 
 function get_result_form($test_type, $test, $num_tests, $patient)
 {
@@ -85,7 +88,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
 		?>
-			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
+			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width validate[required]' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
 			<option></option>
 			<?php
 			foreach($range_values as $option)
@@ -102,7 +105,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width' type='text' name='result[]' id='<?php echo $input_id; ?>' value="<?php echo $clean_result ?>" onchange="javascript:update_remarks1();"></input>
+			<input class='uniform_width validate[required]' type='text' name='result[]' id='<?php echo $input_id; ?>' value="<?php echo $clean_result ?>" onchange="javascript:update_remarks1();"></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -162,14 +165,14 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation' value='". $clean_result ."'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation validate[required]' value='". $clean_result ."'></input>";
                   // echo "</div>";
                                 	
 		}
 		else if($range_type == Measure::$RANGE_TEXTAREA)
 		{
                         # Text area
-                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation' data-required='1' style='height:140px;width:275px'>". $clean_result ."</textarea>";
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation validate[required]' data-required='1' style='height:140px;width:275px'>". $clean_result ."</textarea>";
                   
                                 	
 		}
@@ -204,7 +207,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation' 
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation validate[required]' 
 				onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, 
 				<?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, 
 				'<?php echo $patient->sex;?>');" ><?php echo trim($test->getComments()) ?>
@@ -214,7 +217,6 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 	</tr>
 	</table>
 	</form>
-	
 	<!-- Show worksheet conditionally-->
 	<?php if ($test_type->showCultureWorkSheet) {?>
 	<br />
@@ -376,20 +378,50 @@ $modal_link_id = "test_edit_link_$test_id";
 	</div>
 </div>
 <div class="modal-footer">
-
-	<input type='button' class="btn yellow" value='<?php echo "Send to Sanitas"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>, "send");'></input>
+	<input type='button' class="btn yellow" id="sanitas" value='<?php echo "Send to Sanitas"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
 	<a id="<?php echo $modal_link_id.'2'; ?>" class="btn red" href='javascript:close_modal("<?php echo $modal_link_id.'2'; ?>");' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-	<input type='button' class="btn green" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>, "save");'></input>
+	<input type='button' class="btn green" id="blis" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
 	$(document).ready(function() {
-	    
+alert(<?php echo $test->testId; ?>);
 	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
-	})
+	/*Begin Validation*/
+       jQuery("#test_"+<?php echo $test->testId; ?>).validationEngine();
+       /*End Validation*/
+	});
+
+	$(function(){
+    $('#sanitas').click(function(e){
+         e.preventDefault();
+
+         //if invalid do nothing
+         if(!$("#test_"+<?php echo $test->testId; ?>).validationEngine('validate')){
+         return false;
+          }
+          submit_forms(<?php echo $test->testId ?>, "send");
+
+      
+      return false;
+    })
+
+    $('#blis').click(function(e){
+         e.preventDefault();
+
+         //if invalid do nothing
+         if(!$("#test_"+<?php echo $test->testId; ?>).validationEngine('validate')){
+         return false;
+          }
+          submit_forms(<?php echo $test->testId ?>, "save");
+
+      
+      return false;
+    })
+});
 	
 	function insertCelltacResults(){
 	     

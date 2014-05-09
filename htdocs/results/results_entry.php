@@ -893,7 +893,7 @@ function validate_fields(myForm){
 	}
 
 function submit_forms(test_id, action)
-{
+{	
         var form_id_csv = 'test_'+test_id;
         var form_id_list = form_id_csv.split(",");
 
@@ -935,6 +935,7 @@ function submit_forms(test_id, action)
 				 $('#actionA'+actual_test_id).html
 				    ('<a href="javascript:fetch_test_edit_form('+test_id+');" title="Click to Edit results" class="btn blue mini"><i class="icon-edit"></i> Edit</a> <a href="javascript:view_test_result('+test_id+');" title="Click to view and verify results of this Specimen" class="btn blue mini"><i class="icon-edit"></i> Verify</a>');		
 			}
+		
 		});	
 }
 

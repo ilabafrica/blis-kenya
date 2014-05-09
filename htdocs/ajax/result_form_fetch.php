@@ -24,7 +24,6 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	$form_id_list[] = $curr_form_id;
 
 	?>
-	<div id="results_form">
 	<form name='<?php echo $curr_form_id; ?>' id='<?php echo $curr_form_id; ?>' action='' method='' class="form-horizontal" novalidate='novalidate'>
 	<input type='hidden' name='test_id' value='<?php echo $test_id; ?>'></input>
 	<input type='hidden' name='specimen_id' value='<?php echo $specimen_id; ?>'></input>
@@ -82,7 +81,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
-		?><select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" data-required='1'><option></option>
+		?><select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width validate[required]' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" data-required='1'><option></option>
 			<?php
 			foreach($range_values as $option)
 			{
@@ -218,7 +217,6 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 	</tr-->
 	</table>
 	</form>
-	</div>
 	<!-- Show worksheet conditionally-->
 	<?php if ($test_type->showCultureWorkSheet) {?>
 	<br />
@@ -376,22 +374,49 @@ $modal_link_id = "test_result_link_$test_id";
 	</div>
 </div>
 <div class="modal-footer">
-
-	<input type='button' class="btn yellow" value='<?php echo "Send to Sanitas"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>, "send");'></input>
+	<input type='button' class="btn yellow" id="sanitas" value='<?php echo "Send to Sanitas"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
 	<a id="<?php echo $modal_link_id.'2'; ?>" class="btn red" href='javascript:close_modal("<?php echo $modal_link_id.'2'; ?>");' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-	<input type='button' class="btn green" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>' onclick='javascript:submit_forms(<?php echo $test_id ?>, "save");'></input>
+	<input type='button' class="btn green" id="blis" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
 	$(document).ready(function() {
-	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
+		if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
        }
        /*Begin Validation*/
-       jQuery("#results_form").validationEngine();
+       jQuery("#test_"+<?php echo $test_id; ?>).validationEngine();
        /*End Validation*/
 	});
+
+	$(function(){
+    $('#sanitas').click(function(e){
+         e.preventDefault();
+
+         //if invalid do nothing
+         if(!$("#test_"+<?php echo $test_id; ?>).validationEngine('validate')){
+         return false;
+          }
+          submit_forms(<?php echo $test_id ?>, "send");
+
+      
+      return false;
+    })
+
+    $('#blis').click(function(e){
+         e.preventDefault();
+
+         //if invalid do nothing
+         if(!$("#test_"+<?php echo $test_id; ?>).validationEngine('validate')){
+         return false;
+          }
+          submit_forms(<?php echo $test_id ?>, "save");
+
+      
+      return false;
+    })
+});
 	
 	function insertCelltacResults(){
 	     
