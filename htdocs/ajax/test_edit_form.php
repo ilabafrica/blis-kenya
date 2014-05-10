@@ -385,7 +385,6 @@ $modal_link_id = "test_edit_link_$test_id";
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
 	$(document).ready(function() {
-alert(<?php echo $test->testId; ?>);
 	    if ( <?php echo '"'.$test_type->getName().'"'; ?> == "Full Haemogram" ) {
             $.get( "http://192.168.1.5/blis/htdocs/results/emptyfile.php" );
              $('#ctbutton').show();
