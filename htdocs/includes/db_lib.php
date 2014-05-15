@@ -1,7 +1,7 @@
 <?php
 # 
 # (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre
-# This file contains entity classes and functions for DB queries
+# This file contains entity classes and functions for DB queries 
 #
 
 # Start session if not already started
@@ -346,90 +346,37 @@ class LabConfig
 	public function getPendingTatValue()
 	{
 		# Returns default TAT value (in hours) to be assigned for samples that are pending
-		# Used while generating TAT report
-		# Stored in DB table 'test_type_tat' against test_type_id=0
 		global $DEFAULT_PENDING_TAT;
-		$saved_db = DbUtil::switchToLabConfig($this->id);
-		$query_string = "SELECT tat FROM test_type_tat WHERE test_type_id=0 LIMIT 1";
-		$record = query_associative_one($query_string);
-		$retval = 0;
-		if($record == null)
-		{
-			$retval = $DEFAULT_PENDING_TAT*24;
-		}
-		else if($record['tat'] == null)
-		{
-			$retval = $DEFAULT_PENDING_TAT*24;
-		}
-		else
-		{
-			# Entry present in DB
-			$retval = $record['tat'];
-		}
-		DbUtil::switchRestore($saved_db);
+		$retval = $DEFAULT_PENDING_TAT*24;
 		return $retval;		
 	}
 	
 	public function getGoalTatValue($test_type_id, $timestamp="") {
+		/* Target Turnaround time in hours */
 		global $DEFAULT_TARGET_TAT, $con;
 		$saved_db = DbUtil::switchToLabConfig($this->id);
-		$query_string = "";
 		$test_type_id = mysql_real_escape_string($test_type_id, $con);
 		$query_string = "SELECT target_tat FROM test_type ".
 					    "WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
 		$record = query_associative_one($query_string);
-		return $record['target_tat'];
+		$retval = $record['target_tat'];
+		DbUtil::switchRestore($saved_db);
+		return $retval;		
 	}
 	
 	public function updateGoalTatValue($test_type_id, $tat_value)
 	{	
 		# Updates goal TAT value for a single test type
-		## Adds a new entry for every update to have time-versioned goal TAT values
 		$saved_db = DbUtil::switchToLabConfig($this->id);
 		global $con;
-		$test_type_id = mysql_real_escape_string($tat_value, $con);
-		$tat_value = mysql_real_escape_string($test_type_id, $con);
-		# Create new entry
-		/*
-		$query_string = 
-			"SELECT tat FROM test_type_tat ".
-			"WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
-		*/
-		$query_string =
-			"SELECT target_tat FROM test_type ".
-			"WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
-		$existing_record = query_associative_one($query_string);
-		if($existing_record != null) {
-			if($existing_record['target_tat'] != $tat_value) {
-				# Update TAT value
-				$query_string = 
-					"UPDATE test_type SET target_tat=$tat_value WHERE test_type_id=$test_type_id";
-				query_update($query_string);
-			}
-			/*
-			else
-			{
-				# New record to append for TAT (keeping timestamp wise progression of entries)
-				$query_string = 
-					"INSERT INTO test_type_tat (test_type_id, tat) ".
-					"VALUES ($test_type_id, $tat_value)";
-				echo $query_string;
-				query_insert_one($query_string);
-			}
-			*/
-		}
-		/*
-		else
-		{
-			# New record to add (first entry for this test type)
-			$query_string = 
-				"INSERT INTO test_type_tat (test_type_id, tat) ".
-				"VALUES ($test_type_id, $tat_value)";
-			echo $query_string;
-			query_insert_one($query_string);
-		}
+		$test_type_id = mysql_real_escape_string($test_type_id, $con);
+		$tat_value = mysql_real_escape_string($tat_value, $con);
+
+		# Update TAT value
+		$query_string = "UPDATE test_type SET target_tat=$tat_value WHERE test_type_id=$test_type_id";
+		query_update($query_string);
+
 		DbUtil::switchRestore($saved_db);
-		*/
 	}
 	
 	public function getTestTypeIds()
@@ -3516,7 +3463,6 @@ class Test
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
 		$start_time = new DateTime($specimen->ts_collected);
-		#error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
 		return $interval->format('%d d %H hrs %I min');
@@ -7540,46 +7486,24 @@ function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="")
 	$query_string = "";
 	if($date_from == "" || $date_to == "")
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE s.test_type_id=$test_type_id ".
-				"AND t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"FROM test t, specimen s ".
+			"WHERE t.result <> '' ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
 	}
 	else
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.test_type_id=$test_type_id ".
-				"AND t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"FROM test t, specimen s ".
+			"WHERE t.result <> '' ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			"AND s.specimen_id=t.specimen_id ".
+			"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
 	}
+
 	$resultset = query_associative_all($query_string, $row_count);
 	# Entries for {ts, specimen_id, date_collected} are returned
 	return $resultset;
@@ -7594,46 +7518,24 @@ function get_pendingtat_tests_by_type($test_type_id, $date_from="", $date_to="")
 	$query_string = "";
 	if($date_from == "" || $date_to == "")
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE s.test_type_id=$test_type_id ".
-				"AND t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"FROM test t, specimen s ".
+			"WHERE t.result = '' ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
 	}
 	else
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.test_type_id=$test_type_id ".
-				"AND t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"FROM test t, specimen s ".
+			"WHERE t.result = '' ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			"AND s.specimen_id=t.specimen_id ".
+			"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
 	}
+error_log("$query_string\n", 3, "/tmp/error.log");
 	$resultset = query_associative_all($query_string, $row_count);
 	# Entries for {ts, specimen_id, date_collected} are returned
 	return $resultset;

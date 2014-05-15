@@ -666,7 +666,7 @@ class StatsLib
 				$percentile_count[$day_ts] = array();
 				$percentile_count[$day_ts][] = $date_diff;
 				$progression_count[$day_ts] = 1;
-				$goal_tat[$day_ts] = $lab_config->getGoalTatValue($test_type_id, $day_ts_datetime);
+				$goal_tat[$day_ts] = $lab_config->getGoalTatValue($test_type_id, $day_ts_datetime); //Hours
 				$progression_val[$day_ts][3] = array();
 				$progression_val[$day_ts][4] = array();
 			}
@@ -676,8 +676,8 @@ class StatsLib
 				$percentile_count[$day_ts][] = $date_diff;
 				$progression_count[$day_ts] += 1;
 			}
-			if($date_diff/(60*60*24) > $goal_tat[$day_ts])
-			{	
+			if($date_diff/(60*60) > $goal_tat[$day_ts])
+			{
 				# Add to list of TAT exceeded specimens
 				$progression_val[$day_ts][3][] = $record['specimen_id'];
 			}
@@ -693,7 +693,7 @@ class StatsLib
 			{
 				$date_collected = $record['date_collected'];
 				$date_ts = $record['ts'];
-				$date_diff = $pending_tat_value*60*60;;
+				$date_diff = $pending_tat_value*60*60;
 				$day_ts = $date_collected; 
 				$day_ts_datetime = date("Y-m-d H:i:s", $day_ts);
 				if(!isset($progression_val[$day_ts]))

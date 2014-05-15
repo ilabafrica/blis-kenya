@@ -1,6 +1,6 @@
 <?php
 #
-# Shows turnaround time report for a site/location and date interval
+# Shows turnaround time report for a site/location and date interval 
 #
 include("redirect.php");
 include("includes/header.php");
@@ -137,6 +137,7 @@ $script_elems->enableTableSorter();
 $script_elems->enableLatencyRecord();
 $script_elems->enableDatePicker();
 ?>
+<script type="text/javascript" src="js/highcharts.js"></script>
 <script type='text/javascript'>
 $(document).ready(function(){
     <?php
