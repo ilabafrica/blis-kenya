@@ -532,7 +532,7 @@ else{
 			if($_SESSION['pid'] != 0)
 			{
 			?>
-				<td style='width:75px;'><?php echo $patient->getSurrogateId(); ?></td>
+				<td style='width:75px;'><?php echo $patient->getSurrogateIdorPatientId(); ?></td>
 			<?php
 			}?>
 			

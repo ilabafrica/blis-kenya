@@ -2792,6 +2792,22 @@ class Patient
 			return $this->surrogateId;
 	}
 
+	public function getSurrogateIdorPatientId()
+	{
+		if($this->surrogateId == null || trim($this->surrogateId) == ""){
+		 	if ($this->patientId == null || trim($this->patientId) == ""){
+				return "-";
+		 	}
+			else {
+				return $this->patientId;
+			}
+		}	
+		else {
+			return $this->surrogateId;
+		}
+
+	}
+
 	public function getBlisTests()
 	{
 		# Get tests from sanitas table and match with blis tests
