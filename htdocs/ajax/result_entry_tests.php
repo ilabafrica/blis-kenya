@@ -187,7 +187,7 @@ else
             if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
                 $query_string.=" AND
                             t.status_code_id='$status' AND
-                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.",".Specimen::$STATUS_REJECTED.") ";
+                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.",".Specimen::$STATUS_REJECTED.",".Specimen::$STATUS_REFERRED.") ";
             }else if($status==Specimen::$STATUS_NOT_COLLECTED){
                 $query_string.=" AND s.status_code_id = '$status' ";
             }
@@ -431,6 +431,12 @@ else{
 	<div class="span3">Status: <span id="status"></span> </div>
 	<!-- div class="span3">Specimen Type: <span id="specimen_type"></span> </div>
 	<div class="span3">Test Type: <span id="test_type"></span> </div-->
+    <div class="span2">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>
+    <button id="refresh" class="btn blue icn-only" onclick="right_load('search_div')"><i>Search / Register</i>
+    </button></span> 
+    </div>
 </div>
 <table class="table tale-striped table-condensed" id="<?php echo $attrib_type; ?>">
 	<thead>
@@ -574,7 +580,7 @@ else{
 			}
 			
 			if($test_status == Specimen::$STATUS_PENDING && isset($test_status)){
-				if($specimen_status == Specimen::$STATUS_NOT_COLLECTED){
+				if($specimen_status == Specimen::$STATUS_NOT_COLLECTED || $specimen_status == Specimen::$STATUS_REFERRED){
 					echo 'label-inverse">Not Collected';
 					echo '</span></td>';
 					echo '
@@ -626,7 +632,7 @@ else{
 				<i class="icon-ok"></i> Verify</a>
 			</td>';
 			}else
-			if($test_status == Specimen::$STATUS_REFERRED){
+			if($test_status == Specimen::$STATUS_REFERRED ){
 				echo 'label-warning">Referred';
 				echo '</span></td>';
 				echo '

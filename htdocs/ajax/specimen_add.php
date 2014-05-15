@@ -70,11 +70,17 @@ $specimen->userId = $_SESSION['user_id'];
 $specimen->statusCodeId = Specimen::$STATUS_NOT_COLLECTED;
 $specimen->dailyNum = $prefixed_dnum;
 $specimen->external_lab_no=$external_lab_no;
+$specimen->referredTo = 0;
 # If marked for referral, set appropriate status and store hospital/lab name
-if(isset($_REQUEST['ref_out']) && $_REQUEST['ref_out'] == "Y")
-{
+if(isset($_REQUEST['ref_out_1']))
+{	
 	$specimen->statusCodeId = Specimen::$STATUS_REFERRED;
-	$specimen->referredToName = $_REQUEST['ref_out_name'];
+	if ($_REQUEST['ref_out_1'] == 'IN') {
+		$specimen->referredTo = 2; //IN
+	}
+	else if ($_REQUEST['ref_out_1'] == 'OUT'){		
+		$specimen->referredTo = 3; //OUT
+	}
 	# Add entries to 'specimen_custom_data'
     $custom_field_list = get_custom_fields_specimen();
     foreach($custom_field_list as $custom_field)
@@ -87,7 +93,6 @@ if(isset($_REQUEST['ref_out']) && $_REQUEST['ref_out'] == "Y")
         add_custom_data_specimen($custom_data);
     }
 }
-$specimen->referredTo = 0;
 $specimen->reportTo = $report_to;
 
 		if($doctor!="")

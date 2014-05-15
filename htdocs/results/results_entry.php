@@ -57,6 +57,8 @@ $test_categories = TestCategory::geAllTestCategories($lab_config->id);
 				</div>
 				<div id='specimen_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
 
+				<div id='patient_reg_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
+
 				<div id='specimen_rejection_body' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static"> </div>
 
 				<div id='specimen_registered' class='modal container hide fade' role="dialog" aria-hidden="true" data-backdrop="static" > </div>
@@ -67,7 +69,46 @@ $test_categories = TestCategory::geAllTestCategories($lab_config->id);
 </div>
 <!-- END TESTS PORTLET-->
 
+<!-- BEGIN SEARCH AND REGISTRATION -->
+<div id="search_div" class='results_subdiv' style='display:none;'>
+<div class="portlet box blue">
+    <div class="portlet-title">
+    <h4><i class="icon-reorder"></i>Search and register patients</h4>
+            <div class="tools">
+            <a href="javascript:;" class="collapse"></a>
+            <a href="#portlet-config" data-toggle="modal" class="config"></a>
+            <a href="javascript:;" class="reload"></a>
+            
+            </div>
+    </div>
 
+    <div class="portlet-body form" >
+        	<p style="text-align: right;"><a rel='facebox'>Page Help</a></p>
+        	<a onclick="right_load('tests')" href='javascript:void(0)'>Back</a> <br>
+				<input type='text' name='pq' class="uniform width" id='pq' style='font-family:Tahoma;width:18em' placeholder='Enter Search Value e.g. Wasike or 220412' onkeypress="return restrictCharacters(event)"/>				
+				<button class="btn" type="button" id='psearch_button' onclick="javascript:fetch_patients();"><?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?> </button>
+				<span id='fetch_progress_bar' style='display:none;'>
+				<?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_SEARCHING']); ?>
+				</span>	
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div id='add_anyway_div' >
+               	<div class="span2">
+				    <span>
+				    <button id="refresh" class="btn blue icn-only" onclick="new_patient()"><i>Add new patient</i>
+				    </button></span>
+                </div>
+               <br/>
+                <div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
+                </div>
+           		<div id='patients_found' style='position:relative;left:10px;'></div>
+           		<div id="external_labreq" style="height: 400px"></div>
+                   
+           </div> 
+       </div> 
+    </div>
+        
+</div>
+<!-- BEGIN SEARCH AND REGISTRATION -->
 
 <div id="worksheet_results" class='results_subdiv' style='display:none;'>
 	<form name="fetch_worksheet" id="fetch_worksheet">
@@ -541,8 +582,6 @@ function cancel_hide(){
 function close_modal(this_element){
 
     var el = $('#' + this_element).closest('.modal');
-    var elScroll = $('#' + this_element).closest('.modal-scrollable');
-    var elBack = elScroll.next('.modal-backdrop');
    	el.empty();
     el.modal('hide');
 }
@@ -1088,6 +1127,56 @@ function update_numeric_remarks(test_type_id, count, patient_age, patient_sex)
 
 }
 
+function new_patient()
+{
+    var url = 'regn/new_patient2.php';
+    $('#patient_reg_body').load(url, function(){
+    	$('#patient_reg_body').modal('show');        	
+    });
+    
+}
+
+
+function fetch_patients()
+{   
+	var patient_id = $.trim($('#pq').val());
+	patient_id = patient_id.replace(/[^a-z0-9 /]/gi,'');
+	$('#fetch_progress_bar').show();
+	if(patient_id == "")
+	{
+		$('#fetch_progress_bar').hide();
+		$('#add_anyway_div').show();
+		return;
+	}
+	var url = 'ajax/search_p.php';
+	$("#patients_found").load(url, 
+		{q: patient_id, a: 'all'}, 
+		function(response)
+		{
+			$('#fetch_progress_bar').hide();
+		}
+		
+	);
+}
+
+function restrictCharacters(e) {
+	
+	var alphabets = /[A-Za-z]/g;
+	var numbers = /[0-9]/g;
+	if(!e) var e = window.event;
+	if( e.keyCode ) code = e.keyCode;
+	else if ( e.which) code = e.which;
+	var character = String.fromCharCode(code);
+	
+	if( !e.ctrlKey && code!=9 && code!=8 && code!=27 && code!=36 && code!=37 && code!=38  && code!=40 &&code!=13 &&code!=32 ) {
+		if ( !character.match(alphabets) && !character.match(numbers) && !character.match("/"))
+			return false;
+		else
+			return true;
+	}
+	else
+		return true;
+}
 
 function update_remarks(test_type_id, count, patient_age, patient_sex)
 {
