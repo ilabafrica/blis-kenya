@@ -18,24 +18,24 @@ if($_REQUEST['pending'] == 'Y')
 }
 ?>
  <!-- BEGIN PAGE TITLE & BREADCRUMB-->       
-                        <h3>
-                        </h3>
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="icon-home"></i>
-                                <a href="index.html">Home</a> 
-                                <span class="icon-angle-right"></span>
-                            </li>
-                            <li><a href="#">Reports</a>
-                            <span class="icon-angle-right"></span></li>
-                            <li><a href="#"></a></li>
-                        </ul>
-                        <!-- END PAGE TITLE & BREADCRUMB-->
-                    </div>
-                </div>
-                <!-- END PAGE HEADER-->
-                
-                <!-- BEGIN ROW-FLUID-->                   
+            <h3>
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="index.html">Home</a> 
+                    <span class="icon-angle-right"></span>
+                </li>
+                <li><a href="#">Reports</a>
+                <span class="icon-angle-right"></span></li>
+                <li><a href="#"></a></li>
+            </ul>
+            <!-- END PAGE TITLE & BREADCRUMB-->
+        </div>
+    </div>
+    <!-- END PAGE HEADER-->
+    
+    <!-- BEGIN ROW-FLUID-->                   
 <div class="row-fluid">
 <div class="span12 sortable">
 
@@ -71,39 +71,40 @@ if($_REQUEST['pending'] == 'Y')
                 
                 DbUtil::switchToLabConfig($lab_config_id);
                 ?>
-                <?php echo LangUtil::$generalTerms['FROM_DATE']; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                 <div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
+                <span class="tat-label"><?php echo LangUtil::$generalTerms['FROM_DATE']; ?></span>
+                <div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
                     <input class="m-wrap m-ctrl-medium" size="16" name="from-report-date" id="from-date-tat" type="text" value="<?php echo $date_from ?>"><span class="add-on"><i class="icon-calendar"></i></span>
-                 </div>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <?php echo LangUtil::$generalTerms['TO_DATE']; ?>
-                <span>
+                </div>
+                <span class="tat-label"><?php echo LangUtil::$generalTerms['TO_DATE']; ?></span>
                 <div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
                     <input class="m-wrap m-ctrl-medium" size="16" name="to-report-date" id="to-date-tat" type="text" value="<?php echo $date_to ?>"><span class="add-on"><i class="icon-calendar"></i></span>
                  </div>
-                </span>
                 <br><br>
-                <?php echo LangUtil::$generalTerms['TEST_TYPE']; ?>
-                &nbsp;
+                <span class="tat-label"><?php echo LangUtil::$generalTerms['LAB_SECTION']; ?></span>
+                <select name='cat_code' id='cat_code13' class='uniform_width'>
+                    <option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
+                    <?php
+                        $page_elems->getTestCategorySelect();
+                    ?>
+                </select>
+                <span class="tat-label"><?php echo LangUtil::$generalTerms['TEST_TYPE']; ?></span>
                 <select name='ttype' id='ttype' style='font-family:Tahoma;'>
                     <option value='0'><?php echo LangUtil::$generalTerms['ALL']; ?></option>
                     <?php $page_elems->getTestTypesSelect($lab_config->id); ?>
                 </select>
-                &nbsp;&nbsp;&nbsp;
-                    <span><input type="checkbox" id='pending_chk' name='pending'></input>
-                            <?php echo LangUtil::$pageTerms['MSG_INCLUDEPENDING']; ?>
-                           
-                    </span>
-                  
+                <br><br>
+                <span class="tat-label">Interval</span>
                 <small>
-                &nbsp;&nbsp;&nbsp;
                 <select name='tattype' id='tattype' style='font-family:Tahoma;'>
                     <option value='m'><?php echo LangUtil::$pageTerms['PROGRESSION_M']; ?></option>
                     <option value='w' selected><?php echo LangUtil::$pageTerms['PROGRESSION_W']; ?></option>
                     <option value='d'><?php echo LangUtil::$pageTerms['PROGRESSION_D']; ?></option>
                 </select>
+                <span><input type="checkbox" id='pending_chk' name='pending'></input>
+                        <?php echo LangUtil::$pageTerms['MSG_INCLUDEPENDING']; ?>
+                </span>
                 &nbsp;&nbsp;&nbsp;
-                <input type='button' onclick='javascript:view_tat();' value='<?php echo LangUtil::$generalTerms['CMD_VIEW']; ?>'></input>
+                <a href="javascript:void(0);" class="btn" onclick='javascript:view_tat();'><?php echo LangUtil::$generalTerms['CMD_VIEW']; ?></a>
                 &nbsp;&nbsp;&nbsp;
                 <span id='progress_spinner' style='display:none'><?php $page_elems->getProgressSpinner(LangUtil::$generalTerms['CMD_FETCHING']); ?></span>
                 <br><br>
@@ -149,7 +150,14 @@ $(document).ready(function(){
     }
     ?>
     view_testwise_weekly();
+    $('#cat_code13').change( function() { get_test_types_bycat() });
 });
+function get_test_types_bycat()
+{
+    var cat_code = $('#cat_code13').attr("value");
+    //TODO: Remove Hardcoded for BGM below 301
+    $('#ttype').load('ajax/tests_selectbycat.php?c='+cat_code+'&l=301');
+}
 
 function toggle_stat_table()
 {
@@ -201,7 +209,8 @@ function view_testwise_monthly()
     }
     $('#progress_spinner').show();
     var ttype = $('#ttype').attr("value");
-    var url_string = "ajax/tat_ttype_monthly.php?tt="+ttype+"&df="+date_from+"&dt="+date_to+"&l=<?php echo $lab_config_id; ?>&p="+include_pending;
+    var tcat = $('#cat_code13').attr("value");
+    var url_string = "ajax/tat_ttype_monthly.php?tt="+ttype+"&tc="+tcat+"&df="+date_from+"&dt="+date_to+"&l=<?php echo $lab_config_id; ?>&p="+include_pending;
     $('#stats_testwise_div').load(url_string, function() {
         $('#stats_testwise_div').show();
         $('#stats_cumul_div').hide();
@@ -241,7 +250,8 @@ function view_testwise_weekly()
     }
     $('#progress_spinner').show();
     var ttype = $('#ttype').attr("value");
-    var url_string = "ajax/tat_ttype_weekly.php?tt="+ttype+"&df="+date_from+"&dt="+date_to+"&l=<?php echo $lab_config_id; ?>&p="+include_pending;
+    var tcat = $('#cat_code13').attr("value");
+    var url_string = "ajax/tat_ttype_weekly.php?tt="+ttype+"&tc="+tcat+"&df="+date_from+"&dt="+date_to+"&l=<?php echo $lab_config_id; ?>&p="+include_pending;
     $('#stats_testwise_div').load(url_string, function() {
         $('#stats_testwise_div').show();
         $('#stats_cumul_div').hide();
@@ -281,7 +291,8 @@ function view_testwise_daily()
     }
     $('#progress_spinner').show();
     var ttype = $('#ttype').attr("value");
-    var url_string = "ajax/tat_ttype_daily.php?tt="+ttype+"&df="+date_from+"&dt="+date_to+"&l=<?php echo $lab_config_id; ?>&p="+include_pending;
+    var tcat = $('#cat_code13').attr("value");
+    var url_string = "ajax/tat_ttype_daily.php?tt="+ttype+"&tc="+tcat+"&df="+date_from+"&dt="+date_to+"&l=<?php echo $lab_config_id; ?>&p="+include_pending;
     $('#stats_testwise_div').load(url_string, function() {
         $('#stats_testwise_div').show();
         $('#stats_cumul_div').hide();

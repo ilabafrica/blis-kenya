@@ -6887,7 +6887,6 @@ function search_all_pending_external_requests($query){
                         $patient_list[] = Patient::getLabRequest($record);
                         $count++;
                     }
-                error_log($count, 3, "log.txt");
         }   else return null;
     }
    }//end for Kapsabet
@@ -7477,35 +7476,39 @@ function get_tests_by_specimen_id($specimen_id)
 	return $retval;
 }
 
-function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="")
+function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="", $test_category_id = 0)
 {
 	global $con;
 	$test_type_id = mysql_real_escape_string($test_type_id, $con);
+	$test_category_id = mysql_real_escape_string($test_category_id, $con);
 	# Returns list of tests of a particular type,
 	# that were registered between date_from and date_to and completed
 	$query_string = "";
 	if($date_from == "" || $date_to == "")
 	{
 		$query_string = 
-			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-			"FROM test t, specimen s ".
-			"WHERE t.result <> '' ".
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected, ".
+			"UNIX_TIMESTAMP(s.ts_collected) as ts_collected, UNIX_TIMESTAMP(t.ts_result_entered) as ts_completed ".
+			"FROM test t, specimen s".($test_category_id==0?" ":", test_type tt ").
+			"WHERE t.result <> '' AND s.specimen_id=t.specimen_id ".
 			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
-			"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
+			(($test_category_id==0)?"":"AND t.test_type_id = tt.test_type_id AND tt.test_category_id = $test_category_id ").
+			"ORDER BY s.date_collected";
 	}
 	else
 	{
 		$query_string = 
-			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-			"FROM test t, specimen s ".
-			"WHERE t.result <> '' ".
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected, ".
+			"UNIX_TIMESTAMP(s.ts_collected) as ts_collected, UNIX_TIMESTAMP(t.ts_result_entered) as ts_completed ".
+			"FROM test t, specimen s".($test_category_id==0?" ":", test_type tt ").
+			"WHERE t.result <> '' AND s.specimen_id=t.specimen_id ".
 			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
-			"AND s.specimen_id=t.specimen_id ".
+			(($test_category_id==0)?"":"AND t.test_type_id = tt.test_type_id AND tt.test_category_id = $test_category_id ").
 			"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
 	}
 
 	$resultset = query_associative_all($query_string, $row_count);
-	# Entries for {ts, specimen_id, date_collected} are returned
+	# Entries for {ts, specimen_id, date_collected, ts_collected, ts_complete} are returned
 	return $resultset;
 }
 
@@ -7519,7 +7522,7 @@ function get_pendingtat_tests_by_type($test_type_id, $date_from="", $date_to="")
 	if($date_from == "" || $date_to == "")
 	{
 		$query_string = 
-			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
 			"FROM test t, specimen s ".
 			"WHERE t.result = '' ".
 			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
@@ -7528,14 +7531,14 @@ function get_pendingtat_tests_by_type($test_type_id, $date_from="", $date_to="")
 	else
 	{
 		$query_string = 
-			"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
 			"FROM test t, specimen s ".
 			"WHERE t.result = '' ".
 			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
 			"AND s.specimen_id=t.specimen_id ".
 			"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
 	}
-error_log("$query_string\n", 3, "/tmp/error.log");
+
 	$resultset = query_associative_all($query_string, $row_count);
 	# Entries for {ts, specimen_id, date_collected} are returned
 	return $resultset;

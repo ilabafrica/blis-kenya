@@ -26,6 +26,7 @@
 
 	$test_type_id = $_REQUEST['tt'];
 	$testTypeId = $test_type_id;
+	$test_category_id = $_REQUEST['tc'];
 	$lab_config_id = $_REQUEST['l'];
 
 	if( strstr($lab_config_id,",") )
@@ -43,7 +44,7 @@
 			$lab_config = get_lab_config_by_id($key);
 			$labName = $lab_config->name;
 			$namesArray[] = $labName;
-			$stat_list = StatsLib::getTatDailyProgressionStats($lab_config, $test_type_id, $date_from, $date_to, $include_pending);
+			$stat_list = StatsLib::getTatDailyProgressionStats($lab_config, $test_type_id, $date_from, $date_to, $include_pending, $test_category_id);
 			ksort($stat_list);
 			$stat_lists[] = $stat_list;
 			unset($stat_list);
@@ -54,7 +55,7 @@
 		$lab_config = get_lab_config_by_id($lab_config_id);
 		$labName = $lab_config->name;
 		$namesArray[] = $labName;
-		$stat_list = StatsLib::getTatDailyProgressionStats($lab_config, $test_type_id, $date_from, $date_to, $include_pending);
+		$stat_list = StatsLib::getTatDailyProgressionStats($lab_config, $test_type_id, $date_from, $date_to, $include_pending, $test_category_id);
 		ksort($stat_list);
 		$stat_lists[] = $stat_list;
 	}
@@ -126,14 +127,18 @@
 
 	$testETAT = 0;
 	$progressData = array();
+	$waitingTimeData = array();
 	foreach($stat_lists as $stat_list) {
 		foreach($stat_list as $key => $value) {
+			$waitValue = round($value[5],2);
 			$formattedValue = round($value[0],2);
 			$formattedDate = bcmul($key,1000);
 			$progressData[] = array($formattedDate,$formattedValue);
+			$waitingTimeData[] = array($formattedDate,$waitValue);
 			$testETAT = $value[2]/24; //In days
 		}
 		$progressTrendsData[] = $progressData;
+		$progressTrendsData[] = $waitingTimeData;
 		unset($progressData);
 	}
 	# Obtain stats as date_collected(millisec ts) => tat value
@@ -148,7 +153,8 @@
 	<script type='text/javascript'>
 		var progressTrendsData = new Array();
 		var expectedTAT = new Array;
-		var namesArray = <?php echo json_encode($namesArray); ?>;
+		// var namesArray = <?php echo json_encode($namesArray); ?>;
+		var namesArray = new Array("Expected TAT", "Actual TAT", "Waiting Time");
 		var progressTrendsDataTemp = <?php echo json_encode($progressTrendsData); ?>;
 		var dateStart = Date.UTC(<?php echo $date_from_js; ?>); 
 
@@ -195,13 +201,14 @@
 		  },
 		  tooltip: {
 			 formatter: function() {
-					   return '<b>'+ this.series.name +'</b><br/>' + Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' Days';
+			   return '<b>'+ this.series.name +'</b><br/>' + Highcharts.dateFormat('%e. %b', this.x) +': '+ Math.round(this.y*24) +' Hours';
 			 }
 		  },
 		  series: []
 	   };
 
-		namesArray.unshift("Expected TAT");
+		// namesArray.push("Waiting Time");
+		// namesArray.unshift("Expected TAT");
 		progressTrendsData.unshift(expectedTAT);
 		
 		for(var i=0;i<namesArray.length;i++) {

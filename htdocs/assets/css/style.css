@@ -3407,3 +3407,10 @@ Styler Panel
     overflow: hidden;
     width: auto;
 }
+
+/**/
+span.tat-label {
+  min-width: 80px;
+  padding-left: 10px;
+  display: inline-block;
+}
