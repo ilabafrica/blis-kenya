@@ -21,7 +21,7 @@ foreach($test_type_list as $test_type_id)
 {
 	$curr_tat_value = $tat_value_list[$count];
 	$curr_tat_value = preg_replace("/[^0-9]/" ,"", $curr_tat_value);
-	if(trim($curr_tat_value) == "")
+	if(trim($curr_tat_value) == "" || $test_type_id == 0)
 	{
 		# Empty TAT entry
 		$count++;
@@ -32,6 +32,7 @@ foreach($test_type_list as $test_type_id)
 		# Multiply by 24 to store in hours
 		$curr_tat_value *= 24;
 	}
+error_log("\nTESTTYPEID: $test_type_id TAT: $curr_tat_value", 3 , "/tmp/blis-error.log");
 	$lab_config->updateGoalTatValue($test_type_id, $curr_tat_value);
 	$count++;
 }
