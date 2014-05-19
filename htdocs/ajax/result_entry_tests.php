@@ -187,7 +187,7 @@ else
             if ($status!="all" && $status!=Specimen::$STATUS_NOT_COLLECTED && $status!="request_pending"){
                 $query_string.=" AND
                             t.status_code_id='$status' AND
-                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.",".Specimen::$STATUS_REJECTED.",".Specimen::$STATUS_REFERRED.") ";
+                            s.status_code_id NOT IN (".Specimen::$STATUS_NOT_COLLECTED.",".Specimen::$STATUS_REJECTED.") ";
             }else if($status==Specimen::$STATUS_NOT_COLLECTED){
                 $query_string.=" AND s.status_code_id = '$status' ";
             }
@@ -297,7 +297,7 @@ else
                             
                       $query_string.=    " ORDER BY date_recvd DESC, sorting_time DESC";
                 //$query_string.= " ORDER BY s.date_recvd DESC, s.ts DESC";
-//                  echo $query_string;
+                 // echo $query_string;
                 //error_log("\n".$query_string, 3, "../logs/my.error.log");
     }
     elseif($attrib_type == 11)
@@ -339,7 +339,7 @@ if($attrib_type == 12||$attrib_type == 13)
 	switch ($attrib_type){
 	case 12:
 		echo '<a href="javascript:fetch_test_result_form('.$quote.$attrib_value.$quote.');" title="Click to Enter Results for this Specimen" class="btn yellow mini"><i class="icon-pencil"></i>Enter Results</a>%
-	          <a href="javascript:fetch_specimen2('.$quote.$attrib_value.$quote.');" title="View specimen details" class="btn mini"><i class="icon-search"></i> View Details</a>';
+	          <a href="javascript:specimen_info('.$quote.$attrib_value.$quote.');" title="View specimen details" class="btn mini"><i class="icon-search"></i> View Details</a>';
 		return;
 	break;
 	case 13:
@@ -433,9 +433,13 @@ else{
 	<div class="span3">Test Type: <span id="test_type"></span> </div-->
     <div class="span2">
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <?php
+    $user = get_user_by_id($_SESSION['user_id']);
+     if (is_admin($user)) { ?>
     <span>
     <button id="refresh" class="btn blue icn-only" onclick="right_load('search_div')"><i>Search / Register</i>
-    </button></span> 
+    </button></span>
+    <?php } ?> 
     </div>
 </div>
 <table class="table tale-striped table-condensed" id="<?php echo $attrib_type; ?>">
@@ -567,7 +571,17 @@ else{
 			echo $test_type->getTestName();
 			?>
 			</td>
-			<td style='width:100px;'><?php echo $test->getTestOrderStage($test->external_lab_no); ?></td>
+			<td style='width:100px;'><?php
+             if($specimen->referredTo == 2 ){
+                    echo "Referred In";
+             } 
+             else if ($specimen->referredTo == 3){
+                    echo "Referred Out";
+             }
+            else {
+                echo $test->getTestOrderStage($test->external_lab_no);
+                }?>
+            </td>
 			<?php 
 			$specimen_status = $specimen->statusCodeId;
 			$test_status = $test->getStatusCode();
@@ -636,12 +650,15 @@ else{
 				echo 'label-warning">Referred';
 				echo '</span></td>';
 				echo '
-			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
-				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
-			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
-				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
-			</td>';
+                    <td id=actionA'.$test->testId.' style="width:130px;" class="test-actions">
+                            <a href="javascript:accept_specimen('.$quote.$specimen->specimenId.$quote.', '.$quote.$test->testId.$quote.')" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>
+                            <a href="javascript:load_specimen_rejection('.$quote.$specimen->specimenId.$quote.')" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
+                                                </td>
+                        <td id=actionB'.$test->testId.' style="width:130px;">
+                        <a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
+                            <i class="icon-search"></i> View Details
+                        </a>
+                        </td>';
 			}else
 			if($test_status == Specimen::$STATUS_TOVERIFY){
 				echo 'label-info">Tested';
@@ -664,7 +681,7 @@ else{
 			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
+			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
@@ -675,7 +692,7 @@ else{
 			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
+			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn blue mini">
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else
@@ -686,7 +703,7 @@ else{
 			<td style="width:100px;" class="test-actions"><a href="javascript:start_test('.$quote.$specimen->specimenId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
 				<i class="icon-ok"></i>'.LangUtil::$generalTerms['START_TEST'].'</a>
 			</td>
-			<td style="width:100px;"><a href="javascript:fetch_specimen2('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
+			<td style="width:100px;"><a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
 				<i class="icon-group"></i>'.LangUtil::$generalTerms['ASSIGN_TO'].'</a>
 			</td>';
 			}else

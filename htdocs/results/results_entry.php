@@ -82,7 +82,7 @@ $test_categories = TestCategory::geAllTestCategories($lab_config->id);
             </div>
     </div>
 
-    <div class="portlet-body form" >
+    <div class="portlet-body form" style="height:400px">
         	<p style="text-align: right;"><a rel='facebox'>Page Help</a></p>
         	<a onclick="right_load('tests')" href='javascript:void(0)'>Back</a> <br>
 				<input type='text' name='pq' class="uniform width" id='pq' style='font-family:Tahoma;width:18em' placeholder='Enter Search Value e.g. Wasike or 220412' onkeypress="return restrictCharacters(event)"/>				
@@ -101,7 +101,6 @@ $test_categories = TestCategory::geAllTestCategories($lab_config->id);
                 <div id='Registration' class='right_pane' style='display:none;margin-left:10px;'>
                 </div>
            		<div id='patients_found' style='position:relative;left:10px;'></div>
-           		<div id="external_labreq" style="height: 400px"></div>
                    
            </div> 
        </div> 
@@ -742,9 +741,9 @@ function accept_specimen(specimen_id,test_id)
 					'title="Click to begin testing this Specimen" class="btn red mini">'+
 					'<i class="icon-ok"></i> Start Test</a>');
 			$('#actionB'+test_id).html(''+
-					'<a href="javascript:refer_specimen('+test_id+');"'+ 
-					'title="Click to begin testing this Specimen" class="btn inverse mini">'+
-					'<i class="icon-ok"></i>Refer</a>');
+					'<a href="javascript:specimen_info('+specimen_id+');"'+ 
+					'title="View specimen details" class="btn mini">'+
+					'<i class="icon-search"></i> View Details</a>');
 			App.unblockUI(el);
 		}
 	);

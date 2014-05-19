@@ -74,7 +74,6 @@ $specimen->referredTo = 0;
 # If marked for referral, set appropriate status and store hospital/lab name
 if(isset($_REQUEST['ref_out_1']))
 {	
-	$specimen->statusCodeId = Specimen::$STATUS_REFERRED;
 	if ($_REQUEST['ref_out_1'] == 'IN') {
 		$specimen->referredTo = 2; //IN
 	}

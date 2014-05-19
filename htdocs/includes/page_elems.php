@@ -3502,15 +3502,10 @@ class PageElems
 					</tr>
 					<?php
 				}
-				if($_SESSION['refout'] != 0)
+				if($specimen->referredTo == 2 || $specimen->referredTo == 3)
 				{
 				# Show referred-out hospital name if specimen was referred out and/or returned back
-				if
-				(
-					$specimen->statusCodeId == Specimen::$STATUS_REFERRED ||
-					$specimen->statusCodeId == Specimen::$STATUS_RETURNED
-				)
-				{
+				
 					?>
 					<tr>
 						<td><u>Refferal</u></td>
@@ -3532,7 +3527,6 @@ class PageElems
 						</td>
 					</tr>
 					<?php
-				}
 				}
 				# Custom fields here
 				$custom_data_list = get_custom_data_specimen($specimen->specimenId);
