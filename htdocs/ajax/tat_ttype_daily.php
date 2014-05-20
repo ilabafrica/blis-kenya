@@ -201,7 +201,14 @@
 		  },
 		  tooltip: {
 			 formatter: function() {
-			   return '<b>'+ this.series.name +'</b><br/>' + Highcharts.dateFormat('%e. %b', this.x) +': '+ Math.round(this.y*24) +' Hours';
+			 	yval = Math.round(this.y*24);
+			 	yshow = "";
+			 	if(this.y > yval){
+			 		yshow = Math.round(this.y*24*60) + " Minutes";
+			 	}else{
+			 		yshow = yval + " Hours";
+			 	}
+			   return '<b>'+ this.series.name +'</b><br/>' + Highcharts.dateFormat('%e. %b', this.x) +': '+ yshow;
 			 }
 		  },
 		  series: []
