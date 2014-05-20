@@ -18,7 +18,6 @@ if(!$is_modal){
 LangUtil::setPageId("specimen_info");
 $sid = $_REQUEST['sid'];
 $status = get_specimen_status($sid);
-include("../includes/scripts.php");
 $script_elems->enableDatePicker();
 $script_elems->enableTableSorter();
 

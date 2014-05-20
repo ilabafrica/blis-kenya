@@ -3453,8 +3453,7 @@ class PageElems
 						$patient = Patient::getById($specimen->patientId);
 						echo $patient->getName()." (".$patient->sex." ".$patient->getAge().")";
 						?>
-						&nbsp;&nbsp;
-						<a href='patient_profile.php?pid=<?php echo $specimen->patientId?>' title='Click to go to Patient Profile'>Profile</a>
+						&nbsp;&nbsp;						
 					</td>
 				</tr>
 				<tr>
@@ -3503,8 +3502,32 @@ class PageElems
 					</tr>
 					<?php
 				}
-				?>
-				<?php
+				if($specimen->referredTo == 2 || $specimen->referredTo == 3)
+				{
+				# Show referred-out hospital name if specimen was referred out and/or returned back
+				
+					?>
+					<tr>
+						<td><u>Refferal</u></td>
+						<td>
+						<?php
+						if(trim($specimen->referredTo) == 2)
+						{
+							echo "Referred In";
+						}
+						else if(trim($specimen->referredTo) == 3)
+						{
+							echo "Referred Out";
+						}					
+						else
+						{
+							echo "Not Known";
+						}
+						?>
+						</td>
+					</tr>
+					<?php
+				}
 				# Custom fields here
 				$custom_data_list = get_custom_data_specimen($specimen->specimenId);
 				foreach($custom_data_list as $custom_data)
@@ -3521,34 +3544,7 @@ class PageElems
 					<?php
 					}
 				}
-				if($_SESSION['refout'] != 0)
-				{
-				# Show referred-out hospital name if specimen was referred out and/or returned back
-				if
-				(
-					$specimen->statusCodeId == Specimen::$STATUS_REFERRED ||
-					$specimen->statusCodeId == Specimen::$STATUS_RETURNED
-				)
-				{
-					?>
-					<tr>
-						<td><u><?php echo LangUtil::$generalTerms['REF_TO']; ?></u></td>
-						<td>
-						<?php
-						if(trim($specimen->referredToName) == "")
-						{
-							echo "Not Known";
-						}
-						else
-						{
-							echo $specimen->referredToName;
-						}
-						?>
-						</td>
-					</tr>
-					<?php
-				}
-				}
+				
 				?>				
 				<!-- Commenting as result entry happens in test section
 				<tr>
@@ -4771,36 +4767,39 @@ public function getInfectionStatsTableAggregate($stat_list, $date_from, $date_to
 				echo " style='display:none;' ";
 			?>>
 				<td>
-					<label for='ref_out' valign='top'>Referral sample? <?php if($_SESSION['refout'] == 2) $this->getAsterisk(); ?></label>
+					<label for='ref_out' valign='top'>Referral sample <?php if($_SESSION['refout'] == 2) $this->getAsterisk(); ?></label>
 				</td>
 				
 				<td>
 				    <div class="controls">
                                  <label class="radio">
-                                       <INPUT TYPE=RADIO NAME="<?php echo $radio_name ?>" id='<?php echo $ref_out_check_id; ?>' VALUE="Y" onchange="javascript:checkandtoggle_ref('<?php echo $ref_out_check_id; ?>', '<?php echo $custom_class?>');">
-                                           <?php echo LangUtil::$generalTerms['YES']; ?>                                       
+                                       <INPUT TYPE=RADIO NAME="<?php echo $radio_name ?>" id='<?php echo $ref_out_check_id; ?>' VALUE="OUT">
+                                     	Referred Out                                      
                                  </label>
                                  <label class="radio">  
-                                        <INPUT TYPE=RADIO NAME="<?php echo $radio_name ?>" onchange="javascript:checkandtoggle_ref('<?php echo $ref_out_check_id; ?>', '<?php echo $custom_class ?>');" VALUE="N" checked>
-                                            <?php echo LangUtil::$generalTerms['NO']; ?>                                
+                                        <INPUT TYPE=RADIO NAME="<?php echo $radio_name ?>" VALUE="IN" >
+                                        Referred In                                
                                  </label>  
                       </div>
 				</td>
 			</tr>
 			<?php
+			if(!($_SESSION['refout'] == 0 || (is_array($external_requests) && $external_requests != null))) {
             $custom_field_list = get_custom_fields_specimen();
             foreach($custom_field_list as $custom_field)
-            {   if(($custom_field->flag)==NULL)
+            {   if(($custom_field->flag)!=NULL)
                 {
                 ?>
-			<tr valign='top'  class="<?php echo $custom_class ?>" style='display:none'>
+			<tr valign='top'  class="<?php echo $custom_class ?>" >
 				<td><?php echo $custom_field->fieldName; ?></td>
                 <td><?php $this->getCustomFormField($custom_field); ?></td>
 			</tr>
 			<?php
                 }
             }
-            ?>
+            }            
+			?>
+			
                                
 			<?php
 			if($form_num != 1)

@@ -2739,6 +2739,22 @@ class Patient
 			return $this->surrogateId;
 	}
 
+	public function getSurrogateIdorPatientId()
+	{
+		if($this->surrogateId == null || trim($this->surrogateId) == ""){
+		 	if ($this->patientId == null || trim($this->patientId) == ""){
+				return "-";
+		 	}
+			else {
+				return $this->patientId;
+			}
+		}	
+		else {
+			return $this->surrogateId;
+		}
+
+	}
+
 	public function getBlisTests()
 	{
 		# Get tests from sanitas table and match with blis tests
@@ -6679,19 +6695,19 @@ function add_patient($patient, $importOn = false)
 	{
 		$query_string = 
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `age`, `sex`, `surr_id`, `created_by`, `hash_value` ,`ts`) ".
-			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
+			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$surr_id', $created_by, '$hash_value', now())";
 	}
 	else if($partial_dob != "")
 	{
 		$query_string = 
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `age`, `sex`, `partial_dob`, `surr_id`, `created_by`, `hash_value`,`ts`) ".
-			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$partial_dob', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
+			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$partial_dob', '$surr_id', $created_by, '$hash_value', now())";
 	}
 	else
 	{
 		$query_string =
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `dob`, `age`, `sex`, `surr_id`, `created_by`, `hash_value`, `ts`) ".
-			"VALUES ($pid, '$addl_id', '$name', '$dob', $age, '$sex', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
+			"VALUES ($pid, '$addl_id', '$name', '$dob', $age, '$sex', '$surr_id', $created_by, '$hash_value', now())";
 	}
 	$result = query_insert_one($query_string);
 	
@@ -7198,6 +7214,31 @@ function search_patients_by_dailynum_count($q)
 		"SELECT count(DISTINCT patient_id) as val FROM specimen WHERE daily_num LIKE '%$q'";
 	$resultset = query_associative_one($query_string);
 	return $resultset['val'];
+}
+
+function search_patients_by_everything($q)
+{
+	# Searches for patients with similar name
+	global $con;
+	$q = mysql_real_escape_string($q, $con);
+	$query_string = 
+		"SELECT * FROM patient ".
+		"WHERE name LIKE '%$q%' OR ".
+		"patient_id = '$q' OR ".
+		"surr_id = '$q' ".
+		"ORDER BY name ASC";
+	$resultset = query_associative_all($query_string, $row_count);
+	$patient_list = array();
+	if(count($resultset) > 0)
+	{
+		foreach($resultset as $record)
+		{
+			$patient_list[] = Patient::getObject($record);
+		}
+	}
+
+	return $patient_list;
+
 }
 
 function search_specimens_by_id($q)

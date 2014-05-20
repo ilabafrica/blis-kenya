@@ -10,22 +10,27 @@ $script_elems = new ScriptElems();
 LangUtil::setPageId("new_patient");
 
 $script_elems->enableDatePicker();
-$script_elems->enableLatencyRecord();
 $script_elems->enableJQueryForm();
-$script_elems->enableAutocomplete();
 ?>
 <script>
 	App.init(); // init the rest of plugins and elements
 </script>
-<table>
-  	<tr valign='top'>
+<style type="text/css">
+	.datepicker{z-index:1151;}
+</style>
+
+<div class="modal-header">
+	<a id="<?php echo $modal_link_id; ?>" onclick="close_modal('patient_reg_body');"  href="javascript:void(0);" class="close"></a>
+	<h4><i class="icon-pencil"></i> Add new patients </h4>
+</div>
+<div class="modal-body">
+	<div class="row-fluid">
+	<div class="span6 sortable">
 		<div id='patient_new'>
-		<div class='pretty_box' style='width:500px'>
-		<form name="new_record" action="add_patient.php" method="post" id="new_record" class="form-horizontal" role="form">
-			<?php # Hidden field for db key ?>
+		<div class='pretty_box' style='width:680px'>
+		<form name="new_record" action="add_patient.php" method="post" id="new_record" class="form-horizontal" role="form">			
 			<input type='hidden' name='card_num' id='card_num' value="<?php echo get_max_patient_id()+1; ?>" ></input>
 			<table cellpadding="2" class='regn_form_table' >	
-
 			<tr>	
 			<div class="control-group" <?php if($_SESSION['pid'] == 0) echo " style='display:none;' ";?> >
 			 <td width="200">
@@ -40,14 +45,6 @@ $script_elems->enableAutocomplete();
 					<input type="text" name="pid" id="pid" value="" size="20" class='uniform_width form-control' style='background-color:#FFC' disabled>
 				</td>
 			 </div>
-			</tr>
-			<tr>
-				<td>  Date of Registration </td>
-				<td>
-					<div class="input-append date date-picker" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd"> 
-					<input class="m-wrap m-ctrl-medium" size="16" name="patient_reg_date" id="patient_regist_date" type="text" value="<?php echo date("Y-m-d"); ?>"><span class="add-on"><i class="icon-calendar"></i></span>
-					</div>
-				</td>			
 			</tr>
 			<tr <?php
 			if($_SESSION['p_addl'] == 0)
@@ -75,7 +72,7 @@ $script_elems->enableAutocomplete();
 				echo " style='display:none;' ";
 			?>>	
 				<td><?php echo LangUtil::$generalTerms['PATIENT_NAME']; ?><?php $page_elems->getAsterisk(); ?> </td>
-				<td><input type="text" name="name" id="name" value="" size="20" class='uniform_width m-wrap tooltips' data-trigger="hover" data-original-title="Please enter patient's full name." /></td>
+				<td><input type="text" name="name" id="name" value="" size="20" class='uniform_width m-wrap tooltips' /></td>
 			</tr>
 			
 			<tr<?php
@@ -84,12 +81,12 @@ $script_elems->enableAutocomplete();
 			?>>
 				<td><?php echo LangUtil::$generalTerms['GENDER']; ?><?php $page_elems->getAsterisk();?> </td>
 				<td>
-					<div class="controls">
+					<div >
 						<label class="radio">
 							<span><input type="radio"  name="sex" value="M" checked> <?php echo LangUtil::$generalTerms['MALE']; ?></span>
 							</label>
 					</div>
-					<div class="controls">
+					<div >
 						<label class="radio">
 							<span>
 								<input type="radio" name="sex" value="F"><?php echo LangUtil::$generalTerms['FEMALE']; ?>
@@ -131,18 +128,16 @@ $script_elems->enableAutocomplete();
 				</td>
 				<td>
 					<input type="text" name="age" id="age" value="" size="4" maxlength="10" class='uniform_width m-wrap tooltips' />
-					
 					<select name='age_param' id='age_param' class='uniform_width m-wrap tooltips'>
 						<option value='1'><?php echo LangUtil::$generalTerms['YEARS']; ?></option>
 						<option value='2'><?php echo LangUtil::$generalTerms['MONTHS']; ?></option>
 						<option value='3'><?php echo LangUtil::$generalTerms['DAYS']; ?></option>
-						<option value='4'>Weeks</option>
-						<option value='5'>Range(Years)</option>
+						<option value='4'>Weeks</option>					
 					</select>
 					
 				</td>
-			</tr>
-				
+
+			</tr>	
 		</form>
 			
 		<form id='custom_field_form' name='custom_field_form' action='ajax/patient_add_custom.php' method='get'>
@@ -176,32 +171,19 @@ $script_elems->enableAutocomplete();
 					</span>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<small>
-						<span style='float:left'>
-							<?php $page_elems->getAsteriskMessage(); ?>
-						</span>
-					</small>
-				</td>
-				<td>				
-				</td>	
-			</tr>
-			<tr>
-				<td>
-				</td>
-			</tr>
 		</table>
 		<!--</form>-->
 		</div>
 		</div>
-		</td>
-		</tr>
-</table>
+	</div>
+</div>
+<div class="modal-footer">
+</div>
+
 <script type='text/javascript'>
 $(document).ready(function(){
 	$('#progress_spinner').hide();
-	<?
+	<?php
 	if(isset($_REQUEST['n']))
 	{
 		# Prefill patient name field
@@ -212,7 +194,7 @@ $(document).ready(function(){
 	if(isset($_REQUEST['jmp']))
 	{
 		?>
-		$('#new_patient_msg').html("<center>'<?php echo $_REQUEST['n']."' - ".LangUtil::$generalTerms['PATIENT_NAME']." ".LangUtil::$generalTerms['MSG_NOTFOUND'].". ".LangUtil::$pageTerms['MSG_ADDNEWENTRY']; ?></center>");
+		$('#new_patient_msg').html('<center>'.<?php echo $_REQUEST['n']."' - ".LangUtil::$generalTerms['PATIENT_NAME']." ".LangUtil::$generalTerms['MSG_NOTFOUND'].". ".LangUtil::$pageTerms['MSG_ADDNEWENTRY']; ?>.'</center>');
 		$('#new_patient_msg').show();
 		<?php
 	}
@@ -324,9 +306,9 @@ function add_patient()
 			data: data_string,
 			success: function(data) { 
 				//Add custom fields
-				//$('#custom_field_form').ajaxSubmit();
+				$('#custom_field_form').ajaxSubmit();
 					
-				$('#custom_field_form').submit();
+				//$('#custom_field_form').ajaxSubmit();
 				$("#progress_spinner").hide();
 				
 				/* Retrieve actual DB Key used */
@@ -335,10 +317,10 @@ function add_patient()
 				var new_card_num = data.substring(pidStart,pidEnd);
 				
 				card_num = new_card_num;	
-				var url = 'regn/new_specimen2.php';
-                $('.reg_subdiv').hide();     
-                $('#specimen_reg').show();
+				var url = 'ajax/receive_lab_request.php';
+                $('#patient_reg_body').modal('hide');                     
                 $('#specimen_reg_body').load(url, {pid: card_num });  
+                $('#specimen_reg_body').modal('show');
 			}
 		});
 		//Patient added
