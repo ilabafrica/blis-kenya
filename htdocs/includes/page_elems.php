@@ -1476,7 +1476,8 @@ class PageElems
 			{
 			?>
 			<td>
-				<a href='test_category_delete.php?tcid=<?php echo $key; ?>' class="btn mini red-stripe"><i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
+				<a href='javascript:void(0);' onclick='delete_test_category(<?php echo $key; ?>);' class="btn mini red-stripe">
+					<i class='icon-remove'></i> <?php echo LangUtil::$generalTerms['CMD_DELETE']; ?></a>
 			</td>
 			<?php
 			}

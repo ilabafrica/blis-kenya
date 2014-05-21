@@ -58,7 +58,7 @@ if(is_super_admin($user) || is_country_dir($user))
 		</div>
 		<div class="portlet-body">
 		<p style="text-align: right;"><a rel='facebox' href='#TestType_tc'>Page Help</a></p>
-		 <a href='test_type_new.php' class="btn blue-stripe" title='Click to Add a New Test Type'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		 <a href='test_type_new.php' class="btn blue-stripe" title='Add a New Test Type'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='tdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
@@ -123,7 +123,7 @@ if(is_super_admin($user) || is_country_dir($user))
 		</div>
 		<div class="portlet-body">
 		<p style="text-align: right;"><a rel='facebox' href='#TestCategory_tc'>Page Help</a></p>
-		<a href='javascript:add_section();' class="btn blue-stripe" title='Click to Add a New Test Category'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
+		<a href='javascript:add_section();' class="btn blue-stripe" title='Add New Test Category'><i class='icon-plus'></i> <?php echo LangUtil::$generalTerms['ADDNEW']; ?></a>
 		<br><br>
 		<div id='sdel_msg' class='clean-orange' style='display:none;'>
 			<?php echo LangUtil::$generalTerms['MSG_DELETED']; ?>&nbsp;&nbsp;<a href="javascript:toggle('tcdel_msg');"><?php echo LangUtil::$generalTerms['CMD_HIDE']; ?></a>
@@ -366,5 +366,21 @@ function add_reason(){
 	);
 	
 }
+
+function delete_test_category(tc_id){
+	var confirmed = confirm('This action is irreversible. \nAre you sure you would you like to proceed?');
+	if(confirmed) {
+		var url_string = "ajax/test_category_delete.php";
+		$.ajax({
+			url: 'ajax/test_category_delete.php',
+			data: { id: tc_id }
+			})
+			.done(function () {
+				alert('The Test Category was successfully deleted.');
+				window.location='catalog.php?rm';
+			});
+	}
+}
+
 </script>
 <?php include("includes/footer.php"); ?>

@@ -75,7 +75,7 @@ class User
 		$user->phone = $record['phone'];
 		$user->createdBy = $record['created_by'];
 		$user->labConfigId = $record['lab_config_id'];
-                $user->img = $record['img'];
+		$user->img = isset($record['img'])?$record['img']:"";
 		$user->canverify = $record['verify'];
 		if(isset($record['lang_id']))
 			$user->langId = $record['lang_id'];
@@ -1541,20 +1541,11 @@ class TestCategory
 	public static function deleteById($test_category_id)
 	{
 		# Deletes test category from database
-		# 1. Delete entries in lab_config_test_category
 		global $con;
 		$test_category_id = mysql_real_escape_string($test_category_id, $con);
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"DELETE FROM lab_config_test_category WHERE test_category_id=$test_category_id";
-		query_blind($query_string);
-		# 2. Delete entries from specimen_test
-		$query_string =
-			"DELETE FROM specimen_test WHERE test_category_id=$test_category_id";
-		query_blind($query_string);
-		# 3. Set disabled flag in test_category entry
-		$query_string =
-			"UPDATE test_category SET disabled=1 WHERE test_category_id=$test_category_id";
+			"DELETE FROM test_category WHERE test_category_id=$test_category_id";
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
 	}
