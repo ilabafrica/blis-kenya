@@ -7,11 +7,18 @@ include("../includes/page_elems.php");
 require_once("includes/script_elems.php");
 $script_elems = new ScriptElems();
 $page_elems = new PageElems();
+$script_elems->enableValidation();
 
 LangUtil::setPageId("catalog");
 ?>
 <script type='text/javascript'>
-function check_input()
+/* Begin Validation plugin*/
+		jQuery(document).ready( function() {
+			// binds form submission and fields to the validation engine
+			jQuery("#new_test_category_form").validationEngine();
+		});
+		/*End Validation plugin*/
+/*function check_input()
 {
 	// Validate
 	var category_name = $('#category_name').val();
@@ -22,7 +29,7 @@ function check_input()
 	}
 	// All OK
 	$('#new_test_category_form').submit();
-}
+}*/
 
 </script>
 <br>
@@ -34,7 +41,7 @@ function check_input()
 <table class='smaller_font'>
 <tr>
 <td style='width:150px;'><?php echo LangUtil::$generalTerms['NAME']; ?><?php $page_elems->getAsterisk(); ?></td>
-<td><input type='text' name='category_name' id='category_name' class='span4 m-wrap' /></td>
+<td><input type='text' name='category_name' id='category_name' class='span4 m-wrap validate[required, custom[onlyLetterSp]]' /></td>
 </tr>
 <tr valign='top'>
 <td><?php echo LangUtil::$generalTerms['DESCRIPTION']; ?></td>
@@ -42,7 +49,7 @@ function check_input()
 <td></td></tr></table>
 <br><br>
 <div class="form-actions">
-                              <button type="submit" onclick='check_input();' class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
+                              <button type="submit" class="btn blue"><?php echo LangUtil::$generalTerms['CMD_SUBMIT']; ?></button>
                               <a href='catalog.php?show_tc=1' class='btn'> <?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
                               </div>
 </form>

@@ -1,7 +1,7 @@
 <?php
 # 
 # (c) C4G, Santosh Vempala, Ruban Monu and Amol Shintre
-# This file contains entity classes and functions for DB queries
+# This file contains entity classes and functions for DB queries 
 #
 
 # Start session if not already started
@@ -75,7 +75,7 @@ class User
 		$user->phone = $record['phone'];
 		$user->createdBy = $record['created_by'];
 		$user->labConfigId = $record['lab_config_id'];
-                $user->img = $record['img'];
+		$user->img = isset($record['img'])?$record['img']:"";
 		$user->canverify = $record['verify'];
 		if(isset($record['lang_id']))
 			$user->langId = $record['lang_id'];
@@ -346,90 +346,37 @@ class LabConfig
 	public function getPendingTatValue()
 	{
 		# Returns default TAT value (in hours) to be assigned for samples that are pending
-		# Used while generating TAT report
-		# Stored in DB table 'test_type_tat' against test_type_id=0
 		global $DEFAULT_PENDING_TAT;
-		$saved_db = DbUtil::switchToLabConfig($this->id);
-		$query_string = "SELECT tat FROM test_type_tat WHERE test_type_id=0 LIMIT 1";
-		$record = query_associative_one($query_string);
-		$retval = 0;
-		if($record == null)
-		{
-			$retval = $DEFAULT_PENDING_TAT*24;
-		}
-		else if($record['tat'] == null)
-		{
-			$retval = $DEFAULT_PENDING_TAT*24;
-		}
-		else
-		{
-			# Entry present in DB
-			$retval = $record['tat'];
-		}
-		DbUtil::switchRestore($saved_db);
+		$retval = $DEFAULT_PENDING_TAT*24;
 		return $retval;		
 	}
 	
 	public function getGoalTatValue($test_type_id, $timestamp="") {
+		/* Target Turnaround time in hours */
 		global $DEFAULT_TARGET_TAT, $con;
 		$saved_db = DbUtil::switchToLabConfig($this->id);
-		$query_string = "";
 		$test_type_id = mysql_real_escape_string($test_type_id, $con);
 		$query_string = "SELECT target_tat FROM test_type ".
 					    "WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
 		$record = query_associative_one($query_string);
-		return $record['target_tat'];
+		$retval = $record['target_tat'];
+		DbUtil::switchRestore($saved_db);
+		return $retval;		
 	}
 	
 	public function updateGoalTatValue($test_type_id, $tat_value)
 	{	
 		# Updates goal TAT value for a single test type
-		## Adds a new entry for every update to have time-versioned goal TAT values
 		$saved_db = DbUtil::switchToLabConfig($this->id);
 		global $con;
-		$test_type_id = mysql_real_escape_string($tat_value, $con);
-		$tat_value = mysql_real_escape_string($test_type_id, $con);
-		# Create new entry
-		/*
-		$query_string = 
-			"SELECT tat FROM test_type_tat ".
-			"WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
-		*/
-		$query_string =
-			"SELECT target_tat FROM test_type ".
-			"WHERE test_type_id=$test_type_id ORDER BY ts DESC LIMIT 1";
-		$existing_record = query_associative_one($query_string);
-		if($existing_record != null) {
-			if($existing_record['target_tat'] != $tat_value) {
-				# Update TAT value
-				$query_string = 
-					"UPDATE test_type SET target_tat=$tat_value WHERE test_type_id=$test_type_id";
-				query_update($query_string);
-			}
-			/*
-			else
-			{
-				# New record to append for TAT (keeping timestamp wise progression of entries)
-				$query_string = 
-					"INSERT INTO test_type_tat (test_type_id, tat) ".
-					"VALUES ($test_type_id, $tat_value)";
-				echo $query_string;
-				query_insert_one($query_string);
-			}
-			*/
-		}
-		/*
-		else
-		{
-			# New record to add (first entry for this test type)
-			$query_string = 
-				"INSERT INTO test_type_tat (test_type_id, tat) ".
-				"VALUES ($test_type_id, $tat_value)";
-			echo $query_string;
-			query_insert_one($query_string);
-		}
+		$test_type_id = mysql_real_escape_string($test_type_id, $con);
+		$tat_value = mysql_real_escape_string($tat_value, $con);
+
+		# Update TAT value
+		$query_string = "UPDATE test_type SET target_tat=$tat_value WHERE test_type_id=$test_type_id";
+		query_update($query_string);
+
 		DbUtil::switchRestore($saved_db);
-		*/
 	}
 	
 	public function getTestTypeIds()
@@ -1594,20 +1541,11 @@ class TestCategory
 	public static function deleteById($test_category_id)
 	{
 		# Deletes test category from database
-		# 1. Delete entries in lab_config_test_category
 		global $con;
 		$test_category_id = mysql_real_escape_string($test_category_id, $con);
 		$saved_db = DbUtil::switchToLabConfigRevamp();
 		$query_string = 
-			"DELETE FROM lab_config_test_category WHERE test_category_id=$test_category_id";
-		query_blind($query_string);
-		# 2. Delete entries from specimen_test
-		$query_string =
-			"DELETE FROM specimen_test WHERE test_category_id=$test_category_id";
-		query_blind($query_string);
-		# 3. Set disabled flag in test_category entry
-		$query_string =
-			"UPDATE test_category SET disabled=1 WHERE test_category_id=$test_category_id";
+			"DELETE FROM test_category WHERE test_category_id=$test_category_id";
 		query_blind($query_string);
 		DbUtil::switchRestore($saved_db);
 	}
@@ -2792,6 +2730,22 @@ class Patient
 			return $this->surrogateId;
 	}
 
+	public function getSurrogateIdorPatientId()
+	{
+		if($this->surrogateId == null || trim($this->surrogateId) == ""){
+		 	if ($this->patientId == null || trim($this->patientId) == ""){
+				return "-";
+		 	}
+			else {
+				return $this->patientId;
+			}
+		}	
+		else {
+			return $this->surrogateId;
+		}
+
+	}
+
 	public function getBlisTests()
 	{
 		# Get tests from sanitas table and match with blis tests
@@ -3516,7 +3470,6 @@ class Test
 	{
 		$specimen = get_specimen_by_id($this->specimenId);
 		$start_time = new DateTime($specimen->ts_collected);
-		#error_log("\n".$specimen->ts_collected, 3 , "../logs/blis.api.error.log");
 		$end_time = new DateTime($this->ts_result_entered);
 		$interval = date_diff($start_time, $end_time);
 		return $interval->format('%d d %H hrs %I min');
@@ -6733,19 +6686,19 @@ function add_patient($patient, $importOn = false)
 	{
 		$query_string = 
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `age`, `sex`, `surr_id`, `created_by`, `hash_value` ,`ts`) ".
-			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
+			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$surr_id', $created_by, '$hash_value', now())";
 	}
 	else if($partial_dob != "")
 	{
 		$query_string = 
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `age`, `sex`, `partial_dob`, `surr_id`, `created_by`, `hash_value`,`ts`) ".
-			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$partial_dob', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
+			"VALUES ($pid, '$addl_id', '$name', $age, '$sex', '$partial_dob', '$surr_id', $created_by, '$hash_value', now())";
 	}
 	else
 	{
 		$query_string =
 			"INSERT INTO `patient`(`patient_id`, `addl_id`, `name`, `dob`, `age`, `sex`, `surr_id`, `created_by`, `hash_value`, `ts`) ".
-			"VALUES ($pid, '$addl_id', '$name', '$dob', $age, '$sex', '$surr_id', $created_by, '$hash_value', '$receipt_date')";
+			"VALUES ($pid, '$addl_id', '$name', '$dob', $age, '$sex', '$surr_id', $created_by, '$hash_value', now())";
 	}
 	$result = query_insert_one($query_string);
 	
@@ -6941,7 +6894,6 @@ function search_all_pending_external_requests($query){
                         $patient_list[] = Patient::getLabRequest($record);
                         $count++;
                     }
-                error_log($count, 3, "log.txt");
         }   else return null;
     }
    }//end for Kapsabet
@@ -7255,6 +7207,31 @@ function search_patients_by_dailynum_count($q)
 	return $resultset['val'];
 }
 
+function search_patients_by_everything($q)
+{
+	# Searches for patients with similar name
+	global $con;
+	$q = mysql_real_escape_string($q, $con);
+	$query_string = 
+		"SELECT * FROM patient ".
+		"WHERE name LIKE '%$q%' OR ".
+		"patient_id = '$q' OR ".
+		"surr_id = '$q' ".
+		"ORDER BY name ASC";
+	$resultset = query_associative_all($query_string, $row_count);
+	$patient_list = array();
+	if(count($resultset) > 0)
+	{
+		foreach($resultset as $record)
+		{
+			$patient_list[] = Patient::getObject($record);
+		}
+	}
+
+	return $patient_list;
+
+}
+
 function search_specimens_by_id($q)
 {
 	global $con;
@@ -7531,57 +7508,39 @@ function get_tests_by_specimen_id($specimen_id)
 	return $retval;
 }
 
-function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="")
+function get_completed_tests_by_type($test_type_id, $date_from="", $date_to="", $test_category_id = 0)
 {
 	global $con;
 	$test_type_id = mysql_real_escape_string($test_type_id, $con);
+	$test_category_id = mysql_real_escape_string($test_category_id, $con);
 	# Returns list of tests of a particular type,
 	# that were registered between date_from and date_to and completed
 	$query_string = "";
 	if($date_from == "" || $date_to == "")
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE s.test_type_id=$test_type_id ".
-				"AND t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected, ".
+			"UNIX_TIMESTAMP(s.ts_collected) as ts_collected, UNIX_TIMESTAMP(t.ts_result_entered) as ts_completed ".
+			"FROM test t, specimen s".($test_category_id==0?" ":", test_type tt ").
+			"WHERE t.result <> '' AND s.specimen_id=t.specimen_id ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			(($test_category_id==0)?"":"AND t.test_type_id = tt.test_type_id AND tt.test_category_id = $test_category_id ").
+			"ORDER BY s.date_collected";
 	}
 	else
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.test_type_id=$test_type_id ".
-				"AND t.result <> '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected, ".
+			"UNIX_TIMESTAMP(s.ts_collected) as ts_collected, UNIX_TIMESTAMP(t.ts_result_entered) as ts_completed ".
+			"FROM test t, specimen s".($test_category_id==0?" ":", test_type tt ").
+			"WHERE t.result <> '' AND s.specimen_id=t.specimen_id ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			(($test_category_id==0)?"":"AND t.test_type_id = tt.test_type_id AND tt.test_category_id = $test_category_id ").
+			"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
 	}
+
 	$resultset = query_associative_all($query_string, $row_count);
-	# Entries for {ts, specimen_id, date_collected} are returned
+	# Entries for {ts, specimen_id, date_collected, ts_collected, ts_complete} are returned
 	return $resultset;
 }
 
@@ -7594,46 +7553,24 @@ function get_pendingtat_tests_by_type($test_type_id, $date_from="", $date_to="")
 	$query_string = "";
 	if($date_from == "" || $date_to == "")
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE s.test_type_id=$test_type_id ".
-				"AND t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"FROM test t, specimen s ".
+			"WHERE t.result = '' ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			"AND s.specimen_id=t.specimen_id ORDER BY s.date_collected";
 	}
 	else
 	{
-		if($test_type_id == 0)
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
-		else
-		{
-			$query_string = 
-				"SELECT UNIX_TIMESTAMP(t.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
-				"FROM test t, specimen s ".
-				"WHERE t.test_type_id=$test_type_id ".
-				"AND t.result = '' ".
-				"AND s.specimen_id=t.specimen_id ".
-				"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
-		}
+		$query_string = 
+			"SELECT UNIX_TIMESTAMP(s.ts) as ts, t.specimen_id, UNIX_TIMESTAMP(s.date_collected) as date_collected ".
+			"FROM test t, specimen s ".
+			"WHERE t.result = '' ".
+			(($test_type_id == 0)?"":"AND t.test_type_id=$test_type_id ").
+			"AND s.specimen_id=t.specimen_id ".
+			"AND s.date_collected between '$date_from' AND '$date_to' ORDER BY s.date_collected";
 	}
+
 	$resultset = query_associative_all($query_string, $row_count);
 	# Entries for {ts, specimen_id, date_collected} are returned
 	return $resultset;

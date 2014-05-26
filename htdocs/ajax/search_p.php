@@ -43,6 +43,7 @@ else
 {
 	$lab_config = LabConfig::getById($_SESSION['lab_config_id']);
 }
+
 # Fetch list from DB
 if(isset($_REQUEST['a']) && $_REQUEST['a'] == 0)
 {
@@ -71,6 +72,13 @@ else if(isset($_REQUEST['a']) && $_REQUEST['a'] == 3)
 	# Fetch by daily number
 	$patient_list = search_patients_by_dailynum("-".$q);
 }
+# Fetch patients search using name, id or surr_id
+if(isset($_REQUEST['a']) && $_REQUEST['a'] == 'all')
+{
+	# Fetch by patient ID
+	$patient_list = search_patients_by_everything($q);
+}
+
 if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient == null) )
 {
 	?>
@@ -180,7 +188,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 				echo "<th>".LangUtil::$generalTerms['SP_STATUS']."</th>";
 			}
 			?>
-			<th>Test(s) Requested</th>
+			
 			<th></th>
 		</tr>
 	</thead>
@@ -262,19 +270,8 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 			}
 			?>
 			<td>
-			<?php 
-			if (isset($patient->tests_requested)){
-				$tests = $patient->tests_requested;
-			foreach($tests as $test){
-				echo "-> ".$test['investigation']." - (".$test['requestDate'].")<br>";
-					}
-			}
-			?>
-			
-			</td>
-			<td>
 				<?php 
-				if(strpos($_SERVER["HTTP_REFERER"], "find_patient.php") !== false)
+				if(true)//strpos($_SERVER["HTTP_REFERER"], "find_patient.php") !== false
 				{
 					# Called from find_patient.php. Show 'profile' and 'register specimen' link
 					?>
@@ -300,7 +297,7 @@ else if( (count($patient_list) == 0 || $patient_list[0] == null) && ($patient !=
 										</td>
                                         <td <?php (is_billing_enabled($_SESSION['lab_config_id']) ? print("") : print("style='display:none'")) ?> >
                                        
-                                            <a href=<?php echo $billing_url_string; ?>' title='Click to generate a bill for this patient'>Generate Bill</a>
+                                            <a href='<?php echo $billing_url_string; ?>' title='Click to generate a bill for this patient'>Generate Bill</a>
                                         </td>
 					<td>					
 					<?php
