@@ -99,7 +99,7 @@ if($login_correct)
 	#TODO: Add other session variables here
 	$_SESSION['user_role'] = "garbage";
 	#Redirect to test page
-	header("Location:results_entry.php");
+	$_SESSION[user_level] == 2 ? header("Location:home.php") : header("Location:results_entry.php");
 }
 else
 {
