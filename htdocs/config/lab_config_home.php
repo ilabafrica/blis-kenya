@@ -402,9 +402,16 @@ if($lab_config == null)
                                 <option value='3'><?php echo $LANG_ARRAY['reports']['MENU_TESTRECORDS']; ?></option>
                                 <?php
                             }
+                            if($SHOW_REJECTIONRECORD_REPORT === true)
+                            {
+                                ?>
+                                <option value='267'><?php echo $LANG_ARRAY['reports']."Specimen Rejection"; ?></option>
+                                <?php
+                            }
                             ?>
                             <option value='4'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['SPECIMENS']; ?></option>
                             <option value='6'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-".LangUtil::$generalTerms['PATIENTS']; ?></option>
+                            <option value='267'><?php echo $LANG_ARRAY['reports']['MENU_DAILYLOGS']."-"."Specimen Rejection"; ?></option>
                         </select>
                         &nbsp;&nbsp;
                         <input type='button' class="btn green" id='report_config_button' value="<?php echo LangUtil::$generalTerms['CMD_SEARCH']; ?>" onclick="javascript:fetch_report_config();"></input>

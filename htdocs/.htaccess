@@ -56,6 +56,7 @@ RewriteRule ^reports_specimen\.php$ reports/reports_specimen.php
 RewriteRule ^reports_specimenlog\.php$ reports/reports_specimenlog.php
 RewriteRule ^reports_print\.php$ reports/reports_print.php
 RewriteRule ^reports_dailyspecimens\.php$ reports/reports_dailyspecimens.php
+RewriteRule ^reports_dailyrejections\.php$ reports/reports_dailyrejections.php
 RewriteRule ^reports_dailypatients\.php$ reports/reports_dailypatients.php
 RewriteRule ^reports_infection\.php$ reports/reports_infection.php
 RewriteRule ^doctor_stats\.php$ reports/doctor_stats.php

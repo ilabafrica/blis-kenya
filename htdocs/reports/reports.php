@@ -774,7 +774,14 @@ db_get_current();
                         <div class="controls">
                         <label class="radio">
                             <span>
-                                <input type="radio" name='rectype13' value='2'> <?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
+                                <input type="radio" name='rectype13' id="patRec" value='2'> <?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
+                            </span>
+                        </label>
+                        </div>
+                        <div class="controls">
+                        <label class="radio">
+                            <span>
+                                <input type="radio" name='rectype13' value='3'> <?php echo "Rejected Specimen"; ?>
                             </span>
                         </label>
                         </div>
@@ -1676,6 +1683,9 @@ db_get_current();
 						<input type='radio' name='rectype13' value='2'>
 							<?php echo LangUtil::$generalTerms['RECORDS_PATIENT']; ?>
 						</input>
+                        <input type='radio' name='rectype13' value='3'>
+                            <?php echo "Rejected Specimen"; ?>
+                        </input>
 					</td>
 				</tr>
 				<tr id='cat_row13'>
@@ -2129,8 +2139,12 @@ $(document).ready(function(){
             $('#cat_row13').show();
             $('#ttype_row13').show();
         }
-        else{
+        else if($('#patRec').is(':checked')) { 
              $('#cat_row13').hide();
+            $('#ttype_row13').hide();
+        }
+        else{
+            $('#cat_row13').show();
             $('#ttype_row13').hide();
         }
 		
@@ -3479,6 +3493,35 @@ function print_daily_specimens()
 	window.open(url);
 }
 
+function print_daily_rejections()
+{
+    var l = $("#location13").attr("value");
+    var from_date = $("#from-date").attr("value");
+    var to_date = $("#to-date").attr("value");
+    
+    dateFromArray = from_date.split("-");
+    yf = dateFromArray[0];
+    mf = dateFromArray[1];
+    df = dateFromArray[2];
+    
+    dateToArray = to_date.split("-");
+    yt = dateToArray[0];
+    mt = dateToArray[1];
+    dt = dateToArray[2];
+    
+    if(checkDate(yf, mf, dt) == false || checkDate(yt, mt, dt) == false)
+    {
+        alert("<?php echo LangUtil::$generalTerms['TIPS_DATEINVALID']; ?>");
+        return;
+    }
+    var cat_code = $('#cat_code13').attr("value");
+    var ttype = $('#ttype13').attr("value");
+    var ip= 0;
+    var p=0;
+    var url = "reports_dailyrejections.php?yt="+yt+"&mt="+mt+"&dt="+dt+"&yf="+yf+"&mf="+mf+"&df="+df+"&l="+l+"&c="+cat_code+"&t="+ttype+"&ip="+ip;
+    window.open(url);
+}
+
 function print_daily_log()
 {
 	var record_type = $("input[name='rectype13']:checked").attr("value");
@@ -3486,10 +3529,14 @@ function print_daily_log()
 	{
 		print_daily_specimens();
 	}
-	else
+	else if(record_type == 2)
 	{
 		print_daily_patients();
 	}
+    else if(record_type == 3)
+    {
+        print_daily_rejections();
+    }
 }
 
 function get_stock_report()
