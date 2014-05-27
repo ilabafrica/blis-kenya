@@ -88,7 +88,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
 		?>
-			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width validate[required]' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
+			<select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width validate[groupRequired[edit]]' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');">
 			<option></option>
 			<?php
 			foreach($range_values as $option)
@@ -105,7 +105,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width validate[required]' type='text' name='result[]' id='<?php echo $input_id; ?>' value="<?php echo $clean_result ?>" onchange="javascript:update_remarks1();"></input>
+			<input class='uniform_width validate[groupRequired[edit]]' type='text' name='result[]' id='<?php echo $input_id; ?>' value="<?php echo $clean_result ?>" onchange="javascript:update_remarks1();"></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -165,14 +165,14 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation validate[required]' value='". $clean_result ."'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation validate[groupRequired[edit]]' value='". $clean_result ."'></input>";
                   // echo "</div>";
                                 	
 		}
 		else if($range_type == Measure::$RANGE_TEXTAREA)
 		{
                         # Text area
-                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation validate[required]' data-required='1' style='height:140px;width:275px'>". $clean_result ."</textarea>";
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation validate[groupRequired[edit]]' data-required='1' style='height:140px;width:275px'>". $clean_result ."</textarea>";
                   
                                 	
 		}
@@ -207,7 +207,7 @@ function get_result_form($test_type, $test, $num_tests, $patient)
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation validate[required]' 
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation' 
 				onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, 
 				<?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, 
 				'<?php echo $patient->sex;?>');" ><?php echo trim($test->getComments()) ?>
@@ -380,7 +380,7 @@ $modal_link_id = "test_edit_link_$test_id";
 <div class="modal-footer">
 	<input type='button' class="btn yellow" id="sanitas" value='<?php echo "Send to Sanitas"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
 	<a id="<?php echo $modal_link_id.'2'; ?>" class="btn red" href='javascript:close_modal("<?php echo $modal_link_id.'2'; ?>");' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-	<input type='button' class="btn green" id="blis" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+	<!-- <input type='button' class="btn green" id="blis" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input> -->
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>

@@ -20,8 +20,8 @@ $count = 0;
 foreach($test_type_list as $test_type_id)
 {
 	$curr_tat_value = $tat_value_list[$count];
-	$curr_tat_value = preg_replace("/[^0-9]/" ,"", $curr_tat_value);
-	if(trim($curr_tat_value) == "")
+	$curr_tat_value = preg_replace("/[^0-9]+(\.[0-9]*)*$/" ,"", $curr_tat_value);
+	if(trim($curr_tat_value) == "" || $test_type_id == 0)
 	{
 		# Empty TAT entry
 		$count++;

@@ -9,7 +9,7 @@
 # header("Location:home.php");
 ?>
 <script language="JavaScript">
-	window.location = 'results_entry.php';
+	window.location = 'home.php';
 </script>
 <p>
 Sorry, your browser either does not support JavaScript or has disabled it. <br>

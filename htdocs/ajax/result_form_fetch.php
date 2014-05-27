@@ -81,7 +81,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		
 		if($range_type == Measure::$RANGE_OPTIONS)
 		{
-		?><select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width validate[required]' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" data-required='1'><option></option>
+		?><select name='result[]' id='<?php echo $input_id; ?>' class='uniform_width validate[groupRequired[results]]' onchange="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?> ,<?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');" data-required='1'><option></option>
 			<?php
 			foreach($range_values as $option)
 			{
@@ -97,7 +97,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			# Continuous value range
 			$age=$patient->getAgeNumber();
 			?>
-			<input class='uniform_width validate[required]' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" data-required='1'></input>
+			<input class='uniform_width validate[groupRequired[results]]' type='text' name='result[]' id='<?php echo $input_id; ?>' onchange="javascript:update_remarks1();" data-required='1'></input>
 			<span id='<?php echo $input_id; ?>_range'>
 			&nbsp;(<?php 
 			$unit=$measure->unit;
@@ -157,14 +157,14 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 		{
                         # Text box
                     //echo "<div>";
-                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation validate[required]' data-required='1'></input>";
+                        echo "<input name='result[]' id='$input_id' class='uniform_width results_entry abbreviation validate[groupRequired[results]]' data-required='1'></input>";
                   // echo "</div>";
                                 	
 		}
 		else if($range_type == Measure::$RANGE_TEXTAREA)
 		{
                         # Text area
-                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation validate[required]' data-required='1' style='height:140px;width:275px'></textarea>";
+                   echo "<textarea name='result[]' id='$input_id'  class='results_entry abbreviation validate[groupRequired[results]]' data-required='1' style='height:140px;width:275px'></textarea>";
                   
                                 	
 		}
@@ -199,7 +199,7 @@ function get_result_form($test_type, $test_id, $num_tests, $patient, $parent_tes
 			</label>
 		
 			<span id='<?php echo $curr_form_id; ?>_comments_span'>
-			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation validate[required]'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
+			<textarea name='comments' id='<?php echo $curr_form_id; ?>_comments'  class='uniform_width abbreviation'  onfocus="javascript:update_remarks(<?php echo $test_type->testTypeId; ?>, <?php echo count($measure_list); ?>, <?php echo $patient->getAgeNumber(); ?>, '<?php echo $patient->sex;?>');"
 		       data-required='1'></textarea>
 			</span>
 		</td>
@@ -376,7 +376,7 @@ $modal_link_id = "test_result_link_$test_id";
 <div class="modal-footer">
 	<input type='button' class="btn yellow" id="sanitas" value='<?php echo "Send to Sanitas"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
 	<a id="<?php echo $modal_link_id.'2'; ?>" class="btn red" href='javascript:close_modal("<?php echo $modal_link_id.'2'; ?>");' class='btn'><?php echo LangUtil::$generalTerms['CMD_CANCEL']; ?></a>
-	<input type='button' class="btn green" id="blis" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input>
+	<!-- <input type='button' class="btn green" id="blis" value='<?php echo "Save to BLIS"//LangUtil::$generalTerms['CMD_SUBMIT']; ?>'></input> -->
 </div>
 <input type='hidden' id='form_id_list' value='<?php echo implode(",", $form_id_list); ?>'></input>
 <script type='text/javascript'>
