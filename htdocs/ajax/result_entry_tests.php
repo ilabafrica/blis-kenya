@@ -625,7 +625,7 @@ else{
 						echo '</span></td>';
 						echo '<div id=action'.$test->testId.'>
 					<td id=actionA'.$test->testId.' style="width:130px;" class="test-actions"><a href="javascript:start_test('.$quote.$test->testId.$quote.');" title="Click to begin testing this Specimen" class="btn red mini">
-						<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a>
+						<i class="icon-ok"></i> '.LangUtil::$generalTerms['START_TEST'].'</a> <a href="javascript:load_specimen_rejection('.$quote.$specimen->specimenId.$quote.')" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>
 					</td>
 					<td id=actionB'.$test->testId.' style="width:130px;">
 						<a href="javascript:specimen_info('.$quote.$specimen->specimenId.$quote.');" title="View specimen details" class="btn mini">
