@@ -440,7 +440,7 @@ function add_specimens(labNo)
 				$('#span'+labNo).addClass('label-inverse');
 				$('#span'+labNo).html('Not Collected');
 			    $('#actionA'+labNo).html
-			    ('<a href="javascript:accept_specimen('+test_details[0]+','+test_details[1]+');" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a>');
+			    ('<a href="javascript:accept_specimen('+test_details[0]+','+test_details[1]+');" class="btn mini green"><i class="icon-thumbs-up"></i> Accept</a> <a href="javascript:load_specimen_rejection('+test_details[0]+')" class="btn mini yellow"><i class="icon-thumbs-down"></i> Reject</a>');
 				$('#actionB'+labNo).html
 				('<a href="javascript:specimen_info('+test_details[0]+');" title="View specimen details" class="btn mini"><i class="icon-search"></i> View Details</a>');
 
