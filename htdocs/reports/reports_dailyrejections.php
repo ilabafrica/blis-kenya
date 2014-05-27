@@ -17,13 +17,12 @@ function get_records_to_print($lab_config, $cat_code, $date_from, $date_to)
 			$query_string =
 		"SELECT s.* FROM specimen s, test_category tc, test_type tt, test t WHERE ".
 		" (t.specimen_id=s.specimen_id AND t.test_type_id=tt.test_type_id AND tt.test_category_id=tc.test_category_id ".
-		" AND tc.test_category_id=$cat_code AND s.status_code_id=6 AND s.date_collected LIKE '$date_from%' OR".
-		" s.date_collected LIKE '$date_to%' AND s.date_collected BETWEEN '$date_from' AND '$date_to');";
+		" AND tc.test_category_id=$cat_code AND s.status_code_id=6 AND s.date_collected BETWEEN '$date_from' AND '$date_to');";
 		}
 	else{
 	$query_string =
 		"SELECT * FROM specimen ".
-			"WHERE (status_code_id=6 AND date_collected LIKE '$date_from%' OR date_collected LIKE '$date_to%' AND date_collected BETWEEN '$date_from' AND '$date_to') ";
+			"WHERE (status_code_id=6 AND date_collected BETWEEN '$date_from' AND '$date_to') ";
 		}
 		
 	$resultset = query_associative_all($query_string, $row_count);
@@ -158,8 +157,58 @@ $(document).ready(function(){
 	<?php $page_elems->getReportConfigCss($margin_list, false); ?>
 </style>
 <div id='report_config_content'>
-<h3><?php echo $report_config->headerText; ?></h3>
-<h3><?php echo $report_config->titleText; ?></h3>
+<!-- Logo -->
+<div id="docbody" name="docbody">
+
+<div id='logo' >
+
+<?php
+
+# If hospital logo exists, include it
+
+$logo_path = "../logos/logo_".$lab_config_id.".png";
+
+$logo_path2 = "../ajax/logo_".$lab_config_id.".png";
+
+$logo_path1="../../logo_".$lab_config_id.".png";
+
+
+
+
+
+if(file_exists($logo_path1) === true)
+
+{	copy($logo_path1,$logo_path);
+
+	?>
+
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px'></src>
+
+	<?php
+
+}
+
+else if(file_exists($logo_path) === true)
+
+{
+
+?>
+<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:left;' width='140px'></src>
+
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right; padding-right:10px;' width='140px'></src>
+
+	<?php
+
+}
+
+?>
+
+</div>
+<!-- Logo -->
+<?php $align=$report_config->alignment_header;?>
+<h5 style="text-align:center;"><?php echo $report_config->headerText; ?></h5>
+<h4 style="text-align:center;"><?php echo $report_config->titleText."Specimen Rejection Register"; ?></h4>
+</div>
 <?php
  if($date_from == $date_to)
  {
@@ -240,7 +289,7 @@ if($no_match === true)
 	return;
 }
 ?>
-<table class='print_entry_border draggable' id='report_content_table4'>
+<table class='print_entry_border draggable' id='report_content_table4' style='width:97%; margin-bottom:5px;'>
 <thead>
 		<tr valign='top'>
 			<?php
@@ -654,6 +703,7 @@ if($no_match === true)
 
 <?php # Line for Signature ?>
 .............................
-<h4><?php echo $report_config->footerText; ?></h4>
+<br><?php echo $report_config->footerText; ?>
+<?php include('specimen_rejection_report_footer.php'); ?>
 </div>
 </div>

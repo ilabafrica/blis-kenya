@@ -91,9 +91,56 @@ $(document).ready(function(){
 	<?php $page_elems->getReportConfigCss($margin_list, false); ?>
 </style>
 <div id='report_config_content'>
-<h3><?php echo $report_config->headerText; ?></h3>
-<b><?php echo $report_config->titleText; ?></b>
-<br>
+<!-- Logo -->
+<div id="docbody" name="docbody">
+
+<div id='logo' >
+
+<?php
+
+# If hospital logo exists, include it
+
+$logo_path = "../logos/logo_".$lab_config_id.".png";
+
+$logo_path2 = "../ajax/logo_".$lab_config_id.".png";
+
+$logo_path1="../../logo_".$lab_config_id.".png";
+
+
+
+
+
+if(file_exists($logo_path1) === true)
+
+{	copy($logo_path1,$logo_path);
+
+	?>
+
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px'></src>
+
+	<?php
+
+}
+
+else if(file_exists($logo_path) === true)
+
+{
+
+?>
+<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:left;' width='140px'></src>
+
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right; padding-right:10px;' width='140px'></src>
+
+	<?php
+
+}
+
+?>
+
+</div>
+<!-- Logo -->
+<h5 style="text-align:center;"><?php echo $report_config->headerText; ?></h5>
+<h4 style="text-align:center;"><?php echo $report_config->titleText."Patients Records"; ?></h4>
 <!--<?php echo LangUtil::$generalTerms['FACILITY']; ?>: <?php echo $lab_config->getSiteName(); ?>
  | -->
  <?php
@@ -120,7 +167,7 @@ if( (count($patient_list) == 0 || $patient_list == null) && (count($patient_list
 <br>
 <b>Reported</b>
 <?php if(count($patient_list) > 0 ) { ?>
-<table class='print_entry_border draggable' id='report_content_table5'>
+<table class='print_entry_border draggable' id='report_content_table5' style='width:97%; margin-bottom:5px;'>
 <thead>
 	<tr valign='top'>
 		<?php
@@ -278,7 +325,7 @@ if( (count($patient_list) == 0 || $patient_list == null) && (count($patient_list
 </table>
 <br><br><br><br>
 <b>Unreported</b>
-<table class='print_entry_border draggable' id='report_content_table5'>
+<table class='print_entry_border draggable' id='report_content_table5' style='width:97%; margin-bottom:5px;'>
 <?php if( count($patient_list_U) > 0 ) { ?>
 <thead>
 	<tr valign='top'>
@@ -426,6 +473,6 @@ if( (count($patient_list) == 0 || $patient_list == null) && (count($patient_list
 <br>
 <?php # Line for Signature ?>
 .............................
-<h4><?php echo $report_config->footerText; ?></h4>
+<br><?php echo $report_config->footerText; ?>
 </div>
 </div>

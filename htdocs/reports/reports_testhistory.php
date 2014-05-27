@@ -1510,7 +1510,7 @@ else if(file_exists($logo_path) === true)
 
 <h5 align="<?php echo $align; ?>"><?php echo $report_config->headerText; ?></h5>
 
-<h4 align="<?php echo $align; ?>"><?php echo $report_config->titleText; ?></h4>
+<h4 align="<?php echo $align; ?>"><?php echo $report_config->titleText."Patient Report"; ?></h4>
 
 </div>
 

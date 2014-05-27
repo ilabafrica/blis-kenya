@@ -187,8 +187,56 @@ $(document).ready(function(){
 	<?php $page_elems->getReportConfigCss($margin_list, false); ?>
 </style>
 <div id='report_config_content'>
-<h3><?php echo $report_config->headerText; ?></h3>
-<h3><?php echo $report_config->titleText; ?></h3>
+<!-- Logo -->
+<div id="docbody" name="docbody">
+
+<div id='logo' >
+
+<?php
+
+# If hospital logo exists, include it
+
+$logo_path = "../logos/logo_".$lab_config_id.".png";
+
+$logo_path2 = "../ajax/logo_".$lab_config_id.".png";
+
+$logo_path1="../../logo_".$lab_config_id.".png";
+
+
+
+
+
+if(file_exists($logo_path1) === true)
+
+{	copy($logo_path1,$logo_path);
+
+	?>
+
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px'></src>
+
+	<?php
+
+}
+
+else if(file_exists($logo_path) === true)
+
+{
+
+?>
+<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:left;' width='140px'></src>
+
+	<img src='<?php echo "logos/logo_".$lab_config_id.".png"; ?>' alt="Bungoma District Hospital" height='140px' style='float:right; padding-right:10px;' width='140px'></src>
+
+	<?php
+
+}
+
+?>
+
+</div>
+<!-- Logo -->
+<h5 style="text-align:center;"><?php echo $report_config->headerText; ?></h5>
+<h4 style="text-align:center;"><?php echo $report_config->titleText."Tests Records"; ?></h4>
 <?php
  if($date_from == $date_to)
  {
