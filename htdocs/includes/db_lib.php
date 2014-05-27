@@ -3193,6 +3193,27 @@ class Specimen
 		return $retval;
 	}
 	
+	public function getFullLabSection()
+	{
+		$query_string = "SELECT DISTINCT(tc.name) AS bench FROM test_category tc, 
+		test_type tt, test t, specimen s WHERE tc.test_category_id = tt.test_category_id 
+		AND tt.test_type_id = t.test_type_id AND t.specimen_id = s.specimen_id AND s.specimen_id=$this->specimenId";
+		$resultset = query_associative_all($query_string, $row_count);
+		$retval = "";
+		$count = 0;
+		foreach($resultset as $record)
+		{
+			$count++;
+			$bench = $record['bench'];
+			$retval .= $bench;
+			if($count < count($resultset))
+			{
+				$retval .= "<br>";
+			}
+		}
+		return $retval;
+	}
+
 	public function getDailyNum()
 	{
 		if(trim($this->dailyNum) == "" || $this->dailyNum == 0)

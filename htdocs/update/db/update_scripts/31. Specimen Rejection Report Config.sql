@@ -1,0 +1,1 @@
+INSERT INTO `report_config` (`report_id`, `header`, `footer`, `margins`, `p_fields`, `s_fields`, `t_fields`, `p_custom_fields`, `s_custom_fields`, `test_type_id`, `title`, `landscape`) VALUES (NULL, 'BUNGOMA DISTRICT HOSPITAL LABORATORY', '-End-', '2,0,10,0', '1,1,0,1,1,0,0', '1,0,1,0,0,1,0', '1,1,1,1,1,0,1,1', '', '', '0', 'Daily Log - Specimen Rejection', 0);
