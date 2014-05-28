@@ -551,7 +551,7 @@ $modal_link_id = "test_edit_link_$test_id";
 	 */
 	 /*Function to render drug susceptibility table after successfully saving the results*/
 	 function renderDrugSusceptibility(tid){
-		$.getJSON('ajax/drug_susceptibility.php', { testId: tid, action: "results"}, 
+		$.getJSON('ajax/update_susceptibility.php', { testId: tid, action: "results"}, 
 			function(data){
 				var tableRow ="";
 				var tableBody ="";

@@ -1760,6 +1760,7 @@ class DrugSusceptibility
 	public static function addSusceptibility($userId, $testId, $drugId, $zone, $interpretation){
 		global $con;
 		$query_string = "INSERT INTO drug_susceptibility (userId, testId, drugId, zone, interpretation, ts) values($userId, $testId, $drugId, $zone, '$interpretation', NOW()) ";
+		echo $query_string;
 		$result = query_insert_one($query_string);
 		//return get_last_insert_id();
 	}
@@ -1767,7 +1768,7 @@ class DrugSusceptibility
 	public static function updateSusceptibility($userId, $testId, $drugId, $zone, $interpretation){
 		global $con;
 		$query_string = "UPDATE drug_susceptibility SET userId = $userId, zone = $zone, interpretation = '$interpretation', ts = NOW() WHERE testId = $testId AND drugId = $drugId;";
-		//echo $query_string;
+		echo $query_string;
 		$result = query_blind($query_string);
 		//return get_last_insert_id();
 	}

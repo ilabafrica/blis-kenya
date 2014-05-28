@@ -16,13 +16,16 @@ $interpretation = $_POST['interpretation'];
 $action = $_REQUEST['action'];
 $testId = $_REQUEST['testId'];
 
-
 /*Get user ID*/
 $userId = $_SESSION['user_id'];
 //print_r(count(array_values ($test)));
 for($i=0; $i<count($test); $i++){
-
-	DrugSusceptibility::addSusceptibility($userId,$test[$i],$drug[$i],$zone[$i],$interpretation[$i]);
+	$exists[$i] = DrugSusceptibility::getDrugSusceptibility($test[$i],$drug[$i]);
+	if($exists[$i]){
+		DrugSusceptibility::updateSusceptibility($userId,$test[$i],$drug[$i],$zone[$i],$interpretation[$i]);
+	}else{
+		DrugSusceptibility::addSusceptibility($userId,$test[$i],$drug[$i],$zone[$i],$interpretation[$i]);
+	}
 	
 }
 if ($action == "results"){
