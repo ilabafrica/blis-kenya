@@ -288,7 +288,7 @@ if( (count($patient_list) == 0 || $patient_list == null) && (count($patient_list
 		if($report_config->useTest == 1)
 		{
 		?>
-			<td><?php echo $patient->getAssociatedTests(); ?></td>
+			<td><?php echo $patient->getAssociatedTests($date_from, $date_to); ?></td>
 		<?php
 		}
 		# Patient Custom fields here

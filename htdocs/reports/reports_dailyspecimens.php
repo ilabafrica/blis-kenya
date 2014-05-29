@@ -345,16 +345,16 @@ if($no_match === true)
 			<?php
 			if($report_config->useDailyNum == 1)
 			{
-				// echo "<th class='PDN'>".LangUtil::$generalTerms['PATIENT_DAILYNUM']."</th>";
+				echo "<th>".LangUtil::$generalTerms['PATIENT_DAILYNUM']."</th>";
 			}
 			if($report_config->useSpecimenAddlId != 0)
 			{
-				echo "<th class='SID'>".LangUtil::$generalTerms['SPECIMEN_ID']."</th>";
+				echo "<th>".LangUtil::$generalTerms['SPECIMEN_ID']."</th>";
 			}
 			if($report_config->usePatientId == 1)
 			{
 			?>
-				<th class='PID'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+				<th><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
 			<?php
 			}
 			if($report_config->usePatientAddlId == 1)
@@ -424,7 +424,7 @@ if($no_match === true)
 			}
 			if($report_config->useComments == 1)
 			{
-				// echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
+				echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
 			}
 			if($report_config->useReferredTo == 1)
 			{
@@ -438,10 +438,10 @@ if($no_match === true)
 			{
 				echo "<th>".LangUtil::$generalTerms['RESULTS']."</th>";
 			}
-			if($report_config->useRange == 1)
-			{
-				// echo "<th style='width:120px;'>".LangUtil::$generalTerms['RANGE']."</th>";
-			}
+			// if($report_config->useRange == 1)
+			// {
+			// 	// echo "<th style='width:120px;'>".LangUtil::$generalTerms['RANGE']."</th>";
+			// }
 			if($report_config->useEntryDate == 1)
 			{
 				echo "<th>".LangUtil::$generalTerms['E_DATE']."</th>";
@@ -486,7 +486,7 @@ if($no_match === true)
 			<?php
 			if($report_config->useDailyNum == 1)
 			{
-				// echo "<td>".$specimen->getDailyNum()."</td>";
+				echo "<td>".$specimen->getDailyNum()."</td>";
 			}
 			if($report_config->useSpecimenAddlId == 1)
 			{
@@ -589,7 +589,7 @@ if($no_match === true)
 			}
 			if($report_config->useComments == 1)
 			{
-				// echo "<td>".$specimen->getComments()."</td>";
+				echo "<td>".$specimen->getComments()."</td>";
 			}
 			if($report_config->useReferredTo == 1)
 			{
@@ -617,7 +617,7 @@ if($no_match === true)
 	                        echo "<span>".$measure->name."</span> - ";
 	                    }
 	                    echo "$result ".$measure->unit." &nbsp; ";
-                        if($measure->getRangeType() == Measure::$RANGE_NUMERIC){
+                        if($report_config->useRange == 1 && $measure->getRangeType() == Measure::$RANGE_NUMERIC){
                            echo $measure->getNumericRangeString($patient);
                         }
                         echo "<br />";

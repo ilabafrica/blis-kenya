@@ -23,10 +23,12 @@ td.test-history-range{
     min-width: 50px;
   }
 
+#report_content_table5 thead th,
 #report_content_table4 thead th {
 	color: #363636;
 	font-size: 0.9em;
 }
+#report_content_table5 thead th:hover,
 #report_content_table4 thead th:hover {
 	cursor: pointer;
 }

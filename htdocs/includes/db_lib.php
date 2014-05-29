@@ -2451,18 +2451,29 @@ class Patient
 			return $this->addlId;
 	}
 	
-	public function getAssociatedTests() {
+	public function getAssociatedTests($date_from = 0, $date_to = 0) {
 		if( $this->patientId == "" )
 			return " - ";
 		else {
-			$query_string = "SELECT t.test_type_id FROM test t, specimen sp ".
-							"WHERE t.result <> '' ".
-							"AND t.specimen_id=sp.specimen_id ".
-							"AND sp.patient_id=$this->patientId";
+			$query_string = "SELECT t.* FROM test t, specimen sp ".
+							"WHERE t.specimen_id=sp.specimen_id ".
+							"AND sp.patient_id=$this->patientId ";
+			if($date_from != 0){
+				if($date_to != 0){
+					if($date_from == $date_to){
+						$query_string .= " AND t.ts_started LIKE '$date_from%'";
+					}else{
+						$query_string .= " AND t.ts_started >= '$date_from' AND t.ts_started <= '$date_to'";
+					}
+				}else{
+					$query_string .= " AND t.ts_started >= '$date_from'";
+				}
+			}
 			$recordset = query_associative_all($query_string, $row_count);
 			foreach( $recordset as $record ) {
-				$testName = get_test_name_by_id($record['test_type_id']);
-				$result .= $testName."<br>";
+				$test = Test::getObject($record);
+				$result .= "<span title='".$test->ts_started." - ".$test->getLabSectionByTest()."'>";
+				$result .= $test->getTestName()."</span><br>";
 			}
 			return $result;
 		}
