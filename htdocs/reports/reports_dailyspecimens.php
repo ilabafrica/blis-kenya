@@ -345,16 +345,16 @@ if($no_match === true)
 			<?php
 			if($report_config->useDailyNum == 1)
 			{
-				echo "<th>".LangUtil::$generalTerms['PATIENT_DAILYNUM']."</th>";
+				// echo "<th class='PDN'>".LangUtil::$generalTerms['PATIENT_DAILYNUM']."</th>";
 			}
 			if($report_config->useSpecimenAddlId != 0)
 			{
-				echo "<th>".LangUtil::$generalTerms['SPECIMEN_ID']."</th>";
+				echo "<th class='SID'>".LangUtil::$generalTerms['SPECIMEN_ID']."</th>";
 			}
 			if($report_config->usePatientId == 1)
 			{
 			?>
-				<th><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
+				<th class='PID'><?php echo LangUtil::$generalTerms['PATIENT_ID']; ?></th>
 			<?php
 			}
 			if($report_config->usePatientAddlId == 1)
@@ -424,7 +424,7 @@ if($no_match === true)
 			}
 			if($report_config->useComments == 1)
 			{
-				echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
+				// echo "<th>".LangUtil::$generalTerms['COMMENTS']."</th>";
 			}
 			if($report_config->useReferredTo == 1)
 			{
@@ -440,7 +440,7 @@ if($no_match === true)
 			}
 			if($report_config->useRange == 1)
 			{
-				echo "<th style='width:120px;'>".LangUtil::$generalTerms['RANGE']."</th>";
+				// echo "<th style='width:120px;'>".LangUtil::$generalTerms['RANGE']."</th>";
 			}
 			if($report_config->useEntryDate == 1)
 			{
@@ -486,13 +486,13 @@ if($no_match === true)
 			<?php
 			if($report_config->useDailyNum == 1)
 			{
-				echo "<td>".$specimen->getDailyNum()."</td>";
+				// echo "<td>".$specimen->getDailyNum()."</td>";
 			}
 			if($report_config->useSpecimenAddlId == 1)
 			{
-				echo "<td>";
-				$specimen->getAuxId();
-				echo "</td>";
+				echo "<td>".$test->getLabSectionByTest()."</td>";
+				// echo "<td>".$specimen->specimenId."</td>";
+				// $specimen->getAuxId();
 			}
 			if($report_config->usePatientId == 1)
 			{
@@ -589,9 +589,7 @@ if($no_match === true)
 			}
 			if($report_config->useComments == 1)
 			{
-				echo "<td>";
-				echo $specimen->getComments();
-				echo "</td>";
+				// echo "<td>".$specimen->getComments()."</td>";
 			}
 			if($report_config->useReferredTo == 1)
 			{
@@ -603,93 +601,29 @@ if($no_match === true)
 			}
 			if($report_config->useResults == 1)
 			{
-				echo "<td>";
+				echo "<td class='reports-specimen-daily-results'>";
 				if(trim($test->result) == "")
 				{
 					echo LangUtil::$generalTerms['PENDING_RESULTS'];
 				}
 				else
 				{
-				
-					echo $test->decodeResult();
+                    $test_type = TestType::getById($test->testTypeId);
+                    $measure_list = $test_type->getMeasures();
+                    foreach($measure_list as $measure)
+                    {
+                        $result = get_test_measure_result_value($test->testId, $measure->measureId);
+	                    if (count($measure_list) > 1) {
+	                        echo "<span>".$measure->name."</span> - ";
+	                    }
+	                    echo "$result ".$measure->unit." &nbsp; ";
+                        if($measure->getRangeType() == Measure::$RANGE_NUMERIC){
+                           echo $measure->getNumericRangeString($patient);
+                        }
+                        echo "<br />";
+                    }
+					// echo $test->decodeResult();
 				}
-				echo "</td>";
-			}
-			if($report_config->useRange == 1)
-			{
-				echo "<td>";
-				$test_type = TestType::getById($test->testTypeId);
-				$measure_list = $test_type->getMeasures();
-				foreach($measure_list as $measure)
-						{
-						$type=$measure->getRangeType();
-						if($type==Measure::$RANGE_NUMERIC)
-						{
-						$range_list_array=$measure->getRangeString($patient);
-					$lower=$range_list_array[0];
-					$upper=$range_list_array[1];
-						?>(
-		<?php
-			$unit=$measure->unit;
-			if(stripos($unit,",")!=false)
-		{	
-			$units=explode(",",$unit);
-			$lower_parts=explode(".",$lower);
-			$upper_parts=explode(".",$upper);
-			if($lower_parts[0]!=0)
-			{
-			echo $lower_parts[0];
-			echo $units[0];
-			}
-			if($lower_parts[1]!=0)
-			{
-			echo $lower_parts[1];
-			echo $units[1];
-			}
-			echo " - ";
-			if($upper_parts[0]!=0)
-			{
-			echo $upper_parts[0];
-			echo $units[0];
-			}
-			if($upper_parts[1]!=0)
-			{
-			echo $upper_parts[1];
-			echo $units[1];
-			}
-
-		}
-		else if(stripos($unit,":")!=false)
-		{
-		$units=explode(":",$unit);
-			
-		echo $lower;
-		?><sup><?php echo $units[0]; ?></sup> - 
-		<?php echo $upper;?> <sup> <?php echo $units[0]; ?> </sup>
-		<?php
-		echo " ".$units[1];
-		}
-		
-		else
-		{			
-			echo $lower; ?>-<?php echo $upper; 
-			echo " ".$measure->unit;
-		}
-		?>)&nbsp;&nbsp;	
-			
-			<?php
-		//echo " ".$measure->unit;
-	//	echo "<br>";
-		
-		
-		
-							
-						}
-						//echo $measure->getRangeString($patient);
-						else
-							echo "&nbsp;&nbsp;&nbsp;".$measure->unit;
-							echo "<br>";
-						}
 				echo "</td>";
 			}
 			if($report_config->useEntryDate == 1)
@@ -706,7 +640,7 @@ if($no_match === true)
 			}
 			if($report_config->useRemarks == 1)
 			{
-				echo "<td>".$test->getComments()."</td>";
+				echo "<td class='reports-specimen-daily-remarks'>".$test->getComments()."</td>";
 			}
 			if($report_config->useEnteredBy == 1)
 			{
