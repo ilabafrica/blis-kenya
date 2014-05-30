@@ -517,11 +517,18 @@ $sec_count = count($sections);
 
 for($sc = 0; $sc < $sec_count; $sc++)
 {
-$sec_code = $sections[$sc][0];
-$sec_name = $sections[$sc][1];
+    $sec_code = $sections[$sc][0];
+    $sec_name = $sections[$sc][1];
 
-$test_type_list = get_test_ids_by_category($sec_code, $lab_config_id->id);
-if(count($test_type_list)==0)continue;
+    $test_type_list = get_test_ids_by_category($sec_code, $lab_config_id->id);
+    if(count($test_type_list)==0)continue;
+    $atLeastOneTest = 0;
+    foreach($test_type_list as $test_type_id){
+        $totalTestCount = get_test_count($lab_config, $test_type_id, $date_from, $date_to);
+        $atLeastOneTest += $totalTestCount[0];
+    }
+    if($atLeastOneTest == 0)continue;
+
 ?>
 <br><br>
 <table>
@@ -593,7 +600,7 @@ if(count($test_type_list)==0)continue;
             $tests_list=array();
             $summ = 0;
             foreach($test_type_list as $test_type_id)
-		{
+    		{
                 $testCount = get_test_count($lab_config, $test_type_id, $date_from, $date_to);
                 if($testCount[0] == 0)continue;
                     $test_name = get_test_name_by_id($test_type_id);
