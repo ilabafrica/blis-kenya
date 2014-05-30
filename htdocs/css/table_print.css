@@ -43,3 +43,26 @@ td.reports-specimen-daily-results {
 td.reports-specimen-daily-remarks {
 	max-width: 300px;
 }
+
+.reports-testcount-grouped{
+	border-collapse: collapse;
+}
+	.reports-testcount-grouped thead th{
+		font-size: 0.9em;
+		color: #363636;
+	}
+	.reports-testcount-grouped thead th.ranges{
+		min-width: 60px;
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+	.reports-testcount-grouped tbody tr.range-data td{
+		text-align: center;
+	}
+	.reports-testcount-grouped tbody tr.range-data td.left{
+		text-align: left;
+		min-width: 180px;
+	}
+	.reports-testcount-grouped tbody tr.range-data td.right {
+		text-align: right;
+	}

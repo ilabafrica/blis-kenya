@@ -135,22 +135,19 @@ $table_css = "style='padding: .3em; border: 1px black solid; font-size:14px;'";
 					echo "<th >".LangUtil::$pageTerms['RANGE_AGE']."</th>";
 				}
 			}
-                        else
-                        {
-                            echo "<th >"."Count"."</th>";
-                        }
+            else
+            {
+                echo "<th >Count</th>";
+            }
 			if($byAge == 1 && $byGender == 1)
 			{
 				echo "<th >".LangUtil::$pageTerms['TOTAL_MF']."</th>";
 			}
-			?>
-			
-                        
-                        <?php if($byAge == 1 || $byGender == 1)
-                        {
-                            echo "<th>".LangUtil::$pageTerms['TOTAL_TESTS']."</th>";
-                        }
-                        ?>
+			if($byAge == 1 || $byGender == 1)
+            {
+                echo "<th>".LangUtil::$pageTerms['TOTAL_TESTS']."</th>";
+            }
+            ?>
                         
 		</tr>
 		<tr>
@@ -518,72 +515,62 @@ $sections = get_test_categories_data($lab_config_id->id);
 
 $sec_count = count($sections);
 
-
 for($sc = 0; $sc < $sec_count; $sc++)
 {
 $sec_code = $sections[$sc][0];
 $sec_name = $sections[$sc][1];
 
-echo "<br><br><table><tr><td>";
-echo "Section: </td><td>".$sec_name."</td></tr></table>";
-                               
-
+$test_type_list = get_test_ids_by_category($sec_code, $lab_config_id->id);
+if(count($test_type_list)==0)continue;
 ?>
-
+<br><br>
+<table>
+    <tr><td>Section: </td>
+        <td><?php echo $sec_name; ?></td>
+    </tr>
+</table>                             
 <br>
-<table style='border-collapse: collapse;'>
+
+<table class='reports-testcount-grouped'>
 	<thead>
 		<tr>
-			<th><?php echo LangUtil::$generalTerms['TEST']; ?></th>
+			<th class='left' rowspan='2'><?php echo LangUtil::$generalTerms['TEST']; ?></th>
 			<?php
 			if($byGender == 1)
 			{
-				echo "<th >".LangUtil::$generalTerms['GENDER']."</th>";
+				echo "<th rowspan='2'>".LangUtil::$generalTerms['GENDER']."</th>";
 			}
 			if($byAge == 1)
 			{
-                            $age_group_list = decodeAgeGroups($configArray['age_groups']);
+                $age_group_list = decodeAgeGroups($configArray['age_groups']);
 
-				echo "<th >".LangUtil::$pageTerms['RANGE_AGE']."</th>";
-				for($i = 1; $i < count($age_group_list); $i++)
-				{
-					echo "<th >".LangUtil::$pageTerms['RANGE_AGE']."</th>";
-				}
+                echo "<th colspan=".count($age_group_list).">".LangUtil::$pageTerms['RANGE_AGE']."</th>";
 			}
-                        else
-                        {
-                            echo "<th >"."Count"."</th>";
-                        }
+            else
+            {
+                echo "<th >Count</th>";
+            }
 			if($byAge == 1 && $byGender == 1)
 			{
-				echo "<th >".LangUtil::$pageTerms['TOTAL_MF']."</th>";
+				echo "<th rowspan='2'>".LangUtil::$pageTerms['TOTAL_MF']."</th>";
 			}
-			?>
-			
-                        
-                        <?php if($byAge == 1 || $byGender == 1)
-                        {
-                            echo "<th>".LangUtil::$pageTerms['TOTAL_TESTS']."</th>";
-                        }
-                        ?>
+			if($byAge == 1 || $byGender == 1)
+            {
+                echo "<th rowspan='2'>".LangUtil::$pageTerms['TOTAL_TESTS']."</th>";
+            }
+            ?>
                         
 		</tr>
                 
 		<tr>
-			<th ></th>
 			<?php
-			if($byGender == 1)
-			{
-				echo "<th ></th>";
-			}
-			
 			if($byAge == 1)
 			{
-                            $age_group_list = decodeAgeGroups($configArray['age_groups']);
+                $age_group_list = decodeAgeGroups($configArray['age_groups']);
 
 				foreach($age_group_list as $age_slot)
 				{
-					echo "<th>$age_slot[0]";
+					echo "<th class='ranges'>$age_slot[0]";
 					if(trim($age_slot[1]) == "+")
 						echo "+";
 					else
@@ -591,34 +578,15 @@ echo "Section: </td><td>".$sec_name."</td></tr></table>";
 					echo "</th>";
 				}
 			}
-                        else
-                        {
-                            echo "<th ></th>";
-                        }
-			if($byAge == 1 && $byGender == 1)
-			{
-				echo "<th ></th>";
-			}
-                        
-                        if($byAge == 1 || $byGender == 1)
-                            echo "<th ></th>";
+            else
+            {
+                echo "<th ></th>";
+            }
 			?>
 		</tr>
 	</thead>
 	<tbody>
         <?php
-            $test_type_list = get_test_ids_by_category($sec_code, $lab_config_id->id);
-                //$test_type_list = get_lab_config_test_types($lab_config->id); // to get test type ids
-            
-            //$cat_test_types = TestType::getByCategory($cat_codes[$cc]);
-            //$cat_test_ids = array();
-            //$selected_test_ids = $lab_config->getTestTypeIds();
-
-           // foreach($cat_test_types as $test_type)
-             //   $cat_test_ids[] = $test_type->testTypeId;
-            /*$matched_test_ids = array_intersect($cat_test_ids, $selected_test_ids);
-            $selected_test_ids = array_values($matched_test_ids);
-            $test_type_list = $selected_test_ids;*/
             
             $saved_db = DbUtil::switchToLabConfig($lab_config->id);
             $tests_done_list = array();
@@ -626,20 +594,16 @@ echo "Section: </td><td>".$sec_name."</td></tr></table>";
             $summ = 0;
             foreach($test_type_list as $test_type_id)
 		{
+                $testCount = get_test_count($lab_config, $test_type_id, $date_from, $date_to);
+                if($testCount[0] == 0)continue;
                     $test_name = get_test_name_by_id($test_type_id);
-                    echo "<tr valign='top'>";
-                        echo "<td>";
-                            echo $test_name;
-                        echo "</td>";
-                        
-                        if($byGender == 1)
-                        {
-                            echo "<td>";
-                                echo "M";
-                                echo "<br>";
-                                echo "F";
-                            echo "</td>";
-                        }
+                    echo "<tr valign='top' class='range-data'>";
+                    echo "<td class='left'>".$test_name."</td>";
+                    
+                    if($byGender == 1)
+                    {
+                        echo "<td>M<br>F</td>";
+                    }
                 
                     # Group by age set to true: Fetch age slots from DB
                     if($byAge == 1)
