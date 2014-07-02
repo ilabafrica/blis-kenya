@@ -14,14 +14,23 @@
   </head>
 
   <body>
-    <div id="container">
+  <div id="background">
+      <img  src="images/threeblur.jpg" class="active" >
+      <img  src="images/twoblur.jpg">
+      <img  src="images/eightblur.jpg">
+  </div>
+    <div id="container">      
       <div class="inner">
 
         <header>
           <h1>BLIS-kenya</h1>
           <h2>Basic Laboratory Information System (BLIS) Kenya</h2>
         </header>
-        <img src="images/three.JPG">
+        <div id="slideshow">
+          <img src="images/three.JPG" class="active">
+          <img src="images/two.JPG">
+          <img src="images/eight.JPG">
+        </div>
         <hr>
         <section id="main_content">
           <h1>
@@ -36,9 +45,7 @@
      <img src="images/Intergration.png">
 <hr>
      <h4>Intergration with machines</h4>
-     	<br>
-    	<img src="images/rs232.jpg">
-    	<p></p> 	     
+     	<br>	     
 		<p>We have intergrated BLIS-Kenya with the Celltac-F machine and are currently working on intergrating more machines. Lab technologists are now able to to send results from the machine to the doctor deirectly,
 		eliminating transcription errors and the need to print analyzer results. </p>
 
@@ -81,4 +88,6 @@
       </div>
     </div>
   </body>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="javascripts/main.js"></script>
 </html>
