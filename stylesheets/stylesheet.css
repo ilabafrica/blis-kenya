@@ -146,6 +146,37 @@ header h2 {
   z-index: 9;
 }
 
+.avatar {
+  float: left;
+}
+
+.avatar img {
+  width: 8em;
+  height: 8em;
+  border-radius: 10em;
+  margin-left: 16px;
+}
+
+.avatar .name {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1em;
+  margin: 10px 0 5px;
+  text-align: center;
+}
+
+.avatar .title {
+  font-size: 11px;
+  color: #666;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#main-content{
+  padding-bottom: 100px;
+}
+
 a.button {
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;                     
@@ -356,7 +387,7 @@ footer {
   margin-top: 40px;
   padding-top: 20px;
   padding-bottom: 30px;
-  font-size: 13px;
+  font-size: 15px;
   color: #aaa;
 }
 

@@ -37,6 +37,6 @@ function animater(){
 }
 
 $(function() {
-	setInterval( "animater()", 3000);
+	setInterval( "animater()", 5000);
 
 });
